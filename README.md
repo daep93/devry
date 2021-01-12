@@ -19,6 +19,10 @@
 
 - 🥠Github: [@kingdom](https://github.com/kingdom)
 
+**Hyeon Jun Nam**
+
+- 🧀Github: [@applevalley](https://github.com/applevalley) 
+
 ## 📆 프로젝트 개요
 
 - **진행 기간**: 
