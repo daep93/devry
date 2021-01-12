@@ -15,6 +15,10 @@
 
 - 🥨Github: [@vreez](https://github.com/vreez)
 
+**Dae Yeong Jeong**
+
+- 🥠Github: [@kingdom](https://github.com/kingdom)
+
 ## 📆 프로젝트 개요
 
 - **진행 기간**: 
