@@ -39,7 +39,7 @@
     - index.js를 기본으로 하고 코드가 길어질 경우, state, getters, actions, mutations를 모듈화해서 index.js에 import할 것
     - state의 property 키는 데이터를 나타내는 단어를 쓸 것. 
         - 예) id, token
-    - getters의 함수는 get{State}(state, ...args) 형태로 쓸 것. 
+    - getters의 함수는 ,단순히 state의 키를 가져올 경우, get{State}(state, ...args) 형태로 쓸 것. 
         - 예) getId(state), getToken(state) 
     - mutations의 함수는 {functionState}(state, ...args) 형태로 쓸 것. 
         - 예) setId(state), clearUserInfo(state) 
