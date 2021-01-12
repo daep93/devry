@@ -11,6 +11,9 @@
 
 - 🥪Github: [@daep93](https://github.com/daep93)
 
+**Yoon Vin Kim**
+
+- 🥨Github: [@vreez](https://github.com/vreez)
 
 ## 📆 프로젝트 개요
 
@@ -29,7 +32,7 @@
 ## ⚙️ Install and Usage
 
 ### Frontend
-  
+
 ### Backend
 
 ## ⭐️ 주요 기능
