@@ -1,9 +1,9 @@
 # Vue convention 
 ---
 ## 필수 사항
+
 0. 객체, 변수, 함수명:
     - 두 단어 이상일 경우 camelCase를 준수
-<br>
 1. Vue 파일 이름
     - 확장자가 vue인 파일의 이름은 PaskalCase를 준수.
     - 반드시 두단어 이상을 조합할 것. 예) LoginForm, MainPage
