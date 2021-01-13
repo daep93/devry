@@ -28,7 +28,7 @@ export default new Vuex.Store({
     onAccountModal(state) {
       state.accountModal = true;
     },
-    offAccounModal(state) {
+    offAccountModal(state) {
       state.accountModal = false;
     },
     setAccountModalType(state, type) {
