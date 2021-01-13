@@ -15,6 +15,20 @@
 
 - 🥨Github: [@vreez](https://github.com/vreez)
 
+**Dae Yeong Jeong**
+
+- 🥠Github: [@kingdom](https://github.com/kingdom)
+
+**Hyeon Jun Nam**
+
+- 🧀Github: [@applevalley](https://github.com/applevalley) 
+
+**Si Eun Jeong**
+
+- 🍤Github: [@sieun-iris](https://github.com/sieun-iris)
+
+
+
 ## 📆 프로젝트 개요
 
 - **진행 기간**: 
