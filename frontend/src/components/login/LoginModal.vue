@@ -1,6 +1,7 @@
 <template>
   <account-modal>
     <div class="q-pa-md row">
+      <!-- TODO: [디자인] 이미지와 콘텐츠 영역 넓이 확인 -->
       <!-- 로그인 이미지 -->
       <div
         class="col-6 row justify-center"
@@ -14,7 +15,8 @@
       </div>
       <!-- 로그인 컨텐츠 -->
       <div class="col-6">
-        <login-form></login-form>
+        <login-input></login-input>
+        <!-- <login-form></login-form> -->
       </div>
     </div>
   </account-modal>
@@ -22,9 +24,10 @@
 
 <script>
 import AccountModal from '@/components/common/AccountModal';
-import LoginForm from './LoginForm.vue';
+import LoginInput from '@/components/login/LoginInput';
+
 export default {
-  components: { AccountModal, LoginForm }
+  components: { AccountModal, LoginInput },
 };
 </script>
 

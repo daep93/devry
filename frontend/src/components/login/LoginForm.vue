@@ -12,34 +12,36 @@
       <q-form @submit.prevent="">
         <q-input
           v-model="email"
+          clearables
+          :clear-icon="$i.ionCloseOutline"
+          stack-label
+          placeholder="이메일 주소를 입력해주세요"
           type="email"
           label="e-mail"
-          placeholder="이메일 주소를 입력해주세요"
           style="width:400px;"
           autocapitalize="none"
-          stack-label
           :dense="dense"
           :error="!isEmailValid"
-          clearable
-          :clear-icon="$i.ionCloseOutline"
-          label-slot
-          bottom-slots
         >
+        <!-- TODO: [디자인] 타이틀 lable 없음 (글씨 크기 다름) -->
           <template v-slot:error>
             <div class="text-red-8">잘못된 이메일 양식입니다</div>
           </template>
         </q-input>
+
+        <!-- TODO: [로직] X 아이콘 -->
         <q-input
-          class="input"
           v-model="password"
+          clearable
+          :clear-icon="$i.ionCloseOutline"
+          stack-label
+          bottom-slots
+          placeholder="6~12자 영문 대 소문자, 숫자를 사용하세요"
           type="password"
           label="password"
-          placeholder="6~12자 영문 대 소문자, 숫자를 사용하세요"
           style="width:400px'"
-          stack-label
           :dense="dense"
           :error="!isValidPwd"
-          bottom-slots
         >
           <template v-slot:error>
             <div class="text-red-8" v-if="password.length < 6">
@@ -62,6 +64,8 @@
         >
           비밀번호를 잊으셨나요?
         </div>
+
+        <!-- TODO: [디자인] 버튼 색상, 글씨 크기 -->
         <q-btn
           color="primary"
           label="SIGN IN"
@@ -119,7 +123,7 @@ export default {
       this.$store.commit('offAccountModal');
     },
     checkForm() {
-      return validateEmail(this.email) && validatePwd(this.password);
+      return (validateEmail(this.email) && validatePwd(this.password));
     },
     // async submitLoginForm() {
     //   if (!this.checkForm()) return;
