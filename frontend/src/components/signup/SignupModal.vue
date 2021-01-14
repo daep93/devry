@@ -10,20 +10,43 @@
           />
         </div>
       </div>
-      <div class="col-5">
-        <signup-input></signup-input>
+      <div class="col-5" style="height:100%">
+        <div class="row justify-end" style="height:15%">
+          <q-icon
+            :name="$i.ionClose"
+            class="q-ma-lg"
+            size="md"
+            @click="offModal"
+          ></q-icon>
+        </div>
+        <signup-input
+          @signupSuccess="modalState = 'success'"
+          v-if="modalState === 'input'"
+        ></signup-input>
+        <signup-success v-else-if="modalState === 'success'"></signup-success>
       </div>
     </div>
   </account-modal>
 </template>
 
 <script>
-import AccountModal from '@/components/common/AccountModal.vue';
-import SignupInput from '@/components/signup/SignupInput.vue';
+import AccountModal from '@/components/common/AccountModal';
+import SignupInput from '@/components/signup/SignupInput';
+import SignupSuccess from '@/components/signup/SignupSuccess';
 
 export default {
-  components: { AccountModal, SignupInput },
+  components: { AccountModal, SignupInput, SignupSuccess },
+  data() {
+    return {
+      modalState: 'login',
+    };
+  },
   computed: {},
+  methods: {
+    offModal() {
+      this.$store.commit('offAccountModal');
+    },
+  },
 };
 </script>
 

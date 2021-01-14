@@ -150,7 +150,8 @@ export default {
         // 에러 처리를 어떻게 할지 고민해봐야할 듯.
       } finally {
         this.$q.loading.hide();
-        this.offModal();
+        // this.offModal();
+        this.$emit('signupSuccess');
       }
     },
     offModal() {

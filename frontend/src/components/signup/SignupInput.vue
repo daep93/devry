@@ -1,20 +1,12 @@
 <template>
-  <div style="height:100%">
-    <div class="row justify-end" style="height:15%">
-      <q-icon
-        :name="$i.ionClose"
-        class="q-ma-lg"
-        size="md"
-        @click="offModal"
-      ></q-icon>
-    </div>
+  <div>
     <div class="row justify-start " style="height:10%">
       <p class="text-h4 text-weight-bolder">
         계정 생성
       </p>
     </div>
     <div class="row" style="height:55%">
-      <signup-form></signup-form>
+      <signup-form @signupSuccess="$emit('signupSuccess')"></signup-form>
     </div>
     <!-- 로그인으로 이동하기 -->
     <div class="row justify-center text-grey-6" style=" width:400px;">
@@ -48,9 +40,6 @@ export default {
     SignupForm,
   },
   methods: {
-    offModal() {
-      this.$store.commit('offAccountModal');
-    },
     moveToLogin() {
       this.$store.commit('setAccountModalType', 'login');
     },
