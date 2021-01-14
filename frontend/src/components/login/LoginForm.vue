@@ -132,6 +132,9 @@ export default {
           password: this.password,
         },
           console.log('1111'),
+          console.log(this.username),
+          console.log('비번: ', password),
+          console.log(this.password),
         );
       } catch (error) {
         console.log(error);
