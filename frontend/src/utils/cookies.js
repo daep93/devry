@@ -1,30 +1,29 @@
 function saveAuthToCookie(value) {
-  document.cookie = `til_auth=${value}`;
+  document.cookie = `login_token=${value}`;
 }
-
 function saveUserIdToCookie(value) {
-  document.cookie = `til_user_id=${value}`;
+  document.cookie = `login_id=${value}`;
 }
 function saveUserNicknameToCookie(value) {
-  document.cookie = `til_user_nickname=${value}`;
+  document.cookie = `login_nickname=${value}`;
 }
 
 function getAuthFromCookie() {
   return document.cookie.replace(
-    /(?:(?:^|.*;\s*)til_auth\s*=\s*([^;]*).*$)|^.*$/,
+    /(?:(?:^|.*;\s*)login_token\s*=\s*([^;]*).*$)|^.*$/,
     '$1',
   );
 }
 
 function getUserIdFromCookie() {
   return document.cookie.replace(
-    /(?:(?:^|.*;\s*)til_user_id\s*=\s*([^;]*).*$)|^.*$/,
+    /(?:(?:^|.*;\s*)login_id\s*=\s*([^;]*).*$)|^.*$/,
     '$1',
   );
 }
 function getUserNicknameFromCookie() {
   return document.cookie.replace(
-    /(?:(?:^|.*;\s*)til_user_nickname\s*=\s*([^;]*).*$)|^.*$/,
+    /(?:(?:^|.*;\s*)login_nickname\s*=\s*([^;]*).*$)|^.*$/,
     '$1',
   );
 }

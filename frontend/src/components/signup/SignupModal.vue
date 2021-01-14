@@ -24,19 +24,22 @@
             계정 생성
           </p>
         </div>
-        <div class="row" style="height:48%">
-          <!-- 회원가입 입력 form -->
-          <signup-form></signup-form>
-        </div>
-        <!-- Signup 버튼  -->
-        <div class="row" style="height:10%">
-          <q-btn
-            color="blue-12"
-            class="text-center"
-            style="width:400px;height:50px;border-radius:5px;font-size:16pt"
-            >회원가입</q-btn
-          >
-        </div>
+        <q-form @submit.prevent="" style="height:60%">
+          <div class="row" style="height:80%">
+            <!-- 회원가입 입력 form -->
+            <signup-form></signup-form>
+          </div>
+          <!-- Signup 버튼  -->
+          <div class="row" style="height:20%">
+            <q-btn
+              color="blue-12"
+              class="text-center"
+              style="width:400px;height:50px;border-radius:5px;font-size:16pt"
+              type="submit"
+              >회원가입</q-btn
+            >
+          </div>
+        </q-form>
         <!-- SNS로 가입하기 -->
         <div class="row justify-around " style=" width:400px">
           <q-btn size="16px" round color="blue-8">
