@@ -36,6 +36,27 @@ $ pip install -r requirements.txt
 $ django-admin startproject project_name [.]
 ```
 
+- Django 마이그레이션
+  - DB가 초기화되어있거나, 모델의 수정 등이 이루어진 경우 마이그레이션 작업이 필요합니다.
+  - 이 작업이 이루어지고 나면 app_name/migrations에서 0001.initial과 같은 파일이 생성되는 것을 알 수 있는데, 마이그레이션이 진행될때마다 파일이 생성됩니다.
+  - 이를 통해 모델의 변경 사항 등을 알 수 있습니다.
+
+```bash
+$ python manage.py makemigrations
+
+$ python manage.py migrate
+```
+
+- Django 서버 구동
+
+```bash
+$ python manage.py runserver
+```
+
+
+
+# 프로젝트를 만들고 난 후
+
 - Django app 생성
   - 어플리케이션을 새로 만드는 경우 다음의 명령어를 입력합니다.
 
@@ -50,11 +71,7 @@ $ python manage.py startapp app_name
 ```python
 # settings.py
 INSTALLED_APPS = [
-    'accounts',
-
-    'rest_framework',
-    'knox',
-    'django_rest_passwordreset',
+    'app_name',
 
     'django.contrib.admin',
     'django.contrib.auth',
