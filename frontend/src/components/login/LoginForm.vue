@@ -122,9 +122,6 @@ export default {
     offModal() {
       this.$store.commit('offAccountModal');
     },
-    checkForm() {
-      return (validateEmail(this.email) && validatePwd(this.password));
-    },
     // async submitLoginForm() {
     //   if (!this.checkForm()) return;
     //   try {
@@ -138,6 +135,10 @@ export default {
     },
     isValidPwd() {
       return this.password === '' || validatePwd(this.password);
+    },
+    checkForm() {
+      console.log(validateEmail(this.email))
+      return validateEmail(this.email) && validatePwd(this.password);
     },
   },
 }
