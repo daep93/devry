@@ -33,12 +33,12 @@
           <q-btn
             color="blue-12"
             class="text-center"
-            style="width:350px;height:50px;border-radius:5px;font-size:16pt"
+            style="width:400px;height:50px;border-radius:5px;font-size:16pt"
             >회원가입</q-btn
           >
         </div>
         <!-- SNS로 가입하기 -->
-        <div class="row justify-around " style=" width:350px">
+        <div class="row justify-around " style=" width:400px">
           <q-btn size="16px" round color="blue-8">
             <q-icon name="img:google.svg"></q-icon>
           </q-btn>
