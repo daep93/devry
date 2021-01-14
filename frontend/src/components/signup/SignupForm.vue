@@ -7,12 +7,17 @@
       stack-label
       label-slot
       :input-style="{ width: '350px' }"
+      bottom-slots
       hint="이메일을 입력해주세요"
       placeholder="ssafyPark@edu.ssafy.com"
+      :error="!isValidEmail"
     >
       <template v-slot:label>
         <h5 class="text-primary">이메일</h5>
         <br />
+      </template>
+      <template v-slot:error>
+        <div class="text-red-8">잘못된 이메일 양식입니다</div>
       </template>
     </q-input>
     <br />
@@ -23,13 +28,25 @@
       :clear-icon="$i.ionCloseOutline"
       stack-label
       label-slot
-      hint="8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요."
+      hint="6~12자 영문 대 소문자, 숫자를 사용하세요"
       placeholder="*************"
       type="password"
+      :error="!isValidPwd"
     >
       <template v-slot:label>
         <h5 class="text-primary">비밀번호</h5>
         <br />
+      </template>
+      <template v-slot:error>
+        <div class="text-red-8" v-if="password1.length < 8">
+          6자 이상의 비밀번호를 입력해주세요
+        </div>
+        <div class="text-red-8" v-else-if="password1.length > 16">
+          12자 이하의 비밀번호를 입력해주세요
+        </div>
+        <div class="text-red-8" v-else>
+          특수문자를 제외하고 입력해주세요
+        </div>
       </template>
     </q-input>
     <br />
@@ -41,8 +58,9 @@
       stack-label
       label-slot
       placeholder="*************"
-      hint="비밀번호를 다시 적어주세요"
       type="password"
+      :error="!isValidPwdConfirm"
+      error-message="다시 비밀번호를 확인해주세요"
     >
       <template v-slot:label>
         <h5 class="text-primary">비밀번호 확인</h5>
@@ -53,6 +71,7 @@
 </template>
 
 <script>
+import { validateEmail, validatePwd } from '@/utils/validation';
 export default {
   data() {
     return {
@@ -61,7 +80,17 @@ export default {
       password2: '',
     };
   },
-  methods: {},
+  computed: {
+    isValidEmail() {
+      return this.email === '' || validateEmail(this.email);
+    },
+    isValidPwd() {
+      return this.password1 === '' || validatePwd(this.password1);
+    },
+    isValidPwdConfirm() {
+      return this.password2 === '' || this.password1 === this.password2;
+    },
+  },
 };
 </script>
 

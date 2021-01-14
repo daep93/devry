@@ -33,7 +33,7 @@
           <q-btn
             color="blue-12"
             class="text-center"
-            style="width:350px;height:50px;border-radius:5px"
+            style="width:350px;height:50px;border-radius:5px;font-size:16pt"
             >회원가입</q-btn
           >
         </div>
@@ -67,20 +67,7 @@ export default {
       this.$store.commit('offAccountModal');
     },
   },
-  computed: {
-    // google() {
-    //   return ;
-    // },
-    // github() {
-    //   return require('@/assets/sns/github.svg');
-    // },
-    // facebook() {
-    //   return require('@/assets/sns/facebook.svg');
-    // },
-    // kakao() {
-    //   return require('@/assets/sns/kakao.svg');
-    // },
-  },
+  computed: {},
 };
 </script>
 
