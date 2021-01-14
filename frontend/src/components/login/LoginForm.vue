@@ -9,7 +9,7 @@
     </q-icon>
     <div class="title text-h6 text-weight-bold">Sign in</div>
     <div>
-      <q-form @submit.prevent="">
+      <q-form @submit.prevent="submitLoginForm">
         <q-input
           v-model="email"
           clearables
@@ -71,6 +71,7 @@
           label="SIGN IN"
           style="width:400px; height:50px; border-radius:5px;"
           :disabled="!checkForm"
+          type="submit"
         />
       </q-form>
 
@@ -105,6 +106,7 @@ import { validateEmail, validatePwd } from '@/utils/validation';
 export default {
   data() {
     return {
+      nickname: '',
       email: '',
       password: '',
       dense: false,
@@ -122,12 +124,22 @@ export default {
     offModal() {
       this.$store.commit('offAccountModal');
     },
-    // async submitLoginForm() {
-    //   if (!this.checkForm()) return;
-    //   try {
-    //     const response = await Login(data)
-    //   } catch (error) {}
-    // },
+    async submitLoginForm() {
+      try {
+        // this.$q.loading.show();
+        await this.$store.dispatch('LOGIN', {
+          email: this.email,
+          password: this.password,
+        },
+          console.log('1111'),
+        );
+      } catch (error) {
+        console.log(error);
+      }
+      // finally {
+      //   this.$q.loading.hide();
+      // }
+    },
   },
   computed: {
     isEmailValid() {
