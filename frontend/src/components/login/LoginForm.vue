@@ -55,27 +55,19 @@
         <span @click="signupModal" class="text-primary">회원가입</span>
       </div>
     </div>
-    <div class="q-pa-md row justify-center items-start">
-      <q-img
-        :src="require('@/assets/google.png')"
-        alt="google" 
-        style="width:62px; heigth:62px;"
-      />
-      <q-img
-        :src="require('@/assets/github.png')"
-        alt="google" 
-        style="width:62px; heigth:62px;"
-      />
-      <q-img
-        :src="require('@/assets/facebook.png')"
-        alt="google" 
-        style="width:62px; heigth:62px;"
-      />
-      <q-img
-        :src="require('@/assets/kakao.png')"
-        alt="google" 
-        style="width:62px; heigth:62px;"
-      />
+    <div class="row justify-around">
+      <q-btn size="18px" round color="white">
+        <q-icon name="img:google.svg" size="45px"></q-icon>
+      </q-btn>  
+      <q-btn size="18px" round color="white">
+        <q-icon name="img:github.svg" size="45px"></q-icon>
+      </q-btn>
+      <q-btn size="18px" round color="white">
+        <q-icon name="img:facebook.svg" size="45px"></q-icon>
+      </q-btn>
+      <q-btn size="18px" round color="white">
+        <q-icon name="img:kakao.svg" size="45px"></q-icon>
+      </q-btn>
     </div>
   </div>
 </template>
