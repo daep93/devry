@@ -5,7 +5,7 @@
       <div class="error-title text-h2 text-weight-bold">Ooooooo<br>ooooops!</div>
       <div class="error-detail-message text-weight-regular">죄송합니다. 페이지를 찾을 수 없습니다.</div>
       <q-btn
-        @click="goTomain"
+        @click="goToMain"
         color="primary"
         label="Back to Home"
         style="width:200px; height:50px;"
@@ -25,7 +25,7 @@
 <script>
 export default {
   methods: {
-    goTomain() {
+    goToMain() {
       this.$router.push({path: '/main'});
     }
   }
