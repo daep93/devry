@@ -144,7 +144,6 @@ export default {
           username: this.nickname,
           email: this.email,
           password: this.password1,
-          password_confirmation: this.password1,
         });
         this.$emit('signupSuccess');
       } catch (error) {
