@@ -10,10 +10,10 @@
     <div class="title text-h6 text-weight-bold">Sign in</div>
     <div>
       <form @submit="checkForm" method="post" novalidate="true">
-        <p v-if="errors.length">
+        <!-- <p v-if="errors.length">
           <b>[ 오류 ]</b>
           <li v-for="(error, idx) in errors" :key="idx">{{ error }}</li>
-        </p>
+        </p> -->
         <q-input
           class="input"
           v-model="email"
@@ -24,6 +24,10 @@
           stack-label
           :dense="dense"
         />
+        <div v-if="emailErrors.length" style="font-size:3px">
+          <span v-for="(error, idx) in emailErrors" :key="idx">{{ error }}</span>
+        </div>
+
         <q-input 
           class="input"
           v-model="password"
@@ -34,6 +38,10 @@
           stack-label
           :dense="dense"
         />
+        <div v-if="passwordErrors.length" style="font-size:3px">
+          <span v-for="(error, idx) in passwordErrors" :key="idx">{{ error }}</span>
+        </div>
+
         <div
           @click="fingPwdModal"
           class="password-info text-right"
@@ -47,9 +55,9 @@
           label="SIGN IN"
           style="width:400px; height:50px;"
           type="submit"
-          :disabled="password.length > 15 || password.length < 6"
         />
       </form>
+      <!-- :disabled="password.length > 15 || password.length < 6" -->
       <div class="no-account text-center" style="font-size:3px;">
         아직 계정이 없으신가요?
         <span @click="signupModal" class="text-primary">회원가입</span>
@@ -63,17 +71,17 @@
       />
       <q-img
         :src="require('@/assets/github.png')"
-        alt="google" 
+        alt="google"
         style="width:62px; heigth:62px;"
       />
       <q-img
         :src="require('@/assets/facebook.png')"
-        alt="google" 
+        alt="google"
         style="width:62px; heigth:62px;"
       />
       <q-img
         :src="require('@/assets/kakao.png')"
-        alt="google" 
+        alt="google"
         style="width:62px; heigth:62px;"
       />
     </div>
@@ -88,7 +96,9 @@ export default {
       email: '',
       password: '',
       dense: false,
-      errors: [],
+      // errors: [],
+      emailErrors: [],
+      passwordErrors: [],
     }
   },
   methods: {
@@ -107,25 +117,36 @@ export default {
       e.preventDefault();
       this.errors = [];
       if (!this.email) {
-        this.errors.push('이메일은 필수입니다.');
+        this.emailErrors.push('이메일은 필수입니다.');
+        // this.errors.push('이메일은 필수입니다.');
       } else if (!this.validEmail(this.email)) {
-        this.errors.push('이메일 형식을 다시 확인해주세요.');
+        this.emailErrors.push('이메일 형식을 다시 확인해주세요.');
+        // this.errors.push('이메일 형식을 다시 확인해주세요.');
       }
       if (!this.password) {
-        this.errors.push('비밀번호는 필수입니다.');
+        this.passwordErrors.push('비밀번호는 필수입니다.');
+        // this.errors.push('비밀번호는 필수입니다.');
       }
-      if (!this.errors.length) return true;
+      if (this.password.length < 6) {
+        this.passwordErrors.push('비밀번호는 6글자 이상입니다.');
+        // this.errors.push('비밀번호는 6글자 이상입니다.');
+      } else if (this.password.length > 15) {
+        this.passwordErrors.push('비밀번호는 15글자 이하입니다.');
+        // this.errors.push('비밀번호는 15글자 이하입니다.');
+      }
+      // if (!this.emailErrors.length || !this.passwordErrors.length) return true;
+      // if (!this.errors.length) return true;
     },
     validEmail(email) {
       var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return re.test(email);
     },
   },
-  computed: {
-    isEmailValid() {
-      return validateEmail(this.email);
-    },
-  },
+  // computed: {
+  //   isEmailValid() {
+  //     return validateEmail(this.email);
+  //   },
+  // },
 }
 </script>
 
