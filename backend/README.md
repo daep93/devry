@@ -11,11 +11,11 @@ $ python -m venv venv
   - 완료 후에는 (venv)와 같이 지정했던 가상환경의 이름이 나옴으로 가상환경이 구동되고 있다는 것을 알 수 있습니다.
 
 ```bash
-$ source venv/Scripts/activate
+$ source venv/Scripts/activate   //bash
 (venv)
 ```
 ```cmd
-activate venv
+> activate venv  //cmd
 ```
 
 # Django 서버 구동
