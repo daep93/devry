@@ -1,6 +1,7 @@
 # 가상환경 설정
 
 - 가상환경 생성
+  - cmd에서 backend 폴더로 접근한다. 
 
 ```bash
 $ python -m venv venv
@@ -13,8 +14,9 @@ $ python -m venv venv
 $ source venv/Scripts/activate
 (venv)
 ```
-
-
+```cmd
+activate venv
+```
 
 # Django 서버 구동
 
@@ -26,10 +28,12 @@ $ source venv/Scripts/activate
 $ python -m pip install --upgrade pip
 
 $ pip install -r requirements.txt
+$ pip install django-cors-headers
+$ pip install django-allauth
 ```
 
-- Django 프로젝트 생성
-  - 만약 다른 디렉터리에서 Django 프로젝트를 새로 생성하려는 경우 다음의 명령어를 입력해야 합니다.
+- Django 프로젝트 생성(선택 사항)
+  - 해당 branch를 통해 받은 프로젝트 대신 새롭게 다른 디렉터리에서 Django 프로젝트를 새로 생성하려는 경우 다음의 명령어를 입력해야 합니다.
   - `.`을 뒤에 붙이는 경우 현재 디렉터리에 `manage.py`를 생성합니다.
 
 ```bash
@@ -55,7 +59,7 @@ $ python manage.py runserver
 
 
 
-# 프로젝트를 만들고 난 후
+# 프로젝트를 만들고 난 후(해당 브랜치를 통해 서버를 받았다면 하지 않아도 됩니다.)
 
 - Django app 생성
   - 어플리케이션을 새로 만드는 경우 다음의 명령어를 입력합니다.
