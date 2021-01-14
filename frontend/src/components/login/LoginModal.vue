@@ -1,15 +1,18 @@
 <template>
   <account-modal>
     <div class="q-pa-md row">
-      <!-- 모달 이미지 -->
-      <div class="col-6 row justify-center" style="display: flex; align-items: center;">
-        <q-img 
-          :src="require('@/assets/login.png')" 
-          alt="login" 
+      <!-- 로그인 이미지 -->
+      <div
+        class="col-6 row justify-center"
+        style="display: flex; align-items: center;"
+      >
+        <q-img
+          :src="require('@/assets/login.png')"
+          alt="login"
           style="width:552px; heigth:680px; vertical-align:middle;"
         />
       </div>
-      <!-- 모달 컨텐츠 -->
+      <!-- 로그인 컨텐츠 -->
       <div class="col-6">
         <login-form></login-form>
       </div>

@@ -9,9 +9,8 @@
     </q-icon>
     <div class="title text-h6 text-weight-bold">Sign in</div>
     <div>
-      <form @submit="checkForm" method="post" novalidate="true">
+      <q-form @submit.prevent="">
         <q-input
-          class="input"
           v-model="email"
           type="email"
           label="e-mail"
@@ -20,25 +19,42 @@
           autocapitalize="none"
           stack-label
           :dense="dense"
-        />
-        <div v-if="emailErrors.length" style="font-size:3px">
-          <span v-for="(error, idx) in emailErrors" :key="idx">{{ error }}</span>
-        </div>
-
+          :error="!isEmailValid"
+          clearable
+          :clear-icon="$i.ionCloseOutline"
+          label-slot
+          bottom-slots
+        >
+          <template v-slot:error>
+            <div class="text-red-8">잘못된 이메일 양식입니다</div>
+          </template>
+        </q-input>
         <q-input
           class="input"
           v-model="password"
           type="password"
           label="password"
-          placeholder="비밀번호를 입력해주세요"
+          placeholder="6~12자 영문 대 소문자, 숫자를 사용하세요"
           style="width:400px'"
           stack-label
           :dense="dense"
-        />
-        <div v-if="passwordErrors.length" style="font-size:3px">
-          <span v-for="(error, idx) in passwordErrors" :key="idx">{{ error }}</span>
-        </div>
+          :error="!isValidPwd"
+          bottom-slots
+        >
+          <template v-slot:error>
+            <div class="text-red-8" v-if="password.length < 6">
+              6자 이상의 비밀번호를 입력해주세요
+            </div>
+            <div class="text-red-8" v-else-if="password.length > 12">
+              12자 이하의 비밀번호를 입력해주세요
+            </div>
+            <div class="text-red-8" v-else>
+              특수문자를 제외하고 입력해주세요
+            </div>
+          </template>
+        </q-input>
 
+        <!-- 비밀번호 찾기 이동 -->
         <div
           @click="fingPwdModal"
           class="password-info text-right"
@@ -47,19 +63,21 @@
           비밀번호를 잊으셨나요?
         </div>
         <q-btn
-          @click="goToMain"
           color="primary"
           label="SIGN IN"
-          style="width:400px; height:50px;"
-          type="submit"
+          style="width:400px; height:50px; border-radius:5px;"
+          :disabled="!checkForm"
         />
-      </form>
-      <!-- :disabled="password.length > 15 || password.length < 6" -->
+      </q-form>
+
+      <!-- 회원가입 이동 -->
       <div class="no-account text-center" style="font-size:3px;">
         아직 계정이 없으신가요?
         <span @click="signupModal" class="text-primary">회원가입</span>
       </div>
     </div>
+
+    <!-- SNS 로그인 -->
     <div class="row justify-around">
       <q-btn size="18px" round color="white">
         <q-icon name="img:google.svg" size="45px"></q-icon>
@@ -78,7 +96,7 @@
 </template>
 
 <script>
-// import { validateEmail } from '@/utils/validation';
+import { validateEmail, validatePwd } from '@/utils/validation';
 
 export default {
   data() {
@@ -86,9 +104,7 @@ export default {
       email: '',
       password: '',
       dense: false,
-      emailErrors: [],
-      passwordErrors: [],
-    }
+    };
   },
   methods: {
     signupModal() {
@@ -102,35 +118,24 @@ export default {
     offModal() {
       this.$store.commit('offAccountModal');
     },
-    checkForm(e) {
-      e.preventDefault();
-      if (!this.email) {
-        this.emailErrors.push('이메일은 필수입니다.');
-      } else if (!this.validEmail(this.email)) {
-        this.emailErrors.push('이메일 형식을 다시 확인해주세요.');
-      }
-      if (!this.password) {
-        this.passwordErrors.push('비밀번호는 필수입니다.');
-      }
-      if (this.password.length < 6) {
-        this.passwordErrors.push('비밀번호는 6글자 이상입니다.');
-      } else if (this.password.length > 15) {
-        this.passwordErrors.push('비밀번호는 15글자 이하입니다.');
-      }
-
-      // if (!this.emailErrors.length || !this.passwordErrors.length) return true;
-      // if (!this.errors.length) return true;
+    checkForm() {
+      return validateEmail(this.email) && validatePwd(this.password);
     },
-    validEmail(email) {
-      let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      return re.test(email);
+    // async submitLoginForm() {
+    //   if (!this.checkForm()) return;
+    //   try {
+    //     const response = await Login(data)
+    //   } catch (error) {}
+    // },
+  },
+  computed: {
+    isEmailValid() {
+      return this.email === '' || validateEmail(this.email);
+    },
+    isValidPwd() {
+      return this.password === '' || validatePwd(this.password);
     },
   },
-  // computed: {
-  //   isEmailValid() {
-  //     return validateEmail(this.email);
-  //   },
-  // },
 }
 </script>
 

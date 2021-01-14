@@ -5,6 +5,9 @@ import { Quasar, Loading, QSpinner, Dialog } from 'quasar';
 import * as iconSet from '@quasar/extras/ionicons-v5';
 Vue.prototype.$i = iconSet;
 
+import '@quasar/extras/material-icons/material-icons.css';
+import '@quasar/extras/ionicons-v4/ionicons-v4.css';
+
 Vue.use(Quasar, {
   config: {
     // Quasar Spinning 파트 참조
