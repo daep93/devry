@@ -38,7 +38,7 @@ export default {
   components: { AccountModal, SignupInput, SignupSuccess },
   data() {
     return {
-      modalState: 'login',
+      modalState: 'input',
     };
   },
   computed: {},

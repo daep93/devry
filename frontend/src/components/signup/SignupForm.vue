@@ -141,17 +141,18 @@ export default {
       try {
         this.$q.loading.show();
         await registerUser({
+          username: this.nickname,
           email: this.email,
           password: this.password1,
-          nickname: this.nickname,
+          password_confirmation: this.password1,
         });
+        this.$emit('signupSuccess');
       } catch (error) {
         console.log(error);
         // 에러 처리를 어떻게 할지 고민해봐야할 듯.
       } finally {
         this.$q.loading.hide();
         // this.offModal();
-        this.$emit('signupSuccess');
       }
     },
     offModal() {
