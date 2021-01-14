@@ -72,6 +72,7 @@
           style="width:400px; height:50px; border-radius:5px;"
           :disabled="!checkForm"
           type="submit"
+          @click="login"
         />
       </q-form>
 
@@ -102,11 +103,11 @@
 
 <script>
 import { validateEmail, validatePwd } from '@/utils/validation';
+// import axios from 'axios'
 
 export default {
   data() {
     return {
-      nickname: '',
       email: '',
       password: '',
       dense: false,
@@ -128,21 +129,34 @@ export default {
       try {
         // this.$q.loading.show();
         await this.$store.dispatch('LOGIN', {
-          email: this.email,
+          username: this.email,
           password: this.password,
         },
-          console.log('1111'),
+          console.log('로그인 성공'),
           console.log(this.username),
-          console.log('비번: ', password),
           console.log(this.password),
         );
       } catch (error) {
+        console.log('로그인 실패'),
         console.log(error);
       }
       // finally {
       //   this.$q.loading.hide();
       // }
     },
+    // login({email, password}) {
+    //   const username = this.email
+    //   axios.post('http://127.0.0.1:8000/api/login/', {username, password})
+    //     .then(res => {
+    //       console.log(res)
+    //       console.log('111')
+    //       console.log('확인')
+    //     })
+    //     .catch(error => {
+    //       console.log(error)
+    //       console.log('222')
+    //     })
+    // }
   },
   computed: {
     isEmailValid() {
