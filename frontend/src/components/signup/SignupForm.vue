@@ -98,6 +98,7 @@
         class="text-center"
         style="width:400px;height:50px;border-radius:5px;font-size:16pt"
         type="submit"
+        :disabled="!checkForm"
         >회원가입</q-btn
       >
     </div>
@@ -124,6 +125,14 @@ export default {
     },
     isValidPwdConfirm() {
       return this.password2 === '' || this.password1 === this.password2;
+    },
+    checkForm() {
+      return (
+        validateEmail(this.email) &&
+        validatePwd(this.password1) &&
+        this.password1 === this.password2 &&
+        this.nickname !== ''
+      );
     },
   },
 };
