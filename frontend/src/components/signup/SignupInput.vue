@@ -16,7 +16,13 @@
     <div class="row" style="height:55%">
       <signup-form></signup-form>
     </div>
-
+    <!-- 로그인으로 이동하기 -->
+    <div class="row justify-center text-grey-6" style=" width:400px;">
+      이미 계정이 있으신가요?&nbsp;&nbsp;
+      <a href="#" @click="moveToLogin" class="text-light-blue-13 "
+        >로그인하기</a
+      >
+    </div>
     <!-- SNS로 가입하기 -->
     <div class="row justify-around q-mt-md" style=" width:400px;">
       <q-btn size="16px" round color="blue-8">
@@ -44,6 +50,9 @@ export default {
   methods: {
     offModal() {
       this.$store.commit('offAccountModal');
+    },
+    moveToLogin() {
+      this.$store.commit('setAccountModalType', 'login');
     },
   },
 };
