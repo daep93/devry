@@ -1,5 +1,5 @@
 <template>
-  <div style="width:400px; height:665px; margin: 0 auto;">
+  <q-form @submit.prevent="submitForm" style="width:400px; height:665px; margin: 0 auto;">
     <q-icon
       :name="$i.ionCloseOutline"
       class="close-button"
@@ -63,15 +63,17 @@
       style="width:400px; height:50px;"
       type="submit"
     />
-  </div>
+  </q-form>
 </template>
 
 <script>
+import { changePwdUser } from '@/api/auth';
 import { validatePwd } from '@/utils/validation';
 export default {
   data() {
     return {
-      password: '1234567',
+      // password: '1234567',
+      // password: '',
       newPwd: '',
       confirmNewPwd: '',
       dense: false
@@ -96,7 +98,22 @@ export default {
     },
   },
   methods: {
-
+    async submitForm() {
+      try {
+        this.$q.loading.show();
+        await changePwdUser({
+          password: this.password,
+          new_password: this.newPwd,
+        });
+        alert('비밀번호 변경에 성공하였습니다!')
+      } catch (error) {
+        console.log(error);
+        console.log('error발생')
+        console.log(password)
+      } finally {
+        this.$q.loading.hide();
+      }
+    }
   }
 }
 </script>
