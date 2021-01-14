@@ -1,5 +1,5 @@
 <template>
-  <q-form @submit.prevent="">
+  <q-form @submit.prevent="submitForm">
     <div class="row">
       <!-- 회원가입 입력 form -->
       <div>
@@ -106,6 +106,7 @@
 </template>
 
 <script>
+import { registerUser } from '@/api/auth';
 import { validateEmail, validatePwd } from '@/utils/validation';
 export default {
   data() {
@@ -133,6 +134,27 @@ export default {
         this.password1 === this.password2 &&
         this.nickname !== ''
       );
+    },
+  },
+  methods: {
+    async submitForm() {
+      try {
+        this.$q.loading.show();
+        await registerUser({
+          email: this.email,
+          password: this.password1,
+          nickname: this.nickname,
+        });
+      } catch (error) {
+        console.log(error);
+        // 에러 처리를 어떻게 할지 고민해봐야할 듯.
+      } finally {
+        this.$q.loading.hide();
+        this.offModal();
+      }
+    },
+    offModal() {
+      this.$store.commit('offAccountModal');
     },
   },
 };
