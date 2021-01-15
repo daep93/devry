@@ -11,7 +11,7 @@
       </div>
       <!-- 모달 컨텐츠 -->
       <div class="col-6">
-        <find-pwd-form></find-pwd-form>
+        <find-pwd-input></find-pwd-input>
       </div>
     </div>
   </account-modal>
@@ -19,9 +19,11 @@
 
 <script>
 import AccountModal from '@/components/common/AccountModal';
-import FindPwdForm from './FindPwdForm.vue';
+import FindPwdInput from './FindPwdInput.vue';
+// import FindPwdForm from './FindPwdForm.vue';
+
 export default {
-  components: { AccountModal, FindPwdForm },
+  components: { AccountModal, FindPwdInput },
 };
 </script>
 

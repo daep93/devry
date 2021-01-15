@@ -1,6 +1,7 @@
 <template>
   <q-form @submit.prevent="submitForm" style="width:400px; height:665px; margin: 0 auto;">
     <q-icon
+      @click="offModal"
       :name="$i.ionCloseOutline"
       class="close-button"
       style="width:30px; height:30px; margin-left: 370px"
@@ -72,11 +73,12 @@ import { validatePwd } from '@/utils/validation';
 export default {
   data() {
     return {
-      // password: '1234567',
-      // password: '',
+      password: '12345678',
+      jwt: this.$route.query.jwt,
       newPwd: '',
       confirmNewPwd: '',
-      dense: false
+      dense: false,
+      login: false
     }
   },
   computed: {
@@ -98,21 +100,48 @@ export default {
     },
   },
   methods: {
+    signupModal() {
+      this.$store.commit('setAccountModalType', 'signup');
+      this.$store.commit('onAccountModal');
+    },
+    fingPwdModal() {
+      this.$store.commit('setAccountModalType', 'findPwd');
+      this.$store.commit('onAccountModal');
+    },
+    offModal() {
+      this.$store.commit('offAccountModal');
+    },
+    setToken: function () {
+      const token = localStorage.getItem('jwt')
+      const config = {
+        headers: {
+          Authorization: `JWT ${token}`
+        }
+      }
+      return config
+    },
     async submitForm() {
+      const config = this.setToken()
       try {
-        this.$q.loading.show();
-        await changePwdUser({
-          password: this.password,
-          new_password: this.newPwd,
-        });
+        // await changePwdUser({
+        //   password: this.newPwd,
+        // });
+        console.log(this.password)
+        this.password = this.newPwd
+        console.log(this.password)
         alert('비밀번호 변경에 성공하였습니다!')
       } catch (error) {
         console.log(error);
         console.log('error발생')
-        console.log(password)
-      } finally {
-        this.$q.loading.hide();
+        // console.log(old_password)
       }
+    }
+  },
+  created() {
+    // 로그인 되어있는 상태인지 확인
+    const token = localStorage.getItem('jwt')
+    if (token) {
+      this.login = true
     }
   }
 }
