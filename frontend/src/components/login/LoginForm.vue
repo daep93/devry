@@ -1,20 +1,15 @@
 <template>
   <div style="width:400px; height:665px; margin: 0 auto;">
-    <q-icon
-      @click="offModal"
-      :name="$i.ionCloseOutline"
-      class="close-button"
-      style="width:30px; height:30px; margin-left: 370px"
-    >
     </q-icon>
-    <div class="title text-h6 text-weight-bold">Sign in</div>
+    <div class="title text-h5 text-weight-bold">Login</div>
     <div>
       <q-form @submit.prevent="submitLoginForm">
         <q-input
           v-model="email"
-          clearables
+          clearable
           :clear-icon="$i.ionCloseOutline"
           stack-label
+          label-slot
           placeholder="이메일 주소를 입력해주세요"
           type="email"
           label="e-mail"
@@ -23,13 +18,22 @@
           :dense="dense"
           :error="!isEmailValid"
         >
-        <!-- TODO: [디자인] 타이틀 lable 없음 (글씨 크기 다름) -->
+          <template v-slot:label>
+            <span
+              class="text-h6"
+              :class="isEmailValid ? 'text-primary' : 'text-red'"
+              >Email</span
+            >
+            <br />
+            <br />
+          </template>
           <template v-slot:error>
             <div class="text-red-8">잘못된 이메일 양식입니다</div>
           </template>
         </q-input>
 
-        <!-- TODO: [로직] X 아이콘 -->
+        <br />
+
         <q-input
           v-model="password"
           clearable
@@ -43,6 +47,16 @@
           :dense="dense"
           :error="!isValidPwd"
         >
+
+          <template v-slot:label>
+            <span
+              class="text-h6"
+              :class="isValidPwd ? 'text-primary' : 'text-red'"
+              >Password</span
+            >
+            <br />
+            <br />
+          </template>
           <template v-slot:error>
             <div class="text-red-8" v-if="password.length < 6">
               6자 이상의 비밀번호를 입력해주세요
@@ -65,7 +79,6 @@
           비밀번호를 잊으셨나요?
         </div>
 
-        <!-- TODO: [디자인] 버튼 색상, 글씨 크기 -->
         <q-btn
           color="primary"
           label="SIGN IN"
@@ -77,13 +90,28 @@
       </q-form>
 
       <!-- 회원가입 이동 -->
-      <div class="no-account text-center" style="font-size:3px;">
+      <div class="no-account text-center text-grey-6" style="font-size:3px;">
         아직 계정이 없으신가요?
         <span @click="signupModal" class="text-primary">회원가입</span>
       </div>
     </div>
 
     <!-- SNS 로그인 -->
+    <div class="row justify-around q-mt-md" style=" width:400px;">
+      <q-btn size="16px" round color="grey-2">
+        <q-icon name="img:google.svg"></q-icon>
+      </q-btn>
+      <q-btn size="16px" round color="black">
+        <q-icon name="img:github.svg"></q-icon>
+      </q-btn>
+      <q-btn size="16px" round style="background-color:#1877F2">
+        <q-icon name="img:facebook.svg"></q-icon>
+      </q-btn>
+      <q-btn size="16px" round color="yellow">
+        <q-icon name="img:kakao.svg" size="45px"></q-icon>
+      </q-btn>
+    </div>
+<!-- 
     <div class="row justify-around">
       <q-btn size="18px" round color="white">
         <q-icon name="img:google.svg" size="45px"></q-icon>
@@ -97,7 +125,7 @@
       <q-btn size="18px" round color="white">
         <q-icon name="img:kakao.svg" size="45px"></q-icon>
       </q-btn>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -127,7 +155,7 @@ export default {
     },
     async submitLoginForm() {
       try {
-        // this.$q.loading.show();
+        this.$q.loading.show();
         await this.$store.dispatch('LOGIN', {
           username: this.email,
           password: this.password,
@@ -140,23 +168,10 @@ export default {
         console.log('로그인 실패'),
         console.log(error);
       }
-      // finally {
-      //   this.$q.loading.hide();
-      // }
+      finally {
+        this.$q.loading.hide();
+      }
     },
-    // login({email, password}) {
-    //   const username = this.email
-    //   axios.post('http://127.0.0.1:8000/api/login/', {username, password})
-    //     .then(res => {
-    //       console.log(res)
-    //       console.log('111')
-    //       console.log('확인')
-    //     })
-    //     .catch(error => {
-    //       console.log(error)
-    //       console.log('222')
-    //     })
-    // }
   },
   computed: {
     isEmailValid() {
