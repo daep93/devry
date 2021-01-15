@@ -1,18 +1,27 @@
 <template>
   <account-modal>
-    <div class="row">
+    <div class="q-pa-md row">
       <!-- 모달 이미지 -->
-      <div class="col-6">Login img</div>
+      <div class="col-6 row justify-center" style="display: flex; align-items: center;">
+        <q-img 
+          :src="require('@/assets/login.png')" 
+          alt="login" 
+          style="width:552px; heigth:680px; vertical-align:middle;"
+        />
+      </div>
       <!-- 모달 컨텐츠 -->
-      <div class="col-6">Login contents</div>
+      <div class="col-6">
+        <login-form></login-form>
+      </div>
     </div>
   </account-modal>
 </template>
 
 <script>
 import AccountModal from '@/components/common/AccountModal';
+import LoginForm from './LoginForm.vue';
 export default {
-  components: { AccountModal },
+  components: { AccountModal, LoginForm }
 };
 </script>
 
