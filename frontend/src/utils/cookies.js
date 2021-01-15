@@ -1,3 +1,14 @@
+// function saveAuthToCookie(value) {
+//   document.cookie = `til_auth=${value}`;
+// }
+
+// function saveUserIdToCookie(value) {
+//   document.cookie = `til_user_id=${value}`;
+// }
+// function saveUserNicknameToCookie(value) {
+//   document.cookie = `til_user_nickname=${value}`;
+// }
+
 function saveAuthToCookie(value) {
   document.cookie = `login_token=${value}`;
 }
@@ -7,6 +18,7 @@ function saveUserIdToCookie(value) {
 function saveUserNicknameToCookie(value) {
   document.cookie = `login_nickname=${value}`;
 }
+
 
 function getAuthFromCookie() {
   return document.cookie.replace(

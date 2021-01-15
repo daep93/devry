@@ -60,12 +60,14 @@ export default new Vuex.Store({
       const { data } = await loginUser(userData);
       // store에 저장
       commit('setToken', data.token);
-      commit('setUserid', data.user.username);
-      commit('setUsername', data.user.nickname);
+      commit('setUserid', data.user.email);
+      // commit('setUserid', data.user.username);
+      // commit('setUsername', data.user.nickname);
 
       // 쿠키에 저장
       saveAuthToCookie(data.token);
-      saveUserIdToCookie(data.user.username);
+      saveUserIdToCookie(data.user.email);
+      // saveUserIdToCookie(data.user.username);
       saveUserNicknameToCookie(data.user.nickname);
       return data;
     },
