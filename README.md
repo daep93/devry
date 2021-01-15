@@ -73,7 +73,7 @@
 - 기본 화면: 
   - 모달 창을 통해 로그인 페이지 연결
 
-![image-20210115130222122](README.assets/image-20210115130222122.png)
+![](imgForREADME/1. Login.png)
 
 
 
@@ -83,27 +83,27 @@
   - 각 입력칸 오른쪽에 X 버튼을 배치하여, 한 번에 입력값을 삭제할 수 있게 구현
   - 옳은 입력값이 들어올 경우, 라벨 색을 파란색으로 변경하여 시각적으로 확인할 수 있게 함
 
-![image-20210115125840929](README.assets/image-20210115125840929.png)
+![](imgForREADME/2. 로그인 에러.png)
 
-![image-20210115130052824](README.assets/image-20210115130052824.png)
+![](imgForREADME/2. 로그인 에러2.png)
 
 
 
 - 로그인 버튼 활성화
   - 이메일 형식 입력 및 비밀번화 입력 기존 충족 시 로그인 버튼 활성화
 
-![image-20210115130339647](README.assets/image-20210115130339647.png)
+![](imgForREADME/3. 로그인 버튼 활성화.png)
 
 
 
 - 회원가입 페이지 바로 이동
   - 우측 하단의 '회원가입' 글씨 클릭 시 회원가입 페이지로 이동
 
-![image-20210115130605593](README.assets/image-20210115130605593.png)
+![](imgForREADME/4. 회원가입 이동.png)
 
 회원가입 페이지로 이동한 모습
 
-![image-20210115130813770](README.assets/image-20210115130813770.png)
+![](imgForREADME/5. signup.png)
 
 
 ### Signup
@@ -128,6 +128,5 @@
 ![success](imgForREADME/signupSuccess.PNG)
 
 
-
-
 ## 👀 페이지 소개
+
