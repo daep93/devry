@@ -106,9 +106,26 @@
 ![image-20210115130813770](README.assets/image-20210115130813770.png)
 
 
+### Signup
+
+> 회원가입 페이지 제작
+
+1. 가입 필수 항목 체크
+
+  - 모달 창을 통해 회원가입 페이지 연결
+  - 가입 필수 항목이 채워지지 않으면 회원가입 버튼이 비활성화 유지
+![main](imgForREADME/signupMain.PNG)
+![validationSuccess](imgForREADME/signupActive.PNG)
+
+2. 항목 양식 체크
+  - 항목에 따른 적절한 양식을 넣지 않으면 오류 메세지 출력
+![validationFail](imgForREADME/signupValidation.PNG)
 
 
 
+3. 로그인 화면으로 이동하기
+4. 회원가입 성공 페이지
+![success](imgForREADME/signupSuccess.PNG)
 
 
 
