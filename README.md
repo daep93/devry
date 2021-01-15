@@ -63,7 +63,7 @@
 ### Backend
 
 ## ⭐️ 주요 기능
-
+## 👀 페이지 소개
 ### Login
 
 > 로그인 페이지 커스터마이징
@@ -128,5 +128,5 @@
 ![success](imgForREADME/signupSuccess.PNG)
 
 
-## 👀 페이지 소개
+
 
