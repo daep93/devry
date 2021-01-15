@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-
+import { loginUser } from '@/api/auth';
 import {
   saveAuthToCookie,
   saveUserIdToCookie,
@@ -13,11 +13,11 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    accountModal: false,
-    accountModalType: 'login',
     id: getUserIdFromCookie() || '',
     token: getAuthFromCookie() || '',
     nickname: getUserNicknameFromCookie() || '',
+    accountModal: false,
+    accountModalType: 'login',
   },
   getters: {
     isLogined(state) {
@@ -34,11 +34,14 @@ export default new Vuex.Store({
     onAccountModal(state) {
       state.accountModal = true;
     },
-    offAccounModal(state) {
+    offAccountModal(state) {
       state.accountModal = false;
     },
     setAccountModalType(state, type) {
       state.accountModalType = type;
+    },
+    setUserid(state, id) {
+      state.id = id;
     },
     setUsername(state, nickname) {
       state.nickname = nickname;
@@ -48,7 +51,12 @@ export default new Vuex.Store({
     },
     setPassword(state, password) {
       state.password = password;
-    }
+    },
+    clearUserInfo(state) {
+      state.id = '';
+      state.nickname = '';
+      state.token = '';
+    },
   },
   actions: {
     async CHANGEPWD({ commit }, userData) {
@@ -66,7 +74,19 @@ export default new Vuex.Store({
       saveUserNicknameToCookie(data.user.nickname);
       return data;
     },
+    async LOGIN({ commit }, userData) {
+      const { data } = await loginUser(userData);
+      // store에 저장
+      commit('setToken', data.token);
+      commit('setUserid', data.user.username);
+      commit('setUsername', data.user.nickname);
 
+      // 쿠키에 저장
+      saveAuthToCookie(data.token);
+      saveUserIdToCookie(data.user.username);
+      saveUserNicknameToCookie(data.user.nickname);
+      return data;
+    },
   },
   modules: {},
 });

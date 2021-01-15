@@ -12,4 +12,4 @@ function changePwdUser(userData) {
   return instance.put('change_password/', userData);
 }
 
-export { registerUser, loginUser, checkUser, changePwdUser }
+export { registerUser, loginUser, checkUser, changePwdUser };

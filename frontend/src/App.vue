@@ -23,9 +23,6 @@ export default {
 </script>
 
 <style>
-body {
-  font-family: 'Spoqa Han Sans', 'Sans-serif';
-}
 a {
   text-decoration: none;
 }
