@@ -1,12 +1,9 @@
 <template>
-  <q-form @submit.prevent="submitForm" style="width:400px; height:665px; margin: 0 auto;">
-    <q-icon
-      @click="offModal"
-      :name="$i.ionCloseOutline"
-      class="close-button"
-      style="width:30px; height:30px; margin-left: 370px"
-    >
-    </q-icon>
+  <q-form
+    @submit.prevent="submitForm"
+    class="q-my-none q-mx-auto"
+    style="width:400px;"
+  >
     <div class="title text-h6 text-weight-bold">Forgot password</div>
     <q-input
       class="input"
@@ -44,42 +41,37 @@
 </template>
 
 <script>
-import { checkUser } from '@/api/auth';
+// import { checkUser } from '@/api/auth';
 import { validateEmail } from '@/utils/validation';
 export default {
   data() {
     return {
       email: '',
       dense: false,
-    }
+    };
   },
   computed: {
     isValidEmail() {
       return this.email === '' || validateEmail(this.email);
     },
     checkForm() {
-      return (
-        validateEmail(this.email)
-      );
+      return validateEmail(this.email);
     },
   },
   methods: {
-    offModal() {
-      this.$store.commit('offAccountModal');
-    },
     async submitForm() {
       try {
         // await checkUser({
         //   email: this.email,
         // });
-        alert('이메일을 보냈습니다. 비밀번호 변경을 진행해주세요')
-        // this.$emit('findPwd');
+        alert('계정인증에 성공했습니다. 비밀번호 변경을 진행해주세요');
+        this.$emit('authPwdSuccess');
       } catch (error) {
-        alert('에러가 발생했습니다.')
+        alert('에러가 발생했습니다.');
         console.log(error);
-        console.log('error발생')
+        console.log('error발생');
       }
-    }
+    },
   },
   created() {
     // 로그인 되어있는 상태인지 확인
@@ -87,8 +79,8 @@ export default {
     // if (token) {
     //   this.login = true
     // }
-  }
-}
+  },
+};
 </script>
 
 <style scoped>
@@ -108,5 +100,4 @@ export default {
 .save-button {
   margin-top: 50px;
 }
-
 </style>

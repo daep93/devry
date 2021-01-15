@@ -1,12 +1,9 @@
 <template>
-  <q-form @submit.prevent="submitForm" style="width:400px; height:665px; margin: 0 auto;">
-    <q-icon
-      @click="offModal"
-      :name="$i.ionCloseOutline"
-      class="close-button"
-      style="width:30px; height:30px; margin-left: 370px"
-    >
-    </q-icon>
+  <q-form
+    @submit.prevent="submitForm"
+    class="q-my-none q-mx-auto"
+    style="width:400px;"
+  >
     <div class="title text-h6 text-weight-bold">Create new password</div>
     <q-input
       class="input"
@@ -68,7 +65,7 @@
 </template>
 
 <script>
-import { changePwdUser } from '@/api/auth';
+// import { changePwdUser } from '@/api/auth';
 import { validatePwd } from '@/utils/validation';
 export default {
   data() {
@@ -78,15 +75,15 @@ export default {
       newPwd: '',
       confirmNewPwd: '',
       dense: false,
-      login: false
-    }
+      login: false,
+    };
   },
   computed: {
     isValidPwd() {
       return (
         (this.newPwd === '' || validatePwd(this.newPwd)) &&
         this.newPwd !== this.password
-      );  
+      );
     },
     isValidPwdConfirm() {
       return this.confirmNewPwd === '' || this.newPwd === this.confirmNewPwd;
@@ -108,43 +105,41 @@ export default {
       this.$store.commit('setAccountModalType', 'findPwd');
       this.$store.commit('onAccountModal');
     },
-    offModal() {
-      this.$store.commit('offAccountModal');
-    },
-    setToken: function () {
-      const token = localStorage.getItem('jwt')
+    setToken: function() {
+      const token = localStorage.getItem('jwt');
       const config = {
         headers: {
-          Authorization: `JWT ${token}`
-        }
-      }
-      return config
+          Authorization: `JWT ${token}`,
+        },
+      };
+      return config;
     },
     async submitForm() {
-      const config = this.setToken()
+      // const config = this.setToken();
       try {
         // await changePwdUser({
         //   password: this.newPwd,
         // });
-        console.log(this.password)
-        this.password = this.newPwd
-        console.log(this.password)
-        alert('비밀번호 변경에 성공하였습니다!')
+        console.log(this.password);
+        this.password = this.newPwd;
+        console.log(this.password);
+        alert('비밀번호 변경에 성공하였습니다!');
+        // this.$emit('resetPwdSuccess');
       } catch (error) {
         console.log(error);
-        console.log('error발생')
+        console.log('error발생');
         // console.log(old_password)
       }
-    }
+    },
   },
   created() {
     // 로그인 되어있는 상태인지 확인
-    const token = localStorage.getItem('jwt')
+    const token = localStorage.getItem('jwt');
     if (token) {
-      this.login = true
+      this.login = true;
     }
-  }
-}
+  },
+};
 </script>
 
 <style scoped>
@@ -164,5 +159,4 @@ export default {
 .save-button {
   margin-top: 50px;
 }
-
 </style>
