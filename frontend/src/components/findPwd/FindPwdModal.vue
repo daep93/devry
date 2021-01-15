@@ -26,7 +26,11 @@
           v-if="modalState === 'auth'"
           @authPwdSuccess="modalState = 'reset'"
         ></find-pwd-auth>
-        <find-pwd-reset v-else-if="modalState === 'reset'"></find-pwd-reset>
+        <find-pwd-reset
+          v-else-if="modalState === 'reset'"
+          @resetPwdSuccess="modalState = 'success'"
+        ></find-pwd-reset>
+        <find-pwd-success v-else></find-pwd-success>
       </div>
     </div>
   </account-modal>
@@ -35,11 +39,12 @@
 <script>
 import AccountModal from '@/components/common/AccountModal';
 import FindPwdAuth from '@/components/findPwd/FindPwdAuth';
-import FindPwdReset from '@/components/findPwd/FindPwdReset.vue';
+import FindPwdReset from '@/components/findPwd/FindPwdReset';
+import FindPwdSuccess from '@/components/findPwd/FindPwdSuccess';
 // import FindPwdForm from './FindPwdForm.vue';
 
 export default {
-  components: { AccountModal, FindPwdAuth, FindPwdReset },
+  components: { AccountModal, FindPwdAuth, FindPwdReset, FindPwdSuccess },
   data() {
     return {
       modalState: 'auth',

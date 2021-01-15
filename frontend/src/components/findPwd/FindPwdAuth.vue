@@ -1,12 +1,10 @@
 <template>
-  <q-form
-    @submit.prevent="submitForm"
-    class="q-my-none q-mx-auto"
-    style="width:400px;"
-  >
-    <div class="title text-h6 text-weight-bold">Forgot password</div>
-    <div class="row" style="width:400px">
-      <div class="col-8">
+  <div class="row items-center" style="width:400px; height:60%">
+    <q-form @submit.prevent="submitForm" class="q-my-none q-mx-auto">
+      <div class="text-h5 text-weight-bold">Forgot password</div>
+      <br />
+
+      <div class="row" style="width:400px">
         <q-input
           class="input"
           v-model="email"
@@ -14,13 +12,18 @@
           label="email"
           label-slot
           placeholder="이메일을 입력해주세요"
-          style="width:250px;"
+          style="width:350px;"
           stack-label
           :dense="dense"
           :error="!isValidEmail"
         >
           <template v-slot:label>
-            <h7>email</h7>
+            <span
+              class="text-h6"
+              :class="isValidEmail ? 'text-primary' : 'text-red'"
+              >이메일</span
+            >
+            <br />
             <br />
           </template>
           <template v-slot:error>
@@ -29,35 +32,35 @@
             </div>
           </template>
         </q-input>
-      </div>
-      <div class="col-1"></div>
-      <div class="col-3">
         <q-input
           v-model="nickname"
           clearable
+          placeholder="별명을 입력해주세요"
           :clear-icon="$i.ionCloseOutline"
+          style="width:350px;"
           stack-label
           label-slot
           bottom-slots
         >
           <template v-slot:label>
-            <h7>별명</h7>
+            <span class="text-h6 text-primary">별명</span>
+            <br />
             <br />
           </template>
         </q-input>
       </div>
-    </div>
-    <q-btn
-      @click="moveToChangePwd"
-      :disabled="!checkForm"
-      class="save-button"
-      color="primary"
-      label="SEND"
-      style="width:400px; height:50px;"
-      type="submit"
-    />
-    <!-- @findPwd="emit('findPwd')" -->
-  </q-form>
+      <br />
+      <q-btn
+        @click="moveToChangePwd"
+        :disabled="!checkForm"
+        color="primary"
+        label="SEND"
+        style="width:350px; height:50px;"
+        type="submit"
+      />
+      <!-- @findPwd="emit('findPwd')" -->
+    </q-form>
+  </div>
 </template>
 
 <script>
@@ -67,6 +70,7 @@ export default {
   data() {
     return {
       email: '',
+      nickname: '',
       dense: false,
     };
   },
