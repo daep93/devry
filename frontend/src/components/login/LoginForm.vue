@@ -1,6 +1,5 @@
 <template>
   <div style="width:400px; height:665px; margin: 0 auto;">
-    </q-icon>
     <div class="title text-h5 text-weight-bold">Login</div>
     <div>
       <q-form @submit.prevent="submitLoginForm">
