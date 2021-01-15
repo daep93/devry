@@ -131,9 +131,7 @@
 - 어떤 에러가 발생했는지 구체적으로 (404) 사용자에게 표시
 - 메인 페이지 이동 가능
 
-
-
-![5](README.assets/5.PNG)
+![5](imgForREADME/5.PNG)
 
 ### 
 
@@ -145,10 +143,10 @@
 - 비밀번호를 변경할 경우, 기존 번호와 다른지 그리고 자리수 일치여부 및 특수문자 포함여부를 검사한다.
 - 조건에 맞을 경우 버튼이 활성화된다.
 
-![1](README.assets/1.PNG)
+![1](imgForREADME/1.PNG)
 
-![2](README.assets/2.PNG)
+![2](imgForREADME/2.PNG)
 
-![3](README.assets/3.PNG)
+![3](imgForREADME/3.PNG)
 
 ![4](2학기/1주차 깃랩(팀)/sub-pjt1/README.assets/4.PNG)
