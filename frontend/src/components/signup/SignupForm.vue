@@ -13,11 +13,16 @@
               label-slot
               :input-style="{ width: '180px' }"
               bottom-slots
-              placeholder="ssafyPark@edu.ssafy.com"
+              placeholder="이메일 주소를 입력해주세요"
               :error="!isValidEmail"
             >
               <template v-slot:label>
-                <h5 class="text-primary">이메일</h5>
+                <span
+                  class="text-h6"
+                  :class="isValidEmail ? 'text-primary' : 'text-red'"
+                  >이메일</span
+                >
+                <br />
                 <br />
               </template>
               <template v-slot:error>
@@ -37,7 +42,8 @@
               bottom-slots
             >
               <template v-slot:label>
-                <h5 class="text-primary">별명</h5>
+                <span class="text-h6 text-primary">별명</span>
+                <br />
                 <br />
               </template>
             </q-input>
@@ -56,7 +62,12 @@
           :error="!isValidPwd"
         >
           <template v-slot:label>
-            <h5 class="text-primary">비밀번호</h5>
+            <span
+              class="text-h6"
+              :class="isValidPwd ? 'text-primary' : 'text-red'"
+              >비밀번호</span
+            >
+            <br />
             <br />
           </template>
           <template v-slot:error>
@@ -85,7 +96,13 @@
           error-message="다시 비밀번호를 확인해주세요"
         >
           <template v-slot:label>
-            <h5 class="text-primary">비밀번호 확인</h5>
+            <span
+              class="text-h6"
+              :class="isValidPwdConfirm ? 'text-primary' : 'text-red'"
+            >
+              비밀번호 확인
+            </span>
+            <br />
             <br />
           </template>
         </q-input>

@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="row justify-start " style="height:10%">
-      <p class="text-h4 text-weight-bolder">
-        계정 생성
+      <p class="text-h5 text-weight-bolder">
+        Signup
       </p>
     </div>
     <div class="row" style="height:55%">
@@ -17,7 +17,7 @@
     </div>
     <!-- SNS로 가입하기 -->
     <div class="row justify-around q-mt-md" style=" width:400px;">
-      <q-btn size="16px" round color="blue-8">
+      <q-btn size="16px" round color="grey-2">
         <q-icon name="img:google.svg"></q-icon>
       </q-btn>
       <q-btn size="16px" round color="black">
