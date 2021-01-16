@@ -113,11 +113,11 @@
       <q-btn
         color="blue-12"
         class="text-center"
-        style="width:400px;height:50px;border-radius:5px;font-size:16pt"
+        style="width:400px;height:50px;border-radius:5px;"
         type="submit"
         :disabled="!checkForm"
-        >회원가입</q-btn
-      >
+        label="SIGN UP"
+      ></q-btn>
     </div>
   </q-form>
 </template>

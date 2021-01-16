@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <div style="height:85%">
     <div class="row justify-start " style="height:10%">
       <p class="text-h5 text-weight-bolder">
         Signup
       </p>
     </div>
-    <div class="row" style="height:55%">
+    <div class="row" style="height:70%">
       <signup-form @signupSuccess="$emit('signupSuccess')"></signup-form>
     </div>
     <!-- 로그인 이동 -->

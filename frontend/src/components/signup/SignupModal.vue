@@ -1,6 +1,6 @@
 <template>
   <account-modal>
-    <div class="row" style="height:100%">
+    <div class="q-pa-md row" style="height:100%">
       <!-- 회원가입 이미지 -->
       <div class="col-7 ">
         <div class="row justify-center items-center" style="height:100%">

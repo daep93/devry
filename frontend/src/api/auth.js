@@ -3,7 +3,7 @@ function registerUser(userData) {
   return instance.post('register/', userData);
 }
 function loginUser(userData) {
-  return instance.post('login', userData);
+  return instance.post('login/', userData);
 }
 function checkUser(userData) {
   return instance.post('password_reset/', userData);
