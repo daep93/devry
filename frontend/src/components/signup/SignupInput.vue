@@ -8,11 +8,14 @@
     <div class="row" style="height:55%">
       <signup-form @signupSuccess="$emit('signupSuccess')"></signup-form>
     </div>
-    <!-- 로그인으로 이동하기 -->
+    <!-- 로그인 이동 -->
     <div class="row justify-center text-grey-6" style=" width:400px;">
-      이미 계정이 있으신가요?&nbsp;&nbsp;
-      <a href="#" @click="moveToLogin" class="text-light-blue-13 "
-        >로그인하기</a
+      <span>이미 계정이 있으신가요?</span>
+      <span
+        @click="moveToLogin"
+        class="text-light-blue-13 q-ml-sm"
+        style="cursor:pointer"
+        >로그인하기</span
       >
     </div>
     <!-- SNS로 가입하기 -->

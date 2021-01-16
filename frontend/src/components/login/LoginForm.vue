@@ -1,8 +1,7 @@
 <template>
-  <div style="width:400px; height:665px; margin: 0 auto;">
-    <div class="title text-h5 text-weight-bold">Login</div>
-    <div>
-      <q-form @submit.prevent="submitLoginForm">
+  <q-form @submit.prevent="submitForm">
+    <div class="row">
+      <div>
         <q-input
           v-model="email"
           clearable
@@ -12,10 +11,10 @@
           placeholder="이메일 주소를 입력해주세요"
           type="email"
           label="e-mail"
-          style="width:400px;"
           autocapitalize="none"
           :dense="dense"
           :error="!isEmailValid"
+          :input-style="{ width: '400px' }"
         >
           <template v-slot:label>
             <span
@@ -32,6 +31,7 @@
         </q-input>
 
         <br />
+        <br />
 
         <q-input
           v-model="password"
@@ -42,11 +42,10 @@
           placeholder="6~12자 영문 대 소문자, 숫자를 사용하세요"
           type="password"
           label="password"
-          style="width:400px'"
           :dense="dense"
           :error="!isValidPwd"
+          :input-style="{ width: '400px' }"
         >
-
           <template v-slot:label>
             <span
               class="text-h6"
@@ -68,64 +67,29 @@
             </div>
           </template>
         </q-input>
-
-        <!-- 비밀번호 찾기 이동 -->
-        <div
-          @click="fingPwdModal"
-          class="password-info text-right"
-          style="font-size:3px"
-        >
-          비밀번호를 잊으셨나요?
-        </div>
-
-        <q-btn
-          color="primary"
-          label="SIGN IN"
-          style="width:400px; height:50px; border-radius:5px;"
-          :disabled="!checkForm"
-          type="submit"
-          @click="login"
-        />
-      </q-form>
-
-      <!-- 회원가입 이동 -->
-      <div class="no-account text-center text-grey-6" style="font-size:3px;">
-        아직 계정이 없으신가요?
-        <span @click="signupModal" class="text-primary">회원가입</span>
       </div>
     </div>
-
-    <!-- SNS 로그인 -->
-    <div class="row justify-around q-mt-md" style=" width:400px;">
-      <q-btn size="16px" round color="grey-2">
-        <q-icon name="img:google.svg"></q-icon>
-      </q-btn>
-      <q-btn size="16px" round color="black">
-        <q-icon name="img:github.svg"></q-icon>
-      </q-btn>
-      <q-btn size="16px" round style="background-color:#1877F2">
-        <q-icon name="img:facebook.svg"></q-icon>
-      </q-btn>
-      <q-btn size="16px" round color="yellow">
-        <q-icon name="img:kakao.svg" size="45px"></q-icon>
-      </q-btn>
+    <!-- 비밀번호 찾기 이동 -->
+    <div
+      class="text-right q-mb-md q-mt-md text-grey-6"
+      style="width:400px;font-size:9pt"
+    >
+      <span @click="fingPwdModal" style="cursor:pointer"
+        >비밀번호를 잊으셨나요?</span
+      >
     </div>
-<!-- 
-    <div class="row justify-around">
-      <q-btn size="18px" round color="white">
-        <q-icon name="img:google.svg" size="45px"></q-icon>
-      </q-btn>
-      <q-btn size="18px" round color="white">
-        <q-icon name="img:github.svg" size="45px"></q-icon>
-      </q-btn>
-      <q-btn size="18px" round color="white">
-        <q-icon name="img:facebook.svg" size="45px"></q-icon>
-      </q-btn>
-      <q-btn size="18px" round color="white">
-        <q-icon name="img:kakao.svg" size="45px"></q-icon>
-      </q-btn>
-    </div> -->
-  </div>
+    <br />
+    <div class="row q-mb-md q-mt-md">
+      <q-btn
+        color="primary"
+        label="SIGN IN"
+        style="width:400px; height:50px; border-radius:5px;"
+        :disabled="!checkForm"
+        type="submit"
+        @click="login"
+      />
+    </div>
+  </q-form>
 </template>
 
 <script>
@@ -152,22 +116,22 @@ export default {
     offModal() {
       this.$store.commit('offAccountModal');
     },
-    async submitLoginForm() {
+    async submitForm() {
       try {
         this.$q.loading.show();
-        await this.$store.dispatch('LOGIN', {
-          username: this.email,
-          password: this.password,
-        },
+        await this.$store.dispatch(
+          'LOGIN',
+          {
+            username: this.email,
+            password: this.password,
+          },
           console.log('로그인 성공'),
           console.log(this.username),
           console.log(this.password),
         );
       } catch (error) {
-        console.log('로그인 실패'),
-        console.log(error);
-      }
-      finally {
+        console.log('로그인 실패'), console.log(error);
+      } finally {
         this.$q.loading.hide();
       }
     },
@@ -180,11 +144,11 @@ export default {
       return this.password === '' || validatePwd(this.password);
     },
     checkForm() {
-      console.log(validateEmail(this.email))
+      console.log(validateEmail(this.email));
       return validateEmail(this.email) && validatePwd(this.password);
     },
   },
-}
+};
 </script>
 
 <style scoped>

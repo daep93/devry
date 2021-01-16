@@ -2,10 +2,7 @@
   <account-modal>
     <div class="q-pa-md row" style="height:100%">
       <!-- 모달 이미지 -->
-      <div
-        class="col-7 row justify-center flex items-center"
-        style="height:100%"
-      >
+      <div class="col-7 row justify-center items-center" style="height:100%">
         <q-img
           :src="require('@/assets/change_pwd.png')"
           alt="change-password"
