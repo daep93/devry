@@ -5,6 +5,7 @@
       <div class="col-7 ">
         <div class="row justify-center items-center" style="height:100%">
           <q-img
+            transition="slide-right"
             :src="require('@/assets/signup.jpg')"
             style="width: 552px;height:492px"
           />

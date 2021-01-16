@@ -4,6 +4,7 @@
       <!-- 로그인 이미지 -->
       <div class="col-7 row justify-center items-center" style="height:100%">
         <q-img
+          transition="slide-left"
           :src="require('@/assets/login.png')"
           style="width: 552px;height:492px"
         />

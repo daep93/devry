@@ -105,13 +105,8 @@ export default {
     };
   },
   methods: {
-    signupModal() {
-      this.$store.commit('setAccountModalType', 'signup');
-      this.$store.commit('onAccountModal');
-    },
     fingPwdModal() {
       this.$store.commit('setAccountModalType', 'findPwd');
-      this.$store.commit('onAccountModal');
     },
     offModal() {
       this.$store.commit('offAccountModal');
