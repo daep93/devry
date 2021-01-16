@@ -26,9 +26,6 @@
   </account-modal>
 </template>
 
-
-
-
 <script>
 import AccountModal from '@/components/common/AccountModal';
 import LoginInput from '@/components/login/LoginInput';
@@ -39,7 +36,7 @@ export default {
     offModal() {
       this.$store.commit('offAccountModal');
     },
-  }
+  },
 };
 </script>
 

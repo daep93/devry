@@ -47,4 +47,19 @@
     - cookies 또는 validation, filter와 같이 공통적으로 사용이 가능한 함수들은 기능별로 저장한다.
     
 
-    
+## 권장 사항
+1. 파일 참조
+    - 파일 참조는 '@'를 활용한 절대경로로 쓸 것을 권장.
+        -  리팩토링에 파일위치가 바뀔 때마다 상대 경로를 체크해야하기 때문.
+        ```
+        예) 
+        import MainHeader from '../component/common/MainHeader' (x),
+        import MainHeader from '@/componenet/common/MainHeader' (o),
+        ``` 
+2. Quasar 활용
+    - quasar에 있는 컴포넌트를 최대한 활용할 것을 권장.
+        - 예) q-form, q-btn, q-input...
+    - quasar에서 제공하는 클래스를 최대한 활용하여 속성값 설정 권장
+        - 예) text-primary, text-h4, q-ma-none, q-pt-none
+    - quasar에서 제공하는 플러그인이 자주 쓰일 경우, quasar.js에 등록하고 사용하는 것을 권장. 
+        - 예) Dialog, Loading 
