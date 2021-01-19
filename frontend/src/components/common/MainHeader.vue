@@ -94,12 +94,10 @@ export default {
       this.$store.commit('onFollowModal');
     },
     moveToProfilePage() {
-      this.$router.push(`/profile/${this.$store.getters.getAccountNickname}`);
+      this.$router.push(`/profile/${this.$store.getters.getAccountId}`);
     },
     moveToProfileSettingPage() {
-      this.$router.push(
-        `/profile-setting/${this.$store.getters.getAccountNickname}`,
-      );
+      this.$router.push(`/profile-setting/${this.$store.getters.getAccountId}`);
     },
   },
 };

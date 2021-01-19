@@ -6,34 +6,21 @@ import {
 } from '@/utils/cookies';
 
 export default {
-  async CHANGEPWD({ commit }, userData) {
+  async CHANGEPWD(context, userData) {
     const { data } = await loginUser(userData);
-    // store에 저장
-    commit('setToken', data.token);
-    commit('setUserid', data.user.email);
-    commit('setPassword', data.user.password);
-    commit('setUsername', data.user.nickname);
-
-    // 쿠키에 저장
-    saveAuthToCookie(data.token);
-    saveUserIdToCookie(data.user.email);
-    saveUserIdToCookie(data.user.username);
-    saveUserNicknameToCookie(data.user.nickname);
     return data;
   },
   async LOGIN({ commit }, userData) {
     const { data } = await loginUser(userData);
     // store에 저장
     commit('setToken', data.token);
-    commit('setUserid', data.user.email);
-    // commit('setUserid', data.user.username);
-    // commit('setUsername', data.user.nickname);
+    commit('setUserid', data.user.id);
+    commit('setUsername', data.user.username);
 
     // 쿠키에 저장
     saveAuthToCookie(data.token);
-    saveUserIdToCookie(data.user.email);
-    // saveUserIdToCookie(data.user.username);
-    saveUserNicknameToCookie(data.user.nickname);
+    saveUserIdToCookie(data.user.id);
+    saveUserNicknameToCookie(data.user.username);
     return data;
   },
 };
