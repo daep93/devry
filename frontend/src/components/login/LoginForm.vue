@@ -82,7 +82,7 @@
     <div class="row q-mb-md q-mt-md">
       <q-btn
         color="primary"
-        label="SIGN IN"
+        label="LOGIN"
         style="width:400px; height:50px; border-radius:5px;"
         :disabled="!checkForm"
         type="submit"
@@ -114,20 +114,17 @@ export default {
     async submitForm() {
       try {
         this.$q.loading.show();
-        await this.$store.dispatch(
-          'LOGIN',
-          {
-            username: this.email,
-            password: this.password,
-          },
-          console.log('로그인 성공'),
-          console.log(this.username),
-          console.log(this.password),
-        );
-      } catch (error) {
-        console.log('로그인 실패'), console.log(error);
-      } finally {
+        await this.$store.dispatch('LOGIN', {
+          username: this.email,
+          password: this.password,
+        });
         this.$q.loading.hide();
+        alert('로그인 성공');
+        this.offModal();
+      } catch (error) {
+        console.log(error);
+        this.$q.loading.hide();
+        alert('이메일이나 비밀번호를 다시 확인해주세요.');
       }
     },
   },
