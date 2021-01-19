@@ -21,12 +21,26 @@
         </div>
         <find-pwd-auth
           v-if="modalState === 'auth'"
-          @authPwdSuccess="modalState = 'reset'"
+          @authPwdSuccess="modalState = 'authsuccess'"
+          @authPwdFail="modalState = 'autherror'"
         ></find-pwd-auth>
+        <find-pwd-auth-success
+          v-else-if="modalState === 'authsuccess'"
+          @resetPwd="modalState = 'reset'"
+        ></find-pwd-auth-success>
         <find-pwd-reset
           v-else-if="modalState === 'reset'"
           @resetPwdSuccess="modalState = 'success'"
+          @resetPwdFail="modalState = 'fail'"
         ></find-pwd-reset>
+        <find-pwd-auth-fail
+          v-else-if="modalState === 'autherror'"
+          @authPwd="modalState = 'auth'"
+        ></find-pwd-auth-fail>
+        <find-pwd-fail
+          v-else-if="modalState === 'fail'"
+          @resetPwd="modalState = 'reset'"
+        ></find-pwd-fail>
         <find-pwd-success v-else></find-pwd-success>
       </div>
     </div>
@@ -36,12 +50,14 @@
 <script>
 import AccountModal from '@/components/common/AccountModal';
 import FindPwdAuth from '@/components/findPwd/FindPwdAuth';
+import FindPwdAuthSuccess from '@/components/findPwd/FindPwdAuthSuccess';
 import FindPwdReset from '@/components/findPwd/FindPwdReset';
 import FindPwdSuccess from '@/components/findPwd/FindPwdSuccess';
-// import FindPwdForm from './FindPwdForm.vue';
+import FindPwdAuthFail from '@/components/findPwd/FindPwdAuthFail';
+import FindPwdFail from '@/components/findPwd/FindPwdFail';
 
 export default {
-  components: { AccountModal, FindPwdAuth, FindPwdReset, FindPwdSuccess },
+  components: { AccountModal, FindPwdAuth, FindPwdAuthSuccess, FindPwdReset, FindPwdSuccess, FindPwdAuthFail, FindPwdFail },
   data() {
     return {
       modalState: 'auth',

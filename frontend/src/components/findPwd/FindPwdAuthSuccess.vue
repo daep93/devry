@@ -2,7 +2,7 @@
   <div style="height:50%">
     <div class="row justify-start items-end" style="height:60%">
       <p class="text-h4 text-weight-bolder">
-        비밀번호 변경 성공🎉
+        계정인증에 성공했습니다🎉
       </p>
     </div>
     <br />
@@ -13,8 +13,8 @@
         class="text-center"
         style="width:330px;height:50px;border-radius:5px;font-size:16pt"
         type="submit"
-        @click="offModal"
-        >돌아가기</q-btn
+        @click="resetPwdModal"
+        >비밀번호 변경하기</q-btn
       >
     </div>
   </div>
@@ -23,8 +23,8 @@
 <script>
 export default {
   methods: {
-    offModal() {
-      this.$store.commit('offAccountModal');
+    resetPwdModal() {
+      this.$emit('resetPwd');
     },
   },
 };

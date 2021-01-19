@@ -58,7 +58,6 @@
         style="width:350px; height:50px;"
         type="submit"
       />
-      <!-- @findPwd="emit('findPwd')" -->
     </q-form>
   </div>
 </template>
@@ -72,6 +71,7 @@ export default {
       email: '',
       nickname: '',
       dense: false,
+      modalState: 'auth',
     };
   },
   computed: {
@@ -85,14 +85,16 @@ export default {
   methods: {
     async submitForm() {
       try {
+        // 89-93번째 코드 주석을 해제하면 에러발생
         // await checkUser({
         //   email: this.email,
         //   username: this.nickname
         // });
-        alert('계정인증에 성공했습니다. 비밀번호 변경을 진행해주세요');
+        // alert('계정인증에 성공했습니다. 비밀번호 변경을 진행해주세요');
         this.$emit('authPwdSuccess');
       } catch (error) {
-        alert('에러가 발생했습니다.');
+        // alert('에러가 발생했습니다. 계정을 확인해주세요!');
+        this.$emit('authPwdFail')
         console.log(error);
         console.log('error발생');
       }

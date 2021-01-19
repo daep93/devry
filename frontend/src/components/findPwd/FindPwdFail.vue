@@ -2,7 +2,7 @@
   <div style="height:50%">
     <div class="row justify-start items-end" style="height:60%">
       <p class="text-h4 text-weight-bolder">
-        비밀번호 변경 실패!!
+        비밀번호 변경 실패😥
       </p>
     </div>
     <br />
@@ -24,7 +24,7 @@
 export default {
   methods: {
     backToReset() {
-      this.$emit('authPwdSuccess');
+      this.$emit('resetPwd');
     },
   },
 };

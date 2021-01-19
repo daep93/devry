@@ -2,7 +2,7 @@
   <div style="height:50%">
     <div class="row justify-start items-end" style="height:60%">
       <p class="text-h4 text-weight-bolder">
-        비밀번호 변경 성공🎉
+        계정 인증 실패😥
       </p>
     </div>
     <br />
@@ -13,8 +13,8 @@
         class="text-center"
         style="width:330px;height:50px;border-radius:5px;font-size:16pt"
         type="submit"
-        @click="offModal"
-        >돌아가기</q-btn
+        @click="backToAuthCheck"
+        >뒤로가기</q-btn
       >
     </div>
   </div>
@@ -22,9 +22,14 @@
 
 <script>
 export default {
+  data() {
+    return {
+      modalState: 'auth'
+    }
+  },
   methods: {
-    offModal() {
-      this.$store.commit('offAccountModal');
+    backToAuthCheck() {
+      this.$emit('authPwd');
     },
   },
 };
