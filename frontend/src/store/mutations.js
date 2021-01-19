@@ -5,6 +5,12 @@ export default {
   offAccountModal(state) {
     state.accountModal = false;
   },
+  onFollowModal(state) {
+    state.followModal = true;
+  },
+  offFollowModal(state) {
+    state.followModal = false;
+  },
   setAccountModalType(state, type) {
     state.accountModalType = type;
   },

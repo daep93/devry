@@ -14,6 +14,16 @@ const routes = [
     component: () => import('@/views/MainPage.vue'),
   },
   {
+    path: '/profile/:id',
+    name: 'Profile',
+    component: () => import('@/views/ProfilePage.vue'),
+  },
+  {
+    path: '/profile-setting/:id',
+    name: 'ProfileSetting',
+    component: () => import('@/views/ProfileSettingPage.vue'),
+  },
+  {
     path: '*',
     component: () => import('@/views/NotFoundPage.vue'),
   },

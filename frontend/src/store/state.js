@@ -10,4 +10,5 @@ export default {
   nickname: getUserNicknameFromCookie() || '',
   accountModal: false,
   accountModalType: 'login',
+  followModal: false,
 };

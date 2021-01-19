@@ -8,4 +8,10 @@ export default {
   getAccountModalType(state) {
     return state.accountModalType;
   },
+  getAccountId(state) {
+    return state.id;
+  },
+  getAccountNickname(state) {
+    return state.nickname;
+  },
 };
