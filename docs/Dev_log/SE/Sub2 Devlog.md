@@ -96,7 +96,36 @@ true, false로 에러 발생여부를 판단하여, 성공시 메시지 출력 �
 
 
 
+**수정방안 2**
 
+```javascript
+methods: {
+    fingPwdModal() {
+      this.$store.commit('setAccountModalType', 'findPwd');
+    },
+    offModal() {
+      this.$store.commit('offAccountModal');
+    },
+    async submitForm() {
+      try {
+        this.$q.loading.show();
+        await this.$store.dispatch('LOGIN', {
+          username: this.email,
+          password: this.password,
+        });                                 // 이 부분
+        this.$q.loading.hide();
+        alert('로그인 성공');
+        this.offModal();
+      } catch (error) {
+        console.log(error);
+        this.$q.loading.hide();
+        alert('이메일이나 비밀번호를 다시 확인해주세요.');
+      }
+    },
+  },
+```
+
+그냥 try문 밖에서 바로 메시지를 출력하면 되는거였음
 
 
 
