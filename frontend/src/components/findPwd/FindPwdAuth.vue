@@ -85,6 +85,7 @@ export default {
   methods: {
     async submitForm() {
       try {
+        this.$q.loading.show();
         // 89-93번째 코드 주석을 해제하면 에러발생
         // await checkUser({
         //   email: this.email,
@@ -97,6 +98,8 @@ export default {
         this.$emit('authPwdFail')
         console.log(error);
         console.log('error발생');
+      } finally {
+        this.$q.loading.hide();
       }
     },
   },
