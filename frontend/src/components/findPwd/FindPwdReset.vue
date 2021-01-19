@@ -127,17 +127,19 @@ export default {
     async submitForm() {
       // const config = this.setToken();
       try {
+        // 131 - 133번째 주석을 해제하면 에러발생
         // await changePwdUser({
         //   password: this.newPwd,
         // });
         console.log(this.password);
         this.password = this.newPwd;
         console.log(this.password);
-        alert('비밀번호 변경에 성공하였습니다!');
+        // alert('비밀번호 변경에 성공하였습니다!');
         this.$emit('resetPwdSuccess');
       } catch (error) {
-        console.log(error);
-        console.log('error발생');
+        // alert('에러가 발생했습니다. 다시 시도해주세요!')
+        this.$emit('resetPwdFail')
+        // console.log(error);
         // console.log(old_password)
       }
     },
