@@ -112,23 +112,22 @@ export default {
       this.$store.commit('offAccountModal');
     },
     async submitForm() {
+      let check = true;
       try {
         this.$q.loading.show();
-        await this.$store.dispatch(
-          'LOGIN',
-          {
-            username: this.email,
-            password: this.password,
-          },
-          // console.log('로그인 성공'),
-          alert('로그인 성공'),
-          this.offModal(),
-        );
+        await this.$store.dispatch('LOGIN', {
+          username: this.email,
+          password: this.password,
+        });
       } catch (error) {
-        console.log('로그인 실패'), console.log(error);
+        check = false;
+        console.log(error);
         alert('이메일이나 비밀번호를 다시 확인해주세요.');
       } finally {
         this.$q.loading.hide();
+      }
+      if (check === true) {
+        alert('로그인 성공'), this.offModal();
       }
     },
   },
