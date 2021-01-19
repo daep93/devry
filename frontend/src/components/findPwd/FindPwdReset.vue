@@ -127,6 +127,7 @@ export default {
     async submitForm() {
       // const config = this.setToken();
       try {
+        this.$q.loading.show();
         // 131 - 133번째 주석을 해제하면 에러발생
         // await changePwdUser({
         //   password: this.newPwd,
@@ -141,6 +142,8 @@ export default {
         this.$emit('resetPwdFail')
         // console.log(error);
         // console.log(old_password)
+      } finally {
+        this.$q.loading.hide();
       }
     },
   },
