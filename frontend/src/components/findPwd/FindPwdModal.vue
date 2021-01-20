@@ -57,7 +57,15 @@ import FindPwdAuthFail from '@/components/findPwd/FindPwdAuthFail';
 import FindPwdFail from '@/components/findPwd/FindPwdFail';
 
 export default {
-  components: { AccountModal, FindPwdAuth, FindPwdAuthSuccess, FindPwdReset, FindPwdSuccess, FindPwdAuthFail, FindPwdFail },
+  components: {
+    AccountModal,
+    FindPwdAuth,
+    FindPwdAuthSuccess,
+    FindPwdReset,
+    FindPwdSuccess,
+    FindPwdAuthFail,
+    FindPwdFail,
+  },
   data() {
     return {
       modalState: 'auth',
