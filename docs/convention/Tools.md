@@ -7,13 +7,13 @@
 ### commit
 
 - ```bash
-  [이슈번호] type/기능단위 : 행위 행위요소(PascalCase) 행위디테일(소문자)
+  [이슈번호] type/기능단위 : 무엇을 어떻게 했는지 작성
   
   body 
   ```
 
 - ```bash
-  [S0234165-1] feat/Boards : Update BoardCreateView font color
+  [S0234165-1] feat/Login : Create login success page
   
   body
   ```
