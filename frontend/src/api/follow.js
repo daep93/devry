@@ -1,0 +1,1 @@
+import { follow } from '@/api';
