@@ -22,7 +22,7 @@
       <div class=" text-bold q-mb-md text-center">
         My Skills/languages
       </div>
-      <div class="row q-mb-xl ">
+      <div class="row">
         <span
           v-for="skill in skills"
           :key="skill"

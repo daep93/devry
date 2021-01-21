@@ -6,26 +6,27 @@
           <q-img
             :src="require('@/assets/change_pwd.png')"
             alt="change-password"
-            style="width:150px; height:150px;border:5px solid #ECE1E1; border-radius:100px"
+            class="profile-picture"
           ></q-img>
         </div>
-        <div class="col-9 q-ml-lg">
+        <div class="col-9 q-ml-md">
           <div class="row q-mb-sm justify-between">
-            <span class="text-h5 q-pl-xs">Ssafy Park</span>
+            <span class="text-h5 q-pl-xs">{{ info.username }}</span>
             <q-btn
               style="background-color:#1595DC;"
               class="text-white text-bold"
               >follow</q-btn
             >
           </div>
-          <div class="row  q-mb-md">
+          <!-- 사는 곳, 소속, 이메일 정보를 받는 행 -->
+          <div class="row q-mb-md">
             <div class="q-mr-md row items-center">
               <q-icon
                 :name="$i.ionLocationOutline"
                 size="sm"
                 class="q-mr-xs"
               ></q-icon>
-              <span>Daejeon</span>
+              <span>{{ info.location }}</span>
             </div>
             <div class="q-mr-md row items-center">
               <q-icon
@@ -33,43 +34,31 @@
                 size="sm"
                 class="q-mr-xs"
               ></q-icon>
-              <span>Multi Campus</span>
+              <span>{{ info.group }}</span>
             </div>
-            <div class="row items-center">
+            <div class="q-mr-md row items-center">
               <q-icon
                 :name="$i.ionMailOutline"
                 size="sm"
                 class="q-mr-xs"
               ></q-icon>
-              <span>ssafyPark@edu.ssafy.com</span>
+              <span>{{ info.email }}</span>
             </div>
           </div>
+          <!-- 등록된 웹싸이트 링크에 맞춰 로고를 보여주는 행-->
           <div class="row  q-mb-md">
             <q-icon
-              :name="$i.ionLogoGithub"
+              v-for="(url, logo) in info.links"
+              :key="logo"
+              :name="$i[`ionLogo${logo}`]"
               size="sm"
               color="grey-8"
               class="q-mr-xs"
-            ></q-icon>
-            <q-icon
-              :name="$i.ionLogoGitlab"
-              size="sm"
-              color="grey-8"
-              class="q-mr-xs"
-            ></q-icon>
-            <q-icon
-              :name="$i.ionLogoFacebook"
-              color="grey-8"
-              size="sm"
-              class="q-mr-xs"
-            ></q-icon>
-            <q-icon
-              :name="$i.ionLogoLinkedin"
-              color="grey-8"
-              size="sm"
-              class="q-mr-xs"
+              @click="linkRedirect(url)"
+              style="cursor:pointer"
             ></q-icon>
           </div>
+          <!-- 가입날짜와 팔로워/팔로우 수를 표시해주는 행 -->
           <div class="row q-mb-sm justify-between">
             <div class="row items-center">
               <q-icon
@@ -78,20 +67,22 @@
                 size="xs"
                 class="q-mr-xs"
               ></q-icon>
-              <span>joined on 2020/07/08</span>
+              <span>joined on {{ info.joined | moment('YYYY/MM/DD') }}</span>
             </div>
             <div>
-              <span class="q-mr-md">팔로워: <b>4302</b></span>
-              <span>팔로우: <b>246</b></span>
+              <span class="q-mr-md"
+                >팔로워: <b>{{ info.followerNum }}</b></span
+              >
+              <span
+                >팔로우: <b>{{ info.followeeNum }}</b></span
+              >
             </div>
           </div>
         </div>
       </div>
       <div class="row q-pl-xl q-my-md">
         <p>
-          Jumped into web development 1st of January 2020 and I'm completely in
-          love. I have little experience as a blogger but practice makes
-          perfect! 🤖🦾
+          {{ info.introduction }}
         </p>
       </div>
     </q-card-section>
@@ -99,7 +90,16 @@
 </template>
 
 <script>
-export default {};
+export default {
+  props: {
+    info: Object,
+  },
+  methods: {
+    linkRedirect(url) {
+      window.open(url);
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -108,5 +108,10 @@ export default {};
   position: relative;
   top: -10vh;
   z-index: 1;
+}
+.profile-picture {
+  width: 100%;
+  border: 5px solid #ece1e1;
+  border-radius: 100px;
 }
 </style>
