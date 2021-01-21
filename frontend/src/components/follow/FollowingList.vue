@@ -38,7 +38,47 @@
 </template>
 
 <script>
-export default {};
+import { getFollowee, unfollowFollowee, followingUser } from '@/api/follow';
+
+export default {
+  data() {
+    return {
+      followeeData: [],
+    };
+  },
+  methods: {
+    goToProfile() {
+      console.log('click!');
+      this.$router.push({ name: 'Profile' });
+    },
+    async unfollowMyFollowee() {
+      try {
+        await unfollowFollowee();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async followUser() {
+      try {
+        await followingUser();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
+  async created() {
+    const unit = 10;
+    // 단위 시작 위치
+    const unit_index = 1;
+    const unitData = { unit, unit_index };
+    try {
+      const { data } = await getFollowee(unitData);
+      this.followerData.push(data);
+    } catch (error) {
+      console.log(error);
+    }
+  },
+};
 </script>
 
 <style scoped>

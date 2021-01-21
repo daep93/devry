@@ -43,12 +43,45 @@
 </template>
 
 <script>
+import { getFollower, followFollower, unfollowFollower } from '@/api/follow';
+
 export default {
+  data() {
+    return {
+      followerData: [],
+    };
+  },
   methods: {
     goToProfile() {
       console.log('click!');
       this.$router.push({ name: 'Profile' });
     },
+    async followMyFollower() {
+      try {
+        await followFollower();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async unfollowMyFollower() {
+      try {
+        await unfollowFollower();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
+  async created() {
+    const unit = 10;
+    // 단위 시작 위치
+    const unit_index = 1;
+    const unitData = { unit, unit_index };
+    try {
+      const { data } = await getFollower(unitData);
+      this.followerData.push(data);
+    } catch (error) {
+      console.log(error);
+    }
   },
 };
 </script>

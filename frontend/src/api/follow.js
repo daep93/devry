@@ -1,8 +1,8 @@
 import { follower, followee } from '@/api';
 //// 팔로워
 // 팔로워 목록 불러오기
-function getFollower() {
-  return follower.get('/');
+function getFollower(unitData) {
+  return follower.get('/', unitData);
 }
 // 팔로워 팔로잉하기
 function followFollower() {
@@ -15,8 +15,8 @@ function unfollowFollower() {
 
 //// 팔로이 (내가 팔로우 하는 사람)
 // 팔로이 목록 불러오기
-function getFollowee() {
-  return followee.get('/');
+function getFollowee(unitData) {
+  return followee.get('/', unitData);
 }
 // 팔로이 해제하기
 function unfollowFollowee() {
