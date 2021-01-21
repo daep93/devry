@@ -28,14 +28,36 @@
           </q-list>
         </div>
         <!-- follow 버튼 -->
+        <!-- <div class="col-4 row justify-center items-center" style="height:100%"> -->
         <div class="col-4 row justify-center items-center" style="height:100%">
-          <q-btn
+          <div v-if="follow">
+            <q-btn
+              no-caps
+              color="primary"
+              id="follow-btn"
+              label="Follow"
+              style="width:90px;"
+              @click="checkFollow"
+            />
+          </div>
+          <div v-else>
+            <q-btn
+              no-caps
+              outline
+              color="primary"
+              label="Following"
+              style="width:90px;"
+              @click="checkFollow"
+            />
+          </div>
+
+          <!-- <q-btn
             no-caps
             color="primary"
             id="follow-btn"
             label="Follow"
             style="width:90px;"
-          />
+          /> -->
         </div>
       </div>
     </div>
@@ -49,9 +71,13 @@ export default {
   data() {
     return {
       followerData: [],
+      follow: true,
     };
   },
   methods: {
+    checkFollow() {
+      this.follow = !this.follow;
+    },
     goToProfile() {
       console.log('click!');
       this.$router.push({ name: 'Profile' });
@@ -95,5 +121,13 @@ export default {
 .change-tag-color {
   text-decoration: none;
   color: #000000;
+}
+
+.container q-btn {
+  background-color: green;
+}
+
+.container q-btn.selected {
+  background-color: red;
 }
 </style>

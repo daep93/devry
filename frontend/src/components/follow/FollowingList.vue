@@ -24,13 +24,26 @@
         </div>
         <!-- follow 버튼 -->
         <div class="col-4 row justify-center items-center" style="height:100%">
-          <q-btn
-            no-caps
-            outline
-            color="primary"
-            label="Following"
-            style="width:90px;"
-          />
+          <div v-if="follow">
+            <q-btn
+              no-caps
+              color="primary"
+              id="follow-btn"
+              label="Follow"
+              style="width:90px;"
+              @click="checkFollow"
+            />
+          </div>
+          <div v-else>
+            <q-btn
+              no-caps
+              outline
+              color="primary"
+              label="Following"
+              style="width:90px;"
+              @click="checkFollow"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -44,9 +57,13 @@ export default {
   data() {
     return {
       followeeData: [],
+      follow: true,
     };
   },
   methods: {
+    checkFollow() {
+      this.follow = !this.follow;
+    },
     goToProfile() {
       console.log('click!');
       this.$router.push({ name: 'Profile' });
