@@ -16,6 +16,8 @@ export default {
     commit('setToken', data.token);
     commit('setUserid', data.user.id);
     commit('setUsername', data.user.username);
+    console.log('데이터');
+    console.log(data);
 
     // 쿠키에 저장
     saveAuthToCookie(data.token);

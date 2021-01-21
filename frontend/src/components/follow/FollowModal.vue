@@ -17,11 +17,10 @@
           :thumb-style="thumbStyle"
           style="height: 585px; max-width: 650px;"
         >
-
-        <!-- 탭 시작 -->
+          <!-- 탭 시작 -->
           <div class="q-pa-md">
             <div class="q-gutter-y-md" style="max-width: 600px">
-                <center>
+              <center>
                 <q-tabs
                   v-model="tab"
                   class="text-grey"
@@ -46,13 +45,10 @@
                   <FollowingList></FollowingList>
                 </q-tab-panel>
               </q-tab-panels>
-
             </div>
           </div>
-
         </q-scroll-area>
       </div>
-
     </q-card>
   </q-dialog>
 </template>
@@ -82,5 +78,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
