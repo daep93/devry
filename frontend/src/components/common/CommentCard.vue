@@ -11,7 +11,7 @@
         </div>
       </div>
     </div>
-    <div class="text-bold" style="font-size:14pt">
+    <div class="row text-bold" style="font-size:14pt">
       React interview questions and answers for JS developers
     </div>
     <div class="text-weight-thin">
