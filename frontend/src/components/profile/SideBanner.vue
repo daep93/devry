@@ -4,55 +4,56 @@
       <pie-chart :data="chartData" :options="chartOptions"></pie-chart>
     </q-card-section>
     <q-card-section>
-      <div class="text-bold q-mb-md q-pl-md">
+      <div class="text-bold q-mb-md  text-center">
         My Tags
       </div>
-      <div class="row q-mb-xl q-pl-sm">
-        <q-btn
-          rounded
+      <div class="row q-mb-xl ">
+        <span
           v-for="item in tags"
           :key="item.tagName"
-          class="q-mb-sm q-mr-xs text-grey-2"
+          class="q-mb-sm q-mr-xs q-pa-sm"
           :style="{ 'background-color': item.tagColor }"
-          >{{ item.tagName }}</q-btn
+          style="font-size:10pt; border-radius:5pt"
+          >{{ item.tagName }}</span
         >
       </div>
     </q-card-section>
     <q-card-section>
-      <div class="q-pl-md text-bold q-mb-md">
+      <div class=" text-bold q-mb-md text-center">
         My Skills/languages
       </div>
-      <div class="row q-mb-xl q-pl-sm">
-        <q-btn
-          rounded
+      <div class="row q-mb-xl ">
+        <span
           v-for="skill in skills"
           :key="skill"
-          class="q-mb-sm q-mr-xs "
-          style="background-color: #E5E5E5"
-          >{{ skill }}</q-btn
+          class="q-mb-sm q-mr-xs q-pa-sm"
+          style="background-color: #F0ECEC; font-size:10pt; border-radius:5pt "
+          >{{ skill }}</span
         >
       </div>
     </q-card-section>
     <q-card-section>
-      <div class="q-pl-md text-bold ">
+      <div class="text-bold text-center">
         My Projects
       </div>
-      <div class="row q-mb-xl q-pl-xs">
-        <ul>
+      <div class="row justify-center">
+        <ul class="q-px-none">
           <li style="color: #08458C" v-for="item in projects" :key="item">
             {{ item }}
           </li>
         </ul>
       </div>
-      <div class="row q-mb-xl">
-        <div class="q-pl-md text-bold q-mb-md">
-          My History
-        </div>
-        <q-list separator class="q-pl-sm">
+    </q-card-section>
+    <q-card-section>
+      <div class=" text-bold q-mb-md text-center">
+        My History
+      </div>
+      <div class="row q-mb-xl" style="width:100%">
+        <q-list separator class="q-px-lg" style="width:100%">
           <q-item
             clickable
             v-ripple
-            style="background-color:#FADDDD; border-radius:6px"
+            style="background-color:#FADDDD; border-radius:6px; "
             class="q-mb-sm q-pl-lg"
           >
             <q-item-section avatar>
@@ -116,10 +117,10 @@ export default {
     return {
       projects: ['ssafy-common', 'ssafy-special', 'ssafy-complete'],
       tags: [
-        { tagName: '#vue', tagColor: '#41B883' },
-        { tagName: '#javascript', tagColor: '#F7BF33' },
-        { tagName: '#react', tagColor: '#36A8FD' },
-        { tagName: '#Angular', tagColor: '#B52E31' },
+        { tagName: '#Vue', tagColor: 'rgba(65,184,131,0.5)' }, // #41B883
+        { tagName: '#Javascript', tagColor: 'rgba(247,191,51,0.5)' }, // #F7BF33
+        { tagName: '#React', tagColor: 'rgba(54,168,253,0.5)' }, // #36A8FD
+        { tagName: '#Angular', tagColor: 'rgba(181,46,49,0.5)' }, //#B52E31
       ],
       skills: ['HTML', 'MongoDB', 'Javascript', 'vue'],
       chartOptions: {

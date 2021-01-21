@@ -9,7 +9,7 @@
             style="width:150px; height:150px;border:5px solid #ECE1E1; border-radius:100px"
           ></q-img>
         </div>
-        <div class="col-9 q-ml-lg q-pt-sm">
+        <div class="col-9 q-ml-lg">
           <div class="row q-mb-sm justify-between">
             <span class="text-h5 q-pl-xs">Ssafy Park</span>
             <q-btn
@@ -18,7 +18,7 @@
               >follow</q-btn
             >
           </div>
-          <div class="row  q-mb-sm">
+          <div class="row  q-mb-md">
             <div class="q-mr-md row items-center">
               <q-icon
                 :name="$i.ionLocationOutline"
@@ -44,7 +44,7 @@
               <span>ssafyPark@edu.ssafy.com</span>
             </div>
           </div>
-          <div class="row  q-mb-sm">
+          <div class="row  q-mb-md">
             <q-icon
               :name="$i.ionLogoGithub"
               size="sm"

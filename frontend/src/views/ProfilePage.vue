@@ -6,10 +6,10 @@
     </div>
     <div class="row justify-center body-banner">
       <div class="row  justify-between" style="width: 60%;">
-        <div style="width:28%">
+        <div style="width:30%">
           <side-banner></side-banner>
         </div>
-        <div style="width: 65%">
+        <div style="width: 67%">
           <post-banner></post-banner>
         </div>
       </div>
@@ -37,7 +37,7 @@ export default {
 }
 .body-banner {
   position: relative;
-  top: -5vh;
+  top: -6vh;
 }
 .side-banner {
   width: 100%;
