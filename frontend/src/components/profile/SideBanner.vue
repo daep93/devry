@@ -7,7 +7,7 @@
       <div class="text-bold q-mb-md q-pl-md">
         My Tags
       </div>
-      <div class="row q-mb-xl">
+      <div class="row q-mb-xl q-pl-sm">
         <q-btn
           rounded
           v-for="item in tags"
@@ -22,7 +22,7 @@
       <div class="q-pl-md text-bold q-mb-md">
         My Skills/languages
       </div>
-      <div class="row q-mb-xl">
+      <div class="row q-mb-xl q-pl-sm">
         <q-btn
           rounded
           v-for="skill in skills"
@@ -34,10 +34,10 @@
       </div>
     </q-card-section>
     <q-card-section>
-      <div class="q-pl-md text-bold q-mb-xs">
+      <div class="q-pl-md text-bold ">
         My Projects
       </div>
-      <div class="row q-mb-xl">
+      <div class="row q-mb-xl q-pl-xs">
         <ul>
           <li style="color: #08458C" v-for="item in projects" :key="item">
             {{ item }}
@@ -45,45 +45,58 @@
         </ul>
       </div>
       <div class="row q-mb-xl">
-        <q-list separator>
+        <div class="q-pl-md text-bold q-mb-md">
+          My History
+        </div>
+        <q-list separator class="q-pl-sm">
           <q-item
             clickable
             v-ripple
             style="background-color:#FADDDD; border-radius:6px"
-            class="q-mb-sm"
+            class="q-mb-sm q-pl-lg"
           >
-            <q-item-section avatar class="q-ma-none q-pa-none">
-              <q-icon :name="$i.ionDocumentTextOutline" />
+            <q-item-section avatar>
+              <span
+                ><q-icon :name="$i.ionDocumentTextOutline" size="24px" />
+                posts</span
+              >
             </q-item-section>
             <q-item-section
-              ><span class="text-bold">4 posts published</span></q-item-section
+              ><div class="row text-bold justify-end">4</div></q-item-section
             >
           </q-item>
           <q-item
             clickable
             v-ripple
             style="background-color:#BAD9F6; border-radius:6px"
-            class="q-mb-sm"
+            class="q-mb-sm q-pl-lg"
           >
             <q-item-section avatar>
-              <q-icon :name="$i.ionChatboxEllipsesOutline" />
+              <span
+                ><q-icon :name="$i.ionChatboxEllipsesOutline" size="24px" />
+                comments</span
+              >
             </q-item-section>
             <q-item-section
-              ><span class="text-bold"
-                >16 comments written</span
-              ></q-item-section
+              ><div class="row text-bold justify-end">16</div></q-item-section
             >
           </q-item>
           <q-item
             clickable
             v-ripple
-            style="background-color:#DCA4E5; border-radius:6px"
+            style="background-color:#DCA4E5; border-radius:6px; "
+            class="q-pl-lg"
           >
             <q-item-section avatar>
-              <q-icon :name="$i.ionPricetagsOutline" />
+              <span
+                ><q-icon :name="$i.ionPricetagsOutline" size="24px" />
+                tags</span
+              >
             </q-item-section>
             <q-item-section>
-              <span class="text-bold">4 tags followed</span>
+              <div class="row text-bold justify-end">
+                <span>4</span>
+              </div>
             </q-item-section>
           </q-item>
         </q-list>

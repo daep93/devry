@@ -10,36 +10,7 @@
           <side-banner></side-banner>
         </div>
         <div style="width: 65%">
-          <div class="q-mb-sm row items-center">
-            <q-icon
-              :name="$i.ionAttachOutline"
-              style="color: #B54333"
-              size="md"
-              class="q-mr-xs"
-            ></q-icon>
-            <span class="text-h5">Pinned</span>
-          </div>
-          <q-card class="q-mb-lg">
-            <q-card-section
-              style="width:100%;border: 2px solid #FBAA9F; border-raidus:5px; "
-            ></q-card-section>
-          </q-card>
-          <div class="q-mb-sm row items-center">
-            <q-icon
-              :name="$i.ionLayersOutline"
-              style="color: #259EC5"
-              size="md"
-              class="q-mr-xs"
-            ></q-icon>
-            <span class="text-h5">History</span>
-          </div>
-          <q-card>
-            <q-card-section
-              style="width:100%;border: 2px solid #2F95B4; border-raidus:5px; "
-            >
-              <div style=""></div>
-            </q-card-section>
-          </q-card>
+          <post-banner></post-banner>
         </div>
       </div>
     </div>
@@ -49,10 +20,12 @@
 <script>
 import HeaderBanner from '@/components/profile/HeaderBanner';
 import SideBanner from '@/components/profile/SideBanner';
+import PostBanner from '@/components/profile/PostBanner';
 export default {
   components: {
     HeaderBanner,
     SideBanner,
+    PostBanner,
   },
 };
 </script>
