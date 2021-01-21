@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-bottom: 50px;">
+  <div class="col-12" style="margin-bottom: 50px;">
     <div class="text-h6 text-weight-bold" style="margin-bottom: 40px;">Following Tags</div>
     <div>
       <label for="tag">tags</label>
@@ -8,7 +8,7 @@
         v-model="tagItem"
         id="tag"
         placeholder="팔로우할 태그를 입력해주세요" 
-        style="width:730px; margin: 7px 0 30px 0;" 
+        style="margin: 7px 0 30px 0;" 
         @keypress.enter="createTag"
       />
     </div>
@@ -17,12 +17,9 @@
         <li v-for="(tag, index) in tags" :key="index" style="margin-right: 10px;">
           <q-badge color="primary">
             # {{ tag }}
-            <span :click="removeTag" style="margin-left: 10px;">X</span>
+            <span @click="removeTag" style="margin-left: 10px;">X</span>
           </q-badge>
         </li>
-        <!-- <li v-for="(tag, index) in tags" :key="index"># {{ tag }}
-          <span :click="removeTag(tag, index)">X</span>
-        </li> -->
       </ul>
     </div>
   </div>
@@ -40,14 +37,16 @@ export default {
     createTag: function() {
       if (this.tagItem !== '') {
         console.log(this.tagItem)
-        localStorage.setItem(this.tagItem, JSON.stringify(this.tagItem))
+        // localStorage.setItem(this.tagItem, JSON.stringify(this.tagItem))
+        this.tags.push(this.tagItem)
+        this.$emit('addTagItem', this.tagItem);
         this.tagItem = ''
       }
     },
     removeTag: function(tag, index) {
       console.log(tag, index);
-      localStorage.removeItem(tag);
-      this.tags.splice(index, 1);
+      // localStorage.removeItem(tag)
+      this.tags.splice(index, 1)
     }
   },
   created: function() {

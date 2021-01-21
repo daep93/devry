@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-bottom: 70px;">
+  <div class="col-12" style="margin-bottom: 70px;">
     <div class="text-h6 text-weight-bold" style="margin-bottom: 40px;">Personal details</div>
     <!-- 프로필 이미지 -->
     <div class="row">
@@ -23,50 +23,50 @@
         </span>
       </div>
     </div>
-    <div>
+    <div class="col-12">
       <div class="row" style="display:flex; justify-content:space-between;">
-        <div>
+        <div class="col-6">
           <label for="region">region</label>
           <q-input 
             outlined 
             v-model="region"
             id="region"
             placeholder="지역을 입력해주세요" 
-            style="width:350px; margin: 7px 0 30px 0;"
+            style="margin: 7px 0 30px 0;"
             :dense="dense" 
           />
         </div>
-        <div>
+        <div class="col-6">
           <label for="group">group</label>
           <q-input 
             outlined 
             v-model="group"
             id="group"
             placeholder="소속을 입력해주세요" 
-            style="width:350px; margin: 7px 0 30px 0;"
+            style="margin: 7px 0 30px 0;"
             :dense="dense" 
           />
         </div>
       </div>
-      <div>
+      <div class="col-12">
         <label for="name">name</label>
         <q-input 
           outlined 
           v-model="username"
           id="name"
           placeholder="이름을 입력해주세요" 
-          style="width:730px; margin: 7px 0 30px 0;"
+          style="margin: 7px 0 30px 0;"
           :dense="dense" 
         />
       </div>
-      <div>
+      <div class="col-12">
         <label for="bio">bio</label>
         <q-input
           v-model="bio"
           outlined
           type="textarea"
           placeholder="자기 소개를 입력해주세요" 
-          style="width:730px; height:100px; margin: 7px 0 30px 0;"
+          style="height:100px; margin: 7px 0 30px 0;"
         />
       </div>
     </div>
