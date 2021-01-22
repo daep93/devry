@@ -11,12 +11,23 @@
             <q-item>
               <!-- <q-item clickable v-ripple> -->
               <q-item-section avatar>
-                <q-avatar>
-                  <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
-                </q-avatar>
+                <a href="javascript:;" @click="goToProfile">
+                  <q-avatar>
+                    <img
+                      src="https://cdn.quasar.dev/img/boy-avatar.png"
+                    /> </q-avatar
+                ></a>
               </q-item-section>
               <q-item-section>
-                <span><b style="font-size: 15px;">유저 이름 2</b></span>
+                <span>
+                  <a
+                    href="javascript:;"
+                    @click="goToProfile"
+                    class="change-tag-color"
+                  >
+                    <b style="font-size: 15px;">유저 이름 2</b></a
+                  ></span
+                >
                 <span>글 0 · 팔로워 0</span>
               </q-item-section>
             </q-item>
@@ -102,5 +113,9 @@ export default {
 .col-align {
   display: flex;
   align-items: center;
+}
+.change-tag-color {
+  text-decoration: none;
+  color: #000000;
 }
 </style>

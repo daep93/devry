@@ -78,4 +78,14 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+/* .q-tab__label {
+  font-size: 50px;
+} */
+.q-tab-only-label {
+  font-size: tabs-big-font-size;
+}
+.q-tab >>> .q-tab__label {
+  font-size: 12pt;
+}
+</style>

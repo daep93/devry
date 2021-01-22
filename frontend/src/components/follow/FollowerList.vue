@@ -8,9 +8,12 @@
             <!-- <q-list bordered style="min-width:300px; margin-left: 30px;"> -->
             <q-item>
               <q-item-section avatar>
-                <q-avatar>
-                  <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
-                </q-avatar>
+                <a href="javascript:;" @click="goToProfile">
+                  <q-avatar>
+                    <img
+                      src="https://cdn.quasar.dev/img/boy-avatar.png"
+                    /> </q-avatar
+                ></a>
               </q-item-section>
               <q-item-section>
                 <span>
@@ -50,14 +53,6 @@
               @click="checkFollow"
             />
           </div>
-
-          <!-- <q-btn
-            no-caps
-            color="primary"
-            id="follow-btn"
-            label="Follow"
-            style="width:90px;"
-          /> -->
         </div>
       </div>
     </div>
@@ -70,7 +65,16 @@ import { getFollower, followFollower, unfollowFollower } from '@/api/follow';
 export default {
   data() {
     return {
-      followerData: [],
+      // 가짜 데이터
+      followerData: [
+        {
+          id: 1,
+          // profile_img: ,
+          follower_num: 50,
+          post_num: 10,
+          is_following: 30,
+        },
+      ],
       follow: true,
     };
   },
@@ -117,17 +121,8 @@ export default {
   display: flex;
   align-items: center;
 }
-
 .change-tag-color {
   text-decoration: none;
   color: #000000;
-}
-
-.container q-btn {
-  background-color: green;
-}
-
-.container q-btn.selected {
-  background-color: red;
 }
 </style>
