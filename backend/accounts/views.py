@@ -21,7 +21,7 @@ from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, Pa
 from django.core.mail.message import EmailMessage
 
 from .models import User
-from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, AuthSerializer
+from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, AuthSerializer, deleteSerializer
 
 INTERNAL_RESET_URL_TOKEN = 'set-password'
 INTERNAL_RESET_SESSION_TOKEN = '_password_reset_token'
@@ -108,6 +108,16 @@ def profile(request):
         }
         return HttpResponse(response)
 
+
+@api_view(['DELETE'])
+@permission_classes([AllowAny])
+def delete(request):
+    if request.method == 'DELETE':
+        serializer = deleteSerializer(data=request.data)
+        email = request.data.get('email')
+        user = User.objects.get(email=email)
+        user.delete()
+        return Response({'email': email}, status=status.HTTP_204_NO_CONTENT)
 
 # def req(request):
 #     credentials = {'username': 'pie3', 'email': 'apple@apple.com3'}
