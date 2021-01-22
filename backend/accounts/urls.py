@@ -11,7 +11,7 @@ urlpatterns = [
     path('login/', views.login),
     path('auth/', views.auth),
     path('profile/', views.profile),
-
+    path('delete/', views.delete),
 
     # path('req/', views.req),
 

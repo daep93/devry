@@ -101,3 +101,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = '__all__'
         extra_kwargs = {'password': {'write_only': True}, }
 
+class deleteSerializer(serializers.ModelSerializer):
+    email = serializers.CharField(max_length=80)
+    class Meta:
+       model = User
