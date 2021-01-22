@@ -10,7 +10,7 @@
       <div class="row  justify-between" style="width: 60%;">
         <div style="width:30%">
           <!-- 커뮤니티 활동 성향 관련 정보가 담긴 배너 -->
-          <side-banner></side-banner>
+          <side-banner :info="sideInfo"></side-banner>
         </div>
         <div style="width: 67%">
           <!-- 커뮤니티 활동 내역 정보가 담긴 배너 -->
@@ -34,11 +34,19 @@ export default {
   // 가짜 데이터
   data() {
     return {
+      // TODO : 사진을 어떻게 받을지 고민...
       fetchedData: {
-        username: 'Ssafy Park',
-        location: 'Daejeon',
-        group: 'Multi Campus',
+        userid: 3,
         email: 'ssafyPark@edu.ssafy.com',
+        username: 'Ssafy Park',
+        joined: '2013-02-08T09',
+        followerNum: 4301,
+        followeeNum: 392,
+        region: 'Daejeon',
+        group: 'Multi Campus',
+        bio: `Jumped into web development 1st of January 2020 and I'm completely in
+            love. I have little experience as a blogger but practice makes
+            perfect! 🤖🦾`,
         links: {
           Github: 'https://github.com/daep93/',
           Gitlab: 'https://lab.ssafy.com/',
@@ -47,13 +55,13 @@ export default {
             'https://www.linkedin.com/in/%EB%8C%80%ED%98%84-%EB%B0%95-001319202/',
         },
 
-        joined: '2013-02-08T09',
-        followerNum: 4301,
-        followeeNum: 392,
-        introduction: `Jumped into web development 1st of January 2020 and I'm completely in
-          love. I have little experience as a blogger but practice makes
-          perfect! 🤖🦾`,
-        myTags: {
+        skills: ['HTML', 'MongoDB', 'Javascript', 'vue'],
+        projects: {
+          'ssafy-common': 'https://lab.ssafy.com/',
+          'ssafy-special': 'https://lab.ssafy.com/',
+          'ssafy-complete': 'https://lab.ssafy.com/',
+        },
+        tags: {
           Vue: 8,
           React: 12,
           Angular: 3,
@@ -77,7 +85,12 @@ export default {
       };
     },
     sideInfo() {
-      return {};
+      return {
+        // TODO : post의 갯수와 comment의 갯수 넘겨줘야함.
+        tags: this.fetchedData.tags,
+        skills: this.fetchedData.skills,
+        projects: this.fetchedData.projects,
+      };
     },
   },
 };

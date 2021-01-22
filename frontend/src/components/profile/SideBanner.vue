@@ -9,12 +9,12 @@
       </div>
       <div class="row q-mb-xl ">
         <span
-          v-for="item in tags"
-          :key="item.tagName"
+          v-for="(tag, index) in Object.keys(info.tags)"
+          :key="tag"
           class="q-mb-sm q-mr-xs q-pa-sm"
-          :style="{ 'background-color': item.tagColor }"
+          :style="{ 'background-color': tagColors[index] }"
           style="font-size:10pt; border-radius:5pt"
-          >{{ item.tagName }}</span
+          >{{ tag }}</span
         >
       </div>
     </q-card-section>
@@ -24,7 +24,7 @@
       </div>
       <div class="row">
         <span
-          v-for="skill in skills"
+          v-for="skill in info.skills"
           :key="skill"
           class="q-mb-sm q-mr-xs q-pa-sm"
           style="background-color: #F0ECEC; font-size:10pt; border-radius:5pt "
@@ -38,8 +38,12 @@
       </div>
       <div class="row justify-center">
         <ul class="q-px-none">
-          <li style="color: #08458C" v-for="item in projects" :key="item">
-            {{ item }}
+          <li
+            style="color: #08458C"
+            v-for="(url, name) in info.projects"
+            :key="name"
+          >
+            {{ name }}
           </li>
         </ul>
       </div>
@@ -96,7 +100,7 @@
             </q-item-section>
             <q-item-section>
               <div class="row text-bold justify-end">
-                <span>4</span>
+                <span>{{ tagLength }}</span>
               </div>
             </q-item-section>
           </q-item>
@@ -108,14 +112,18 @@
 
 <script>
 import PieChart from '@/utils/pieChart';
-
+import { colorMapper } from '@/utils/tagColorMapper';
 export default {
   components: {
     PieChart,
   },
+  props: {
+    info: Object,
+  },
   data() {
     return {
       projects: ['ssafy-common', 'ssafy-special', 'ssafy-complete'],
+      // TODO : 태그에 따른 로고 색 알려주는 함수 필요
       tags: [
         { tagName: '#Vue', tagColor: 'rgba(65,184,131,0.5)' }, // #41B883
         { tagName: '#Javascript', tagColor: 'rgba(247,191,51,0.5)' }, // #F7BF33
@@ -161,6 +169,17 @@ export default {
         ],
       },
     };
+  },
+  computed: {
+    tagColors() {
+      return colorMapper(this.tagNames);
+    },
+    tagNames() {
+      return Object.keys(this.info.tags);
+    },
+    tagLength() {
+      return this.tagNames.length;
+    },
   },
 };
 </script>

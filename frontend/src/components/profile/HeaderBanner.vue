@@ -26,7 +26,7 @@
                 size="sm"
                 class="q-mr-xs"
               ></q-icon>
-              <span>{{ info.location }}</span>
+              <span>{{ info.region }}</span>
             </div>
             <div class="q-mr-md row items-center">
               <q-icon
@@ -82,7 +82,7 @@
       </div>
       <div class="row q-pl-xl q-my-md">
         <p>
-          {{ info.introduction }}
+          {{ info.bio }}
         </p>
       </div>
     </q-card-section>

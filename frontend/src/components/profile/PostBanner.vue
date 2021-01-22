@@ -28,7 +28,7 @@
       </div>
       <div>
         <q-tabs v-model="post" style="color:#259EC5">
-          <q-tab name="posts" label="posts" />
+          <q-tab name="posts" label="posts" class="qtab" />
           <q-tab name="comments" label="comments" />
         </q-tabs>
       </div>
