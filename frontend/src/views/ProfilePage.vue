@@ -14,7 +14,7 @@
         </div>
         <div style="width: 67%">
           <!-- 커뮤니티 활동 내역 정보가 담긴 배너 -->
-          <post-banner></post-banner>
+          <post-banner :info="postInfo"></post-banner>
         </div>
       </div>
     </div>
@@ -39,7 +39,7 @@ export default {
         userid: 3,
         email: 'ssafyPark@edu.ssafy.com',
         username: 'Ssafy Park',
-        joined: '2013-02-08T09',
+        joined: '2013-02-08',
         followerNum: 4301,
         followeeNum: 392,
         region: 'Daejeon',
@@ -67,6 +67,76 @@ export default {
           Angular: 3,
           Javascript: 24,
         },
+        // TODO : 이미지를 어떻게 받을지 고민을 해야함.
+        pinnedPosts: [
+          {
+            id: 1,
+            username: 'Go SSAFY',
+            writtenAt: '2021-01-03T09',
+            likeNum: 30,
+            commentNum: 5,
+            title: 'Vue interview questions and answers for js developers',
+            tags: ['Vue', 'Javascript', 'React', 'Angular'],
+          },
+          {
+            id: 2,
+            username: 'Go SSAFY',
+            writtenAt: '2021-01-03T09',
+            likeNum: 13,
+            commentNum: 1,
+            title: 'Useful Markup skills 5',
+            tags: ['Vue', 'Javascript', 'React', 'Angular'],
+          },
+        ],
+        posts: [
+          {
+            id: '1',
+            username: 'Go SSAFY',
+            writtenAt: '2021-01-03T09',
+            likeNum: 30,
+            commentNum: 5,
+            title: 'Vue interview questions and answers for js developers',
+            tags: ['Vue', 'Javascript', 'React', 'Angular'],
+          },
+          {
+            id: '2',
+            username: 'Go SSAFY',
+            writtenAt: '2021-01-03T09',
+            likeNum: 13,
+            commentNum: 1,
+            title: 'Useful Markup skills 5',
+            tags: ['Vue', 'Javascript', 'React', 'Angular'],
+          },
+          {
+            id: '3',
+            username: 'Go SSAFY',
+            writtenAt: '2021-01-03T09',
+            likeNum: 13,
+            commentNum: 1,
+            title: 'Useful Markup skills 5',
+            tags: ['Vue', 'Javascript', 'React', 'Angular'],
+          },
+        ],
+        comments: [
+          {
+            id: 1,
+            postId: 1,
+            username: 'Go SSAFY',
+            writtenAt: '2021-01-03T09',
+            title: 'Vue interview questions and answers for js developers',
+            comment:
+              'Hope this has been helpful and will give you ideas for your future.',
+          },
+          {
+            id: 2,
+            postId: 1,
+            username: 'Go SSAFY',
+            writtenAt: '2021-01-03T09',
+            title: 'Vue interview questions and answers for js developers',
+            comment:
+              'Hope this has been helpful and will give you ideas for your future.Hope this has been helpful and will give you ideas for your future.Hope this has been helpful and will give you ideas for your future.',
+          },
+        ],
       },
     };
   },
@@ -90,6 +160,13 @@ export default {
         tags: this.fetchedData.tags,
         skills: this.fetchedData.skills,
         projects: this.fetchedData.projects,
+      };
+    },
+    postInfo() {
+      return {
+        posts: this.fetchedData.posts,
+        comments: this.fetchedData.comments,
+        pinned: this.fetchedData.pinnedPosts,
       };
     },
   },

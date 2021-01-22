@@ -13,7 +13,11 @@
       <q-card-section
         style="width:100%;border: 2px solid #FBAA9F; border-raidus:5px; "
       >
-        <post-card v-for="item in [0, 1, 2]" :key="item"></post-card>
+        <post-card
+          v-for="post in info.pinned"
+          :detail="post"
+          :key="post.id"
+        ></post-card>
       </q-card-section>
     </q-card>
     <div class="row justify-between q-mb-sm">
@@ -37,14 +41,22 @@
       <q-card-section
         style="width:100%;border: 2px solid #2F95B4; border-raidus:5px; "
       >
-        <post-card v-for="item in [0, 1, 2]" :key="item"></post-card>
+        <post-card
+          v-for="post in info.posts"
+          :detail="post"
+          :key="post.id"
+        ></post-card>
       </q-card-section>
     </q-card>
     <q-card v-if="post == 'comments'">
       <q-card-section
         style="width:100%;border: 2px solid #2F95B4; border-raidus:5px; "
       >
-        <comment-card v-for="item in [0, 1, 2]" :key="item"></comment-card>
+        <comment-card
+          v-for="comment in info.comments"
+          :detail="comment"
+          :key="comment.id"
+        ></comment-card>
       </q-card-section>
     </q-card>
   </div>
@@ -54,6 +66,9 @@
 import PostCard from '@/components/common/PostCard';
 import CommentCard from '@/components/common/CommentCard';
 export default {
+  props: {
+    info: Object,
+  },
   components: { PostCard, CommentCard },
   data() {
     return {

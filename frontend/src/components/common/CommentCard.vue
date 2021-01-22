@@ -5,23 +5,30 @@
   >
     <div class="row justify-between q-pt-xs q-mb-xs">
       <div class="row items-baseline">
-        <div class="q-mr-sm text-weight-regular">@Go ssafy</div>
+        <div class="q-mr-sm text-weight-regular">@{{ detail.username }}</div>
         <div class="text-weight-thin" style="font-size:8pt">
-          Jan 17(15 hours)
+          {{ detail.writtenAt | moment('YYYY/MM/DD') }}
         </div>
       </div>
     </div>
-    <div class="row text-bold q-mb-sm" style="font-size:14pt">
-      React interview questions and answers for JS developers
+    <div class="row text-bold q-mb-sm" style="font-size:14pt;">
+      {{ detail.title }}
     </div>
-    <div class="row text-weight-thin q-mb-sm text-grey-8">
-      Comment : Hope this has been helpful and will give you ideas for your n...
+    <div
+      class="row text-weight-thin q-mb-sm text-grey-8 q-pr-lg"
+      style="display:block;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"
+    >
+      {{ detail.comment }}
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  props: {
+    detail: Object,
+  },
+};
 </script>
 
 <style scoped></style>
