@@ -1,17 +1,14 @@
 <template>
-  <div
-    class="row q-mb-sm"
-    style="width:100%; border: 1px solid #C1B9B9; border-radius: 8px"
-  >
+  <div class="row q-mb-sm post-card-frame">
     <div class="col-2">
       <q-img
-        :src="require('@/assets/keyboard.png')"
+        src="https://source.unsplash.com/random"
         alt="change-password"
-        style="height:120px; clip: inherit;"
+        class="post-thumbnail"
       ></q-img>
     </div>
-    <div class="col-10 q-pl-sm">
-      <div class="row justify-between q-pt-xs q-mb-sm">
+    <div class="col-10 q-pl-sm row content-between wrap" style="height:120px">
+      <div class="row justify-between q-pt-xs q-mb-sm col-12">
         <div class="row items-baseline q-mb-sm">
           <div class="q-mr-sm text-weight-regular">@{{ detail.username }}</div>
           <div class="text-weight-thin" style="font-size:8pt">
@@ -40,17 +37,16 @@
           <div></div>
         </div>
       </div>
-      <div class="row text-bold" style="font-size:14pt">
+      <div class="row text-bold col-12" style="font-size:14pt">
         {{ detail.title }}
       </div>
-      <div class="row justify-end items-end">
+      <div class="row justify-end items-end col-12">
         <span
           v-for="(tag, index) in detail.tags"
-          class="q-mr-sm q-mb-sm q-px-xs"
+          class="q-mr-sm q-mb-sm q-px-xs tag-color"
           :style="{ 'background-color': tagColors[index] }"
-          style="font-size:10pt; border-radius:5pt"
           :key="tag"
-          >{{ tag }}</span
+          >#{{ tag }}</span
         >
       </div>
     </div>
@@ -71,4 +67,18 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.post-card-frame {
+  width: 100%;
+  border: 1px solid #c1b9b9;
+  border-radius: 8px;
+}
+.post-thumbnail {
+  height: 120px;
+  clip: inherit;
+}
+.tag-color {
+  font-size: 10pt;
+  border-radius: 5pt;
+}
+</style>

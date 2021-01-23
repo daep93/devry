@@ -15,8 +15,7 @@
       {{ detail.title }}
     </div>
     <div
-      class="row text-weight-thin q-mb-sm text-grey-8 q-pr-lg"
-      style="display:block;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"
+      class="row text-weight-thin q-mb-sm text-grey-8 q-pr-lg comment-content"
     >
       {{ detail.comment }}
     </div>
@@ -31,4 +30,11 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.comment-content {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+</style>

@@ -13,7 +13,7 @@
           <side-banner :info="sideInfo"></side-banner>
         </div>
         <div style="width: 67%">
-          <!-- 커뮤니티 활동 내역 정보가 담긴 배너 -->
+          <!-- 글과 댓글 정보가 담긴 배너 -->
           <post-banner :info="postInfo"></post-banner>
         </div>
       </div>
@@ -25,6 +25,7 @@
 import HeaderBanner from '@/components/profile/HeaderBanner';
 import SideBanner from '@/components/profile/SideBanner';
 import PostBanner from '@/components/profile/PostBanner';
+import { getProfile } from '@/api/profile.js';
 export default {
   components: {
     HeaderBanner,
@@ -36,7 +37,6 @@ export default {
     return {
       // TODO : 사진을 어떻게 받을지 고민...
       fetchedData: {
-        userid: 3,
         email: 'ssafyPark@edu.ssafy.com',
         username: 'Ssafy Park',
         joined: '2013-02-08',
@@ -55,7 +55,7 @@ export default {
             'https://www.linkedin.com/in/%EB%8C%80%ED%98%84-%EB%B0%95-001319202/',
         },
 
-        skills: ['HTML', 'MongoDB', 'Javascript', 'vue'],
+        tech_stacks: ['HTML', 'MongoDB', 'Javascript', 'vue'],
         projects: {
           'ssafy-common': 'https://lab.ssafy.com/',
           'ssafy-special': 'https://lab.ssafy.com/',
@@ -152,13 +152,14 @@ export default {
         followerNum: this.fetchedData.followerNum,
         followeeNum: this.fetchedData.followeeNum,
         introduction: this.fetchedData.introduction,
+        bio: this.fetchedData.bio,
       };
     },
     sideInfo() {
       return {
         // TODO : post의 갯수와 comment의 갯수 넘겨줘야함.
         tags: this.fetchedData.tags,
-        skills: this.fetchedData.skills,
+        skills: this.fetchedData.tech_stacks,
         projects: this.fetchedData.projects,
       };
     },
@@ -169,6 +170,18 @@ export default {
         pinned: this.fetchedData.pinnedPosts,
       };
     },
+  },
+  async created() {
+    const id = this.$route.params.id;
+    try {
+      this.$q.loading.show();
+      const { data } = await getProfile(id);
+      // this.fetchedData = data;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      this.$q.loading.hide();
+    }
   },
 };
 </script>
