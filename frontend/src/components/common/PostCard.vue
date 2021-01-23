@@ -7,7 +7,7 @@
         class="post-thumbnail"
       ></q-img>
     </div>
-    <div class="col-10 q-pl-sm row content-between wrap" style="height:120px">
+    <div class="col-10 q-pl-sm row content-between wrap" style="height:100%">
       <div class="row justify-between q-pt-xs q-mb-sm col-12">
         <div class="row items-baseline q-mb-sm">
           <div class="q-mr-sm text-weight-regular">@{{ detail.username }}</div>
@@ -37,7 +37,7 @@
           <div></div>
         </div>
       </div>
-      <div class="row text-bold col-12" style="font-size:14pt">
+      <div class="row text-bold col-12 q-px-md q-mb-xs" style="font-size:14pt">
         {{ detail.title }}
       </div>
       <div class="row justify-end items-end col-12">
@@ -74,7 +74,7 @@ export default {
   border-radius: 8px;
 }
 .post-thumbnail {
-  height: 120px;
+  height: 130px;
   clip: inherit;
 }
 .tag-color {

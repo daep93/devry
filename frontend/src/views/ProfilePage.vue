@@ -6,17 +6,11 @@
     <div class="row justify-center ">
       <header-banner :info="headerInfo"></header-banner>
     </div>
-    <div class="row justify-center body-banner">
-      <div class="row  justify-between" style="width: 60%;">
-        <div style="width:30%">
-          <!-- 커뮤니티 활동 성향 관련 정보가 담긴 배너 -->
-          <side-banner :info="sideInfo"></side-banner>
-        </div>
-        <div style="width: 67%">
-          <!-- 글과 댓글 정보가 담긴 배너 -->
-          <post-banner :info="postInfo"></post-banner>
-        </div>
-      </div>
+    <div class="row justify-center">
+      <!-- 커뮤니티 활동 성향 관련 정보가 담긴 배너 -->
+      <side-banner :info="sideInfo"></side-banner>
+      <!-- 글과 댓글 정보가 담긴 배너 -->
+      <post-banner :info="postInfo"></post-banner>
     </div>
   </div>
 </template>
@@ -80,6 +74,25 @@ export default {
           },
           {
             id: 2,
+            username: 'Go SSAFY',
+            writtenAt: '2021-01-03T09',
+            likeNum: 13,
+            commentNum: 1,
+            title:
+              'Useful Markup skills 5Useful Markup skills 5Useful Markup skills 5',
+            tags: ['Vue', 'Javascript', 'React', 'Angular'],
+          },
+          {
+            id: 3,
+            username: 'Go SSAFY',
+            writtenAt: '2021-01-03T09',
+            likeNum: 13,
+            commentNum: 1,
+            title: 'Useful Markup skills 5',
+            tags: ['Vue', 'Javascript', 'React', 'Angular'],
+          },
+          {
+            id: 4,
             username: 'Go SSAFY',
             writtenAt: '2021-01-03T09',
             likeNum: 13,
@@ -190,15 +203,5 @@ export default {
 .back-header {
   height: 15vh;
   background-color: #1595dc;
-}
-.body-banner {
-  position: relative;
-  top: -6vh;
-}
-.side-banner {
-  width: 100%;
-}
-.contents-banner {
-  width: 100%;
 }
 </style>

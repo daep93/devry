@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="post-banner q-mb-lg">
     <div class="q-mb-sm row items-center">
       <q-icon
         :name="$i.ionAttachOutline"
@@ -7,17 +7,20 @@
         size="md"
         class="q-mr-xs"
       ></q-icon>
-      <span class="text-h5">Pinned</span>
+      <span class="text-h5 text-weight-bold">Pinned</span>
     </div>
     <q-card class="q-mb-lg">
       <q-card-section
         style="width:100%;border: 2px solid #FBAA9F; border-raidus:5px; "
       >
-        <post-card
-          v-for="post in info.pinned"
-          :detail="post"
-          :key="post.id"
-        ></post-card>
+        <div class="row justify-between">
+          <post-card
+            v-for="post in info.pinned"
+            :detail="post"
+            :key="post.id"
+            style="width:49%"
+          ></post-card>
+        </div>
       </q-card-section>
     </q-card>
     <div class="row justify-between q-mb-sm">
@@ -28,7 +31,7 @@
           size="md"
           class="q-mr-xs"
         ></q-icon>
-        <span class="text-h5">History</span>
+        <span class="text-h5 text-weight-bold">History</span>
       </div>
       <div>
         <q-tabs v-model="post" style="color:#259EC5">
@@ -78,4 +81,10 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.post-banner {
+  width: 60%;
+  position: relative;
+  z-index: 1;
+}
+</style>

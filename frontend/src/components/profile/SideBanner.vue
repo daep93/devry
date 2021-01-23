@@ -1,112 +1,152 @@
 <template>
   <q-card class="side-banner">
-    <q-card-section>
-      <pie-chart :data="chartData" :options="chartOptions"></pie-chart>
-    </q-card-section>
-    <q-card-section>
-      <div class="text-bold q-mb-md  text-center">
-        My Tags
+    <div class="row">
+      <div class="row col-6 items-center">
+        <q-card-section>
+          <pie-chart :data="chartData" :options="chartOptions"></pie-chart>
+        </q-card-section>
       </div>
-      <div class="row q-mb-xl ">
-        <span
-          v-for="(tag, index) in Object.keys(info.tags)"
-          :key="tag"
-          class="q-mb-sm q-mr-xs q-pa-sm"
-          :style="{ 'background-color': tagColors[index] }"
-          style="font-size:10pt; border-radius:5pt"
-          >#{{ tag }}</span
-        >
-      </div>
-    </q-card-section>
-    <q-card-section>
-      <div class=" text-bold q-mb-md text-center">
-        My Skills/languages
-      </div>
-      <div class="row">
-        <span
-          v-for="skill in info.skills"
-          :key="skill"
-          class="q-mb-sm q-mr-xs q-pa-sm"
-          style="background-color: #F0ECEC; font-size:10pt; border-radius:5pt "
-          >{{ skill }}</span
-        >
-      </div>
-    </q-card-section>
-    <q-card-section>
-      <div class="text-bold text-center">
-        My Projects
-      </div>
-      <div class="row justify-center">
-        <ul class="q-px-none">
-          <li
-            style="color: #08458C"
-            v-for="(url, name) in info.projects"
-            :key="name"
-          >
-            {{ name }}
-          </li>
-        </ul>
-      </div>
-    </q-card-section>
-    <q-card-section>
-      <div class=" text-bold q-mb-md text-center">
-        My History
-      </div>
-      <div class="row q-mb-xl" style="width:100%">
-        <q-list separator class="q-px-lg" style="width:100%">
-          <q-item
-            clickable
-            v-ripple
-            style="background-color:#FADDDD; border-radius:6px; "
-            class="q-mb-sm q-pl-lg"
-          >
-            <q-item-section avatar>
-              <span
-                ><q-icon :name="$i.ionDocumentTextOutline" size="24px" />
-                posts</span
-              >
-            </q-item-section>
-            <q-item-section
-              ><div class="row text-bold justify-end">4</div></q-item-section
-            >
-          </q-item>
-          <q-item
-            clickable
-            v-ripple
-            style="background-color:#BAD9F6; border-radius:6px"
-            class="q-mb-sm q-pl-lg"
-          >
-            <q-item-section avatar>
-              <span
-                ><q-icon :name="$i.ionChatboxEllipsesOutline" size="24px" />
-                comments</span
-              >
-            </q-item-section>
-            <q-item-section
-              ><div class="row text-bold justify-end">16</div></q-item-section
-            >
-          </q-item>
-          <q-item
-            clickable
-            v-ripple
-            style="background-color:#DCA4E5; border-radius:6px; "
-            class="q-pl-lg"
-          >
-            <q-item-section avatar>
-              <span
-                ><q-icon :name="$i.ionPricetagsOutline" size="24px" />
-                tags</span
-              >
-            </q-item-section>
-            <q-item-section>
-              <div class="row text-bold justify-end">
-                <span>{{ tagLength }}</span>
+      <div class="row col-6 items-start">
+        <div class="row items-start col-12">
+          <div class="col-6">
+            <q-card-section>
+              <div class="text-bold q-mb-md  text-center">
+                My Tags
               </div>
-            </q-item-section>
-          </q-item>
-        </q-list>
+              <div class="row q-mb-xl ">
+                <span
+                  v-for="(tag, index) in Object.keys(info.tags)"
+                  :key="tag"
+                  class="q-mb-sm q-mr-xs q-pa-sm"
+                  :style="{ 'background-color': tagColors[index] }"
+                  style="font-size:10pt; border-radius:5pt"
+                  >#{{ tag }}</span
+                >
+              </div>
+            </q-card-section>
+          </div>
+          <div class="col-6">
+            <q-card-section>
+              <div class=" text-bold q-mb-md text-center">
+                My Skills/languages
+              </div>
+              <div class="row">
+                <span
+                  v-for="skill in info.skills"
+                  :key="skill"
+                  class="q-mb-sm q-mr-xs q-pa-sm"
+                  style="background-color: #F0ECEC; font-size:10pt; border-radius:5pt "
+                  >{{ skill }}</span
+                >
+              </div>
+            </q-card-section>
+          </div>
+        </div>
+        <div class="row items-start col-12 ">
+          <div class="col-6 ">
+            <q-card-section>
+              <div class="text-bold text-center q-mb-md">
+                My Projects
+              </div>
+              <div class="row" style="width:100%">
+                <q-list separator style="width:100%">
+                  <q-item
+                    clickable
+                    v-ripple
+                    style="background-color:#F0ECEC; border-radius:6px; "
+                    class="q-mb-sm q-pl-lg"
+                    v-for="(url, name) in info.projects"
+                    :key="name"
+                  >
+                    <q-item-section>
+                      <div style="color: #08458C" class="text-center">
+                        {{ name }}
+                      </div>
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+              </div>
+            </q-card-section>
+          </div>
+          <div class="col-6">
+            <q-card-section>
+              <div class=" text-bold q-mb-md text-center">
+                My History
+              </div>
+              <div class="row" style="width:100%">
+                <q-list separator style="width:100%">
+                  <q-item
+                    clickable
+                    v-ripple
+                    style="background-color:#FADDDD; border-radius:6px; "
+                    class="q-mb-sm q-pl-lg"
+                  >
+                    <q-item-section avatar>
+                      <span
+                        ><q-icon
+                          :name="$i.ionDocumentTextOutline"
+                          size="24px"
+                        />
+                        posts</span
+                      >
+                    </q-item-section>
+                    <q-item-section
+                      ><div class="row text-bold justify-end">
+                        4
+                      </div></q-item-section
+                    >
+                  </q-item>
+                  <q-item
+                    clickable
+                    v-ripple
+                    style="background-color:#BAD9F6; border-radius:6px"
+                    class="q-mb-sm q-pl-lg"
+                  >
+                    <q-item-section avatar>
+                      <span
+                        ><q-icon
+                          :name="$i.ionChatboxEllipsesOutline"
+                          size="24px"
+                        />
+                        comments</span
+                      >
+                    </q-item-section>
+                    <q-item-section
+                      ><div class="row text-bold justify-end">
+                        16
+                      </div></q-item-section
+                    >
+                  </q-item>
+                  <q-item
+                    clickable
+                    v-ripple
+                    style="background-color:#DCA4E5; border-radius:6px; "
+                    class="q-pl-lg"
+                  >
+                    <q-item-section avatar>
+                      <span
+                        ><q-icon :name="$i.ionPricetagsOutline" size="24px" />
+                        tags</span
+                      >
+                    </q-item-section>
+                    <q-item-section>
+                      <div class="row text-bold justify-end">
+                        <span>{{ tagLength }}</span>
+                      </div>
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+              </div>
+            </q-card-section>
+          </div>
+        </div>
       </div>
-    </q-card-section>
+
+      <!-- <div class="col-3">
+        
+        
+      </div> -->
+    </div>
   </q-card>
 </template>
 
@@ -184,4 +224,11 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.side-banner {
+  width: 60%;
+  position: relative;
+  top: -5vh;
+  z-index: 1;
+}
+</style>
