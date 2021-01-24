@@ -1,9 +1,9 @@
-import { instance } from '@/api';
-function updateProfile() {
-  return instance.put('profile/setting/save');
-}
-function loadProfile() {
-  return instance.get('profile/setting/load');
-}
+import { profileSetting } from '@/api';
 
-export { updateProfile, loadProfile };
+function loadProfile(profileId) {
+  return profileSetting.get('/load', profileId);
+}
+function updateProfile(profileId, profileData) {
+  return profileSetting.put('/save', profileId, profileData);
+}
+export { loadProfile, updateProfile };

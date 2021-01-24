@@ -5,19 +5,20 @@
       <label for="tech">Skills</label>
       <q-input
         outlined 
-        v-model="skill"
+        v-model="techStack"
         id="tech"
         placeholder="보유하신 기술을 입력해주세요" 
         style="margin: 7px 0 30px 0;"
         @keypress.enter="addTechStack"
-        :dense="dense" 
+        TODO
+        @keypress.enter.prevent="submitForm()"
       />
     </div>
     <ul class="row">
-      <li v-for="item in skills" :key="item" style="margin-right: 10px;">
+      <li v-for="(skill, index) in propsTechStackData" :key="index" style="margin-right: 10px; cursor: pointer;">
         <q-badge color="blue">
-          {{ item.skill }}
-          <span @click="removeTechStack" style="margin-left: 10px;">X</span>
+          {{ skill }}
+          <span @click="removeTechStack(skill, index)" style="margin-left: 10px;">X</span>
         </q-badge>
       </li>
     </ul>
@@ -26,22 +27,23 @@
 
 <script>
 export default {
+  props: ['propsTechStackData'],
   data() {
     return {
-      skill: '',
-      skills: []
+      techStack: '',
     }
   },
   methods: {
     addTechStack: function() {
-      if (this.skill !== '') {
-        this.skills.push({skill: this.skill})
-        this.$emit('addTechStackItem', this.skill);
-        this.skill = ''
+      if (this.techStack !== '') {
+        console.log(this.techStack)
+        this.$emit('addTechStackItem', this.techStack);
+        this.techStack = ''
       }
     },
-    removeTechStack: function(form, index) {
-      this.skills.splice(index, 1)
+    removeTechStack: function(skill, index) {
+      console.log(skill)
+      this.$emit('removeTechStackItem', skill, index);
     },
   }
 }

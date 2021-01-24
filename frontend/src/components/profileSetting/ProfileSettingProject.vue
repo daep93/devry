@@ -22,14 +22,14 @@
         color="primary"
         icon="add"
         style="width:60px;"
-        @click="addForm"
+        @click="addProject"
       />
     </div>
-    <ul v-for="(form, index) in addForms" :key="index">
+    <ul v-for="(project, index) in propsProjectData" :key="index">
       <li v-if="index < 3">
         <q-btn color="primary" size="sm">
-          {{ form.pjtName }} [{{ form.pjtUrl }}]
-          <span @click="removeTag" style="margin-left: 10px;">
+          {{ project.project_name }} [{{ project.project_url }}]
+          <span @click="removeProject(project, index)" style="margin-left: 10px;">
             <q-icon :name="$i.ionTrash"></q-icon>
           </span>
         </q-btn>
@@ -40,26 +40,23 @@
 
 <script>
 export default {
+  props: ['propsProjectData'],
   data() {
     return {
-      addForms: [],
       pjtName: '',
       pjtUrl: '',
     }
   },
   methods: {
-    addForm: function(form, index) {
+    addProject: function(project, index) {
       if (this.pjtUrl !== '' && this.pjtName !== '') {
-        this.addForms.push({
-          pjtName: this.pjtName, pjtUrl: this.pjtUrl
-        })
         this.$emit('addProjectItem', this.pjtUrl, this.pjtName);
         this.pjtName = '',
         this.pjtUrl = ''
       }
     },
-    removeTag: function(form, index) {
-      this.addForms.splice(index, 1)
+    removeProject: function(project, index) {
+      this.$emit('removeProjectItem', project, index)
     },
   }
 }

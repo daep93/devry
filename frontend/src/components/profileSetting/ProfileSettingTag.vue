@@ -10,14 +10,16 @@
         placeholder="팔로우할 태그를 입력해주세요" 
         style="margin: 7px 0 30px 0;" 
         @keypress.enter="createTag"
+        TODO
+        @keypress.enter.prevent="submitForm()"
       />
     </div>
     <div>
       <ul class="row">
-        <li v-for="(tag, index) in tags" :key="index" style="margin-right: 10px;">
+        <li v-for="(tag, index) in propsTagData" :key="index" style="margin-right: 10px; cursor: pointer;">
           <q-badge color="primary">
             # {{ tag }}
-            <span @click="removeTag" style="margin-left: 10px;">X</span>
+            <span @click="removeTag(tag, index)" style="margin-left: 10px;">X</span>
           </q-badge>
         </li>
       </ul>
@@ -27,35 +29,25 @@
 
 <script>
 export default {
+  props: ['propsTagData'],
   data() {
     return {
       tagItem: '',
-      tags: [],
     }
   },
   methods: {
     createTag: function() {
       if (this.tagItem !== '') {
         console.log(this.tagItem)
-        // localStorage.setItem(this.tagItem, JSON.stringify(this.tagItem))
-        this.tags.push(this.tagItem)
         this.$emit('addTagItem', this.tagItem);
         this.tagItem = ''
       }
     },
     removeTag: function(tag, index) {
       console.log(tag, index);
-      // localStorage.removeItem(tag)
-      this.tags.splice(index, 1)
+      this.$emit('removeTagItem', tag, index);
     }
   },
-  created: function() {
-    if (localStorage.length > 0) {
-      for (var i = 0; i < localStorage.length ; i ++) {
-        this.tags.push(JSON.parse(localStorage.getItem(localStorage.key(i))));
-      }
-    }
-  }
 }
 </script>
 
