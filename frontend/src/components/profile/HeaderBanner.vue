@@ -80,10 +80,10 @@
           </div>
         </div>
       </div>
-      <div class="row q-pl-xl q-my-md">
-        <p>
+      <div class="row q-pl-xl q-my-md ">
+        <div class="col-11">
           {{ info.bio }}
-        </p>
+        </div>
       </div>
     </q-card-section>
   </q-card>
