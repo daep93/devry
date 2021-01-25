@@ -19,7 +19,7 @@ const routes = [
     component: () => import('@/views/ProfilePage.vue'),
   },
   {
-    path: '/profile-setting/:id',
+    path: '/profile-setting',
     name: 'ProfileSetting',
     component: () => import('@/views/ProfileSettingPage.vue'),
   },

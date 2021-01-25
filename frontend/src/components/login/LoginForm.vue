@@ -86,7 +86,6 @@
         style="width:400px; height:50px; border-radius:5px;"
         :disabled="!checkForm"
         type="submit"
-        @click="login"
       />
     </div>
   </q-form>
