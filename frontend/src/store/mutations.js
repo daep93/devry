@@ -31,4 +31,7 @@ export default {
     state.nickname = '';
     state.token = '';
   },
+  toggleLeft(state) {
+    state.leftDrawal = !state.leftDrawal;
+  },
 };

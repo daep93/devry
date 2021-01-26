@@ -1,0 +1,90 @@
+<template>
+  <q-drawer
+    show-if-above
+    v-model="$store.state.leftDrawal"
+    side="left"
+    behavior="desktop"
+    bordered
+    :width="250"
+  >
+    <q-tabs
+      v-model="tab"
+      vertical
+      class="text-black q-pt-xl"
+      active-bg-color="blue-1"
+      indicator-color="blue-4"
+      inline-label
+      align="left"
+    >
+      <q-route-tab
+        name="twit"
+        :icon="$i.ionHappyOutline"
+        label="자유 게시판"
+        to="/twit"
+      />
+      <q-route-tab
+        name="qna"
+        :icon="$i.ionSearchOutline"
+        label="QnA"
+        to="/qna"
+      />
+      <q-route-tab
+        name="forum"
+        :icon="$i.ionCafeOutline"
+        label="포럼"
+        to="/forum"
+      />
+      <q-route-tab name="event" icon="event" label="이벤트" to="/event" />
+      <q-route-tab
+        name="jobs"
+        :icon="$i.ionLaptopOutline"
+        label="구인구직"
+        to="/jobs"
+      />
+    </q-tabs>
+    <div>
+      <div class="row my-tags q-pt-lg">
+        <div class="row col-12 q-mb-sm" style="font-size: 14pt;">#My tags</div>
+        <div class="row q-mr-sm">
+          <span
+            v-for="tag in tags"
+            :key="tag"
+            class="q-mb-sm q-mr-xs q-pa-sm"
+            :style="{ 'background-color': '#ECEFF1' }"
+            style="font-size:10pt; border-radius:5pt"
+            >#{{ tag }}</span
+          >
+        </div>
+      </div>
+    </div>
+  </q-drawer>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      tab: 'qna',
+      tags: ['Javascript', 'vue', 'react', 'python'],
+    };
+  },
+};
+</script>
+
+<style scoped>
+.q-tab {
+  justify-content: start;
+}
+.q-tab >>> .q-tab__content {
+  padding-left: 40px;
+}
+.q-tab >>> .q-tab__label {
+  font-weight: bold;
+}
+.q-tabs--vertical {
+  height: auto;
+}
+.my-tags {
+  padding-left: 48px;
+}
+</style>

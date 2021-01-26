@@ -18,6 +18,7 @@
             class="q-ma-lg"
             size="md"
             @click="offModal"
+            style="cursor:pointer"
           ></q-icon>
         </div>
         <signup-input

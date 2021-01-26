@@ -19,9 +19,34 @@ const routes = [
     component: () => import('@/views/ProfilePage.vue'),
   },
   {
-    path: '/profile-setting/:id',
+    path: '/profile-setting',
     name: 'ProfileSetting',
     component: () => import('@/views/ProfileSettingPage.vue'),
+  },
+  {
+    path: '/twit',
+    name: 'Twit',
+    component: () => import('@/views/TwitPage.vue'),
+  },
+  {
+    path: '/qna',
+    name: 'QnA',
+    component: () => import('@/views/QnaPage.vue'),
+  },
+  {
+    path: '/forum',
+    name: 'Forum',
+    component: () => import('@/views/ForumPage.vue'),
+  },
+  {
+    path: '/event',
+    name: 'Event',
+    component: () => import('@/views/EventPage.vue'),
+  },
+  {
+    path: '/jobs',
+    name: 'Jobs',
+    component: () => import('@/views/JobsPage.vue'),
   },
   {
     path: '*',
