@@ -1,10 +1,11 @@
 const colorDict = {
-  Vue: 'rgba(65,184,131,0.5)',
-  Javascript: 'rgba(247,191,51,0.5)',
-  React: 'rgba(54,168,253,0.5)',
-  Angular: 'rgba(181,46,49,0.5)',
+  vue: 'rgba(65,184,131,1)',
+  javascript: 'rgba(247,191,51,1)',
+  react: 'rgba(54,168,253,1)',
+  angular: 'rgba(181,46,49,1)',
+  python: 'rgba(69,132,182,1)',
 };
 function colorMapper(tags) {
-  return tags.map(tag => colorDict[tag]);
+  return tags.map(tag => colorDict[tag.toLowerCase()]);
 }
 export { colorMapper };
