@@ -39,6 +39,11 @@ const routes = [
     component: () => import('@/views/ForumPage.vue'),
   },
   {
+    path: '/forum/forum-detail',
+    name: 'ForumDetail',
+    component: () => import('@/views/ForumDetailPage.vue'),
+  },
+  {
     path: '/event',
     name: 'Event',
     component: () => import('@/views/EventPage.vue'),
