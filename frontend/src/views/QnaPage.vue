@@ -32,7 +32,7 @@ export default {
   },
   computed: {
     tagColors() {
-      return colorMapper(this.tags);
+      return colorMapper(this.tags, 1);
     },
   },
 };

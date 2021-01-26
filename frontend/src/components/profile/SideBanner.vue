@@ -23,7 +23,7 @@
                   :key="tag"
                   class="q-mb-sm q-mr-xs q-pa-sm"
                   :style="{ 'background-color': tagColors[index] }"
-                  style="font-size:10pt; border-radius:5pt"
+                  style="font-size:10pt; border-radius:5pt;"
                   >#{{ tag }}</span
                 >
               </div>
@@ -216,7 +216,7 @@ export default {
   },
   computed: {
     tagColors() {
-      return colorMapper(this.tagNames);
+      return colorMapper(this.tagNames, 0.5);
     },
     tagNames() {
       return Object.keys(this.info.tags);
