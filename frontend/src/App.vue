@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh lpR fFf" class="bg-blue-grey-1" style="width:100vw">
+  <q-layout view="hHh lpR fFf" style="width:100vw">
     <main-header />
     <account-modal></account-modal>
     <follow-modal></follow-modal>
