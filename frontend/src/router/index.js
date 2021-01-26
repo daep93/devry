@@ -44,6 +44,12 @@ const routes = [
     component: () => import('@/views/EventPage.vue'),
   },
   {
+    // path: '/event/:id',
+    path: '/event-detail',
+    name: 'EventDetail',
+    component: () => import('@/views/EventDetailPage.vue'),
+  },
+  {
     path: '/jobs',
     name: 'Jobs',
     component: () => import('@/views/JobsPage.vue'),
