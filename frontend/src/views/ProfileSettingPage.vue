@@ -183,20 +183,6 @@ export default {
       ],
     }
   },
-  // data() {
-  //   return {
-  //     email: '',
-  //     username: '',
-  //     region: '',
-  //     group: '',
-  //     bio: '',
-  //     profile_img: 'https://placeimg.com/500/300/nature',
-  //     links: {}
-  //     techStacks: [],
-  //     projects: [],
-  //     tags: [],
-  //   }
-  // },
 
   // TODO : 프로필 수정 중 페이지를 이동할 때 경고문구 띄우기
   beforeRouteLeave(to, from, next) {
@@ -212,7 +198,6 @@ export default {
       this.$refs.imageInput.click();
     },
     onChangeImages(e) {
-      console.log(e.target.files)
       const file = e.target.files[0];
       this.profile_img = URL.createObjectURL(file);
     },
@@ -255,7 +240,6 @@ export default {
         // 이동 시킬 페이지 적어주기(이전 페이지로 이동)
         this.$router.go(-1);
       } catch (error) {
-        console.log(error);
         // alert('에러가 발생했습니다!')
       } finally {
         this.$q.loading.hide();
@@ -281,7 +265,6 @@ export default {
         tags: this.tags,
       });
     } catch (error) {
-      console.log(error);
       // alert('에러가 발생했습니다.)
     } finally {
       this.$q.loading.hide();

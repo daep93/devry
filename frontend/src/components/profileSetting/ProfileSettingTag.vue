@@ -38,13 +38,11 @@ export default {
   methods: {
     createTag: function() {
       if (this.tagItem !== '') {
-        console.log(this.tagItem)
         this.$emit('addTagItem', this.tagItem);
         this.tagItem = ''
       }
     },
     removeTag: function(tag, index) {
-      console.log(tag, index);
       this.$emit('removeTagItem', tag, index);
     }
   },

@@ -36,13 +36,11 @@ export default {
   methods: {
     addTechStack: function() {
       if (this.techStack !== '') {
-        console.log(this.techStack)
         this.$emit('addTechStackItem', this.techStack);
         this.techStack = ''
       }
     },
     removeTechStack: function(skill, index) {
-      console.log(skill)
       this.$emit('removeTechStackItem', skill, index);
     },
   }
