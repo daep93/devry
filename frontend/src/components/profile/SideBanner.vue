@@ -3,7 +3,11 @@
     <div class="row">
       <div class="row col-6 items-center">
         <q-card-section>
-          <pie-chart :data="chartData" :options="chartOptions"></pie-chart>
+          <pie-chart
+            :data="chartData"
+            :options="chartOptions"
+            style="width:25vw"
+          ></pie-chart>
         </q-card-section>
       </div>
       <div class="row col-6 items-start">
@@ -176,7 +180,7 @@ export default {
         cutoutPercentage: 75,
         legend: {
           display: true,
-          position: 'right',
+          position: 'bottom',
           fullWidth: true,
           labels: {
             boxWidth: 10,

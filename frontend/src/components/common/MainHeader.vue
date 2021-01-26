@@ -1,22 +1,34 @@
 <template>
-  <q-header reveal elevated class="bg-primary text-white" height-hint="98">
+  <q-header bordered class="bg-white" height-hint="98">
     <q-toolbar>
-      <router-link :to="logolink">
-        <q-btn flat round dense :icon="$i.ionPricetags" color="white" />
-      </router-link>
+      <div class="row items-center">
+        <q-btn
+          dense
+          flat
+          round
+          icon="menu"
+          @click="toggleLeft"
+          color="primary"
+        />
+        <router-link :to="logolink">
+          <span class="text-primary logo-font">DEVRY</span>
+        </router-link>
+      </div>
       <q-toolbar-title>
-        <div class="text-white q-ma-none text-h4">
-          <span>
-            <router-link :to="logolink">
-              DEVRY
-            </router-link>
-          </span>
-        </div>
+        <div></div>
       </q-toolbar-title>
       <q-tabs align="left">
+        <q-input v-model="search" type="search" class="q-ma-sm" outlined>
+          <template v-slot:append>
+            <q-icon name="create" />
+          </template>
+        </q-input>
+        <q-btn color="black" :icon="$i.ionNotificationsOutline" round flat>
+        </q-btn>
         <!-- 로그인 하기 이전 보여지는 버튼 구현 -->
-        <q-btn-dropdown label="Before Login">
-          <q-list bordered>
+        <q-btn color="primary" round flat v-if="!$store.getters.isLogined">
+          <q-avatar :icon="$i.ionPersonCircleOutline"></q-avatar>
+          <q-menu>
             <q-item @click="loginModal" clickable>
               <q-item-section avatar>
                 <q-icon :name="$i.ionPersonCircleOutline"></q-icon>
@@ -33,11 +45,14 @@
                 회원가입
               </q-item-section>
             </q-item>
-          </q-list>
-        </q-btn-dropdown>
+          </q-menu>
+        </q-btn>
         <!-- 로그인 이후 보여지는 버튼 구현 -->
-        <q-btn-dropdown label="After Login">
-          <q-list bordered>
+        <q-btn color="primary" round flat v-if="$store.getters.isLogined">
+          <q-avatar style="border: 1px solid #ECEFF1">
+            <q-img :src="require('@/assets/keyboard.png')" />
+          </q-avatar>
+          <q-menu>
             <q-item @click="moveToProfilePage" clickable>
               <q-item-section avatar>
                 <q-icon :name="$i.ionHappyOutline"></q-icon>
@@ -62,8 +77,8 @@
                 팔로워/팔로우
               </q-item-section>
             </q-item>
-          </q-list>
-        </q-btn-dropdown>
+          </q-menu>
+        </q-btn>
       </q-tabs>
     </q-toolbar>
   </q-header>
@@ -71,6 +86,11 @@
 
 <script>
 export default {
+  data() {
+    return {
+      search: '',
+    };
+  },
   computed: {
     logolink() {
       return '/main';
@@ -99,12 +119,26 @@ export default {
     moveToProfileSettingPage() {
       this.$router.push(`/profile-setting/${this.$store.getters.getAccountId}`);
     },
+    toggleLeft() {
+      this.$store.commit('toggleLeft');
+    },
   },
 };
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Bungee+Inline&display=swap');
 a {
   color: white;
+}
+.logo-font {
+  font-size: 20pt;
+  font-family: 'Bungee Inline', cursive;
+}
+.q-input >>> .q-field__control {
+  height: 40px;
+}
+.q-input >>> .q-field__append {
+  height: 40px;
 }
 </style>
