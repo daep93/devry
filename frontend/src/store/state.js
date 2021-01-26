@@ -11,4 +11,5 @@ export default {
   accountModal: false,
   accountModalType: 'login',
   followModal: false,
+  leftDrawal: true,
 };

@@ -1,6 +1,6 @@
 <template>
-  <q-page>
-    MainPage
+  <q-page style=" width:100%; height:90vh">
+    <div class="row" style="height:100%"></div>
   </q-page>
 </template>
 
