@@ -6,6 +6,7 @@
     behavior="desktop"
     bordered
     :width="250"
+    overlay
   >
     <q-tabs
       v-model="tab"
