@@ -156,7 +156,7 @@
 
 <script>
 import PieChart from '@/utils/pieChart';
-import { colorMapper } from '@/utils/tagColorMapper';
+import { colorListMapper } from '@/utils/tagColorMapper';
 export default {
   components: {
     PieChart,
@@ -216,7 +216,7 @@ export default {
   },
   computed: {
     tagColors() {
-      return colorMapper(this.tagNames, 0.5);
+      return colorListMapper(this.tagNames, 0.5);
     },
     tagNames() {
       return Object.keys(this.info.tags);
