@@ -15,5 +15,5 @@ urlpatterns = [
     path('qnas/<int:qna_pk>/anss/', views.create_comment),
 
     path('anss/', views.comment_list),
-    path('anss/<int:comment_pk>/', views.comment_detail_update_delete),
+    path('anss/<int:ans_pk>/', views.comment_detail_update_delete),
 ]
