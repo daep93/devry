@@ -6,6 +6,7 @@
     behavior="desktop"
     bordered
     :width="250"
+    overlay
   >
     <q-tabs
       v-model="tab"
@@ -49,7 +50,7 @@
           <span
             v-for="tag in tags"
             :key="tag"
-            class="q-mb-sm q-mr-xs q-pa-sm"
+            class="q-mb-sm q-mr-xs q-pa-sm "
             :style="{ 'background-color': '#ECEFF1' }"
             style="font-size:10pt; border-radius:5pt"
             >#{{ tag }}</span

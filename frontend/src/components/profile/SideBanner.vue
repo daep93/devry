@@ -23,7 +23,7 @@
                   :key="tag"
                   class="q-mb-sm q-mr-xs q-pa-sm"
                   :style="{ 'background-color': tagColors[index] }"
-                  style="font-size:10pt; border-radius:5pt"
+                  style="font-size:10pt; border-radius:5pt;"
                   >#{{ tag }}</span
                 >
               </div>
@@ -156,7 +156,7 @@
 
 <script>
 import PieChart from '@/utils/pieChart';
-import { colorMapper } from '@/utils/tagColorMapper';
+import { colorListMapper } from '@/utils/tagColorMapper';
 export default {
   components: {
     PieChart,
@@ -216,7 +216,7 @@ export default {
   },
   computed: {
     tagColors() {
-      return colorMapper(this.tagNames);
+      return colorListMapper(this.tagNames, 0.5);
     },
     tagNames() {
       return Object.keys(this.info.tags);
