@@ -1,11 +1,11 @@
 <template>
   <div>
-    <q-card flat bordered class="my-card" style="padding: 27px; width: 967px;">
+    <q-card flat bordered class="my-card" style="padding: 40px; width: 868px;">
       <div class="q-pt-none row">
         <div class="col-2" style="width: 50px; margin-right: 5px;">
           <span style="cursor: pointer;">
             <q-avatar @click="goToProfile" style="width: 35px; height: 35px;"
-              ><img :src="profile_img" />
+              ><img src="https://cdn.quasar.dev/img/avatar.png" />
             </q-avatar>
           </span>
         </div>
@@ -15,13 +15,13 @@
               outlined
               v-model="text"
               :dense="dense"
-              style="width: 850px;"
+              style="width: 720px;"
               placeholder="댓글을 입력해주세요"
             />
           </span>
         </div>
       </div>
-      <q-card-section style="width: 920px;">
+      <q-card-section style="width: 790px;">
         <div class="icon-position">
           <q-btn
             no-caps
@@ -55,7 +55,7 @@
                 flat
                 bordered
                 class="my-card"
-                style="width: 850px; height: 100px; padding: 12px;"
+                style="width: 720px; height: 100px; padding: 18px;"
               >
                 <span>{{ username }}</span>
                 <span style="margin-left: 10px; font-size: 5px;">7분 전</span>

@@ -1,8 +1,8 @@
 <template>
   <div class="row" style="margin:0 auto; width: 1200px; height: 600px;">
-    <div class="justify-center col-10">
+    <div class="justify-center col-9">
       <div class="q-pa-md row items-start q-gutter-md">
-        <q-card flat bordered class="my-card" style="padding: 15px;">
+        <q-card flat bordered class="my-card" style="padding: 30px;">
           <q-card-section>
             <div class="text-h4">
               <b>{{ title }}</b>
@@ -10,15 +10,26 @@
           </q-card-section>
 
           <q-card-section class="q-pt-none">
-            <span style="cursor: pointer;">
-              <q-avatar @click="goToProfile" style="width: 35px; height: 35px;"
-                ><img :src="profile_img" />
-              </q-avatar>
-            </span>
-            <span style="margin-left: 12px; font-size: 17px;">{{
-              username
-            }}</span>
-            <span style="font-size: 10px; margin-left: 7px;"> 7시간 전</span>
+            <div class="row">
+              <div class="col-0.5">
+                <span style="cursor:pointer; margin-right: 11px;">
+                  <q-avatar
+                    @click="goToProfile"
+                    style="width: 35px; height: 35px;"
+                    ><img :src="profile_img" />
+                  </q-avatar>
+                </span>
+              </div>
+              <div class="col-11.5">
+                <div
+                  style="font-size: 15px; cursor:pointer; height: 17px; color: #464646"
+                  @click="goToProfile"
+                >
+                  <b>{{ username }}</b>
+                </div>
+                <span style="font-size: 10px; color: #464646">15분 전</span>
+              </div>
+            </div>
           </q-card-section>
           <br />
           <q-card-section class="q-pt-none">
@@ -80,7 +91,7 @@
       </div>
     </div>
 
-    <div class="col-2">
+    <div class="col-3">
       <ForumShortProfile></ForumShortProfile>
     </div>
   </div>

@@ -2,7 +2,7 @@
   <div>
     <div
       class="justify-center"
-      style="width: 900px; height: 150px; margin:0 auto;"
+      style="width: 1200px; height: 150px; margin:0 auto;"
     >
       <q-card
         flat
