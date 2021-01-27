@@ -1,34 +1,19 @@
 <template>
   <div>
-    <div
-      class="justify-center"
-      style="width: 1200px; height: 150px; margin:0 auto;"
-    >
-      <q-card
-        flat
-        class="my-card"
-        style="width: 800px; margin-top: 50px; margin-left: 35px;"
+    <!-- <div class="row justify-end q-gutter-lg">
+      <q-input v-model="search" type="search" class="q-mb-sm" outlined>
+        <template v-slot:append>
+          <q-icon :name="$i.ionSearchOutline" />
+        </template>
+      </q-input>
+      <q-btn
+        class="tag-filter"
+        outline
+        color="primary"
+        @click="$store.commit('toggleTagFilter')"
+        >태그 선택</q-btn
       >
-        <q-card-section>
-          <div class="text-h6">Tags</div>
-        </q-card-section>
-
-        <span
-          v-for="i in 3"
-          :key="i"
-          class="icon-position"
-          style="margin-left: 10px;"
-        >
-          <q-badge color="blue">
-            # Vue
-          </q-badge>
-        </span>
-      </q-card>
-
-      <q-card-section class="q-pt-none">
-        {{ lorem }}
-      </q-card-section>
-    </div>
+    </div> -->
   </div>
 </template>
 

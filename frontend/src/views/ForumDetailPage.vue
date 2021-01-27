@@ -1,6 +1,6 @@
 <template>
-  <div class="row" style="margin:0 auto; width: 1200px; height: 600px;">
-    <div class="justify-center col-9">
+  <div class="row" style="margin:0 auto; width: 1000px; height: 600px;">
+    <div class="justify-center col-10">
       <div class="q-pa-md row items-start q-gutter-md">
         <q-card flat bordered class="my-card" style="padding: 30px;">
           <q-card-section>
@@ -91,7 +91,7 @@
       </div>
     </div>
 
-    <div class="col-3">
+    <div class="col-2">
       <ForumShortProfile></ForumShortProfile>
     </div>
   </div>

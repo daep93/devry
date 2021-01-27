@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-card flat bordered class="my-card" style="padding: 40px; width: 868px;">
+    <q-card flat bordered class="my-card" style="padding: 40px; width: 800px;">
       <div class="q-pt-none row">
         <div class="col-2" style="width: 50px; margin-right: 5px;">
           <span style="cursor: pointer;">
@@ -15,13 +15,13 @@
               outlined
               v-model="text"
               :dense="dense"
-              style="width: 720px;"
+              style="width: 660px;"
               placeholder="댓글을 입력해주세요"
             />
           </span>
         </div>
       </div>
-      <q-card-section style="width: 790px;">
+      <q-card-section style="margin-right: -12px;">
         <div class="icon-position">
           <q-btn
             no-caps
@@ -55,7 +55,7 @@
                 flat
                 bordered
                 class="my-card"
-                style="width: 720px; height: 100px; padding: 18px;"
+                style="width: 660px; height: 100px; padding: 18px;"
               >
                 <span>{{ username }}</span>
                 <span style="margin-left: 10px; font-size: 5px;">7분 전</span>
