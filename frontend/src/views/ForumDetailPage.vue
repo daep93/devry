@@ -1,8 +1,8 @@
 <template>
-  <div class="row">
-    <div class="justify-center col-md-9" style="width: 900px; height: 600px;">
+  <div class="row" style="margin:0 auto; width: 1200px; height: 600px;">
+    <div class="justify-center col-10">
       <div class="q-pa-md row items-start q-gutter-md">
-        <q-card flat bordered class="my-card" style="padding: 10px;">
+        <q-card flat bordered class="my-card" style="padding: 15px;">
           <q-card-section>
             <div class="text-h4">
               <b>{{ title }}</b>
@@ -31,27 +31,56 @@
             </div>
           </q-card-section>
           <br />
+          <br />
           <q-card-section class="q-pt-none">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem
-            ipsum, dolor sit amet consectetur adipisicing elit. Eveniet est
-            voluptatem eius sunt. Dicta assumenda et fugiat cumque similique
-            nesciunt qui labore earum blanditiis, alias quam dignissimos culpa.
-            Cupiditate tempore facilis laudantium enim perferendis, tenetur
-            nobis fugiat necessitatibus doloremque eaque quidem, quisquam nihil
-            aut. Neque asperiores tempora quos consequuntur eaque architecto
-            quas nemo molestias quam tempore magnam necessitatibus, quidem
-            tenetur aliquam officiis cumque? Eveniet enim accusantium doloribus
-            delectus vitae totam itaque modi magni possimus aspernatur, eligendi
-            nesciunt laborum voluptatum. Tempora accusamus tenetur blanditiis
-            magnam et, atque cupiditate, officia libero adipisci impedit
-            praesentium, iure nam eius. Illo deleniti atque suscipit veritatis?
+            <p style="font-size:40px;">Hello world!</p>
+            <p style="font-size:20px;">testing</p>
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio
+              omnis sunt a nisi? Ratione nisi sunt sequi neque sapiente expedita
+              placeat repellat eos dolorem voluptas. Alias officia fugit rem et
+              eveniet. Architecto dicta aliquam optio odit autem tenetur?
+              Reprehenderit, dolorum? Quibusdam quam odio neque ullam enim totam
+              voluptatum est culpa quas, similique velit esse quos tenetur
+              molestiae voluptatem perferendis minima assumenda ex! Rem
+              explicabo sunt, beatae pariatur animi minima dolores iste eius
+              tenetur officia praesentium architecto quos facere, ab doloremque?
+              Soluta mollitia asperiores nostrum dolorem debitis! Nihil enim
+              vero, ad obcaecati error ab nesciunt neque. Voluptatibus, ullam
+              praesentium sapiente possimus non enim suscipit mollitia vitae
+              deleniti, nesciunt esse magnam natus, minima quam. Omnis ut,
+              ratione nulla modi aliquam nesciunt laboriosam repellat a hic
+              quasi ab magnam sed, minima voluptate neque dignissimos fuga iure!
+              Dolore, magni ad enim dolorum nostrum exercitationem. Omnis
+              accusantium modi accusamus. Velit doloremque nam autem et
+              accusantium labore odit veritatis. Dicta consequuntur, vel harum
+              rem soluta nemo at beatae blanditiis corporis quaerat. Neque
+              nulla, rerum odit fugiat perferendis voluptatum ipsa quibusdam id
+              pariatur dolores a tempore repellat dolor iure aut explicabo ut
+              reprehenderit doloribus cum ipsam nemo, excepturi, assumenda quam
+              vitae. Quod hic quia saepe. Ipsum, quidem?<br />
+              <br />
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui
+              deserunt cum voluptates eaque magnam fugiat at, excepturi
+              distinctio rerum accusantium ut in deleniti iste, expedita ducimus
+              ipsum libero autem! Maiores nam odio, nemo numquam distinctio
+              animi perferendis quis iste ab! Suscipit ab, ipsam minima nostrum
+              quo eveniet distinctio architecto hic. Eaque quam, obcaecati
+              soluta eligendi deleniti exercitationem natus et impedit
+              recusandae? Atque consequuntur, nulla eveniet itaque suscipit
+              temporibus necessitatibus blanditiis exercitationem quod,
+              perspiciatis ad praesentium odit sunt voluptas impedit neque
+              facilis! Corrupti iure neque, quae ducimus rerum ab doloremque
+              labore quod ipsam? Obcaecati eligendi explicabo odio molestiae
+              necessitatibus aliquam cum.
+            </p>
           </q-card-section>
         </q-card>
+        <ForumComment></ForumComment>
       </div>
     </div>
 
-    <div class="col-md-3">
+    <div class="col-2">
       <ForumShortProfile></ForumShortProfile>
     </div>
   </div>
@@ -59,10 +88,12 @@
 
 <script>
 import ForumShortProfile from '@/components/forum/ForumShortProfile';
+import ForumComment from '@/components/forum/ForumComment';
 
 export default {
   components: {
     ForumShortProfile,
+    ForumComment,
   },
   data() {
     return {
