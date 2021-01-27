@@ -1,8 +1,17 @@
+import json
+import requests
+
 from rest_framework import status, generics, permissions
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.generics import CreateAPIView, UpdateAPIView, GenericAPIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.views import APIView
+
 from allauth.account.forms import ResetPasswordForm
+
+from rest_auth.registration.views import RegisterView
+from rest_auth.views import LoginView, LogoutView
 
 
 
@@ -11,6 +20,7 @@ from django.utils.http import is_safe_url, urlsafe_base64_decode
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.decorators.cache import never_cache
 
+from django.contrib.auth import get_user_model, authenticate
 from django.template import RequestContext
 from django.shortcuts import render                                                            
 from django.http import HttpResponse, HttpResponseRedirect
@@ -20,63 +30,55 @@ from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, 
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, PasswordResetForm, SetPasswordForm
 from django.core.mail.message import EmailMessage
 
-from .models import User
-from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, AuthSerializer, deleteSerializer
-
-INTERNAL_RESET_URL_TOKEN = 'set-password'
-INTERNAL_RESET_SESSION_TOKEN = '_password_reset_token'
-
-import json
-import requests
-
-@api_view(['POST'])
-@permission_classes([AllowAny])
-def createUser(request):
-    if request.method == 'POST':
-        serializer = RegisterSerializer(data=request.data)
-        if not serializer.is_valid(raise_exception=True):
-            return Response({"message": "Request Body Error."}, status=status.HTTP_409_CONFLICT)
-
-        if User.objects.filter(email=serializer.validated_data['email']).first() is None:
-            serializer.save()
-            return Response({
-                'username': serializer.data['username'],
-                'email': serializer.data['email'],
-            }, status=status.HTTP_201_CREATED)
-        return Response({"message": "duplicate email"}, status=status.HTTP_409_CONFLICT)
+from .models import User, Profile
+from .serializers import ProfileStatusSerializer, UpdateUserSerializer, UserRegistrationSerializer, UserSerializer, InfoSerializer, deleteSerializer
 
 
-@api_view(['POST'])
-@permission_classes([AllowAny])
-def login(request):
-    if request.method == 'POST':
-        serializer = LoginSerializer(data=request.data)
-        email = request.data.get('email')
 
-        if not serializer.is_valid(raise_exception=True):
-            return Response({"message": "Request Body Error."}, status=status.HTTP_409_CONFLICT)
-        if serializer.validated_data['email'] == "None":
-            return Response({'message': 'fail'}, status=status.HTTP_200_OK)
 
-        user = User.objects.get(email=email)
 
-        response = {
-            'user': {
-                'username': UserSerializer(user).data['username'],
-                'email': serializer.data['email']
-            },
-            'token': serializer.data['token']
-        }
-        return Response(response, status=status.HTTP_200_OK)
+class UserSignupView(RegisterView):
+    """
+    유저네임, 이메일, 비밀번호를 입력해 가입할 수 있습니다.
+    """
+    serializer_class = UserRegistrationSerializer
 
-@api_view(['POST'])
-@permission_classes([AllowAny])
-def auth(request):
-    if request.method == 'POST':
-        serializer = AuthSerializer(data=request.data)
-        email = request.data.get('email')
-        username = request.data.get('username')
+        
+class UserLoginView(LoginView):
+    """
+    이메일과 비밀번호를 통해 토큰을 발급받을 수 있습니다.
+    """
 
+    def post(self, request, *args, **kwargs):
+        self.request = request
+        self.serializer = self.get_serializer(data=self.request.data,
+                                              context={'request': request})
+        self.serializer.is_valid(raise_exception=True)
+        self.login()
+
+        return self.get_response()
+
+class UserLogoutView(LogoutView):
+    """
+    headers에 유저의 토큰을 입력합니다. 
+    headers={'Authorization': 'Token your_token'}
+    """
+    pass
+
+
+class UserInfoView(APIView):
+    """
+    이메일과 유저네임을 통해 특정 유저의 정보를 얻을 수 있습니다. 
+    {
+        "username": "username",
+        "email": "email"
+    }
+    """
+    def post(self, request, *args, **kwargs):
+        if request.method == 'POST':
+            serializer = InfoSerializer(data=request.data)
+            email = request.data.get('email')
+            username = request.data.get('username')
         if not serializer.is_valid(raise_exception=True):
             return Response({"message": "Request Body Error."}, status=status.HTTP_409_CONFLICT)
         if serializer.validated_data['email'] == "None":
@@ -88,25 +90,31 @@ def auth(request):
                 'email': serializer.data['email'],   
                 
             },
-            'token': serializer.data['token']
         }
         return Response(response, status=status.HTTP_200_OK)
         
 
-@api_view(['GET'])
-@permission_classes([AllowAny])
-def profile(request):
-    if request.method == 'GET':
-        serializer = UserSerializer
-        user = User.objects.get(pk=1)
-        print(user)
-        print(UserSerializer(user).data['email'])
-        response = {
-            'username': serializer(user).data['username'],
-            'email': serializer(user).data['email'],
-            # 'date_joined': serializer(user).data['date_joined'],
-        }
-        return HttpResponse(response)
+class ProfileList(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    # serializer_class = 
+
+# class ProfileList(generics.ListAPIView):
+    # User = get_user_model()
+    # profile_user = User.objects.get(pk=User.id)
+    # serializer_class = ProfileStatusSerializer
+    # permission_classes = [IsAuthenticated]
+    # queryset = Profile.objects.all()
+
+
+class UpdateUser(generics.UpdateAPIView):
+    serializer_class = UpdateUserSerializer
+    queryset = get_user_model().objects.all()
+
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        obj = queryset.get(pk=self.request.user.id)
+        self.check_object_permissions(self.request, obj)
+        return obj
 
 
 @api_view(['DELETE'])
@@ -123,48 +131,6 @@ def delete(request):
 #     credentials = {'username': 'pie3', 'email': 'apple@apple.com3'}
 #     response = requests.post("http://127.0.0.1:8000/auth/", data=credentials)
 #     return HttpResponse(response)
-
-
-# class ChangePasswordView(generics.UpdateAPIView):
-#     """
-#     An endpoint for changing password.
-#     """
-        
-#     serializer_class = ChangePasswordSerializer
-#     model = User
-#     permission_classes = (permissions.IsAuthenticated,)
-#     def get_object(self, queryset=None):
-#         obj = self.request.user
-#         return obj
-
-#     def update(self, request, *args, **kwargs):
-#         self.object = self.get_object()
-#         serializer = self.get_serializer(data=request.data)
-
-#         old_password = request.data.get('old_password')
-#         new_password = request.data.get('new_password')
-
-#         if old_password == new_password:
-#             return Response('비밀번호 동일', status=status.HTTP_400_BAD_REQUEST)
-            
-#         if serializer.is_valid():
-#             # Check old password
-#             if not self.object.check_password(serializer.data.get("old_password")):
-#                 return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
-#             # set_password also hashes the password that the user will get
-#             self.object.set_password(serializer.data.get("new_password"))
-#             self.object.save()
-#             response = {
-#                 'status': 'success',
-#                 'code': status.HTTP_200_OK,
-#                 'message': 'Password updated successfully',
-#                 'data': []
-#             }
-
-#             return Response(response)
-
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 # def send_email(request):
 #     subject = "message"
