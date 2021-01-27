@@ -17,7 +17,6 @@
             <q-icon :name="$i.ionSearchOutline" />
           </template>
         </q-input>
-
         <q-btn
           class="tag-filter"
           outline

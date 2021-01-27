@@ -41,8 +41,20 @@
                 'transition-timing-function': 'ease-in-out',
               }"
               @click="toggleFollow(tag)"
-              >{{ flag ? 'Following' : 'Follow' }}</q-btn
             >
+              <div class="row items-center">
+                <q-icon
+                  :name="$i.ionCheckmarkOutline"
+                  v-if="flag"
+                  :style="{
+                    color: flag ? mainColor(tag) : 'white',
+                    'transition-duration': '0.5s',
+                    'transition-timing-function': 'ease-in-out',
+                  }"
+                ></q-icon>
+                <div>{{ flag ? 'Following' : 'Follow' }}</div>
+              </div>
+            </q-btn>
           </q-card-section>
         </q-card>
       </q-card-section>
