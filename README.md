@@ -63,8 +63,9 @@
 ### Backend
 
 ## 
+
 ## 👀 서비스 소개
-![DEVRY](img/README/sub2/devry.jpg)
+![DEVRY_logo](img/README/sub2/devry.jpg)
 
 **DEVRY란?**
 
@@ -72,9 +73,9 @@ DEVRY는 **개발자 특화 커뮤니티** 서비스와 **포트폴리오** 서�
 
 `Developer` + `Everyone` 의 합성어로, 모든 개발자를 위한 공간이라는 뜻을 함축하고 있습니다.
 
+</br>
 
-
-자세한 기획 배경 및 기능 소개가 궁금하다면?
+**자세한 기획 배경 및 기능 소개가 궁금하다면?**
 
 [DEVRY 기획/기능 명세서 바로가기](https://www.notion.so/DEVRY-9f3cc7c325694d2287e476160df50fc2)
 
@@ -117,7 +118,7 @@ DEVRY는 **개발자 특화 커뮤니티** 서비스와 **포트폴리오** 서�
 
 ![qna](img/README/sub2/3. qna.JPG)
 
-
+</br>
 
 **③ Event**
 
@@ -131,7 +132,7 @@ DEVRY는 **개발자 특화 커뮤니티** 서비스와 **포트폴리오** 서�
 
 ![event_detail](img/README/sub2/5. event detail.JPG)
 
-
+</br>
 
 **④ 구인구직**
 
@@ -139,7 +140,7 @@ DEVRY는 **개발자 특화 커뮤니티** 서비스와 **포트폴리오** 서�
 
 ***구현 예정***
 
-
+</br>
 
 **⑤ 자유 게시판**
 
@@ -147,7 +148,9 @@ DEVRY는 **개발자 특화 커뮤니티** 서비스와 **포트폴리오** 서�
 
 ***구현 예정***
 
+</br>
 
+</br>
 
 ### 2. 포트폴리오 기능
 
@@ -175,7 +178,7 @@ DEVRY는 **개발자 특화 커뮤니티** 서비스와 **포트폴리오** 서�
 
 
 
-
+</br>
 
 ①-1. 프로필 설정 페이지
 
@@ -183,13 +186,13 @@ DEVRY는 **개발자 특화 커뮤니티** 서비스와 **포트폴리오** 서�
 
 - 개발자에게 특화된 이력 입력폼 제공
 
-![profile_setting](img/README/sub2/11. profile-setting.jpg)
+![setting](img/README/sub2/11. profile-setting.jpg)
 
-![profile_setting2](img/README/sub2/12. profile-setting 2.jpg)
+![setting2](img/README/sub2/12. profile-setting 2.jpg)
 
-![profile_setting3](img/README/sub2/13. profile-setting 3.jpg)
+![setting3](img/README/sub2/13. profile-setting 3.jpg)
 
-
+</br>
 
 ①-2. 팔로우/팔로잉 모달
 
@@ -197,13 +200,13 @@ DEVRY는 **개발자 특화 커뮤니티** 서비스와 **포트폴리오** 서�
 
 - 해당 화면에서 바로 팔로우 및 팔로우 취소 가능
 
-![follower](img/README/sub2/14. follow.jpg)
+![follower1](img/README/sub2/14. follow.jpg)
 
-![following](img/README/sub2/15. follower.jpg)
+![following2](img/README/sub2/15. follower.jpg)
 
+</br>
 
-
-
+</br>
 
 ### 3. 편집 기능 
 
