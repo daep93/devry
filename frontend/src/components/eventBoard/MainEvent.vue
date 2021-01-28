@@ -11,14 +11,15 @@
       transition-next="slide-left"
       @mouseenter="autoplay = false"
       @mouseleave="autoplay = true"
-      style="height: 300px;"
+      height="270px"
     >
       <q-carousel-slide
         :name="1"
-        style="background-color: black; border-radius: 10px;"
+        class="bg-black"
+        style="border-radius: 10px;"
         @click="moveToDetailPage"
       >
-        <div style="margin: 50px 0px 0px 50px;">
+        <div class="q-mt-lg q-ml-lg">
           <div class="text-h5 text-white">For Developer vol.1</div>
           <div class="text-h4 text-teal-8 text-weight-bolder">
             2021 Vue.js Online
@@ -26,22 +27,22 @@
         </div>
         <q-btn
           outline
-          class="absolute-bottom-right"
+          class="absolute-bottom-right q-ma-xl"
           color="white"
           text-color="white"
           label="바로가기"
-          style="margin: 50px;"
         />
       </q-carousel-slide>
       <q-carousel-slide
         :name="2"
         style="background-color: #213186; border-radius: 10px;"
+        class="overflow-hidden"
       >
-        <div style="position: absolute; top: 9%; left: 29%;">
+        <div class="row justify-center overflow-hidden">
           <img
             src="@/assets/hackathon.png"
             alt="AI hackathon"
-            style="height: 240px; width: 60%;"
+            style="height:250px;width:40%"
           />
         </div>
       </q-carousel-slide>
@@ -52,11 +53,10 @@
       >
         <q-btn
           outline
-          class="absolute-bottom-right"
+          class="absolute-bottom-right q-ma-xl"
           color="white"
           text-color="white"
           label="바로가기"
-          style="margin: 50px;"
         />
       </q-carousel-slide>
       <q-carousel-slide
@@ -66,11 +66,10 @@
       >
         <q-btn
           outline
-          class="absolute-bottom-right"
+          class="absolute-bottom-right q-ma-xl"
           color="white"
           text-color="white"
           label="바로가기"
-          style="margin: 50px;"
         />
       </q-carousel-slide>
     </q-carousel>
@@ -81,8 +80,8 @@
 export default {
   data() {
     return {
-      slide: 1,
       autoplay: true,
+      slide: 1,
     };
   },
   methods: {

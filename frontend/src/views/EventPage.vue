@@ -1,6 +1,6 @@
 <template>
   <div class="q-pa-lg q-mt-sm row justify-center">
-    <div class="q-gutter-lg" style="width: 60vw; ">
+    <div class="q-pa-sm" style="width: 60vw; ">
       <!-- 타이틀 -->
       <!-- <div style="margin-bottom: 20px;">
         <span class="text-h4 text-weight-bolder">Events </span>
@@ -13,9 +13,9 @@
       <div class="q-mb-md q-mt-md float-right" style="margin-bottom: 30px;">
         <q-btn
           color="blue-12"
-          class="text-weight-bold"
+          class="text-weight-bold q-px-md q-py-sm"
           label="이벤트 등록 신청"
-          style="width:200px; height:50px; border-radius:5px;"
+          size="md"
         />
       </div>
     </div>

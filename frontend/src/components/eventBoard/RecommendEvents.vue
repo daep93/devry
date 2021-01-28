@@ -1,12 +1,14 @@
 <template>
-  <div class="col-12" style="margin-bottom: 50px;">
+  <div class="col-12 row" style="margin-bottom: 50px;">
     <!-- 소제목 타이틀 -->
-    <div class="text-h6 text-weight-bold">Events for You</div>
-    <!-- 이벤트 카테고리 -->
-    <div class="q-pa-md float-right q-gutter-lg">
+    <div class="text-h6 text-weight-bold col-12">Events for You</div>
+
+    <div class=" row justify-end q-mb-sm q-gutter-lg col-12">
+      <!-- 태그 필터링 -->
       <q-btn outline color="primary" @click="$store.commit('toggleTagFilter')"
         >태그 선택</q-btn
       >
+      <!-- 이벤트 카테고리 -->
       <q-btn-dropdown outline color="black" label="Category">
         <q-list>
           <q-item clickable v-close-popup @click="onItemClick">
@@ -34,76 +36,76 @@
         </q-list>
       </q-btn-dropdown>
     </div>
-    <div class="q-pa-md" style="clear: both;">
-      <div class="q-gutter-y-md" style="max-width: 1500px">
-        <q-tabs inline-label class="bg-white text-black">
-          <q-tab>
-            <q-intersection
-              v-for="(event, index) in events"
-              :key="index"
-              once
-              transition="scale"
-            >
-              <q-card class="q-ma-sm" style="border-radius: 20px;">
-                <q-card-section>
+    <div class="row col-12">
+      <div class="col-12 row">
+        <q-tabs
+          inline-label
+          class="bg-white text-black"
+          indicator-color="white"
+        >
+          <div
+            v-for="(event, index) in events"
+            :key="index"
+            class="col-4 q-pa-xs"
+          >
+            <q-card style="border-radius: 20px;">
+              <q-card-section class="q-px-md q-pt-lg q-pb-none">
+                <div class="q-pa-xs row justify-between">
                   <div
-                    class="q-pa-sm d-flex"
-                    style="height: 180px; justify-content: space-between;"
+                    class="text-weight-bold text-weight-bold col-10"
+                    style="font-size:1.1em"
                   >
-                    <span
-                      class="text-weight-bold"
-                      style="font-size: 15px; margin-top: 20px;"
-                      >{{ event.eventTitle }}</span
-                    >
-                    <q-btn
-                      v-if="event.bookmark"
-                      @click="checkBookMark(index)"
-                      flat
-                      round
-                      color="primary"
-                      icon="bookmark"
-                      style="margin-left: 40px;"
-                    />
-                    <q-btn
-                      v-else
-                      @click="checkBookMark(index)"
-                      flat
-                      round
-                      color="primary"
-                      icon="bookmark_border"
-                      style="margin-left: 40px;"
-                    />
-                    <ul class="row" style="margin-top:0px;">
-                      <li v-for="(tag, index) in event.eventTags" :key="index">
-                        <div
-                          class="text-caption float-left"
-                          style="margin: 0px 5px 40px 0px;"
-                        >
-                          #{{ tag }}
-                        </div>
-                      </li>
-                    </ul>
-                    <div
-                      class="d-flex"
-                      style="clear: both; justify-content: space-between"
-                    >
-                      <span
-                        class="text-subtitle2 text-weight-bold text-primary"
-                        >{{ event.eventDate }}</span
-                      >
-                      <span>
-                        <img
-                          :src="event.eventHostImg"
-                          style="width: 50px; height: 40px; margin-left: 130px; border-radius: 10px;"
-                        />
-                      </span>
-                    </div>
+                    {{ event.eventTitle }}
                   </div>
-                </q-card-section>
-              </q-card>
-            </q-intersection>
-          </q-tab>
+                  <div class="col-2 row justify-end">
+                    <q-btn
+                      padding="0"
+                      @click="checkBookMark(index)"
+                      flat
+                      round
+                      color="primary"
+                      :icon="event.bookmark ? 'bookmark' : 'bookmark_border'"
+                      style="margin-left: 40px;"
+                    />
+                  </div>
+                </div>
+              </q-card-section>
+              <q-card-section class="q-px-lg q-pt-sm q-pb-xs">
+                <div class="row q-gutter-sm">
+                  <div
+                    v-for="(tag, index) in event.eventTags"
+                    :key="index"
+                    style="font-size:0.9em"
+                  >
+                    #{{ tag }}
+                  </div>
+                </div>
+              </q-card-section>
+              <q-card-section class="q-px-lg q-pt-sm q-pb-lg">
+                <div class="row justify-between items-end">
+                  <div class="text-subtitle2 text-weight-bold text-primary">
+                    {{ event.eventDate }}
+                  </div>
+                  <div>
+                    <img
+                      :src="event.eventHostImg"
+                      style="width: 50px; height: 40px;  border-radius: 10px;"
+                    />
+                  </div>
+                </div>
+              </q-card-section>
+            </q-card>
+          </div>
         </q-tabs>
+        <!-- <q-intersection
+          v-for="(event, index) in events"
+          :key="index"
+          once
+          transition="scale"
+          class=" row"
+        >
+         
+        </q-intersection> -->
       </div>
     </div>
   </div>
@@ -140,6 +142,14 @@ export default {
           eventHostImg: 'https://cdn.quasar.dev/img/mountains.jpg',
           bookmark: false,
         },
+        {
+          eventCategory: 'hackathon',
+          eventTitle: 'Bigdata hackathon',
+          eventTags: ['Bigdata', 'hackathon'],
+          eventDate: '2021.04.20',
+          eventHostImg: 'https://cdn.quasar.dev/img/mountains.jpg',
+          bookmark: false,
+        },
       ],
     };
   },
@@ -152,9 +162,4 @@ export default {
 };
 </script>
 
-<style scoped>
-ul {
-  list-style-type: none;
-  padding-left: 0px;
-}
-</style>
+<style scoped></style>
