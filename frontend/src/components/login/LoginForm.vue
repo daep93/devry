@@ -135,7 +135,6 @@ export default {
       return this.password === '' || validatePwd(this.password);
     },
     checkForm() {
-      console.log(validateEmail(this.email));
       return validateEmail(this.email) && validatePwd(this.password);
     },
   },
