@@ -1,6 +1,6 @@
 <template>
-  <div class="q-pa-md">
-    <div class="justify-center" style="width: 70%; padding: 50px; margin:0 auto;">
+  <div class="q-pa-lg q-mt-sm row justify-center">
+    <div class="" style="width: 60vw; ">
       <!-- 타이틀 -->
       <!-- <div style="margin-bottom: 20px;">
         <span class="text-h4 text-weight-bolder">Events </span>
@@ -8,6 +8,10 @@
       </div> -->
       <main-event></main-event>
       <!-- 이벤트 등록 신청 버튼 -->
+
+      <event-tags></event-tags>
+      <recommend-events></recommend-events>
+      <upcoming-events></upcoming-events>
       <div class="q-mb-md q-mt-md float-right" style="margin-bottom: 30px;">
         <q-btn
           color="blue-12"
@@ -16,9 +20,6 @@
           style="width:200px; height:50px; border-radius:5px;"
         />
       </div>
-      <event-tags></event-tags>
-      <recommend-events></recommend-events>
-      <upcoming-events></upcoming-events>
     </div>
   </div>
 </template>
@@ -30,14 +31,13 @@ import RecommendEvents from '@/components/eventBoard/RecommendEvents';
 import UpcomingEvents from '@/components/eventBoard/UpcomingEvents';
 
 export default {
-  components: { 
-    MainEvent, 
-    EventTags, 
-    RecommendEvents, 
-    UpcomingEvents 
+  components: {
+    MainEvent,
+    EventTags,
+    RecommendEvents,
+    UpcomingEvents,
   },
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
