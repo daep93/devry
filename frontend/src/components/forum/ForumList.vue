@@ -42,27 +42,30 @@
           <q-tab-panel name="feed">
             <!-- 피드 리스트 -->
             <div class="row" style="margin-left: 12px;">
-              <div v-for="n in 10" :key="n">
+              <div v-for="(data, index) in forumList" :key="index">
                 <div
                   class="q-pa-md row items-start q-gutter-md"
                   style="width: 345px;"
                 >
-                  <q-card class="my-card">
-                    <img src="https://cdn.quasar.dev/img/mountains.jpg" />
-                    <q-card-section style="margin-bottom: -5px;">
+                  <!-- 썸네일 -->
+                  <q-card class="my-card" style="height: 400px;">
+                    <img :src="data.thumnail" style="height: 198px;" />
+                    <q-card-section style="margin-bottom: -5px; height: 80px;">
                       <div
                         style="font-size: 18px; cursor: pointer"
                         @click="goToDetail"
                       >
-                        <b>{{ title }}</b>
+                        <b>{{ data.title }}</b>
                       </div>
                     </q-card-section>
 
                     <div style="margin-left: 15px;">
-                      <span v-for="i in 3" :key="i" style="margin-right: 5px;">
-                        <q-badge color="blue">
-                          # Vue
-                        </q-badge>
+                      <span
+                        v-for="tag in data.ref_tags"
+                        :key="tag"
+                        style="margin-right: 5px;"
+                      >
+                        <q-badge color="blue"> # {{ tag }} </q-badge>
                       </span>
                     </div>
 
@@ -73,7 +76,7 @@
                             <q-avatar
                               @click="goToProfile"
                               style="width: 35px; height: 35px;"
-                              ><img :src="profile_img" />
+                              ><img :src="data.user_info.profile_img" />
                             </q-avatar>
                           </span>
                         </div>
@@ -82,11 +85,11 @@
                             style="font-size: 15px; cursor:pointer; height: 17px; color: #464646"
                             @click="goToProfile"
                           >
-                            <b>{{ username }}</b>
+                            <b>{{ data.user_info.username }}</b>
                           </div>
-                          <span style="font-size: 5px; color: #464646"
-                            >15분 전</span
-                          >
+                          <span style="font-size: 5px; color: #464646">{{
+                            data.user_info.written_time
+                          }}</span>
                         </div>
                       </div>
                     </q-card-section>
@@ -101,9 +104,9 @@
                           size="18px"
                         ></q-icon
                       ></span>
-                      <span style="margin-right: 12px; font-size: 13px;"
-                        >17</span
-                      >
+                      <span style="margin-right: 12px; font-size: 13px;">{{
+                        data.like_num
+                      }}</span>
                       <span style="margin-right: 5px;">
                         <q-icon
                           :name="$i.ionChatboxEllipsesOutline"
@@ -111,9 +114,9 @@
                           size="15px"
                         ></q-icon
                       ></span>
-                      <span style="margin-right: 15px; font-size: 13px;"
-                        >2</span
-                      >
+                      <span style="margin-right: 15px; font-size: 13px;">{{
+                        data.comment_num
+                      }}</span>
                     </div>
                   </q-card>
                 </div>
@@ -124,27 +127,30 @@
           <q-tab-panel name="latest">
             <!-- 최신순 리스트 -->
             <div class="row" style="margin-left: 12px;">
-              <div v-for="n in 10" :key="n">
+              <div v-for="(data, index) in forumList" :key="index">
                 <div
                   class="q-pa-md row items-start q-gutter-md"
                   style="width: 345px;"
                 >
-                  <q-card class="my-card">
-                    <img src="https://cdn.quasar.dev/img/mountains.jpg" />
-                    <q-card-section style="margin-bottom: -5px;">
+                  <!-- 썸네일 -->
+                  <q-card class="my-card" style="height: 400px;">
+                    <img :src="data.thumnail" style="height: 198px;" />
+                    <q-card-section style="margin-bottom: -5px; height: 80px;">
                       <div
                         style="font-size: 18px; cursor: pointer"
                         @click="goToDetail"
                       >
-                        <b>{{ title }}</b>
+                        <b>{{ data.title }}</b>
                       </div>
                     </q-card-section>
 
                     <div style="margin-left: 15px;">
-                      <span v-for="i in 3" :key="i" style="margin-right: 5px;">
-                        <q-badge color="blue">
-                          # Vue
-                        </q-badge>
+                      <span
+                        v-for="tag in data.ref_tags"
+                        :key="tag"
+                        style="margin-right: 5px;"
+                      >
+                        <q-badge color="blue"> # {{ tag }} </q-badge>
                       </span>
                     </div>
 
@@ -155,7 +161,7 @@
                             <q-avatar
                               @click="goToProfile"
                               style="width: 35px; height: 35px;"
-                              ><img :src="profile_img" />
+                              ><img :src="data.user_info.profile_img" />
                             </q-avatar>
                           </span>
                         </div>
@@ -164,11 +170,11 @@
                             style="font-size: 15px; cursor:pointer; height: 17px; color: #464646"
                             @click="goToProfile"
                           >
-                            <b>{{ username }}</b>
+                            <b>{{ data.user_info.username }}</b>
                           </div>
-                          <span style="font-size: 5px; color: #464646"
-                            >15분 전</span
-                          >
+                          <span style="font-size: 5px; color: #464646">{{
+                            data.user_info.written_time
+                          }}</span>
                         </div>
                       </div>
                     </q-card-section>
@@ -183,9 +189,9 @@
                           size="18px"
                         ></q-icon
                       ></span>
-                      <span style="margin-right: 12px; font-size: 13px;"
-                        >17</span
-                      >
+                      <span style="margin-right: 12px; font-size: 13px;">{{
+                        data.like_num
+                      }}</span>
                       <span style="margin-right: 5px;">
                         <q-icon
                           :name="$i.ionChatboxEllipsesOutline"
@@ -193,9 +199,9 @@
                           size="15px"
                         ></q-icon
                       ></span>
-                      <span style="margin-right: 15px; font-size: 13px;"
-                        >2</span
-                      >
+                      <span style="margin-right: 15px; font-size: 13px;">{{
+                        data.comment_num
+                      }}</span>
                     </div>
                   </q-card>
                 </div>
@@ -214,9 +220,44 @@ export default {
     return {
       tab: 'feed',
       // title: 'Add',
-      title: 'Add a YouTube stats widget to your iPhone with JavaScript',
-      username: 'test user',
-      profile_img: 'https://cdn.quasar.dev/img/avatar.png',
+      // title: 'Add a YouTube stats widget to your iPhone with JavaScript',
+      // username: 'test user',
+      // profile_img: 'https://cdn.quasar.dev/img/avatar.png',
+
+      forumList: [
+        {
+          forum_id: 1,
+          title: 'Add a YouTube stats widget to your iPhone with JavaScript',
+          thumnail: 'https://cdn.quasar.dev/img/mountains.jpg',
+          ref_tags: ['vue', 'django'],
+          like_num: 7,
+          comment_num: 1,
+          viewed_num: 20,
+          user_info: {
+            // 글 작성자 정보
+            user_id: 3,
+            username: 'test1',
+            written_time: '2021-01-24T02:02',
+            profile_img: 'https://cdn.quasar.dev/img/avatar.png',
+          },
+        },
+        {
+          forum_id: 2,
+          title: '두 번째 글',
+          thumnail: 'https://placeimg.com/500/300/nature',
+          ref_tags: ['django', 'python'],
+          like_num: 10,
+          comment_num: 3,
+          viewed_num: 10,
+          user_info: {
+            // 글 작성자 정보
+            user_id: 5,
+            username: 'user2',
+            written_time: '2021-01-24T02:02',
+            profile_img: 'https://cdn.quasar.dev/img/mountains.jpg',
+          },
+        },
+      ],
     };
   },
   methods: {

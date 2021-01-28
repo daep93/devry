@@ -111,6 +111,19 @@ export default {
       title: 'Add a YouTube stats widget to your iPhone with JavaScript',
       username: 'test user',
       profile_img: 'https://cdn.quasar.dev/img/avatar.png',
+      // forumData: {
+      //   forum_id: 3,
+      //   title: 'Add a YouTube stats widget to your iPhone with JavaScript',
+      //   ref_tags: ['javascript', 'vue'],
+      //   like_num: 5,
+      //   comment_num: 7,
+      //   viewed_num: 50,
+      //   user_idfo : {
+      //     user_id: 3,
+      //     username: 'testuser',
+      //     written_time: '2021-01-06T02:02',
+      //   }
+      // }
     };
   },
   methods: {
