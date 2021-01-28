@@ -24,7 +24,6 @@
         <div style="position: absolute; top: 9%; left: 29%;">
           <img src="@/assets/hackathon.png" alt="AI hackathon" style="height: 240px; width: 60%;">
         </div>
-        <!-- <q-btn outline class="absolute-bottom-right" color="white" text-color="white" label="바로가기" style="margin: 50px;"/> -->
       </q-carousel-slide>
       <q-carousel-slide :name="3" img-src="https://cdn.quasar.dev/img/parallax2.jpg" style="border-radius: 10px;">
         <q-btn outline class="absolute-bottom-right" color="white" text-color="white" label="바로가기" style="margin: 50px;"/>
