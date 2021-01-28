@@ -1,5 +1,5 @@
 <template>
-  <div style="clear: both; margin-bottom: 50px;">
+  <div style="clear: both; margin-bottom: 20px;">
     <q-carousel
       animated
       v-model="slide"

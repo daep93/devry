@@ -1,5 +1,5 @@
 <template>
-  <div class="col-12" style="margin-bottom: 50px;">
+  <div class="col-12" style="margin-bottom: 50px; clear: both;">
     <div class="text-h6 text-weight-bold" style="margin-bottom: 20px;">Tags</div>
       <div>
         <ul class="row">

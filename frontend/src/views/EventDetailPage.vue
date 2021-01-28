@@ -128,7 +128,7 @@ export default {
       introduction: '프론트엔드 개발을 위한 Vue.js 컨퍼런스입니다.',
       schedule: '1. 주최자 소개 | 2. 컨퍼런스 소개 | 3. 프론트엔드 프레임워크 소개',
       hostInfo: {
-        hostImg: 'https://lh3.googleusercontent.com/proxy/74mBDjBQRjZj4N9RoCaZC0-fgK6gHWv2meYVoID6UsVLiQag1BYtUqxyAaWYhDFstJhCtrjuaXskLcLgh5R0jqf3Tqpnhn1Cys-od-L6apnj7iUBtnLRvtqpc-Y1F7S_XLs2I9wxRuh3VZmCi_zR9RS8NVMhWY_iHV4pZSd3o2QlIAl-T0mKeW14mnc9OuxisdJmZ6NkIEji-arPq0rvfpDYgduQlmDUoTBCAFy7F2w6MzFAFmyHmY35oGra3sWwXR9zND2ahSDByaRbuTixY3BPOPNfGV3bMOoG',
+        hostImg: 'https://cdn.quasar.dev/img/parallax1.jpg',
         hostName: 'Eddie',
         hostEmail: 'eddie@gmail.com',
         hostIntro: '안녕하세요, 만나서 반갑습니다! Vue.js 전문가 Eddie입니다.'
