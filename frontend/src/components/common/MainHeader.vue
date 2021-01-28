@@ -117,7 +117,7 @@ export default {
       this.$router.push(`/profile/${this.$store.getters.getAccountId}`);
     },
     moveToProfileSettingPage() {
-      this.$router.push(`/profile-setting/${this.$store.getters.getAccountId}`);
+      this.$router.push(`/profile-setting/`);
     },
     toggleLeft() {
       this.$store.commit('toggleLeft');

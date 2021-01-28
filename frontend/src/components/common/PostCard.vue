@@ -54,14 +54,14 @@
 </template>
 
 <script>
-import { colorMapper } from '@/utils/tagColorMapper';
+import { colorListMapper } from '@/utils/tagColorMapper';
 export default {
   props: {
     detail: Object,
   },
   computed: {
     tagColors() {
-      return colorMapper(this.detail.tags);
+      return colorListMapper(this.detail.tags);
     },
   },
 };

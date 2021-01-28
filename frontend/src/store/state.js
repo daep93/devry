@@ -12,4 +12,5 @@ export default {
   accountModalType: 'login',
   followModal: false,
   leftDrawal: true,
+  tagFilter: false,
 };
