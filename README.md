@@ -65,7 +65,7 @@
 ## 
 
 ## 👀 서비스 소개
-![DEVRY_logo](img/README/sub2/devry.jpg)
+![devry](img/README/sub2/devry.jpg)
 
 **DEVRY란?**
 
@@ -186,7 +186,7 @@ DEVRY는 **개발자 특화 커뮤니티** 서비스와 **포트폴리오** 서�
 
 - 개발자에게 특화된 이력 입력폼 제공
 
-![setting](img/README/sub2/11. profile-setting.jpg)
+![setting1](img/README/sub2/11. profile-setting.jpg)
 
 ![setting2](img/README/sub2/12. profile-setting 2.jpg)
 
@@ -200,9 +200,9 @@ DEVRY는 **개발자 특화 커뮤니티** 서비스와 **포트폴리오** 서�
 
 - 해당 화면에서 바로 팔로우 및 팔로우 취소 가능
 
-![follower1](img/README/sub2/14. follow.jpg)
+![modal1](img/README/sub2/14. follow.jpg)
 
-![following2](img/README/sub2/15. follower.jpg)
+![modal2](img/README/sub2/15. follower.jpg)
 
 </br>
 
