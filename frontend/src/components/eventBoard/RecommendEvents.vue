@@ -38,65 +38,70 @@
     </div>
     <div class="row col-12">
       <div class="col-12 row">
-        <q-tabs
-          inline-label
-          class="bg-white text-black"
-          indicator-color="white"
+        <q-intersection
+          transition="scale"
+          class="row"
         >
-          <div
-            v-for="(event, index) in events"
-            :key="index"
-            class="col-4 q-pa-xs"
+          <q-tabs
+            inline-label
+            class="bg-white text-black"
+            indicator-color="white"
           >
-            <q-card style="border-radius: 20px;">
-              <q-card-section class="q-px-md q-pt-lg q-pb-none">
-                <div class="q-pa-xs row justify-between">
-                  <div
-                    class="text-weight-bold text-weight-bold col-10"
-                    style="font-size:1.1em"
-                  >
-                    {{ event.eventTitle }}
+            <div
+              v-for="(event, index) in events"
+              :key="index"
+              class="col-4 q-pa-xs"
+            >
+              <q-card style="border-radius: 20px;">
+                <q-card-section class="q-px-md q-pt-lg q-pb-none">
+                  <div class="q-pa-xs row justify-between">
+                    <div
+                      class="text-weight-bold text-weight-bold col-10"
+                      style="font-size:1.1em"
+                    >
+                      {{ event.eventTitle }}
+                    </div>
+                    <div class="col-2 row justify-end">
+                      <q-btn
+                        padding="0"
+                        @click="checkBookMark(index)"
+                        flat
+                        round
+                        color="primary"
+                        :icon="event.bookmark ? 'bookmark' : 'bookmark_border'"
+                        style="margin-left: 40px;"
+                      />
+                    </div>
                   </div>
-                  <div class="col-2 row justify-end">
-                    <q-btn
-                      padding="0"
-                      @click="checkBookMark(index)"
-                      flat
-                      round
-                      color="primary"
-                      :icon="event.bookmark ? 'bookmark' : 'bookmark_border'"
-                      style="margin-left: 40px;"
-                    />
+                </q-card-section>
+                <q-card-section class="q-px-lg q-pt-sm q-pb-xs">
+                  <div class="row q-gutter-sm">
+                    <div
+                      v-for="(tag, index) in event.eventTags"
+                      :key="index"
+                      style="font-size:0.9em"
+                    >
+                      #{{ tag }}
+                    </div>
                   </div>
-                </div>
-              </q-card-section>
-              <q-card-section class="q-px-lg q-pt-sm q-pb-xs">
-                <div class="row q-gutter-sm">
-                  <div
-                    v-for="(tag, index) in event.eventTags"
-                    :key="index"
-                    style="font-size:0.9em"
-                  >
-                    #{{ tag }}
+                </q-card-section>
+                <q-card-section class="q-px-lg q-pt-sm q-pb-lg">
+                  <div class="row justify-between items-end">
+                    <div class="text-subtitle2 text-weight-bold text-primary">
+                      {{ event.eventDate }}
+                    </div>
+                    <div>
+                      <img
+                        :src="event.eventHostImg"
+                        style="width: 50px; height: 40px;  border-radius: 10px;"
+                      />
+                    </div>
                   </div>
-                </div>
-              </q-card-section>
-              <q-card-section class="q-px-lg q-pt-sm q-pb-lg">
-                <div class="row justify-between items-end">
-                  <div class="text-subtitle2 text-weight-bold text-primary">
-                    {{ event.eventDate }}
-                  </div>
-                  <div>
-                    <img
-                      :src="event.eventHostImg"
-                      style="width: 50px; height: 40px;  border-radius: 10px;"
-                    />
-                  </div>
-                </div>
-              </q-card-section>
-            </q-card>
-          </div>
-        </q-tabs>
+                </q-card-section>
+              </q-card>
+            </div>
+          </q-tabs>
+        </q-intersection>
         <!-- <q-intersection
           v-for="(event, index) in events"
           :key="index"
