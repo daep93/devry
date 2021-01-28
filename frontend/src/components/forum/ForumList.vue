@@ -35,7 +35,7 @@
       <!-- 탭 시작 -->
       <div class=" justify-center col-12">
         <q-tab-panels v-model="tab" animated>
-          <q-tab-panel :name="tab"></q-tab-panel>
+          <q-tab-panel :name="tab">
             <!-- 피드 리스트 -->
             <div class="row ">
               <div
