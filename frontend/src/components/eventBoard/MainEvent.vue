@@ -44,7 +44,6 @@
             style="height: 240px; width: 60%;"
           />
         </div>
-        <!-- <q-btn outline class="absolute-bottom-right" color="white" text-color="white" label="바로가기" style="margin: 50px;"/> -->
       </q-carousel-slide>
       <q-carousel-slide
         :name="3"
