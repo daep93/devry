@@ -9,7 +9,7 @@
       >
         <q-tab name="latest" label="최신순" />
         <q-tab name="orderByComment" label="댓글순" />
-        <q-tab name="orderByRecommend" label="추천순" />
+        <q-tab name="orderByLike" label="추천순" />
       </q-tabs>
       <div class="row justify-end q-gutter-lg">
         <q-input v-model="search" type="search" class="q-mb-sm" outlined>
@@ -28,8 +28,9 @@
     </div>
     <div class="row q-mt-md col-12">
       <qna-entity
-        v-for="item in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
-        :key="item"
+        v-for="quest in refinedQuest"
+        :key="quest.questId"
+        :entity="quest"
       ></qna-entity>
     </div>
   </div>
@@ -37,6 +38,7 @@
 
 <script>
 import QnaEntity from '@/components/qna/QnaEntity.vue';
+import { testCase } from '@/dummy/Questions.js';
 export default {
   components: {
     QnaEntity,
@@ -45,7 +47,49 @@ export default {
     return {
       sort: 'latest',
       search: '',
+      quests: [],
     };
+  },
+  created() {
+    this.quests = testCase;
+    this.$store.commit('initSelectedTags');
+  },
+  computed: {
+    refinedQuest() {
+      if (this.sort === 'latest') return this.timeSortedList;
+      else if (this.sort == 'orderByComment') return this.commentSortedList;
+      else return this.likeSortedList;
+    },
+    tagFilteredList() {
+      return testCase.filter(article => {
+        for (const tag of article.refTags) {
+          for (const selected of this.$store.getters.getSelectedTags) {
+            if (tag === selected) return true;
+          }
+        }
+        return false;
+      });
+    },
+    timeSortedList() {
+      const list = this.tagFilteredList.slice();
+      return list.sort(
+        (a, b) =>
+          this.$moment(b.userInfo.writtenTime) -
+          this.$moment(a.userInfo.writtenTime),
+      );
+    },
+    commentSortedList() {
+      const list = this.tagFilteredList.slice();
+      return list.sort(
+        (a, b) => this.$moment(b.commentNum) - this.$moment(a.commentNum),
+      );
+    },
+    likeSortedList() {
+      const list = this.tagFilteredList.slice();
+      return list.sort(
+        (a, b) => this.$moment(b.likeNum) - this.$moment(a.likeNum),
+      );
+    },
   },
 };
 </script>
