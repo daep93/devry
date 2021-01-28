@@ -17,42 +17,44 @@
   <!-- 이벤트 목록 -->
   <div class="q-ma-sm" style="clear: both;">
     <div class="row justify-center q-gutter-sm">
-      <q-intersection
-        v-for="(event, index) in events"
-        :key="index"
-        once
-        transition="scale"
-        class="example-item"
-      >
-        <q-card v-if="event.categoryCheck" class="q-ma-sm" style="border-radius: 20px;">
-          <q-card-section class="eventCard">
-            <div class="q-pa-sm" style="height: 175px;">
-              <div class="d-flex">
-                <span class="text-weight-bold" style="font-size: 15px; margin-top: 20px; width: 100px; text-overflow: ellipsis; ">{{ event.eventTitle }}</span>
-                <!-- <q-btn class="float-right" flat round color="primary" icon="bookmark" style="margin-left: 27px;" /> -->
-                <q-btn v-if="event.bookmark" @click="checkBookMark(index)" class="float-right" flat round color="primary" icon="bookmark" style="margin-left: 27px;"/>
-                <q-btn v-else @click="checkBookMark(index)" class="float-right" flat round color="primary" icon="bookmark_border" style="margin-left: 27px;"/>
+      <div v-for=" i in 27" :key="i">
+        <q-intersection
+          v-for="(event, index) in events"
+          :key="index"
+          once
+          transition="scale"
+          class="example-item"
+        >
+          <q-card v-if="event.categoryCheck" class="q-ma-sm" style="border-radius: 20px;">
+            <q-card-section class="eventCard">
+              <div class="q-pa-sm" style="height: 175px;">
+                <div class="d-flex">
+                  <span class="text-weight-bold" style="font-size: 15px; margin-top: 20px; width: 100px; text-overflow: ellipsis; ">{{ event.eventTitle }}</span>
+                  <!-- <q-btn class="float-right" flat round color="primary" icon="bookmark" style="margin-left: 27px;" /> -->
+                  <q-btn v-if="event.bookmark" @click="checkBookMark(index)" class="float-right" flat round color="primary" icon="bookmark" style="margin-left: 27px;"/>
+                  <q-btn v-else @click="checkBookMark(index)" class="float-right" flat round color="primary" icon="bookmark_border" style="margin-left: 27px;"/>
+                </div>
+                <ul class="row" style="margin-top:0px;">
+                  <li v-for="(tag, index) in event.eventTags" :key="index">
+                    <div class="text-caption float-left" style="margin: 0px 5px 60px 0px;">#{{ tag }}</div>
+                  </li>
+                </ul>
+                <div>
+                  <span class="text-subtitle2 text-weight-bold" style="color: #598FFC;">{{ event.eventDate }}</span>
+                  <span>
+                    <img
+                      :src="event.eventHostImg"
+                      style="width: 50px; height: 40px; margin-left: 100px; border-radius: 10px;"
+                    >
+                  </span>
+                </div>
               </div>
-              <ul class="row" style="margin-top:0px;">
-                <li v-for="(tag, index) in event.eventTags" :key="index">
-                  <div class="text-caption float-left" style="margin: 0px 5px 60px 0px;">#{{ tag }}</div>
-                </li>
-              </ul>
-              <div>
-                <span class="text-subtitle2 text-weight-bold" style="color: #598FFC;">{{ event.eventDate }}</span>
-                <span>
-                  <img
-                    :src="event.eventHostImg"
-                    style="width: 50px; height: 40px; margin-left: 100px; border-radius: 10px;"
-                  >
-                </span>
-              </div>
-            </div>
-          </q-card-section>
-        </q-card>
-        <q-card v-else style="display: none;">
-        </q-card>  
-      </q-intersection>
+            </q-card-section>
+          </q-card>
+          <q-card v-else style="display: none;">
+          </q-card>  
+        </q-intersection>
+      </div>
     </div>
   </div>
 </div>
@@ -122,8 +124,8 @@ export default {
     }
   },
   methods: {
-    checkBookMark: function(index) {
-      this.events[index].bookmark = !this.events[index].bookmark
+    checkBookMark: function(i, index) {
+      this.events[i*index].bookmark = !this.events[i*index].bookmark
     },
     onItemClick: function(index) {
       for (const event of this.events) {
@@ -150,8 +152,8 @@ ul {
   padding-left: 0px;
 }
 
-.eventCard:hover {
+/* .eventCard:hover {
   background-color: #598FFC;
   color: white;
-}
+} */
 </style>
