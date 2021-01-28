@@ -50,7 +50,6 @@
         <q-intersection
           v-for="(event, index) in events"
           :key="index"
-          once
           transition="scale"
           class="example-item col-4 q-pa-xs"
         >
