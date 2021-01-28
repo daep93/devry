@@ -1,11 +1,20 @@
 <template>
   <div>
-    forum
+    <ForumTags></ForumTags>
+    <ForumList></ForumList>
   </div>
 </template>
 
 <script>
-export default {};
+import ForumList from '@/components/forum/ForumList';
+import ForumTags from '@/components/forum/ForumTags';
+
+export default {
+  components: {
+    ForumList,
+    ForumTags,
+  },
+};
 </script>
 
 <style scoped></style>
