@@ -1,10 +1,8 @@
 <template>
-  <div>
-    <div class="justify-center" style="width: 1070px; margin:0 auto;">
-      <div style="margin-left: 50px; margin-top: 30px; font-size: 30px;">
-        <b>Forum 게시판</b>
-      </div>
-      <div class="row justify-between col-12" style="margin-top: 30px;">
+  <div class="row justify-center q-ml-md q-mt-lg">
+    <div class="row col-8">
+      <div class="text-h4 text-weight-bold q-mb-lg col-12">Forum 게시판</div>
+      <div class="row justify-between col-12">
         <!-- tab 라벨 -->
         <q-tabs
           v-model="tab"
@@ -14,14 +12,13 @@
           active-color="primary"
           indicator-color="primary"
           narrow-indicator
-          style="max-width: 170px; margin-left: 60px; margin-bottom: 0px;"
         >
-          <q-tab name="feed" label="Feed" style=" width: 50px;" />
+          <q-tab name="feed" label="Feed" />
           <q-tab name="latest" label="Latest" />
         </q-tabs>
         <!-- 서치바, 태그 버튼 -->
-        <div class="row justify-end q-gutter-lg" style="margin-right: 50px;">
-          <q-input v-model="search" type="search" class="q-mb-sm" outlined>
+        <div class="row justify-end q-gutter-lg">
+          <q-input v-model="search" type="search" outlined>
             <template v-slot:append>
               <q-icon :name="$i.ionSearchOutline" />
             </template>
@@ -36,175 +33,92 @@
         </div>
       </div>
       <!-- 탭 시작 -->
-      <div class="q-pa-md justify-center" style="width: 1065px; margin:0 auto;">
-        <div class="q-gutter-y-md"></div>
+      <div class=" justify-center col-12">
         <q-tab-panels v-model="tab" animated>
-          <q-tab-panel name="feed">
+          <q-tab-panel :name="tab"></q-tab-panel>
             <!-- 피드 리스트 -->
-            <div class="row" style="margin-left: 12px;">
-              <div v-for="(data, index) in forumList" :key="index">
-                <div
-                  class="q-pa-md row items-start q-gutter-md"
-                  style="width: 345px;"
-                >
-                  <!-- 썸네일 -->
-                  <q-card class="my-card" style="height: 400px;">
-                    <img :src="data.thumnail" style="height: 198px;" />
-                    <q-card-section style="margin-bottom: -5px; height: 80px;">
-                      <div
-                        style="font-size: 18px; cursor: pointer"
-                        @click="goToDetail"
-                      >
-                        <b>{{ data.title }}</b>
-                      </div>
-                    </q-card-section>
+            <div class="row ">
+              <div
+                v-for="(data, index) in tab === 'feed'
+                  ? forumList
+                  : forumListSorted"
+                :key="index"
+                class="q-pa-sm row col-4"
+              >
+                <!-- 썸네일 -->
+                <q-card class="my-card">
+                  <img :src="data.thumnail" style="height: 50%;" />
+                  <q-card-section
+                    class="q-pa-md cursor-pointer text-weight-bold"
+                    style="font-size: 14pt; height: 21%;"
+                    @click="goToDetail"
+                  >
+                    {{ data.title }}
+                  </q-card-section>
 
-                    <div style="margin-left: 15px;">
-                      <span
-                        v-for="tag in data.ref_tags"
-                        :key="tag"
-                        style="margin-right: 5px;"
-                      >
-                        <q-badge color="blue"> # {{ tag }} </q-badge>
-                      </span>
-                    </div>
+                  <div
+                    class="row  q-px-md q-gutter-xs q-mb-xs"
+                    style="height: 10%;"
+                  >
+                    <span v-for="tag in data.ref_tags" :key="tag">
+                      <q-badge class="q-pa-xs" color="blue">
+                        # {{ tag }}
+                      </q-badge>
+                    </span>
+                  </div>
 
-                    <q-card-section style="margin-top: 10px;">
-                      <div class="row">
-                        <div class="col-0.5">
-                          <span style="cursor:pointer; margin-right: 11px;">
-                            <q-avatar
-                              @click="goToProfile"
-                              style="width: 35px; height: 35px;"
-                              ><img :src="data.user_info.profile_img" />
-                            </q-avatar>
-                          </span>
+                  <q-card-section class="q-px-md">
+                    <div class="row">
+                      <div class="row col-7 items-center q-gutter-sm">
+                        <div class="row justify-center items-center">
+                          <q-avatar
+                            class="cursor-pointer"
+                            @click="goToProfile"
+                            style="width: 35px; height: 35px;"
+                            ><img :src="data.user_info.profile_img" />
+                          </q-avatar>
                         </div>
-                        <div class="col-11.5">
+                        <div>
                           <div
-                            style="font-size: 15px; cursor:pointer; height: 17px; color: #464646"
+                            class="cursor-pointer"
+                            style="color: #464646"
                             @click="goToProfile"
                           >
                             <b>{{ data.user_info.username }}</b>
                           </div>
-                          <span style="font-size: 5px; color: #464646">{{
-                            data.user_info.written_time
-                          }}</span>
-                        </div>
-                      </div>
-                    </q-card-section>
-                    <div
-                      class="icon-position"
-                      style="margin-bottom: 10px; margin-top: -10px;"
-                    >
-                      <span style=" margin-right: 5px;">
-                        <q-icon
-                          :name="$i.ionHeartOutline"
-                          style="color:#727272"
-                          size="18px"
-                        ></q-icon
-                      ></span>
-                      <span style="margin-right: 12px; font-size: 13px;">{{
-                        data.like_num
-                      }}</span>
-                      <span style="margin-right: 5px;">
-                        <q-icon
-                          :name="$i.ionChatboxEllipsesOutline"
-                          style="color:#727272"
-                          size="15px"
-                        ></q-icon
-                      ></span>
-                      <span style="margin-right: 15px; font-size: 13px;">{{
-                        data.comment_num
-                      }}</span>
-                    </div>
-                  </q-card>
-                </div>
-              </div>
-            </div>
-          </q-tab-panel>
-
-          <q-tab-panel name="latest">
-            <!-- 최신순 리스트 -->
-            <div class="row" style="margin-left: 12px;">
-              <div v-for="(data, index) in forumList" :key="index">
-                <div
-                  class="q-pa-md row items-start q-gutter-md"
-                  style="width: 345px;"
-                >
-                  <!-- 썸네일 -->
-                  <q-card class="my-card" style="height: 400px;">
-                    <img :src="data.thumnail" style="height: 198px;" />
-                    <q-card-section style="margin-bottom: -5px; height: 80px;">
-                      <div
-                        style="font-size: 18px; cursor: pointer"
-                        @click="goToDetail"
-                      >
-                        <b>{{ data.title }}</b>
-                      </div>
-                    </q-card-section>
-
-                    <div style="margin-left: 15px;">
-                      <span
-                        v-for="tag in data.ref_tags"
-                        :key="tag"
-                        style="margin-right: 5px;"
-                      >
-                        <q-badge color="blue"> # {{ tag }} </q-badge>
-                      </span>
-                    </div>
-
-                    <q-card-section style="margin-top: 10px;">
-                      <div class="row">
-                        <div class="col-0.5">
-                          <span style="cursor:pointer; margin-right: 11px;">
-                            <q-avatar
-                              @click="goToProfile"
-                              style="width: 35px; height: 35px;"
-                              ><img :src="data.user_info.profile_img" />
-                            </q-avatar>
-                          </span>
-                        </div>
-                        <div class="col-11.5">
-                          <div
-                            style="font-size: 15px; cursor:pointer; height: 17px; color: #464646"
-                            @click="goToProfile"
-                          >
-                            <b>{{ data.user_info.username }}</b>
+                          <div style="font-size: 5pt; color: #464646">
+                            {{ data.user_info.written_time }}
                           </div>
-                          <span style="font-size: 5px; color: #464646">{{
-                            data.user_info.written_time
+                        </div>
+                      </div>
+
+                      <div class="col-5 row items-end justify-end">
+                        <div class="icon-position q-mb-xs row items-center">
+                          <div class="q-mr-xs">
+                            <q-icon
+                              :name="$i.ionHeartOutline"
+                              style="color:#727272"
+                              size="22px"
+                            ></q-icon>
+                          </div>
+                          <div class="q-mr-md" style=" font-size: 13pt;">
+                            {{ data.like_num }}
+                          </div>
+                          <div class="q-mr-sm">
+                            <q-icon
+                              :name="$i.ionChatboxEllipsesOutline"
+                              style="color:#727272"
+                              size="22px"
+                            ></q-icon>
+                          </div>
+                          <span style="font-size: 13pt;">{{
+                            data.comment_num
                           }}</span>
                         </div>
                       </div>
-                    </q-card-section>
-                    <div
-                      class="icon-position"
-                      style="margin-bottom: 10px; margin-top: -10px;"
-                    >
-                      <span style=" margin-right: 5px;">
-                        <q-icon
-                          :name="$i.ionHeartOutline"
-                          style="color:#727272"
-                          size="18px"
-                        ></q-icon
-                      ></span>
-                      <span style="margin-right: 12px; font-size: 13px;">{{
-                        data.like_num
-                      }}</span>
-                      <span style="margin-right: 5px;">
-                        <q-icon
-                          :name="$i.ionChatboxEllipsesOutline"
-                          style="color:#727272"
-                          size="15px"
-                        ></q-icon
-                      ></span>
-                      <span style="margin-right: 15px; font-size: 13px;">{{
-                        data.comment_num
-                      }}</span>
                     </div>
-                  </q-card>
-                </div>
+                  </q-card-section>
+                </q-card>
               </div>
             </div>
           </q-tab-panel>
@@ -253,13 +167,57 @@ export default {
             // 글 작성자 정보
             user_id: 5,
             username: 'user2',
-            written_time: '2021-01-24T02:02',
+            written_time: '2021-01-25T02:02',
+            profile_img: 'https://cdn.quasar.dev/img/mountains.jpg',
+          },
+        },
+        {
+          forum_id: 1,
+          title: 'Add a YouTube stats widget to your iPhone with JavaScript',
+          thumnail: 'https://cdn.quasar.dev/img/mountains.jpg',
+          ref_tags: ['vue', 'django'],
+          like_num: 7,
+          comment_num: 1,
+          viewed_num: 20,
+          user_info: {
+            // 글 작성자 정보
+            user_id: 3,
+            username: 'test1',
+            written_time: '2021-01-25T04:02',
+            profile_img: 'https://cdn.quasar.dev/img/avatar.png',
+          },
+        },
+        {
+          forum_id: 2,
+          title: '두 번째 글',
+          thumnail: 'https://placeimg.com/500/300/nature',
+          ref_tags: ['django', 'python'],
+          like_num: 10,
+          comment_num: 3,
+          viewed_num: 10,
+          user_info: {
+            // 글 작성자 정보
+            user_id: 5,
+            username: 'user2',
+            written_time: '2021-01-23T11:02',
             profile_img: 'https://cdn.quasar.dev/img/mountains.jpg',
           },
         },
       ],
+      forumListSorted: [],
     };
   },
+  created() {
+    this.forumListSorted = this.forumList.slice();
+    this.forumListSorted.sort((a, b) => {
+      if (this.$moment(a.written_time).isAfter(b.written_time)) {
+        return 1;
+      } else {
+        return -1;
+      }
+    });
+  },
+
   methods: {
     goToProfile() {
       this.$router.push({ name: 'Profile' });
