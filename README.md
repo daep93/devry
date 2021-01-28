@@ -1,11 +1,11 @@
-# Welcome to (미정)
+# Welcome to DEVRY
 
 // 이미지 위치 
 ## 🏠 [Homepage]()
 
 <br>
 
-## 👨‍👩‍👦팀원소개
+## 🚤팀원소개
 
 **Dae Hyun Park**
 
@@ -62,10 +62,10 @@
 
 ### Backend
 
-## 
+
 
 ## 👀 서비스 소개
-![devry](img/README/sub2/devry.jpg)
+![devry](img/README/sub2/devry.JPG)
 
 **DEVRY란?**
 
@@ -186,11 +186,11 @@ DEVRY는 **개발자 특화 커뮤니티** 서비스와 **포트폴리오** 서�
 
 - 개발자에게 특화된 이력 입력폼 제공
 
-![setting1](img/README/sub2/11. profile-setting.jpg)
+![setting1](img/README/sub2/11. profile-setting.JPG)
 
-![setting2](img/README/sub2/12. profile-setting 2.jpg)
+![setting2](img/README/sub2/12. profile-setting 2.JPG)
 
-![setting3](img/README/sub2/13. profile-setting 3.jpg)
+![setting3](img/README/sub2/13. profile-setting 3.JPG)
 
 </br>
 
@@ -200,9 +200,9 @@ DEVRY는 **개발자 특화 커뮤니티** 서비스와 **포트폴리오** 서�
 
 - 해당 화면에서 바로 팔로우 및 팔로우 취소 가능
 
-![modal1](img/README/sub2/14. follow.jpg)
+![modal1](img/README/sub2/14. follow.JPG)
 
-![modal2](img/README/sub2/15. follower.jpg)
+![modal2](img/README/sub2/15. follower.JPG)
 
 </br>
 
