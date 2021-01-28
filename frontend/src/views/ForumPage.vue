@@ -33,7 +33,7 @@
         </div>
       </div>
       <!-- 탭 시작 -->
-      <ForumList></ForumList>
+      <ForumList :tab="tab"></ForumList>
     </div>
   </div>
 </template>
@@ -42,6 +42,11 @@
 import ForumList from '@/components/forum/ForumList';
 
 export default {
+  data() {
+    return {
+      tab: 'feed',
+    };
+  },
   components: {
     ForumList,
   },

@@ -1,7 +1,7 @@
 <template>
   <div class=" justify-center col-12">
-    <q-tab-panels v-model="tab" animated>
-      <q-tab-panel :name="tab">
+    <q-tab-panels v-model="tab" animated class="q-px-none">
+      <q-tab-panel :name="tab" class="q-px-none">
         <!-- 피드 리스트 -->
         <div class="row ">
           <div
@@ -92,9 +92,11 @@
 
 <script>
 export default {
+  props: {
+    tab: String,
+  },
   data() {
     return {
-      tab: 'feed',
       // title: 'Add',
       // title: 'Add a YouTube stats widget to your iPhone with JavaScript',
       // username: 'test user',
