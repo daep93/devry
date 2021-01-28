@@ -52,7 +52,7 @@
                     'transition-timing-function': 'ease-in-out',
                   }"
                 ></q-icon>
-                <div>{{ flag ? 'Following' : 'Follow' }}</div>
+                <div>{{ flag ? 'checked' : 'check' }}</div>
               </div>
             </q-btn>
           </q-card-section>
