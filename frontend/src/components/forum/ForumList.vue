@@ -1,13 +1,13 @@
 <template>
   <div class=" justify-center col-12">
-    <q-tab-panels v-model="tab" animated class="q-px-none">
+    <q-tab-panels v-model="tab" class="q-px-none">
       <q-tab-panel :name="tab" class="q-px-none">
         <!-- 피드 리스트 -->
         <div class="row ">
           <div
             v-for="(data, index) in tab === 'feed'
-              ? forumList
-              : forumListSorted"
+              ? tagFilteredList
+              : sortedList"
             :key="index"
             class="q-pa-sm row col-4"
           >
@@ -39,7 +39,8 @@
                         class="cursor-pointer"
                         @click="goToProfile"
                         style="width: 35px; height: 35px;"
-                        ><img :src="data.user_info.profile_img" />
+                      >
+                        <img :src="data.user_info.profile_img" />
                       </q-avatar>
                     </div>
                     <div>
@@ -51,7 +52,10 @@
                         <b>{{ data.user_info.username }}</b>
                       </div>
                       <div style="font-size: 5pt; color: #464646">
-                        {{ data.user_info.written_time }}
+                        {{
+                          data.user_info.written_time
+                            | moment('YYYY/MM/DD hh:mm')
+                        }}
                       </div>
                     </div>
                   </div>
@@ -107,7 +111,7 @@ export default {
           forum_id: 1,
           title: 'Add a YouTube stats widget to your iPhone with JavaScript',
           thumnail: 'https://cdn.quasar.dev/img/mountains.jpg',
-          ref_tags: ['vue', 'django'],
+          ref_tags: ['vue', 'javascript'],
           like_num: 7,
           comment_num: 1,
           viewed_num: 20,
@@ -115,7 +119,7 @@ export default {
             // 글 작성자 정보
             user_id: 3,
             username: 'test1',
-            written_time: '2021-01-24T02:02',
+            written_time: '2021-01-24T02:01',
             profile_img: 'https://cdn.quasar.dev/img/avatar.png',
           },
         },
@@ -131,7 +135,7 @@ export default {
             // 글 작성자 정보
             user_id: 5,
             username: 'user2',
-            written_time: '2021-01-25T02:02',
+            written_time: '2021-01-25T03:04',
             profile_img: 'https://cdn.quasar.dev/img/mountains.jpg',
           },
         },
@@ -140,14 +144,14 @@ export default {
           title: 'Add a YouTube stats widget to your iPhone with JavaScript',
           thumnail: 'https://cdn.quasar.dev/img/mountains.jpg',
           ref_tags: ['vue', 'django'],
-          like_num: 7,
+          like_num: 17,
           comment_num: 1,
           viewed_num: 20,
           user_info: {
             // 글 작성자 정보
             user_id: 3,
             username: 'test1',
-            written_time: '2021-01-25T04:02',
+            written_time: '2021-01-25T04:09',
             profile_img: 'https://cdn.quasar.dev/img/avatar.png',
           },
         },
@@ -156,32 +160,43 @@ export default {
           title: '두 번째 글',
           thumnail: 'https://placeimg.com/500/300/nature',
           ref_tags: ['django', 'python'],
-          like_num: 10,
+          like_num: 1,
           comment_num: 3,
           viewed_num: 10,
           user_info: {
             // 글 작성자 정보
             user_id: 5,
             username: 'user2',
-            written_time: '2021-01-23T11:02',
+            written_time: '2021-01-23T05:12',
             profile_img: 'https://cdn.quasar.dev/img/mountains.jpg',
           },
         },
       ],
-      forumListSorted: [],
     };
   },
   created() {
-    this.forumListSorted = this.forumList.slice();
-    this.forumListSorted.sort((a, b) => {
-      if (this.$moment(a.written_time).isAfter(b.written_time)) {
-        return 1;
-      } else {
-        return -1;
-      }
-    });
+    this.$store.commit('initSelectedTags');
   },
-
+  computed: {
+    tagFilteredList() {
+      return this.forumList.filter(article => {
+        for (const tag of article.ref_tags) {
+          for (const selected of this.$store.getters.getSelectedTags) {
+            if (tag === selected) return true;
+          }
+        }
+        return false;
+      });
+    },
+    sortedList() {
+      const list = this.tagFilteredList.slice();
+      return list.sort(
+        (a, b) =>
+          this.$moment(b.user_info.written_time) -
+          this.$moment(a.user_info.written_time),
+      );
+    },
+  },
   methods: {
     goToProfile() {
       this.$router.push({ name: 'Profile' });

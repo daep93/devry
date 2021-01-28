@@ -13,4 +13,6 @@ export default {
   followModal: false,
   leftDrawal: true,
   tagFilter: false,
+  myTags: ['javascript', 'vue', 'python'],
+  selectedTags: [],
 };

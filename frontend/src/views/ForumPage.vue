@@ -45,6 +45,7 @@ export default {
   data() {
     return {
       tab: 'feed',
+      search: '',
     };
   },
   components: {

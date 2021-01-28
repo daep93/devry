@@ -72,7 +72,7 @@
           flat
           label="선택 적용"
           color="primary"
-          @click="$store.commit('toggleTagFilter')"
+          @click="updateSelectedTags"
         />
       </q-card-actions>
     </q-card>
@@ -111,6 +111,14 @@ export default {
     },
     toggleFollow(tag) {
       this.tags[tag] = !this.tags[tag];
+    },
+    updateSelectedTags() {
+      const selectedTags = [];
+      for (const tag in this.tags) {
+        if (this.tags[tag]) selectedTags.push(tag);
+      }
+      this.$store.commit('setSelectedTags', selectedTags);
+      this.$store.commit('toggleTagFilter');
     },
   },
 };
