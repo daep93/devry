@@ -62,6 +62,11 @@
 
 ### Backend
 
+#### vscode 플러그인
+
+- Python
+- Django
+
 
 
 ## 👀 서비스 소개
@@ -78,6 +83,8 @@ DEVRY는 **개발자 특화 커뮤니티** 서비스와 **포트폴리오** 서�
 **자세한 기획 배경 및 기능 소개가 궁금하다면?**
 
 [DEVRY 기획/기능 명세서 바로가기](https://www.notion.so/DEVRY-9f3cc7c325694d2287e476160df50fc2)
+
+[API 문서 확인하기](https://www.notion.so/Devry-API-Document-057c077d706c4dfb8db173658c39d185)
 
 </br>
 
