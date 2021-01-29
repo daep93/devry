@@ -14,4 +14,10 @@ export default {
   getAccountNickname(state) {
     return state.nickname;
   },
+  getMyTags(state) {
+    return state.myTags;
+  },
+  getSelectedTags(state) {
+    return state.selectedTags;
+  },
 };

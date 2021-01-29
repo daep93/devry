@@ -39,9 +39,20 @@ const routes = [
     component: () => import('@/views/ForumPage.vue'),
   },
   {
+    path: '/forum/forum-detail',
+    name: 'ForumDetail',
+    component: () => import('@/views/ForumDetailPage.vue'),
+  },
+  {
     path: '/event',
     name: 'Event',
     component: () => import('@/views/EventPage.vue'),
+  },
+  {
+    // path: '/event/:id',
+    path: '/event-detail',
+    name: 'EventDetail',
+    component: () => import('@/views/EventDetailPage.vue'),
   },
   {
     path: '/jobs',

@@ -34,4 +34,13 @@ export default {
   toggleLeft(state) {
     state.leftDrawal = !state.leftDrawal;
   },
+  toggleTagFilter(state) {
+    state.tagFilter = !state.tagFilter;
+  },
+  initSelectedTags(state) {
+    state.selectedTags = state.myTags;
+  },
+  setSelectedTags(state, tags) {
+    state.selectedTags = tags;
+  },
 };

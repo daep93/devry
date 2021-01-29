@@ -12,4 +12,7 @@ export default {
   accountModalType: 'login',
   followModal: false,
   leftDrawal: true,
+  tagFilter: false,
+  myTags: ['javascript', 'vue', 'python'],
+  selectedTags: [],
 };

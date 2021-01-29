@@ -52,7 +52,7 @@
           <q-avatar style="border: 1px solid #ECEFF1">
             <q-img :src="require('@/assets/keyboard.png')" />
           </q-avatar>
-          <q-menu>
+          <q-menu style="width:30%">
             <q-item @click="moveToProfilePage" clickable>
               <q-item-section avatar>
                 <q-icon :name="$i.ionHappyOutline"></q-icon>
@@ -117,7 +117,7 @@ export default {
       this.$router.push(`/profile/${this.$store.getters.getAccountId}`);
     },
     moveToProfileSettingPage() {
-      this.$router.push(`/profile-setting/${this.$store.getters.getAccountId}`);
+      this.$router.push(`/profile-setting/`);
     },
     toggleLeft() {
       this.$store.commit('toggleLeft');
