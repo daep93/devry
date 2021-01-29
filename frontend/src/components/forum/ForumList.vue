@@ -95,6 +95,7 @@
 </template>
 
 <script>
+import { testCase } from '@/dummy/Forum.js';
 export default {
   props: {
     tab: String,
@@ -179,7 +180,7 @@ export default {
   },
   computed: {
     tagFilteredList() {
-      return this.forumList.filter(article => {
+      return testCase.filter(article => {
         for (const tag of article.ref_tags) {
           for (const selected of this.$store.getters.getSelectedTags) {
             if (tag === selected) return true;

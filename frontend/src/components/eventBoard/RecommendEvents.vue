@@ -1,54 +1,36 @@
 <template>
-  <div class="col-12 row" style="margin-bottom: 50px;">
+  <div class="row q-mb-xl">
     <!-- 소제목 타이틀 -->
-    <div class="text-h6 text-weight-bold col-12">Events for You</div>
+    <div class="row col-12 text-h6 text-weight-bold ">Events for You</div>
 
-    <div class=" row justify-end q-mb-sm q-gutter-lg col-12">
+    <div class=" row q-mb-sm justify-end col-12">
       <!-- 태그 필터링 -->
-      <q-btn outline color="primary" @click="$store.commit('toggleTagFilter')"
+      <q-btn
+        outline
+        color="primary"
+        @click="$store.commit('toggleTagFilter')"
+        class="q-mr-sm"
+        style="height:40px"
         >태그 선택</q-btn
       >
       <!-- 이벤트 카테고리 -->
-      <q-btn-dropdown outline color="black" label="Category">
-        <q-list>
-          <q-item clickable v-close-popup @click="onItemClick">
-            <q-item-section>
-              <q-item-label>ALL</q-item-label>
-            </q-item-section>
-          </q-item>
-          <q-item clickable v-close-popup @click="onItemClick">
-            <q-item-section>
-              <q-item-label>Conference</q-item-label>
-            </q-item-section>
-          </q-item>
-
-          <q-item clickable v-close-popup @click="onItemClick">
-            <q-item-section>
-              <q-item-label>Workshop</q-item-label>
-            </q-item-section>
-          </q-item>
-
-          <q-item clickable v-close-popup @click="onItemClick">
-            <q-item-section>
-              <q-item-label>Hackathon</q-item-label>
-            </q-item-section>
-          </q-item>
-        </q-list>
-      </q-btn-dropdown>
+      <q-select
+        outlined
+        v-model="category"
+        :options="['ALL', 'conference', 'workshop', 'hackathon']"
+        style="width:140px;"
+      />
     </div>
-    <div class="row col-12">
+    <div class="row col-12 " style="height:30vh">
       <div class="col-12 row">
-        <q-intersection
-          transition="scale"
-          class="row"
-        >
+        <q-intersection transition="scale" class="col-12">
           <q-tabs
             inline-label
-            class="bg-white text-black"
+            class="bg-white text-black col-12"
             indicator-color="white"
           >
             <div
-              v-for="(event, index) in events"
+              v-for="(event, index) in categorySortedList"
               :key="index"
               class="col-4 q-pa-xs"
             >
@@ -59,7 +41,7 @@
                       class="text-weight-bold text-weight-bold col-10"
                       style="font-size:1.1em"
                     >
-                      {{ event.eventTitle }}
+                      {{ event.title }}
                     </div>
                     <div class="col-2 row justify-end">
                       <q-btn
@@ -77,7 +59,7 @@
                 <q-card-section class="q-px-lg q-pt-sm q-pb-xs">
                   <div class="row q-gutter-sm">
                     <div
-                      v-for="(tag, index) in event.eventTags"
+                      v-for="(tag, index) in event.tags"
                       :key="index"
                       style="font-size:0.9em"
                     >
@@ -88,11 +70,11 @@
                 <q-card-section class="q-px-lg q-pt-sm q-pb-lg">
                   <div class="row justify-between items-end">
                     <div class="text-subtitle2 text-weight-bold text-primary">
-                      {{ event.eventDate }}
+                      {{ event.date }}
                     </div>
                     <div>
                       <img
-                        :src="event.eventHostImg"
+                        :src="event.host_info.profile_img"
                         style="width: 50px; height: 40px;  border-radius: 10px;"
                       />
                     </div>
@@ -117,54 +99,66 @@
 </template>
 
 <script>
+import { testCase } from '@/dummy/Events.js';
 export default {
   data() {
     return {
-      events: [
-        {
-          eventCategory: 'conference',
-          eventTitle: 'Vue.js Conference',
-          eventTags: ['Vue.js', 'Conference'],
-          eventDate: '2021.03.15',
-          eventHostImg:
-            'https://img1.daumcdn.net/thumb/R720x0.q80/?scode=mtistory2&fname=http%3A%2F%2Fcfile28.uf.tistory.com%2Fimage%2F99E375455D5E2D6A1960E9',
-          bookmark: false,
-        },
-        {
-          eventCategory: 'workshop',
-          eventTitle: 'JavaScript Workshop',
-          eventTags: ['JavaScript', 'Workshop'],
-          eventDate: '2021.03.20',
-          eventHostImg:
-            'https://img.etoday.co.kr/pto_db/2019/10/600/20191008190706_1374482_584_432.jpg',
-          bookmark: false,
-        },
-        {
-          eventCategory: 'hackathon',
-          eventTitle: 'Bigdata hackathon',
-          eventTags: ['Bigdata', 'hackathon'],
-          eventDate: '2021.04.20',
-          eventHostImg: 'https://cdn.quasar.dev/img/mountains.jpg',
-          bookmark: false,
-        },
-        {
-          eventCategory: 'hackathon',
-          eventTitle: 'Bigdata hackathon',
-          eventTags: ['Bigdata', 'hackathon'],
-          eventDate: '2021.04.20',
-          eventHostImg: 'https://cdn.quasar.dev/img/mountains.jpg',
-          bookmark: false,
-        },
-      ],
+      category: 'ALL',
     };
   },
   methods: {
     checkBookMark: function(index) {
-      this.events[index].bookmark = !this.events[index].bookmark;
+      this.categorySortedList[index].bookmark = !this.categorySortedList[index]
+        .bookmark;
     },
-    onItemClick: function() {},
+  },
+  created() {
+    this.$store.commit('initSelectedTags');
+  },
+  computed: {
+    tagFilteredList() {
+      return testCase.filter(article => {
+        for (const tag of article.tags) {
+          for (const selected of this.$store.getters.getSelectedTags) {
+            if (tag.toLowerCase() === selected) return true;
+          }
+        }
+        return false;
+      });
+    },
+    categorySortedList() {
+      return this.tagFilteredList.filter(article => {
+        if (this.category === 'ALL') return true;
+        if (article.category === this.category) return true;
+        return false;
+      });
+    },
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.q-select >>> .q-field--auto-height {
+  min-height: 40px;
+}
+.q-select >>> .q-field__native {
+  min-height: 40px;
+  height: 40px;
+}
+.q-select >>> .q-field__append {
+  min-height: 40px;
+  height: 40px;
+}
+.q-select >>> .q-field__marginal {
+  min-height: 40px;
+}
+.q-select >>> .q-field__control {
+  min-height: 40px;
+}
+.q-select >>> .q-field__control-container {
+  height: inherit;
+}
+.q-intersection > div {
+  width: 100%;
+}
+</style>

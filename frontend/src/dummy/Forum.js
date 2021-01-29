@@ -1,4 +1,4 @@
-const forumList = [
+const testCase = [
   {
     forum_id: 1, // 포럼 글 번호
     title: 'Add a YouTube stats widget to your iPhone with JavaScript', // 글 제목
@@ -194,4 +194,4 @@ const forumList = [
     },
   },
 ];
-export { forumList };
+export { testCase };

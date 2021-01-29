@@ -47,11 +47,9 @@ export default {
     return {
       sort: 'latest',
       search: '',
-      quests: [],
     };
   },
   created() {
-    this.quests = testCase;
     this.$store.commit('initSelectedTags');
   },
   computed: {

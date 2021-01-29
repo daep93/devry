@@ -3,7 +3,7 @@ const testCase = [
     event_id: 1, // 이벤트 게시글 번호
     category: 'conference', // 이벤트 카테고리
     title: 'Vue.js Conference', // 이벤트 제목
-    tags: ['Vue.js', 'Conference'], // 이벤트 관련 태그
+    tags: ['vue', 'Conference'], // 이벤트 관련 태그
     date: '2021.03.15', // 이벤트 개최 일자
     host_info: {
       // 이벤트 주최자 정보
@@ -17,7 +17,7 @@ const testCase = [
     event_id: 2,
     category: 'workshop',
     title: 'JavaScript Workshop',
-    tags: ['JavaScript', 'Workshop'],
+    tags: ['javaScript', 'Workshop'],
     date: '2021.03.20',
     host_info: {
       user_id: 3,
@@ -30,7 +30,7 @@ const testCase = [
     event_id: 3,
     category: 'hackathon',
     title: 'Bigdata hackathon',
-    tags: ['Bigdata', 'hackathon'],
+    tags: ['python', 'hackathon'],
     date: '2021.04.20',
     host_info: {
       user_id: 8,
@@ -42,7 +42,7 @@ const testCase = [
     event_id: 4,
     category: 'hackathon',
     title: 'AI Speech 해커톤',
-    tags: ['AI', 'hackathon'],
+    tags: ['AI', 'python', 'hackathon'],
     date: '2021.04.27',
     host_info: {
       user_id: 5,
@@ -53,8 +53,8 @@ const testCase = [
   {
     event_id: 5,
     category: 'conference',
-    title: '블록체인-금융 컨퍼런스',
-    tags: ['blockchain', 'conference'],
+    title: '타입스크립트 컨퍼런스',
+    tags: ['typescript', 'conference'],
     date: '2021.03.10',
     host_info: {
       user_id: 6,
@@ -65,8 +65,8 @@ const testCase = [
   {
     event_id: 6,
     category: 'hackathon',
-    title: 'Digital health hackathon',
-    tags: ['digital', 'hackathon'],
+    title: 'React hackathon',
+    tags: ['react', 'hackathon'],
     date: '2021.05.02',
     host_info: {
       user_id: 4,
@@ -78,7 +78,7 @@ const testCase = [
     event_id: 7,
     category: 'conferendce',
     title: '문화콘텐츠 AI 컨퍼런스',
-    tags: ['AI', 'conferendce'],
+    tags: ['AI', 'python', 'conferendce'],
     date: '2021.04.18',
     host_info: {
       user_id: 7,
@@ -89,8 +89,8 @@ const testCase = [
   {
     event_id: 8,
     category: 'workshop',
-    title: 'Bigdata 워크샵',
-    tags: ['Bigdata', 'workshop'],
+    title: 'react 워크샵',
+    tags: ['react', 'workshop'],
     date: '2021.03.27',
     host_info: {
       user_id: 21,
@@ -102,7 +102,7 @@ const testCase = [
     event_id: 9,
     category: 'hackathon',
     title: '제 5회 융합 해커톤',
-    tags: ['fusion', 'hackathon'],
+    tags: ['vue', 'django', 'hackathon'],
     date: '2021.06.13',
     host_info: {
       user_id: 11,
@@ -114,7 +114,7 @@ const testCase = [
     event_id: 10,
     category: 'conferendce',
     title: 'Java 컨퍼런스',
-    tags: ['Java', 'conferendce'],
+    tags: ['java', 'conferendce'],
     date: '2021.04.17',
     host_info: {
       user_id: 13,
@@ -125,8 +125,8 @@ const testCase = [
   {
     event_id: 11,
     category: 'workshop',
-    title: 'Python 워크샵',
-    tags: ['Python', 'workshop'],
+    title: 'docker 워크샵',
+    tags: ['docker', 'workshop'],
     date: '2021.03.11',
     host_info: {
       user_id: 17,
@@ -137,8 +137,8 @@ const testCase = [
   {
     event_id: 12,
     category: 'conference',
-    title: '5G 혁신 컨퍼런스',
-    tags: ['C', '5G', 'conference'],
+    title: 'django 컨퍼런스',
+    tags: ['django', 'conference'],
     date: '2021.06.13',
     host_info: {
       user_id: 12,
