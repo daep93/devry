@@ -51,6 +51,9 @@ export default {
   components: {
     ForumList,
   },
+  created() {
+    this.$store.commit('onLeft');
+  },
 };
 </script>
 

@@ -93,12 +93,12 @@ export default {
         angular: false,
         django: false,
         java: false,
-        vue: true,
+        vue: false,
         typescript: false,
         docker: false,
-        python: true,
+        python: false,
         react: false,
-        javascript: true,
+        javascript: false,
       },
     };
   },
@@ -120,6 +120,11 @@ export default {
       this.$store.commit('setSelectedTags', selectedTags);
       this.$store.commit('toggleTagFilter');
     },
+  },
+  created() {
+    for (const tag of this.$store.getters.getMyTags) {
+      this.tags[tag] = true;
+    }
   },
 };
 </script>
