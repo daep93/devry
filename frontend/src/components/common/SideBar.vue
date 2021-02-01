@@ -43,12 +43,12 @@
         to="/jobs"
       />
     </q-tabs>
-    <div>
+    <div v-if="$store.getters.isLogined">
       <div class="row my-tags q-pt-lg">
         <div class="row col-12 q-mb-sm" style="font-size: 14pt;">#My tags</div>
         <div class="row q-mr-sm">
           <span
-            v-for="tag in tags"
+            v-for="tag in $store.getters.getMyTags"
             :key="tag"
             class="q-mb-sm q-mr-xs q-pa-sm "
             :style="{ 'background-color': '#ECEFF1' }"

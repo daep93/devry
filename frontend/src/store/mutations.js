@@ -34,6 +34,9 @@ export default {
   toggleLeft(state) {
     state.leftDrawal = !state.leftDrawal;
   },
+  onLeft(state) {
+    state.leftDrawal = true;
+  },
   toggleTagFilter(state) {
     state.tagFilter = !state.tagFilter;
   },
@@ -42,5 +45,8 @@ export default {
   },
   setSelectedTags(state, tags) {
     state.selectedTags = tags;
+  },
+  setMyTags(state, tags) {
+    state.myTags = tags;
   },
 };
