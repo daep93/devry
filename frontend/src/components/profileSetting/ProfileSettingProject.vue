@@ -50,7 +50,7 @@ export default {
   methods: {
     addProject: function(project, index) {
       if (this.pjtUrl !== '' && this.pjtName !== '') {
-        this.$emit('addProjectItem', this.pjtUrl, this.pjtName);
+        this.$emit('addProjectItem', this.pjtName, this.pjtUrl);
         this.pjtName = '',
         this.pjtUrl = ''
       }
