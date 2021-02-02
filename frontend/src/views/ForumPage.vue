@@ -52,6 +52,7 @@ export default {
     ForumList,
   },
   created() {
+    // 왼쪽 사이드 바 열림
     this.$store.commit('onLeft');
   },
 };

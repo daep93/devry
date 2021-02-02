@@ -7,9 +7,9 @@
         style="color:#3B77AF"
         class="row justify-start"
       >
-        <q-tab name="latest" label="최신순" />
-        <q-tab name="orderByComment" label="댓글순" />
-        <q-tab name="orderByLike" label="추천순" />
+        <q-tab name="time" label="최신순" />
+        <q-tab name="comment" label="댓글순" />
+        <q-tab name="like" label="추천순" />
       </q-tabs>
       <div class="row justify-end q-gutter-lg">
         <q-input v-model="search" type="search" class="q-mb-sm" outlined>
@@ -28,7 +28,7 @@
     </div>
     <div class="row q-mt-md col-12">
       <qna-entity
-        v-for="quest in refinedQuest"
+        v-for="quest in board"
         :key="quest.questId"
         :entity="quest"
       ></qna-entity>
@@ -38,55 +38,55 @@
 
 <script>
 import QnaEntity from '@/components/qna/QnaEntity.vue';
-import { testCase } from '@/dummy/Questions.js';
+import { getQnaList } from '@/api/board';
 export default {
   components: {
     QnaEntity,
   },
   data() {
     return {
-      sort: 'latest',
+      sort: 'time',
       search: '',
+      board: [],
     };
   },
-  created() {
+  async created() {
+    // myTags로부터 selectedTags를 받아옴
     this.$store.commit('initSelectedTags');
+    // QnA 게시판의 정보를 서버로부터 받아옴
+    this.loadBoard();
+  },
+  watch: {
+    sort() {
+      // sort를 감시해서 바뀌면 새로운 게시판의 정보를 서버로부터 받아옴
+      this.loadBoard();
+    },
+    selectedTags() {
+      // store의 selectedTags가 바뀌면 새로운 게시판의 정보를 서버로부터 받아옴
+      this.loadBoard();
+    },
+  },
+  methods: {
+    // 게시판의 정보를 서버로부터 받아옴
+    async loadBoard() {
+      try {
+        this.$q.loading.show();
+        const { data } = await getQnaList({
+          tags_filter: this.selectedTags,
+          tab: this.sort,
+        });
+        this.board = data.quests;
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.$q.loading.hide();
+      }
+    },
   },
   computed: {
-    refinedQuest() {
-      if (this.sort === 'latest') return this.timeSortedList;
-      else if (this.sort == 'orderByComment') return this.commentSortedList;
-      else return this.likeSortedList;
-    },
-    tagFilteredList() {
-      return testCase.filter(article => {
-        for (const tag of article.refTags) {
-          for (const selected of this.$store.getters.getSelectedTags) {
-            if (tag === selected) return true;
-          }
-        }
-        return false;
-      });
-    },
-    timeSortedList() {
-      const list = this.tagFilteredList.slice();
-      return list.sort(
-        (a, b) =>
-          this.$moment(b.userInfo.writtenTime) -
-          this.$moment(a.userInfo.writtenTime),
-      );
-    },
-    commentSortedList() {
-      const list = this.tagFilteredList.slice();
-      return list.sort(
-        (a, b) => this.$moment(b.commentNum) - this.$moment(a.commentNum),
-      );
-    },
-    likeSortedList() {
-      const list = this.tagFilteredList.slice();
-      return list.sort(
-        (a, b) => this.$moment(b.likeNum) - this.$moment(a.likeNum),
-      );
+    // watch로 감시하기 위해서 store의 데이터를 selectedTags에 담음.
+    selectedTags() {
+      return this.$store.getters.getSelectedTags;
     },
   },
 };

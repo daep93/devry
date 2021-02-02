@@ -15,4 +15,5 @@ const instance = createInstance();
 const follower = createInstanceWithAuth('follower/');
 const followee = createInstanceWithAuth('followee/');
 const profileSetting = createInstanceWithAuth('profile/setting');
-export { instance, follower, followee, profileSetting };
+const board = createInstanceWithAuth('board/');
+export { instance, follower, followee, profileSetting, board };
