@@ -13,14 +13,30 @@
       <q-card-section
         style="width:100%;border: 2px solid #FBAA9F; border-raidus:5px; "
       >
-        <div class="row justify-between">
-          <post-card
-            v-for="post in info.pinned"
-            :detail="post"
+        <q-carousel
+          v-model="slide"
+          transition-prev="slide-right"
+          transition-next="slide-left"
+          swipeable
+          animated
+          infinite
+          control-color="black"
+          padding
+          arrows
+          :autoplay="autoplay"
+          @mouseenter="autoplay = false"
+          @mouseleave="autoplay = true"
+          height="170px"
+        >
+          <q-carousel-slide
+            v-for="(post, index) in info.pinned"
+            :name="index"
             :key="post.id"
-            style="width:49%"
-          ></post-card>
-        </div>
+            style="border-radius: 10px;"
+          >
+            <post-card :detail="info.pinned[0]"></post-card>
+          </q-carousel-slide>
+        </q-carousel>
       </q-card-section>
     </q-card>
     <div class="row justify-between q-mb-sm">
@@ -75,6 +91,8 @@ export default {
   components: { PostCard, CommentCard },
   data() {
     return {
+      autoplay: true,
+      slide: 1,
       post: 'posts',
     };
   },

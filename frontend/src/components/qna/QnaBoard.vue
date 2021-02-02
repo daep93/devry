@@ -75,6 +75,7 @@ export default {
           tags_filter: this.selectedTags,
           tab: this.sort,
         });
+        console.log(typeof data);
         this.board = data.quests;
       } catch (error) {
         console.log(error);

@@ -1,9 +1,12 @@
 import { profileSetting } from '@/api';
 
-function loadProfile(profileId) {
-  return profileSetting.get('/load', profileId);
+function loadProfile() {
+  return profileSetting.get('/');
 }
-function updateProfile(profileId, profileData) {
-  return profileSetting.put('/save', profileId, profileData);
+function updateProfile(profileData) {
+  return profileSetting.put('/', profileData);
 }
-export { loadProfile, updateProfile };
+function deleteProfile() {
+  return profileSetting.delete('/');
+}
+export { loadProfile, updateProfile, deleteProfile };

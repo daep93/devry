@@ -1,6 +1,6 @@
 <template>
   <div class="row q-mb-sm post-card-frame">
-    <div class="col-2">
+    <div class="col-2" style="">
       <q-img
         src="https://source.unsplash.com/random"
         alt="change-password"
@@ -12,7 +12,7 @@
         <div class="row items-baseline q-mb-sm">
           <div class="q-mr-sm text-weight-regular">@{{ detail.username }}</div>
           <div class="text-weight-thin" style="font-size:8pt">
-            {{ detail.writtenAt | moment('YYYY/MM/DD') }}
+            {{ detail.written_time | moment('YYYY/MM/DD') }}
           </div>
         </div>
         <div class="row">
@@ -23,7 +23,7 @@
               size="22px"
               class="q-mr-sm"
             ></q-icon>
-            <span>{{ detail.likeNum }}</span>
+            <span>{{ detail.like_num }}</span>
           </div>
           <div class="row items-center q-mr-md">
             <q-icon
@@ -32,19 +32,22 @@
               size="22px"
               class="q-mr-sm"
             ></q-icon>
-            <span>{{ detail.commentNum }}</span>
+            <span>{{ detail.comment_num }}</span>
           </div>
           <div></div>
         </div>
       </div>
-      <div class="row text-bold col-12 q-px-md q-mb-xs" style="font-size:14pt">
+      <div
+        class="row text-bold col-12 q-px-md q-mb-xs"
+        style="font-size:14pt; height:80px"
+      >
         {{ detail.title }}
       </div>
       <div class="row justify-end items-end col-12">
         <span
-          v-for="(tag, index) in detail.tags"
+          v-for="tag in detail.tags"
           class="q-mr-sm q-mb-sm q-px-xs tag-color"
-          :style="{ 'background-color': tagColors[index] }"
+          :style="{ 'background-color': tagColor(tag) }"
           :key="tag"
           >#{{ tag }}</span
         >
@@ -54,14 +57,14 @@
 </template>
 
 <script>
-import { colorListMapper } from '@/utils/tagColorMapper';
+import { colorSoloMapper } from '@/utils/tagColorMapper';
 export default {
   props: {
     detail: Object,
   },
-  computed: {
-    tagColors() {
-      return colorListMapper(this.detail.tags);
+  methods: {
+    tagColor(tag) {
+      return colorSoloMapper(tag, 0.2);
     },
   },
 };
@@ -74,7 +77,7 @@ export default {
   border-radius: 8px;
 }
 .post-thumbnail {
-  height: 130px;
+  height: 150px;
   clip: inherit;
 }
 .tag-color {
