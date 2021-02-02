@@ -13,7 +13,9 @@
           <span class="text-weight-thin text-grey-8"
             >#{{ entity.questId }}</span
           >
-          {{ entity.title }}
+          <span class="cursor-pointer" @click="goToDetail">
+            {{ entity.title }}
+          </span>
         </div>
 
         <div class="row q-mr-xs q-gutter-sm q-mb-sm col-12">
@@ -79,6 +81,10 @@ export default {
   methods: {
     tagColor(tag, alpha) {
       return colorSoloMapper(tag, alpha);
+    },
+    // TODO: 추후 연결 페이지 수정 필요
+    goToDetail() {
+      this.$router.push({ name: 'QnaDetail' });
     },
   },
 };

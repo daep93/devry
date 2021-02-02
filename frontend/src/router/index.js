@@ -34,11 +34,18 @@ const routes = [
     component: () => import('@/views/QnaPage.vue'),
   },
   {
+    // path: '/qna/:id',
+    path: '/qna-detail',
+    name: 'QnaDetail',
+    component: () => import('@/views/QnaDetailPage.vue'),
+  },
+  {
     path: '/forum',
     name: 'Forum',
     component: () => import('@/views/ForumPage.vue'),
   },
   {
+    // 추후 id값으로 수정 필요
     path: '/forum/forum-detail',
     name: 'ForumDetail',
     component: () => import('@/views/ForumDetailPage.vue'),
