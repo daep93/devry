@@ -1,6 +1,6 @@
 <template>
   <div class="q-pl-md">
-    <q-card flat bordered style="width: 40px; height: 260px;">
+    <q-card flat bordered style="width: 40px; height: 245px;">
       <div style="margin:0 auto; text-align:center" class="q-pt-sm">
         <q-icon
           :name="$i.ionHeartOutline"

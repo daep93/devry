@@ -1,153 +1,228 @@
 <template>
   <div class="row col-12">
-    <div class="row col-2"></div>
-    <div class="row col-10">
-      <div class="row col-9">
-        <q-card flat bordered class="my-card q-pa-lg q-mt-lg row col-12">
-          <div class="row col-12">
-            <!-- 답변 상태 표기 -->
-            <div
-              class="row col-2 q-pl-md q-pb-xs"
-              v-for="(color, msg) in {
-                '답변 완료': '#1976D2',
-              }"
-              :key="msg"
-            >
-              <div
-                class="row col-12 shadow-1 overflow-hidden"
-                style="border-radius:5px; max-width: 100px;"
-              >
-                <div class="col-2" :style="{ 'background-color': color }"></div>
-                <div class="col-10 text-center">{{ msg }}</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="row col-9">
-            <div class="q-ml-md row col-12 q-my-sm">
-              <div style="color: blue">
-                @채택된유저
-              </div>
-              <span class="q-ml-md text-caption" style="color: gray;">
-                50분 전
-              </span>
-            </div>
-          </div>
-          <div class="row col-2 q-pl-xl">
-            <div class="icon-position q-mb-xs row items-center">
-              <div class="q-mr-xs">
+    <!-- 첫 번째 댓글 -->
+    <div class="row col-12">
+      <div class="row col-1"></div>
+      <div class="row col-1 q-mt-lg q-pl-xl">
+        <!-- 댓글 좋아요 수, 댓글 수, 북마크 수 -->
+        <div class="q-pl-md">
+          <div class="q-pl-md">
+            <q-card flat bordered style="width: 40px; height: 190px;">
+              <div style="margin:0 auto; text-align:center" class="q-pt-sm">
                 <q-icon
                   :name="$i.ionHeartOutline"
                   style="color:#727272"
                   size="17px"
                 ></q-icon>
-              </div>
-              <div class="q-mr-md" style=" font-size: 10pt;">
-                2
-              </div>
-              <div class="q-mr-sm">
+                <br />
+                <span>8</span>
+                <br />
+                <br />
                 <q-icon
                   :name="$i.ionChatboxEllipsesOutline"
                   style="color:#727272"
                   size="17px"
                 ></q-icon>
-              </div>
-              <span style="font-size: 10pt;">3</span>
-            </div>
-          </div>
-          <div class="row col-1 q-mb-sm">
-            <q-toggle
-              :label="채택하기"
-              :true-value="false"
-              :false-value="true"
-              v-model="blueModel"
-            />
-          </div>
-          <div class="q-ml-md row col-12">
-            <div class="q-mr-md q-pb-md">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet
-              accusantium quam laudantium fugiat sequi, soluta cupiditate fugit
-              delectus minima cumque quos eius ad debitis molestias laborum
-              suscipit nesciunt? Quis, libero.
-            </div>
-          </div>
-          <div class="row col-12 q-px-md">
-            <q-separator />
-          </div>
-          <div class="q-mt-sm q-px-md row col-12">
-            <q-input
-              borderless
-              v-model="text"
-              placeholder="댓글을 입력해주세요"
-            />
-          </div>
-        </q-card>
-        <q-card flat bordered class="my-card q-pa-lg q-mt-lg row col-12">
-          <!-- <div class="row col-11 q-pl-lg"></div> -->
-
-          <div class="row col-9">
-            <div class="q-ml-md row col-12 q-my-sm">
-              <div style="color: blue">
-                @채택된유저
-              </div>
-              <span class="q-ml-md text-caption" style="color: gray;">
-                50분 전
-              </span>
-            </div>
-          </div>
-          <div class="row col-2 q-pl-xl">
-            <div class="icon-position q-mb-xs row items-center">
-              <div class="q-mr-xs">
+                <br />
+                <span>2</span>
+                <br />
+                <br />
                 <q-icon
-                  :name="$i.ionHeartOutline"
-                  style="color:#727272"
+                  :name="$i.ionBookmarkOutline"
+                  color="grey-6"
                   size="17px"
                 ></q-icon>
+                <br />
+                <span>3</span>
               </div>
-              <div class="q-mr-md" style=" font-size: 10pt;">
-                2
-              </div>
-              <div class="q-mr-sm">
-                <q-icon
-                  :name="$i.ionChatboxEllipsesOutline"
-                  style="color:#727272"
-                  size="17px"
-                ></q-icon>
-              </div>
-              <span style="font-size: 10pt;">3</span>
-            </div>
+            </q-card>
           </div>
-          <div class="row col-1 q-mb-sm">
-            <q-toggle
-              :label="채택하기"
-              :true-value="false"
-              :false-value="true"
-              v-model="blueModel"
-            />
-          </div>
-          <div class="q-ml-md row col-12">
-            <div class="q-mr-md q-pb-lg">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet
-              accusantium quam laudantium fugiat sequi, soluta cupiditate fugit
-              delectus minima cumque quos eius ad debitis molestias laborum
-              suscipit nesciunt? Quis, libero.
-            </div>
-          </div>
-          <div class="row col-12 q-px-md">
-            <q-separator />
-          </div>
-          <div class="q-mt-sm q-px-md row col-12">
-            <q-input
-              borderless
-              v-model="text"
-              placeholder="댓글을 입력해주세요"
-            />
-          </div>
-        </q-card>
+        </div>
       </div>
-      <!-- 채택 댓글 프로필 -->
-      <div v-if="!blueModel">
-        <qna-comment-selected></qna-comment-selected>
+      <div class="row col-10">
+        <div class="row col-9">
+          <q-card flat bordered class="my-card q-pa-lg q-mt-lg row col-12">
+            <div class="row col-9">
+              <div class="q-ml-md row col-12 q-my-sm">
+                <div style="color: blue">
+                  @Hello
+                </div>
+                <span class="q-ml-md text-caption" style="color: gray;">
+                  50분 전
+                </span>
+              </div>
+            </div>
+            <div v-if="!blueModel" class="row col-2">
+              <div
+                class="q-pl-xl q-mt-sm"
+                v-for="(color, msg) in {
+                  '답변 채택': '#1976D2',
+                }"
+                :key="msg"
+              >
+                <div
+                  class="row col-12 shadow-1 overflow-hidden"
+                  style="border-radius:5px; width: 100px; height: 20px;"
+                >
+                  <div
+                    class="col-2"
+                    :style="{ 'background-color': color }"
+                  ></div>
+                  <div class="col-10 text-center">{{ msg }}</div>
+                </div>
+              </div>
+            </div>
+            <div v-else class="row col-2"></div>
+            <div class="row col-1 q-mb-sm q-pl-sm">
+              <q-toggle
+                :label="채택하기"
+                :true-value="false"
+                :false-value="true"
+                v-model="blueModel"
+              />
+            </div>
+            <div class="q-ml-md row col-12">
+              <div class="q-mr-md q-pb-lg">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                Exercitationem quidem, iure eveniet praesentium repudiandae
+                necessitatibus delectus explicabo repellat id eligendi corrupti.
+                Dolorem harum, nihil ipsum accusantium delectus labore dolorum,
+                illo
+              </div>
+            </div>
+            <div class="row col-12 q-px-md">
+              <q-separator />
+            </div>
+            <div class="q-mt-sm q-px-md row col-12">
+              <q-input
+                borderless
+                v-model="text"
+                placeholder="댓글을 입력해주세요"
+              />
+            </div>
+          </q-card>
+        </div>
+        <!-- 채택 댓글 프로필 -->
+        <div v-if="!blueModel">
+          <qna-comment-selected></qna-comment-selected>
+        </div>
+      </div>
+    </div>
+
+    <!-- 두 번째 댓글 -->
+    <div class="row col-12">
+      <div class="row col-1"></div>
+      <div class="row col-1 q-mt-lg q-pl-xl">
+        <!-- 댓글 좋아요 수, 댓글 수, 북마크 수 -->
+        <div class="q-pl-md">
+          <div class="q-pl-md">
+            <q-card flat bordered style="width: 40px; height: 190px;">
+              <div style="margin:0 auto; text-align:center" class="q-pt-sm">
+                <q-icon
+                  :name="$i.ionHeartOutline"
+                  style="color:#727272"
+                  size="17px"
+                ></q-icon>
+                <br />
+                <span>8</span>
+                <br />
+                <br />
+                <q-icon
+                  :name="$i.ionChatboxEllipsesOutline"
+                  style="color:#727272"
+                  size="17px"
+                ></q-icon>
+                <br />
+                <span>2</span>
+                <br />
+                <br />
+                <q-icon
+                  :name="$i.ionBookmarkOutline"
+                  color="grey-6"
+                  size="17px"
+                ></q-icon>
+                <br />
+                <span>3</span>
+              </div>
+            </q-card>
+          </div>
+        </div>
+      </div>
+      <div class="row col-10">
+        <div class="row col-9">
+          <q-card flat bordered class="my-card q-pa-lg q-mt-lg row col-12">
+            <div class="row col-9">
+              <div class="q-ml-md row col-12 q-my-sm">
+                <div style="color: blue">
+                  @user123
+                </div>
+                <span class="q-ml-md text-caption" style="color: gray;">
+                  50분 전
+                </span>
+              </div>
+            </div>
+            <div v-if="!blueModel" class="row col-2">
+              <div
+                class="q-pl-xl q-mt-sm"
+                v-for="(color, msg) in {
+                  '답변 채택': '#1976D2',
+                }"
+                :key="msg"
+              >
+                <div
+                  class="row col-12 shadow-1 overflow-hidden"
+                  style="border-radius:5px; width: 100px; height: 20px;"
+                >
+                  <div
+                    class="col-2"
+                    :style="{ 'background-color': color }"
+                  ></div>
+                  <div class="col-10 text-center">{{ msg }}</div>
+                </div>
+              </div>
+            </div>
+            <div v-else class="row col-2"></div>
+            <div class="row col-1 q-mb-sm q-pl-sm">
+              <q-toggle
+                :label="채택하기"
+                :true-value="false"
+                :false-value="true"
+                v-model="blueModel"
+              />
+            </div>
+            <div class="q-ml-md row col-12">
+              <div class="q-mr-md q-pb-lg">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                Exercitationem quidem, iure eveniet praesentium repudiandae
+                necessitatibus delectus explicabo repellat id eligendi corrupti.
+                Dolorem harum, nihil ipsum accusantium delectus labore dolorum,
+                illo, autem quas distinctio accusamus tenetur fugiat
+                perspiciatis illum dolore! Obcaecati totam laboriosam eaque
+                quos. Consequuntur esse veritatis tempora cum earum illum,
+                suscipit nobis neque excepturi ducimus sed voluptatum nesciunt
+                minus placeat nulla voluptate iste corrupti odit repudiandae
+                totam itaque facilis quas non! Eos hic veritatis quas minima
+                cupiditate odit dignissimos? Totam asperiores architecto illum
+                eum accusantium rerum neque? Officiis ut illo aut minima maiores
+                fuga obcaecati animi, veniam facilis distinctio?
+              </div>
+            </div>
+            <div class="row col-12 q-px-md">
+              <q-separator />
+            </div>
+            <div class="q-mt-sm q-px-md row col-12">
+              <q-input
+                borderless
+                v-model="text"
+                placeholder="댓글을 입력해주세요"
+              />
+            </div>
+          </q-card>
+        </div>
+        <!-- 채택 댓글 프로필 -->
+        <div v-if="!blueModel">
+          <qna-comment-selected></qna-comment-selected>
+        </div>
       </div>
     </div>
   </div>
@@ -155,10 +230,12 @@
 
 <script>
 import QnaCommentSelected from '@/components/qna/QnaCommentSelected';
+import QnaDetailStatus from '@/components/qna/QnaDetailStatus';
 
 export default {
   components: {
     QnaCommentSelected,
+    QnaDetailStatus,
   },
   data() {
     return {

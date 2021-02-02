@@ -2,9 +2,10 @@
   <div class="row col-12">
     <q-card flat bordered class="my-card q-px-lg q-pt-lg row col-12">
       <div class="row col-12">
+        <div class="row col-10"></div>
         <!-- 답변 상태 표기 -->
         <div
-          class="row col-2 q-pl-md q-pb-md"
+          class="row col-2 q-pl-xl"
           v-for="(color, msg) in {
             '답변 완료': '#1976D2',
           }"
@@ -25,8 +26,8 @@
           Lorem, ipsum dolor sit amet consectetur
         </div>
       </q-card-section>
-      <div class="row col-12 q-ml-sm">
-        <span v-for="i in 3" :key="i" class="q-ml-sm">
+      <div class="q-ml-sm icon-position">
+        <span v-for="i in 3" :key="i" class="q-ml-sm icon-position">
           <q-badge color="blue">
             # Vue
           </q-badge>
