@@ -39,6 +39,11 @@ const routes = [
     component: () => import('@/views/QnaPageCreate.vue'),
   },
   {
+    path: '/markdown',
+    name: 'Markdown',
+    component: () => import('@/views/Markdown.vue'),
+  },
+  {
     path: '/forum',
     name: 'Forum',
     component: () => import('@/views/ForumPage.vue'),
