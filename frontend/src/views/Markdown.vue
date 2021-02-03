@@ -4,14 +4,15 @@
       <!-- 타이틀 -->
       <div class="q-mb-md">
         <span class="text-h4 text-weight-bolder">QnA Registration</span>
-        <p class="text-subtitle2 q-mt-md q-mb-xl" >궁금하신 점을 질문해보세요:)</p>
+        <p class="text-subtitle2 q-mt-md q-mb-xl">
+          궁금하신 점을 질문해보세요:)
+        </p>
       </div>
       <!-- 마크다운 에디터 -->
       <v-md-editor v-model="text" height="400px"></v-md-editor>
-    </div>  
+    </div>
   </div>
 </template>
-
 
 <script>
 import Vue from 'vue';
@@ -19,9 +20,9 @@ import VMdEditor from '@kangc/v-md-editor';
 import '@kangc/v-md-editor/lib/style/base-editor.css';
 import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
 import '@kangc/v-md-editor/lib/theme/style/github.css';
-// import enUS from '@kangc/v-md-editor/lib/lang/en-US';
+import koKR from '@kangc/v-md-editor/lib/lang/ko-KR';
 
-// VueMarkdownEditor.lang.use('en-US', enUS);
+VMdEditor.lang.use('ko-KR', koKR);
 
 VMdEditor.use(githubTheme);
 
@@ -33,10 +34,7 @@ export default {
       text: '',
     };
   },
-  
-}
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

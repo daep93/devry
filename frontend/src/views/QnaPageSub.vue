@@ -4,10 +4,13 @@
       <!-- 타이틀 -->
       <div class="q-mb-md">
         <span class="text-h4 text-weight-bolder">QnA Registration</span>
-        <p class="text-subtitle2 q-mt-md q-mb-xl" >궁금하신 점을 질문해보세요:)</p>
+        <p class="text-subtitle2 q-mt-md q-mb-xl">
+          궁금하신 점을 질문해보세요:)
+        </p>
       </div>
       <!-- QnA 입력 폼 -->
-      <qna-create @addTagItem="addOneTag"
+      <qna-create
+        @addTagItem="addOneTag"
         @removeTagItem="removeOneTag"
         :propsTagData="tags"
       ></qna-create>
@@ -39,22 +42,18 @@ export default {
   },
   data() {
     return {
-      tags: [
-        'Vue', 'UX/UI', 'Python'
-      ],
-    }
+      tags: ['Vue', 'UX/UI', 'Python'],
+    };
   },
   methods: {
     addOneTag(tagItem) {
-      this.tags.push(tagItem)
+      this.tags.push(tagItem);
     },
     removeOneTag(tag, index) {
-      this.tags.splice(index, 1)
-    }
-  }
-}
+      this.tags.splice(index, 1);
+    },
+  },
+};
 </script>
 
-<style>
-
-</style>
+<style></style>
