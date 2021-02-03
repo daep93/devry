@@ -118,6 +118,14 @@
                 placeholder="댓글을 입력해주세요"
               />
             </div>
+            <div class="row col-12">
+              <div class="row col-10"></div>
+              <div class="row col-2 q-pl-lg q-mb-sm">
+                <span class="q-pl-md"
+                  ><q-btn color="primary" label="댓글 추가" size="sm"
+                /></span>
+              </div>
+            </div>
           </q-card>
         </div>
         <!-- 채택 댓글 프로필 -->
