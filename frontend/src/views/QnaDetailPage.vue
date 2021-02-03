@@ -13,7 +13,7 @@
             <qna-detail-content></qna-detail-content>
           </div>
         </div>
-        <div class="row col-3 q-pl-lg q-pr-xl">
+        <div class="row col-3 q-pl-sm q-pr-xl">
           <qna-short-profile></qna-short-profile>
         </div>
       </div>
@@ -32,7 +32,6 @@
               color="primary"
               id="follow-btn"
               label="답변 작성하기"
-              @click="checkFollow(index)"
               style="width: 200px"
               class="q-mb-xl"
             />
@@ -40,7 +39,6 @@
         </div>
       </div>
     </div>
-    <div class="row col-3 q-mt-sm q-pl-lg q-pr-xl"></div>
   </div>
 </template>
 

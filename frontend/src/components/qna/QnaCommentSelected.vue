@@ -1,6 +1,6 @@
 <template>
   <!-- 채택 댓글 프로필 -->
-  <div class="row cal-3 q-px-sm q-pt-lg q-ml-md">
+  <div class="row cal-3 q-pt-lg q-ml-sm">
     <q-card
       flat
       bordered

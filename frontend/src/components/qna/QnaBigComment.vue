@@ -2,41 +2,11 @@
   <div class="row col-12">
     <!-- 첫 번째 댓글 -->
     <div class="row col-12">
-      <div class="row col-1"></div>
-      <div class="row col-1 q-mt-lg q-pl-xl">
-        <!-- 댓글 좋아요 수, 댓글 수, 북마크 수 -->
-        <div class="q-pl-md">
-          <div class="q-pl-md">
-            <q-card flat bordered style="width: 40px; height: 190px;">
-              <div style="margin:0 auto; text-align:center" class="q-pt-sm">
-                <q-icon
-                  :name="$i.ionHeartOutline"
-                  style="color:#727272"
-                  size="17px"
-                ></q-icon>
-                <br />
-                <span>8</span>
-                <br />
-                <br />
-                <q-icon
-                  :name="$i.ionChatboxEllipsesOutline"
-                  style="color:#727272"
-                  size="17px"
-                ></q-icon>
-                <br />
-                <span>2</span>
-                <br />
-                <br />
-                <q-icon
-                  :name="$i.ionBookmarkOutline"
-                  color="grey-6"
-                  size="17px"
-                ></q-icon>
-                <br />
-                <span>3</span>
-              </div>
-            </q-card>
-          </div>
+      <!-- 댓글 좋아요 수, 댓글 수, 북마크 수 -->
+      <div class="row col-2">
+        <div class="row col-9"></div>
+        <div class="row col-3 q-mt-lg">
+          <qna-comment-status></qna-comment-status>
         </div>
       </div>
       <div class="row col-10">
@@ -47,7 +17,7 @@
                 <div style="color: blue">
                   @Hello
                 </div>
-                <span class="q-ml-md text-caption" style="color: gray;">
+                <span class="q-ml-sm text-caption" style="color: gray;">
                   50분 전
                 </span>
               </div>
@@ -111,41 +81,11 @@
 
     <!-- 두 번째 댓글 -->
     <div class="row col-12">
-      <div class="row col-1"></div>
-      <div class="row col-1 q-mt-lg q-pl-xl">
+      <div class="row col-2">
         <!-- 댓글 좋아요 수, 댓글 수, 북마크 수 -->
-        <div class="q-pl-md">
-          <div class="q-pl-md">
-            <q-card flat bordered style="width: 40px; height: 190px;">
-              <div style="margin:0 auto; text-align:center" class="q-pt-sm">
-                <q-icon
-                  :name="$i.ionHeartOutline"
-                  style="color:#727272"
-                  size="17px"
-                ></q-icon>
-                <br />
-                <span>8</span>
-                <br />
-                <br />
-                <q-icon
-                  :name="$i.ionChatboxEllipsesOutline"
-                  style="color:#727272"
-                  size="17px"
-                ></q-icon>
-                <br />
-                <span>2</span>
-                <br />
-                <br />
-                <q-icon
-                  :name="$i.ionBookmarkOutline"
-                  color="grey-6"
-                  size="17px"
-                ></q-icon>
-                <br />
-                <span>3</span>
-              </div>
-            </q-card>
-          </div>
+        <div class="row col-9"></div>
+        <div class="row col-3 q-mt-lg">
+          <qna-comment-status></qna-comment-status>
         </div>
       </div>
       <div class="row col-10">
@@ -156,7 +96,7 @@
                 <div style="color: blue">
                   @user123
                 </div>
-                <span class="q-ml-md text-caption" style="color: gray;">
+                <span class="q-ml-sm text-caption" style="color: gray;">
                   50분 전
                 </span>
               </div>
@@ -230,12 +170,12 @@
 
 <script>
 import QnaCommentSelected from '@/components/qna/QnaCommentSelected';
-import QnaDetailStatus from '@/components/qna/QnaDetailStatus';
+import QnaCommentStatus from '@/components/qna/QnaCommentStatus';
 
 export default {
   components: {
     QnaCommentSelected,
-    QnaDetailStatus,
+    QnaCommentStatus,
   },
   data() {
     return {

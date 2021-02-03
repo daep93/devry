@@ -26,10 +26,14 @@
           Lorem, ipsum dolor sit amet consectetur
         </div>
       </q-card-section>
-      <div class="q-ml-sm icon-position">
-        <span v-for="i in 3" :key="i" class="q-ml-sm icon-position">
-          <q-badge color="blue">
-            # Vue
+      <div class="q-ml-md">
+        <span v-for="tag in tags" :key="tag" class="q-px-xs">
+          <q-badge
+            class="q-pr-xs"
+            :style="{ 'background-color': tagColor(tag, 0.5) }"
+            style="font-size:0.8em; border-radius:3pt; color: black"
+          >
+            # {{ tag }}
           </q-badge>
         </span>
       </div>
@@ -77,6 +81,7 @@
 
 <script>
 import QnaSmallComment from '@/components/qna/QnaSmallComment';
+import { colorSoloMapper } from '@/utils/tagColorMapper';
 
 export default {
   components: {
@@ -85,7 +90,13 @@ export default {
   data: function() {
     return {
       msg: true,
+      tags: ['Vue', 'Javascript', 'Typescript'],
     };
+  },
+  methods: {
+    tagColor(tag, alpha) {
+      return colorSoloMapper(tag, alpha);
+    },
   },
 };
 </script>

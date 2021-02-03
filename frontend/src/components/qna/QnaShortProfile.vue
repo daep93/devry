@@ -3,7 +3,7 @@
     <q-card
       flat
       bordered
-      class="my-card row col-12 q-pa-sm"
+      class="my-card row col-12 q-pa-sm q-mb-sm"
       style="max-width: 250px; max-height: 280px;"
     >
       <q-card-section>
@@ -62,20 +62,26 @@
         </div>
       </div>
     </q-card>
-    <br />
     <q-card
       flat
       bordered
-      class="my-card row col-12 q-pa-sm q-pt-lg"
+      class="my-card row col-12 q-px-sm q-pt-md"
       style="max-width: 250px; max-height: 280px;"
     >
-      <div class="q-px-md q-pb-md">
+      <div class="q-px-md q-pb-sm">
         <div style="font-size: 13px;">
-          <div class="q-mb-md">
+          <div class="q-my-sm">
+            <span class="text-weight-bold" style="color: #598FFC"
+              >Test User</span
+            >
+            <span>님의 글 더보기</span>
+          </div>
+          <q-separator />
+          <div class="q-my-sm">
             FE Engineer for en expensive cars company.
           </div>
           <q-separator />
-          <div class="q-mt-md">
+          <div class="q-my-sm">
             Archer at night. Ask me about company culture, side projects,
             performance and Vue.
           </div>
