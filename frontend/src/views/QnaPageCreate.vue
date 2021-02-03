@@ -95,6 +95,25 @@ Vue.use(VMdEditor);
 export default {
   data() {
     const index = this.$route.params.id;
+    this.toolbar = {
+      video: {
+        title: '비디오',
+        // TODO : icon 변경하기
+        icon: 'v-md-icon-tip',
+        action(editor) {
+          editor.insert(function (selected) {
+            const imagetxt = 'Image text';
+            const image = 'Screenshot image URL';
+            const youtube = 'Youtube Link';
+
+            return {
+              text: `[![${imagetxt}](${image})](${youtube})`,
+              selected: imagetxt,
+            };
+          });
+        },
+      },
+    };
     return {
       index,
       title: '',
