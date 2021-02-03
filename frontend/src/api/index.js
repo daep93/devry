@@ -15,5 +15,4 @@ const instance = createInstance();
 const follower = createInstanceWithAuth('follower/');
 const followee = createInstanceWithAuth('followee/');
 const profileSetting = createInstanceWithAuth('profile/setting');
-const qnaCreate = createInstanceWithAuth('qna/create');
-export { instance, follower, followee, profileSetting, qnaCreate };
+export { instance, follower, followee, profileSetting };

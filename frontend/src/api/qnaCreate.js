@@ -1,10 +1,12 @@
-// TODO : api 수정하기
-import { qnaCreate } from '@/api';
+import { instance } from '@/api';
 
-function createQnaItem(postId) {
-  return qnaCreate.post('/qna', postId);
+function loadQnaItem(postId) {
+  return instance.get(`qna/${postId}`)
+}
+function createQnaItem(postData) {
+  return instance.post('qna', postData);
 }
 function updateQnaItem(postId, postData) {
-  return qnaCreate.put(`/qna/${postId}`, postData);
+  return instance.put(`qna/${postId}`, postData);
 }
-export { createQnaItem, updateQnaItem };
+export { loadQnaItem, createQnaItem, updateQnaItem };

@@ -1,108 +1,61 @@
 <template>
-  <div class="q-pa-lg q-mt-sm row justify-center">
-    <div class="q-pa-sm" style="width: 80vw;">
+  <div class="q-pa-md q-gutter-sm row justify-center">
+    <div class="q-pa-sm" style="width: 85vw;">
       <!-- 타이틀 -->
-      <div class="q-mb-md">
+      <!-- <div class="q-mb-md">
         <span class="text-h4 text-weight-bolder">QnA Registration</span>
         <p class="text-subtitle2 q-mt-md q-mb-xl">
           궁금하신 점을 질문해보세요:)
         </p>
-      </div>
-      <!-- QnA 입력 폼 -->
-      <div class="q-pa-md q-gutter-sm row">
-        <q-card flat bordered class="col">
-          <!-- 제목 입력 -->
-          <q-input
-            class="q-mx-md q-my-md text-h4 text-weight-bold"
-            borderless
-            v-model="title"
-            placeholder="제목을 입력해주세요"
-          />
-          <!-- :rules="[ val => val && val.length > 0 || '제목은 필수항목 입니다']" -->
-          <!-- 태그 입력 -->
-          <q-input
-            class="q-mx-md"
-            borderless
-            v-model="tagItem"
-            placeholder="태그를 하나 이상 입력해주세요"
-            TODO
-            @keypress.enter="createTag"
+      </div> -->
+      <div class="q-pa-md q-gutter-sm">
+        <!-- 제목 입력 -->
+        <q-input
+          class="q-mx-md q-my-md text-h3 text-weight-bold"
+          borderless
+          v-model="title"
+          placeholder="제목을 입력해주세요"
+        />
+        <!-- :rules="[ val => val && val.length > 0 || '제목은 필수항목 입니다']" -->
+        <!-- 태그 입력 -->
+        <q-input
+          class="q-mx-md"
+          borderless
+          v-model="tagItem"
+          placeholder="태그를 하나 이상 입력해주세요"
+          TODO
+          @keypress.enter="createTag"
+        >
+          <!-- :error="!isValid" -->
+          <!-- :rules="[ ref_tags.length > 0 || '태그 필요!']" -->
+          <!-- 태그 에러 -->
+          <!-- <template v-slot:error>
+            <p class="text-weight-bold">태그를 반드시 하나 이상 입력해주세요</p>
+          </template> -->
+        </q-input>
+        <!-- 태그 보여주기 -->
+        <ul class="row">
+          <li
+            class="q-mb-xs cursor-pointer"
+            v-for="(tag, index) in ref_tags"
+            :key="index"
           >
-            <!-- :error="!isValid" -->
-            <!-- :rules="[ ref_tags.length > 0 || '태그 필요!']" -->
-            <!-- 태그 에러 -->
-            <!-- <template v-slot:error>
-              <p class="text-weight-bold">태그를 반드시 하나 이상 입력해주세요</p>
-            </template> -->
-          </q-input>
-          <ul class="row">
-            <li
-              class="q-ml-sm cursor-pointer"
-              v-for="(tag, index) in ref_tags"
-              :key="index"
-            >
-              <q-chip outline square color="primary">
-                <div @click="removeTag(tag, index)">{{ tag }}</div>
-              </q-chip>
-            </li>
-          </ul>
-          <!-- 입력 폼 -->
-          <q-editor
-            v-model="contents"
-            min-height="50rem"
-            placeholder="내용을 입력해주세요"
-            :definitions="{
-              link: {
-                tip: 'Link your Url',
-                icon: 'link',
-              },
-              image: {
-                tip: 'Upload your Image',
-                icon: 'insert_photo',
-              },
-            }"
-            :toolbar="[
-              [
-                {
-                  label: $q.lang.editor.formatting,
-                  icon: $q.iconSet.editor.formatting,
-                  list: 'no-icons',
-                  options: ['p', 'h3', 'h4', 'h5', 'h6', 'code'],
-                },
-              ],
-              ['bold', 'italic', 'strike', 'underline'],
-              ['image', 'link'],
-            ]"
-          >
-            <pre style="white-space: pre-line"></pre>
-            <!-- TODO : 콘텐츠가 빈 값일 경우 에러 메시지를 띄워야 함  -->
-            <!-- 콘텐츠 에러 -->
-            <!-- <template v-slot:error>
-              <p class="text-weight-bold">내용은 필수 항목입니다</p>
-            </template> -->
-          </q-editor>
-        </q-card>
-        <!-- 미리보기 화면 -->
-        <q-card flat filled class="col bg-grey-3">
-          <q-card-section
-            class="text-h4 text-weight-bold q-mx-sm q-my-lg"
-            v-html="title"
-          />
-          <ul class="row q-ml-md">
-            <li
-              class="q-mr-sm cursor-pointer"
-              v-for="(tag, index) in ref_tags"
-              :key="index"
-            >
-              <q-chip outline square color="primary">
-                {{ tag }}
-              </q-chip>
-            </li>
-          </ul>
-          <q-card-section class="q-mx-sm" v-html="contents" />
-        </q-card>
+            <q-chip outline square color="primary">
+              <div @click="removeTag(tag, index)">{{ tag }}</div>
+            </q-chip>
+          </li>
+        </ul>
+        <!-- 마크다운 에디터 -->
+        <v-md-editor 
+          v-model="contents" 
+          height="800px"
+          left-toolbar="undo redo clear | h bold italic strikethrough quote ul ol table hr link image imageLink uploadImage video code save"
+          :toolbar="toolbar"
+        >
+          
+        </v-md-editor>
       </div>
-      <!-- buttons -->
+      <!-- 버튼 -->
       <div class="q-mb-xl q-mt-xl" style="text-align: center;">
         <q-btn
           outline
@@ -116,7 +69,7 @@
           class="text-weight-bold q-px-xl q-py-sm"
           label="작성하기"
           size="md"
-          @click="submitQna"
+          @click="index !== undefined ? updateQna() : createQna()"
         />
       </div>
     </div>
@@ -124,15 +77,26 @@
 </template>
 
 <script>
-import { Notify } from 'quasar';
+import { loadQnaItem, createQnaItem, updateQnaItem } from '@/api/qnaCreate';
 
-// Notify.create({
-//   message: 'Danger, Will Robinson! Danger!'
-// })
+import Vue from 'vue';
+import VMdEditor from '@kangc/v-md-editor';
+import '@kangc/v-md-editor/lib/style/base-editor.css';
+import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
+import '@kangc/v-md-editor/lib/theme/style/github.css';
+import koKR from '@kangc/v-md-editor/lib/lang/ko-KR';
+
+VMdEditor.lang.use('ko-KR', koKR);
+
+VMdEditor.use(githubTheme);
+
+Vue.use(VMdEditor);
 
 export default {
   data() {
+    const index = this.$route.params.id;
     return {
+      index,
       title: '',
       tagItem: '',
       contents: '',
@@ -152,14 +116,9 @@ export default {
     removeTag(tag, index) {
       this.ref_tags.splice(index, 1);
     },
-    // TODO : api 수정하기
-    // qna 게시글 생성하기
-    async submitQna() {
+    // 게시글 생성하기
+    async createQna() {
       if (this.title === '') {
-        //   this.$q.notify({
-        //   message: '제목을 입력해주세요',
-        //   color: 'primary',
-        // })
         alert('제목은 필수 입력 항목입니다');
       }
       if (this.ref_tags.length === 0) {
@@ -170,18 +129,50 @@ export default {
       }
       try {
         console.log('성공!');
-        // post_id 넘겨주기
-        const post_id = this.$route.parmas.id;
+       
         this.$q.loading.show();
-        await createQnaItem(post_id, {
+        await createQnaItem({
           // 넘길 데이터 적어주기
           title: this.title,
           contents: this.contents,
-          ref_tags: this.tags,
+          ref_tags: this.ref_tags,
         });
-        // 이동 시킬 페이지 적어주기(이전 페이지로 이동)
-        this.$router.go(-1);
+        // 이동 시킬 페이지 적어주기(QnA 게시판으로 이동)
+        this.$router.push({path: '/qna'});
       } catch (error) {
+        console.log(error);
+        // alert('에러가 발생했습니다!')
+      } finally {
+        this.$q.loading.hide();
+      }
+    },
+    // qna 게시글 수정하기
+    async updateQna() {
+      if (this.title === '') {
+        alert('제목은 필수 입력 항목입니다');
+      }
+      if (this.ref_tags.length === 0) {
+        alert('태그를 하나이상 입력해주세요');
+      }
+      if (this.contents === '') {
+        alert('내용은 필수 입력항목 입니다');
+      }
+      try {
+        console.log('성공!');
+        console.log(this.$route.query.id)
+        // post_id 넘겨주기
+        const post_id = this.$route.params.id;
+        this.$q.loading.show();
+        await updateQnaItem(post_id, {
+          // 넘길 데이터 적어주기
+          title: this.title,
+          contents: this.contents,
+          ref_tags: this.ref_tags,
+        });
+        // 이동 시킬 페이지 적어주기(QnA 게시판으로 이동)
+        this.$router.push({path: '/qna'});
+      } catch (error) {
+        console.log(error);
         // alert('에러가 발생했습니다!')
       } finally {
         this.$q.loading.hide();
@@ -194,12 +185,12 @@ export default {
     const post_id = this.$route.params.id;
     try {
       this.$q.loading.show();
-      await updateQnaItem(post_id, {
-        title: this.title,
-        contents: this.contents,
-        ref_tags: this.tags,
-      });
+      const { data } = await loadQnaItem(post_id);
+        this.title = data.title;
+        this.contents = data.contents;
+        this.ref_tags = data.ref_tags;
     } catch (error) {
+      console.log(error)
       // alert('에러가 발생했습니다.)
     } finally {
       this.$q.loading.hide();
