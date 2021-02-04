@@ -4,6 +4,7 @@
       <div class="row q-mb-sm col-12 text-h5 text-weight-bold">
         QnA 게시판
       </div>
+
       <!-- 게시판 보드 -->
       <qna-board></qna-board>
       <div class="row q-mt-md col-12 q-mb-xl justify-between">
