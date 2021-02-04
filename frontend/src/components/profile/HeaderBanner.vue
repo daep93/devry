@@ -70,10 +70,10 @@
               <span>joined on {{ info.joined | moment('YYYY/MM/DD') }}</span>
             </div>
             <div>
-              <span class="q-mr-md"
+              <span class="q-mr-md cursor-pointer" @click="onFollow('follow')"
                 >팔로워: <b>{{ info.followerNum }}</b></span
               >
-              <span
+              <span class="cursor-pointer" @click="onFollow('following')"
                 >팔로우: <b>{{ info.followeeNum }}</b></span
               >
             </div>
@@ -97,6 +97,9 @@ export default {
   methods: {
     linkRedirect(url) {
       window.open(url);
+    },
+    onFollow(tab) {
+      this.$store.commit('onFollowModal', tab);
     },
   },
 };
