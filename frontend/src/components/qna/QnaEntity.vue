@@ -10,9 +10,7 @@
       ></div>
       <div class="row col-11 q-pl-sm q-pt-xs">
         <div class="row text-weight-bold qna-title col-12 q-mb-xs">
-          <span class="text-weight-thin text-grey-8"
-            >#{{ entity.questId }}</span
-          >
+          <span class="text-weight-thin text-grey-8">#{{ entity.id }}</span>
           <span class="cursor-pointer" @click="goToDetail">
             {{ entity.title }}
           </span>
@@ -20,8 +18,8 @@
 
         <div class="row q-mr-xs q-gutter-sm q-mb-sm col-12">
           <span
-            v-for="tag in entity.refTags"
-            :key="tag"
+            v-for="(tag, index) in entity.ref_tags"
+            :key="index"
             :style="{ 'background-color': tagColor(tag, 0.5) }"
             style="font-size:0.8em; border-radius:3pt;"
             class="q-px-xs"
@@ -34,7 +32,7 @@
       <div class="row col-2 items-center">
         <q-icon :name="$i.ionHeartOutline" size="sm" color="grey-6"></q-icon>
         <span class="q-pl-xs text-grey-8" style="font-size:1.2em;">{{
-          entity.likeNum
+          entity.like_num
         }}</span>
       </div>
       <div class="row col-2 items-center">
@@ -44,13 +42,13 @@
           color="grey-6"
         ></q-icon>
         <span class="q-pl-xs text-grey-8" style="font-size:1.2em;">{{
-          entity.commentNum
+          entity.comment_num
         }}</span>
       </div>
       <div class="row col-2  items-center justify-center">
         <q-icon :name="$i.ionEyeOutline" size="sm" color="grey-6"></q-icon>
         <span class="q-pl-xs text-grey-8" style="font-size:1.2em;">{{
-          entity.viewedNum
+          entity.viewed_num
         }}</span>
       </div>
       <div class="row col-6 items-center justify-center q-py-xs ">
@@ -61,10 +59,10 @@
         </div>
         <div class="q-pl-sm">
           <div class="text-weight-regular col-12 text-primary">
-            {{ entity.userInfo.username }}
+            {{ entity.profile.username }}
           </div>
           <div class="text-weight-thin col-12" style="font-size:8pt">
-            {{ entity.writtenTime | moment('YYYY/MM/DD HH:mm') }}
+            {{ entity.written_time | moment('YYYY/MM/DD HH:mm') }}
           </div>
         </div>
       </div>

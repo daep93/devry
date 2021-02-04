@@ -246,7 +246,7 @@ export default {
             project_url: 'https://mysecondproject.com',
           },
         ],
-        tags: ['Vue', 'React', 'Python', 'javascript'],
+        tags: ['Vue.js', 'React', 'Python3', 'javascript'],
       },
       chageImg: false,
     };

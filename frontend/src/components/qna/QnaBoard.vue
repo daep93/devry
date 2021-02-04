@@ -48,6 +48,7 @@ export default {
       sort: 'time',
       search: '',
       board: [],
+      origin_board: [],
     };
   },
   async created() {
@@ -57,13 +58,33 @@ export default {
     this.loadBoard();
   },
   watch: {
-    sort() {
+    sort(newValue) {
       // sort를 감시해서 바뀌면 새로운 게시판의 정보를 서버로부터 받아옴
-      this.loadBoard();
+      // this.loadBoard();
+      if (newValue === 'time') {
+        this.board.sort((item1, item2) => {
+          return (
+            this.$moment(item2.written_time) - this.$moment(item1.written_time)
+          );
+        });
+      } else if (newValue === 'comment') {
+        this.board.sort(
+          (item1, item2) => item2.comment_num - item1.comment_num,
+        );
+      } else {
+        this.board.sort((item1, item2) => item2.like_num - item1.like_num);
+      }
     },
-    selectedTags() {
+    selectedTags(newValue) {
       // store의 selectedTags가 바뀌면 새로운 게시판의 정보를 서버로부터 받아옴
-      this.loadBoard();
+      // this.loadBoard();
+      console.log(newValue);
+      this.board = this.origin_board.filter(post => {
+        for (const tag of post.ref_tags) {
+          if (newValue.indexOf(tag.toLowerCase()) >= 0) return true;
+        }
+        return false;
+      });
     },
   },
   methods: {
@@ -71,12 +92,13 @@ export default {
     async loadBoard() {
       try {
         this.$q.loading.show();
-        const { data } = await getQnaList({
-          tags_filter: this.selectedTags,
-          tab: this.sort,
-        });
-        console.log(typeof data);
-        this.board = data.quests;
+        // const { data } = await getQnaList({
+        //   tags_filter: this.selectedTags,
+        //   tab: this.sort,
+        // });
+        const { data } = await getQnaList();
+        this.origin_board = data;
+        this.board = data;
       } catch (error) {
         console.log(error);
       } finally {

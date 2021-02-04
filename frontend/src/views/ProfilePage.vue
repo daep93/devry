@@ -19,7 +19,8 @@
 import HeaderBanner from '@/components/profile/HeaderBanner';
 import SideBanner from '@/components/profile/SideBanner';
 import PostBanner from '@/components/profile/PostBanner';
-import { getProfile } from '@/api/profile.js';
+// import { getProfile } from '@/api/profile.js';
+import { testCase } from '@/dummy/Profile';
 export default {
   components: {
     HeaderBanner,
@@ -65,16 +66,17 @@ export default {
     },
   },
   async created() {
-    const id = this.$route.params.id;
-    try {
-      this.$q.loading.show();
-      const { data } = await getProfile(id);
-      this.profile = data;
-    } catch (error) {
-      console.log(error);
-    } finally {
-      this.$q.loading.hide();
-    }
+    // const id = this.$route.params.id;
+    // try {
+    //   this.$q.loading.show();
+    //   const { data } = await getProfile(id);
+    //   this.profile = data;
+    // } catch (error) {
+    //   console.log(error);
+    // } finally {
+    //   this.$q.loading.hide();
+    // }
+    this.profile = testCase;
   },
 };
 </script>
