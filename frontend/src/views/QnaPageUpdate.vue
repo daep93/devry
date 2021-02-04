@@ -1,13 +1,6 @@
 <template>
   <div class="q-pa-md q-gutter-sm row justify-center">
     <div class="q-pa-sm" style="width: 85vw;">
-      <!-- 타이틀 -->
-      <!-- <div class="q-mb-md">
-        <span class="text-h4 text-weight-bolder">QnA Registration</span>
-        <p class="text-subtitle2 q-mt-md q-mb-xl">
-          궁금하신 점을 질문해보세요:)
-        </p>
-      </div> -->
       <div class="q-pa-md q-gutter-sm">
         <!-- 제목 입력 -->
         <q-input
@@ -16,7 +9,6 @@
           v-model="title"
           placeholder="제목을 입력해주세요"
         />
-        <!-- :rules="[ val => val && val.length > 0 || '제목은 필수항목 입니다']" -->
         <!-- 태그 입력 -->
         <q-input
           class="q-mx-md"
@@ -26,12 +18,6 @@
           TODO
           @keypress.enter="createTag"
         >
-          <!-- :error="!isValid" -->
-          <!-- :rules="[ ref_tags.length > 0 || '태그 필요!']" -->
-          <!-- 태그 에러 -->
-          <!-- <template v-slot:error>
-            <p class="text-weight-bold">태그를 반드시 하나 이상 입력해주세요</p>
-          </template> -->
         </q-input>
         <!-- 태그 보여주기 -->
         <ul class="row">
@@ -52,7 +38,6 @@
           left-toolbar="undo redo clear | h bold italic strikethrough quote ul ol table hr link image imageLink uploadImage video code save"
           :toolbar="toolbar"
         >
-          
         </v-md-editor>
       </div>
       <!-- 버튼 -->
@@ -137,6 +122,9 @@ export default {
     },
     // qna 게시글 수정하기
     async updateQna() {
+      if (this.user.id !== this.$store.state.id) {
+        alert('글 작성자가 아닙니다.')
+      }
       if (this.title === '') {
         alert('제목은 필수 입력 항목입니다');
       }
@@ -147,17 +135,12 @@ export default {
         alert('내용은 필수 입력항목 입니다');
       }
       try {
-        console.log('성공!');
-        // console.log(this.profile)
-        // console.log(this.profile.user)
-        console.log(this.user)
         // post_id 넘겨주기
         const post_id = this.$route.params.id;
         this.$q.loading.show();
         await updateQnaItem(post_id, {
           // 넘길 데이터 적어주기
           title: this.title,
-          // profile: this.profile.user,
           user: this.user.id,
           content: this.content,
           ref_tags: this.ref_tags,
@@ -195,9 +178,6 @@ export default {
     isValid() {
       return this.tagItem === '' || this.ref_tags.length > 0;
     },
-    // isValidContent () {
-    //   return this.content.length > 0
-    // }
   },
 };
 </script>
