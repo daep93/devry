@@ -1,4 +1,4 @@
-import { instance } from '@/api';
+import { instance, instanceAuth } from '@/api';
 function registerUser(userData) {
   return instance.post('signup/', userData);
 }
@@ -11,5 +11,7 @@ function checkUser(userData) {
 function changePwdUser(userData) {
   return instance.put('change_password/', userData);
 }
-
-export { registerUser, loginUser, checkUser, changePwdUser };
+function logoutUser() {
+  return instanceAuth.post('logout/');
+}
+export { registerUser, loginUser, checkUser, changePwdUser, logoutUser };
