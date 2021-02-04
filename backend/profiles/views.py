@@ -12,7 +12,7 @@ from rest_framework import viewsets
 
 from articles.models import Article, Comment
 from articles.serializers import ArticleProfileSerializer, CommentProfileSerializer
-
+from accounts.models import User
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
@@ -33,6 +33,7 @@ class PostViewSet(viewsets.ModelViewSet):
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 
 @api_view(['GET', 'POST'])
 def profile_list_create(request):

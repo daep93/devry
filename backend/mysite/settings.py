@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'qnas',
     'profiles',
     'django_seed',
-
+    
     'corsheaders',
     'imagekit',
     'rest_framework',

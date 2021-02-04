@@ -4,10 +4,11 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from .serializers import QnaListSerializer, QnaSerializer, AnsSerializer, likeSerializer, bookmarkSerializer, solveSerializer, like_ansSerializer,User_infoSerializer,ProfileListSerializer,ProfileSerializer, QnasmallSerializer, AnssmallSerializer,QnadetailSerializer,AnslistSerializer,AnsdetailSerializer
-from .models import Qna, Ans, User, Qnasmall, Anssmall
+from .serializers import QnaListSerializer, QnaListforamtSerializer ,QnaSerializer, AnsSerializer, likeSerializer, bookmarkSerializer, solveSerializer, like_ansSerializer, UserinfoSerializer,ProfileListSerializer,ProfileSerializer, QnasmallSerializer, AnssmallSerializer,QnadetailSerializer,AnslistSerializer,AnsdetailSerializer
+from .models import Qna, Ans, Qnasmall, Anssmall
 from rest_framework import viewsets
 from profiles.models import Profile
+from accounts.models import User
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -30,6 +31,22 @@ class AnssmallViewSet(viewsets.ModelViewSet):
     serializer_class = AnssmallSerializer
 
 
+@api_view(['GET'])
+def qna_list(request):
+    if request.method == 'GET':
+        qnas = Qna.objects.all() 
+        for qna in qnas:
+            qna.like_num = qna.like_users.count()
+            if qna.like_users.filter(id=request.user.pk).exists():
+                qna.liked = "True"      
+            else:
+                qna.liked = "False"
+            qna.save()
+            # qna number in user_id -> It will be "True"
+        serializer = QnaListforamtSerializer(qnas, many=True)
+        return Response(serializer.data) 
+
+
 @api_view(['GET', 'POST'])
 def qna_list_create(request):
     if request.method == 'GET':
@@ -45,6 +62,10 @@ def qna_list_create(request):
         serializer = QnaListSerializer(qnas, many=True)
         return Response(serializer.data) 
     else:
+        profiles = Profile.objects.all()
+        for profile in profiles:
+            if profile.user_id==request.user.id:
+                request.data['profile']=profile.id
         serializer = QnaSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()     
@@ -107,6 +128,10 @@ def ans_list(request):
         serializer = AnslistSerializer(anss, many=True)
         return Response(serializer.data)
     else:
+        profiles = Profile.objects.all()
+        for profile in profiles:
+            if profile.user_id==request.user.id:
+                request.data['profile']=profile.id
         serializer = AnsSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()     
@@ -183,8 +208,6 @@ def like_ans(request, ans_pk):
 
 @api_view(['GET','POST'])
 def bookmark(request, qna_pk):
-    # user authentication process
-    # if request.user.is_authenticated:
         qna = get_object_or_404(Qna, pk=qna_pk)
         if request.method == 'GET':
             if qna.bookmark_users.filter(pk=request.user.pk).exists():
@@ -209,7 +232,6 @@ def bookmark(request, qna_pk):
 
 @api_view(['GET','POST'])
 def solve(request, ans_pk):
-    # user authentication process
     if request.user.is_authenticated:
         ans = get_object_or_404(Ans, pk=ans_pk)
         qna = get_object_or_404(Qna, pk=ans.qna_id)

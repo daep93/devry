@@ -20,7 +20,7 @@ tech = (
 )
     
 class Qna(models.Model): 
-    title = models.CharField(max_length=30)
+    title = models.CharField(max_length=80)
     ref_tags = MultiSelectField(choices=tech)
     like_num = models.PositiveIntegerField(default=0)
     comment_num = models.PositiveIntegerField(default=0)
@@ -33,10 +33,12 @@ class Qna(models.Model):
     viewed_num = models.PositiveIntegerField(default=0)
     written_time = models.DateTimeField(auto_now_add=True)
     content = models.TextField()
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
-   
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
     def __str__(self):
         return self.title
+
 
 class Qnasmall(models.Model): 
     content = models.TextField()
@@ -55,10 +57,12 @@ class Ans(models.Model):
     liked_ans = models.BooleanField(default="False")
     written_time = models.DateTimeField(auto_now_add=True)
     qna = models.ForeignKey(Qna, on_delete=models.CASCADE)
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
     def __str__(self):
         return self.title
+
 
 class Anssmall(models.Model): 
     content = models.TextField()

@@ -13,7 +13,7 @@ routerq.register('anssmall', AnssmallViewSet)
 
 urlpatterns = [
     path('qnatest/', include(routerq.urls)),
-    path('board/qna/', views.qna_list_create),
+    path('board/qna/', views.qna_list),
     path('qna/', views.qna_list_create),
     path('qna/<int:qna_pk>/', views.qna_detail_update_delete),
     path('qna/<int:qna_pk>/anss/', views.create_ans),

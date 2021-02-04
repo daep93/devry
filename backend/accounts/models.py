@@ -62,7 +62,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField('date_joined', default=timezone.now)
     # followers = models.ManyToManyField('self', related_name='follower', blank=True)
     # following = models.ManyToManyField('self', related_name='following', blank=True)
-
+    pro=models.PositiveIntegerField(default=0)
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
