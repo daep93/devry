@@ -6,11 +6,11 @@
       </div>
       <!-- 게시판 보드 -->
       <qna-board></qna-board>
-      <div class="row q-mt-sm col-12 q-mb-xl justify-between">
+      <div class="row q-mt-md col-12 q-mb-xl justify-between">
         <!-- 답변 완료 표기 -->
-        <div class="col-9 row q-py-xs">
+        <div class="col-3 row q-py-xs">
           <div
-            class="row col-2 q-pb-xs q-mr-md"
+            class="row col-4 q-pb-xs q-mr-md"
             v-for="(color, msg) in {
               '답변 완료': '#1976D2',
               '답변 대기': '#C8DAFE',
@@ -27,7 +27,7 @@
           </div>
         </div>
         <!-- 페이지네이션 -->
-        <div class="col-3 row justify-end">
+        <div class="col-6 row justify-center">
           <q-pagination
             v-model="current"
             color="grey"
@@ -35,6 +35,11 @@
             :boundary-links="true"
           >
           </q-pagination>
+        </div>
+        <div class="col-3 row justify-end">
+          <q-btn color="blue-7" @click="$router.push('/qna/create')"
+            >질문하기</q-btn
+          >
         </div>
       </div>
     </div>
