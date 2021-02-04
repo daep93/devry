@@ -1,16 +1,22 @@
 <template>
   <div class="row col-12">
-    <div v-for="(data, index) in answers" :key="index" class="row col-12">
+    <div class="row col-12">
       <div class="row col-12">
         <q-separator />
-        <div class="row col-12 q-py-sm">
+        <div
+          class="row col-12 q-py-sm"
+          v-for="(data, index) in comments"
+          :key="index"
+        >
           <div class="row col-12 justify-between">
             <div class="row col-10">
-              <span class="q-mr-xs">1.</span>
+              <span class="q-mr-xs">{{ data.id }}</span>
               <span class="q-mr-sm" style="color: blue">
                 @{{ data.username }}
               </span>
-              <span class="text-caption" style="color: gray">11분 전</span>
+              <span class="text-caption" style="color: gray">
+                {{ data.written_time | moment('YYYY/MM/DD HH:mm') }}
+              </span>
             </div>
             <div class="q-pl-xl row col-2">
               <div class="row items-center">
@@ -51,7 +57,7 @@
     <div class="row col-12">
       <div class="row col-10"></div>
       <div class="row col-2 q-pl-xl q-mb-lg">
-        <q-btn color="primary" label="댓글 추가" size="sm" />
+        <q-btn color="primary" label="댓글 추가" size="md" />
       </div>
     </div>
   </div>
@@ -59,8 +65,12 @@
 
 <script>
 export default {
+  props: {
+    comments: Array,
+  },
   data: function() {
     return {
+      text: '',
       answers: [
         {
           contents: 'this is test small comment 1',

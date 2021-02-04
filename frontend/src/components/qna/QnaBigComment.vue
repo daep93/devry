@@ -14,11 +14,9 @@
           <q-card flat bordered class="my-card q-pa-lg q-mt-lg row col-12">
             <div class="row col-9">
               <div class="q-ml-md row col-12 q-my-sm">
-                <div style="color: blue">
-                  @user123
-                </div>
+                <div style="color: blue">@{{ info.username }}</div>
                 <span class="q-ml-sm text-caption" style="color: gray;">
-                  50분 전
+                  {{ info.written_time | moment('YYYY/MM/DD HH:mm') }}
                 </span>
               </div>
             </div>
@@ -28,22 +26,13 @@
             <div v-else-if="!blueModel && !writerStatus" class="row col-3">
               <div class="row col-3 q-mb-sm q-pl-sm"></div>
               <div class="row col-9">
-                <div
-                  class="q-pl-xl q-mt-sm"
-                  v-for="(color, msg) in {
-                    '답변 채택': '#1976D2',
-                  }"
-                  :key="msg"
-                >
+                <div class="q-pl-xl q-mt-sm">
                   <div
                     class="row col-12 shadow-1 overflow-hidden"
                     style="border-radius:5px; width: 100px; height: 20px;"
                   >
-                    <div
-                      class="col-2"
-                      :style="{ 'background-color': color }"
-                    ></div>
-                    <div class="col-10 text-center">{{ msg }}</div>
+                    <div class="col-2" style="background-color: #1976D2"></div>
+                    <div class="col-10 text-center">답변 채택</div>
                   </div>
                 </div>
               </div>
@@ -63,22 +52,13 @@
             <!-- 토글이 켜져있으며, 글 작성자가 맞는 경우 -->
             <div v-else-if="!blueModel && writerStatus" class="row col-3">
               <div class="row col-8">
-                <div
-                  class="q-pl-xl q-mt-sm"
-                  v-for="(color, msg) in {
-                    '답변 채택': '#1976D2',
-                  }"
-                  :key="msg"
-                >
+                <div class="q-pl-xl q-mt-sm">
                   <div
                     class="row col-12 shadow-1 overflow-hidden"
                     style="border-radius:5px; width: 100px; height: 20px;"
                   >
-                    <div
-                      class="col-2"
-                      :style="{ 'background-color': color }"
-                    ></div>
-                    <div class="col-10 text-center">{{ msg }}</div>
+                    <div class="col-2" style="background-color:#1976D2"></div>
+                    <div class="col-10 text-center">답변 채택</div>
                   </div>
                 </div>
               </div>
@@ -93,19 +73,9 @@
             </div>
             <div class="q-ml-md row col-12">
               <div class="q-mr-md q-pb-lg">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Exercitationem quidem, iure eveniet praesentium repudiandae
-                necessitatibus delectus explicabo repellat id eligendi corrupti.
-                Dolorem harum, nihil ipsum accusantium delectus labore dolorum,
-                illo, autem quas distinctio accusamus tenetur fugiat
-                perspiciatis illum dolore! Obcaecati totam laboriosam eaque
-                quos. Consequuntur esse veritatis tempora cum earum illum,
-                suscipit nobis neque excepturi ducimus sed voluptatum nesciunt
-                minus placeat nulla voluptate iste corrupti odit repudiandae
-                totam itaque facilis quas non! Eos hic veritatis quas minima
-                cupiditate odit dignissimos? Totam asperiores architecto illum
-                eum accusantium rerum neque? Officiis ut illo aut minima maiores
-                fuga obcaecati animi, veniam facilis distinctio?
+                <q-card-section class="row col-12">
+                  <q-markdown :src="info.contents"> </q-markdown>
+                </q-card-section>
               </div>
             </div>
             <div class="row col-12 q-px-md">
@@ -122,7 +92,7 @@
               <div class="row col-10"></div>
               <div class="row col-2 q-pl-lg q-mb-sm">
                 <span class="q-pl-md"
-                  ><q-btn color="primary" label="댓글 추가" size="sm"
+                  ><q-btn color="primary" label="댓글 추가" size="md"
                 /></span>
               </div>
             </div>
@@ -142,12 +112,16 @@ import QnaCommentSelected from '@/components/qna/QnaCommentSelected';
 import QnaCommentStatus from '@/components/qna/QnaCommentStatus';
 
 export default {
+  props: {
+    info: Object,
+  },
   components: {
     QnaCommentSelected,
     QnaCommentStatus,
   },
   data() {
     return {
+      text: '',
       follow: true,
       blueModel: true,
       writerStatus: false,

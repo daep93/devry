@@ -16,16 +16,16 @@
       <div class="row col-10 q-mt-lg ">
         <div class="row col-9">
           <div class="row col-12">
-            <qna-detail-content></qna-detail-content>
+            <qna-detail-content :info="questBody"></qna-detail-content>
           </div>
         </div>
         <div class="row col-3 q-pl-sm q-pr-xl">
-          <qna-short-profile></qna-short-profile>
+          <qna-short-profile :info="shortProfile"></qna-short-profile>
         </div>
       </div>
     </div>
-    <div class="row col-12">
-      <qna-big-comment></qna-big-comment>
+    <div class="row col-12" v-if="bigComments.length">
+      <qna-big-comment :info="bigComments"></qna-big-comment>
     </div>
 
     <div class="row col-9 q-mt-lg q-pl-xl">
@@ -89,22 +89,29 @@ export default {
         bookmarked: this.contents.bookmarked,
         bookmark_num: this.contents.bookmark_num,
         viewed_num: this.contents.viewed_num,
-        comment_num: this.contents.qnasmall_set,
+        comment: this.contents.qnasmall_set,
       };
     },
     questBody() {
       return {
         title: this.contents.title,
         ref_tags: this.contents.ref_tags,
-        contents: this.contents.contents,
-        qnasmall_set: this.contents.qnasmall_set,
+        contents: this.contents.content,
+        comments: this.contents.qnasmall_set,
+        written_time: this.contents.written_time,
+        solved: this.contents.solved,
+        user_id: this.contents.user.id,
+        post_id: this.contents.id,
       };
     },
     shortProfile() {
-      return '';
+      return {
+        profile: this.contents.profile,
+        user: this.contents.user,
+      };
     },
-    bigComment() {
-      return '';
+    bigComments() {
+      return this.contents.ans_set;
     },
   },
   async created() {

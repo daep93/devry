@@ -10,8 +10,9 @@ const routes = [
   },
   {
     path: '/main',
-    name: 'Main',
-    component: () => import('@/views/MainPage.vue'),
+    redirect: '/forum',
+    // name: 'Main',
+    // component: () => import('@/views/MainPage.vue'),
   },
   {
     path: '/profile/:id',

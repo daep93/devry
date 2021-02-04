@@ -30,7 +30,7 @@
           size="17px"
         ></q-icon>
         <br />
-        <span>{{ info.comment_num.length }}</span>
+        <span>{{ info.comment.length }}</span>
         <br />
         <br />
         <q-icon :name="$i.ionEyeOutline" color="grey-6" size="17px"></q-icon>

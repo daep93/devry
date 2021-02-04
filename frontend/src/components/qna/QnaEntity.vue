@@ -52,12 +52,12 @@
         }}</span>
       </div>
       <div class="row col-6 items-center justify-center q-py-xs ">
-        <div class="">
+        <div class="col-4 row justify-end">
           <q-avatar style="border: 1px solid #ECEFF1" size="2.8em">
             <q-img :src="require('@/assets/keyboard.png')" />
           </q-avatar>
         </div>
-        <div class="q-pl-sm">
+        <div class="q-pl-sm col-8">
           <div class="text-weight-regular col-12 text-primary">
             {{ entity.user.username }}
           </div>
