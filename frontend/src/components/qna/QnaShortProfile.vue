@@ -59,7 +59,7 @@
             color="primary"
             label="Following"
             @click="checkFollow"
-            style="width: 220px"
+            style="width: 200px"
             class="q-mb-sm"
           />
         </template>
@@ -108,13 +108,10 @@ export default {
     checkFollow() {
       this.follow = !this.follow;
       console.log(this.follow);
-
-      // for (const btn of this.follow) {
-      //   if (this.follow.indexOf(btn) === index) {
-      //     btn.follow = !btn.follow;
-      //     console.log(btn);
-      //   }
-      // }
+    },
+    goToProfile() {
+      console.log('click!');
+      this.$router.push({ name: 'Profile' });
     },
   },
 };

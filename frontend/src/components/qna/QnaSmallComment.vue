@@ -86,8 +86,12 @@ export default {
       for (const heart of this.answers) {
         if (this.answers.indexOf(heart) === index) {
           heart.liked = !heart.liked;
+          if (heart.liked) {
+            heart.like_num = heart.like_num - 1;
+          } else {
+            heart.like_num = heart.like_num + 1;
+          }
         }
-        console.log(index);
       }
     },
   },
