@@ -59,7 +59,7 @@
         </div>
         <div class="q-pl-sm">
           <div class="text-weight-regular col-12 text-primary">
-            {{ entity.profile.username }}
+            {{ entity.user.username }}
           </div>
           <div class="text-weight-thin col-12" style="font-size:8pt">
             {{ entity.written_time | moment('YYYY/MM/DD HH:mm') }}
@@ -82,7 +82,7 @@ export default {
     },
     // TODO: 추후 연결 페이지 수정 필요
     goToDetail() {
-      this.$router.push({ name: 'QnaDetail' });
+      this.$router.push(`/qna-detail/${this.entity.id}`);
     },
   },
 };
