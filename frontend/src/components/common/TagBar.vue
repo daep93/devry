@@ -88,15 +88,15 @@ export default {
   data() {
     return {
       tags: {
-        swift: false,
-        flutter: false,
+        frontend: false,
+        backend: false,
         angular: false,
         django: false,
         java: false,
-        vue: false,
+        'vue.js': false,
         typescript: false,
         docker: false,
-        python: false,
+        python3: false,
         react: false,
         javascript: false,
       },
