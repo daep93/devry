@@ -47,7 +47,7 @@
         </ul>
         <!-- 마크다운 에디터 -->
         <v-md-editor 
-          v-model="contents" 
+          v-model="content" 
           height="800px"
           left-toolbar="undo redo clear | h bold italic strikethrough quote ul ol table hr link image imageLink uploadImage video code save"
           :toolbar="toolbar"
@@ -118,10 +118,8 @@ export default {
       index,
       title: '',
       tagItem: '',
-      contents: '',
-      ref_tags: [
-        // 'Vue', 'UX/UI', 'Python'
-      ],
+      content: '',
+      ref_tags: [],
     };
   },
   methods: {
@@ -143,7 +141,7 @@ export default {
       if (this.ref_tags.length === 0) {
         alert('태그를 하나이상 입력해주세요');
       }
-      if (this.contents === '') {
+      if (this.content === '') {
         alert('내용은 필수 입력항목 입니다');
       }
       try {
@@ -153,9 +151,10 @@ export default {
         await createQnaItem({
           // 넘길 데이터 적어주기
           title: this.title,
-          contents: this.contents,
+          content: this.content,
           ref_tags: this.ref_tags,
         });
+        console.log('페이지 이동 전까지 성공?');
         // 이동 시킬 페이지 적어주기(QnA 게시판으로 이동)
         this.$router.push({path: '/qna'});
       } catch (error) {
@@ -185,7 +184,7 @@ export default {
         await updateQnaItem(post_id, {
           // 넘길 데이터 적어주기
           title: this.title,
-          contents: this.contents,
+          content: this.content,
           ref_tags: this.ref_tags,
         });
         // 이동 시킬 페이지 적어주기(QnA 게시판으로 이동)
@@ -206,7 +205,7 @@ export default {
       this.$q.loading.show();
       const { data } = await loadQnaItem(post_id);
         this.title = data.title;
-        this.contents = data.contents;
+        this.content = data.content;
         this.ref_tags = data.ref_tags;
     } catch (error) {
       console.log(error)
