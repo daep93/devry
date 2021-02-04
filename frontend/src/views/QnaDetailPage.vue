@@ -1,5 +1,11 @@
 <template>
   <div class="row col-12">
+    <div v-if="writerStatus" class="row col-12">
+      <div class="row col-11"></div>
+      <div class="row col-1 q-mt-lg">
+        <q-btn color="primary" label="글 수정" size="sm" />
+      </div>
+    </div>
     <div class="row col-12">
       <div class="row col-2 q-mt-lg">
         <div class="row col-9"></div>
@@ -60,12 +66,22 @@ export default {
       title: 'Add a YouTube stats widget to your iPhone with JavaScript',
       username: 'test user',
       profile_img: 'https://cdn.quasar.dev/img/avatar.png',
+      writerStatus: false,
     };
   },
   methods: {
     goToProfile() {
       this.$router.push({ name: 'Profile' });
     },
+    checkWriter() {
+      // 글 작성자 판별
+      if (this.$store.state.id === this.QnaDetailData.user_info.userid) {
+        this.writerStatus = true;
+      }
+    },
+  },
+  created() {
+    this.checkWriter();
   },
 };
 </script>

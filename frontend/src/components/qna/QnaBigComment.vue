@@ -1,6 +1,6 @@
 <template>
   <div class="row col-12">
-    <!-- 두 번째 댓글 -->
+    <!-- 댓글 시작 -->
     <div class="row col-12">
       <div class="row col-2">
         <!-- 댓글 좋아요 수, 댓글 수, 북마크 수 -->
@@ -185,9 +185,10 @@ export default {
       if (this.$store.state.id === this.QnaDetailData.user_info.userid) {
         this.writerStatus = true;
       }
-      // console.log('1번', this.$store.state.id);
-      // console.log('2번', this.QnaDetailData.user_info.userid);
     },
+  },
+  created() {
+    this.checkWriter();
   },
 };
 </script>
