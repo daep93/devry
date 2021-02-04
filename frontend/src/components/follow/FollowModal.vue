@@ -1,5 +1,5 @@
 <template>
-  <q-dialog v-model="$store.state.followModal">
+  <q-dialog v-model="$store.state.follow.modal">
     <q-card style="min-width:650px; height:670px">
       <!-- x버튼 -->
       <div class="row justify-end" style="height:40px;">
@@ -30,7 +30,7 @@
                   style="max-width: 450px;"
                 >
                   <q-tab name="follow" label="팔로워" />
-                  <q-tab name="following" label="팔로잉" />
+                  <q-tab name="following" label="팔로우" />
                 </q-tabs>
 
                 <q-separator style="width: 75%;" />
@@ -60,7 +60,7 @@ export default {
   components: { FollowerList, FollowingList },
   data() {
     return {
-      tab: 'follow',
+      tab: '',
       thumbStyle: {
         right: '2px',
         borderRadius: '5px',
@@ -73,6 +73,16 @@ export default {
   methods: {
     offModal() {
       this.$store.commit('offFollowModal');
+    },
+  },
+  computed: {
+    followTab() {
+      return this.$store.state.follow.tab;
+    },
+  },
+  watch: {
+    followTab(newValue) {
+      this.tab = newValue;
     },
   },
 };

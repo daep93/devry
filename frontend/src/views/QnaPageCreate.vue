@@ -1,0 +1,233 @@
+<template>
+  <div class="q-pa-md q-gutter-sm row justify-center">
+    <div class="q-pa-sm" style="width: 85vw;">
+      <!-- 타이틀 -->
+      <!-- <div class="q-mb-md">
+        <span class="text-h4 text-weight-bolder">QnA Registration</span>
+        <p class="text-subtitle2 q-mt-md q-mb-xl">
+          궁금하신 점을 질문해보세요:)
+        </p>
+      </div> -->
+      <div class="q-pa-md q-gutter-sm">
+        <!-- 제목 입력 -->
+        <q-input
+          class="q-mx-md q-my-md text-h3 text-weight-bold"
+          borderless
+          v-model="title"
+          placeholder="제목을 입력해주세요"
+        />
+        <!-- :rules="[ val => val && val.length > 0 || '제목은 필수항목 입니다']" -->
+        <!-- 태그 입력 -->
+        <q-input
+          class="q-mx-md"
+          borderless
+          v-model="tagItem"
+          placeholder="태그를 하나 이상 입력해주세요"
+          TODO
+          @keypress.enter="createTag"
+        >
+          <!-- :error="!isValid" -->
+          <!-- :rules="[ ref_tags.length > 0 || '태그 필요!']" -->
+          <!-- 태그 에러 -->
+          <!-- <template v-slot:error>
+            <p class="text-weight-bold">태그를 반드시 하나 이상 입력해주세요</p>
+          </template> -->
+        </q-input>
+        <!-- 태그 보여주기 -->
+        <ul class="row">
+          <li
+            class="q-mb-xs cursor-pointer"
+            v-for="(tag, index) in ref_tags"
+            :key="index"
+          >
+            <q-chip outline square color="primary">
+              <div @click="removeTag(tag, index)">{{ tag }}</div>
+            </q-chip>
+          </li>
+        </ul>
+        <!-- 마크다운 에디터 -->
+        <v-md-editor 
+          v-model="content" 
+          height="800px"
+          left-toolbar="undo redo clear | h bold italic strikethrough quote ul ol table hr link image imageLink uploadImage video code save"
+          :toolbar="toolbar"
+        >
+          
+        </v-md-editor>
+      </div>
+      <!-- 버튼 -->
+      <div class="q-mb-xl q-mt-xl" style="text-align: center;">
+        <q-btn
+          outline
+          color="blue-12"
+          class="text-weight-bold q-px-xl q-py-sm q-mr-md"
+          label="임시저장"
+          size="md"
+        />
+        <q-btn
+          color="blue-12"
+          class="text-weight-bold q-px-xl q-py-sm"
+          label="작성하기"
+          size="md"
+          @click="index !== undefined ? updateQna() : createQna()"
+        />
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { loadQnaItem, createQnaItem, updateQnaItem } from '@/api/qnaCreate';
+
+import Vue from 'vue';
+import VMdEditor from '@kangc/v-md-editor';
+import '@kangc/v-md-editor/lib/style/base-editor.css';
+import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
+import '@kangc/v-md-editor/lib/theme/style/github.css';
+import koKR from '@kangc/v-md-editor/lib/lang/ko-KR';
+
+VMdEditor.lang.use('ko-KR', koKR);
+
+VMdEditor.use(githubTheme);
+
+Vue.use(VMdEditor);
+
+export default {
+  data() {
+    const index = this.$route.params.id;
+    this.toolbar = {
+      video: {
+        title: '비디오',
+        // TODO : icon 변경하기
+        icon: 'v-md-icon-tip',
+        action(editor) {
+          editor.insert(function (selected) {
+            const imagetxt = 'Image text';
+            const image = 'Screenshot image URL';
+            const youtube = 'Youtube Link';
+
+            return {
+              text: `[![${imagetxt}](${image})](${youtube})`,
+              selected: imagetxt,
+            };
+          });
+        },
+      },
+    };
+    return {
+      index,
+      title: '',
+      tagItem: '',
+      content: '',
+      ref_tags: [],
+    };
+  },
+  methods: {
+    createTag(tagItem) {
+      if (this.tagItem !== '') {
+        console.log(this.tagItem);
+        this.ref_tags.push(this.tagItem);
+        this.tagItem = '';
+      }
+    },
+    removeTag(tag, index) {
+      this.ref_tags.splice(index, 1);
+    },
+    // 게시글 생성하기
+    async createQna() {
+      if (this.title === '') {
+        alert('제목은 필수 입력 항목입니다');
+      }
+      if (this.ref_tags.length === 0) {
+        alert('태그를 하나이상 입력해주세요');
+      }
+      if (this.content === '') {
+        alert('내용은 필수 입력항목 입니다');
+      }
+      try {
+        console.log('성공!');
+       
+        this.$q.loading.show();
+        await createQnaItem({
+          // 넘길 데이터 적어주기
+          title: this.title,
+          content: this.content,
+          ref_tags: this.ref_tags,
+        });
+        console.log('페이지 이동 전까지 성공?');
+        // 이동 시킬 페이지 적어주기(QnA 게시판으로 이동)
+        this.$router.push({path: '/qna'});
+      } catch (error) {
+        console.log(error);
+        // alert('에러가 발생했습니다!')
+      } finally {
+        this.$q.loading.hide();
+      }
+    },
+    // qna 게시글 수정하기
+    async updateQna() {
+      if (this.title === '') {
+        alert('제목은 필수 입력 항목입니다');
+      }
+      if (this.ref_tags.length === 0) {
+        alert('태그를 하나이상 입력해주세요');
+      }
+      if (this.contents === '') {
+        alert('내용은 필수 입력항목 입니다');
+      }
+      try {
+        console.log('성공!');
+        console.log(this.$route.query.id)
+        // post_id 넘겨주기
+        const post_id = this.$route.params.id;
+        this.$q.loading.show();
+        await updateQnaItem(post_id, {
+          // 넘길 데이터 적어주기
+          title: this.title,
+          content: this.content,
+          ref_tags: this.ref_tags,
+        });
+        // 이동 시킬 페이지 적어주기(QnA 게시판으로 이동)
+        this.$router.push({path: '/qna'});
+      } catch (error) {
+        console.log(error);
+        // alert('에러가 발생했습니다!')
+      } finally {
+        this.$q.loading.hide();
+      }
+    },
+  },
+  // qna 게시글 수정하기(기존 정보 가져오기)
+  async created() {
+    // id 가져오기
+    const post_id = this.$route.params.id;
+    try {
+      this.$q.loading.show();
+      const { data } = await loadQnaItem(post_id);
+        this.title = data.title;
+        this.content = data.content;
+        this.ref_tags = data.ref_tags;
+    } catch (error) {
+      console.log(error)
+      // alert('에러가 발생했습니다.)
+    } finally {
+      this.$q.loading.hide();
+    }
+  },
+  computed: {
+    isValid() {
+      return this.tagItem === '' || this.ref_tags.length > 0;
+    },
+    // isValidContent () {
+    //   return this.content.length > 0
+    // }
+  },
+};
+</script>
+
+<style scoped>
+ul {
+  list-style-type: none;
+  padding-left: 0px;
+}
+</style>

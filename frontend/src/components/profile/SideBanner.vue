@@ -19,7 +19,7 @@
               </div>
               <div class="row q-mb-xl ">
                 <span
-                  v-for="(tag, index) in Object.keys(info.tags)"
+                  v-for="(tag, index) in tagNames"
                   :key="tag"
                   class="q-mb-sm q-mr-xs q-pa-sm"
                   :style="{ 'background-color': tagColors[index] }"
@@ -96,7 +96,7 @@
                     </q-item-section>
                     <q-item-section
                       ><div class="row text-bold justify-end">
-                        4
+                        {{ info.postNum }}
                       </div></q-item-section
                     >
                   </q-item>
@@ -117,7 +117,7 @@
                     </q-item-section>
                     <q-item-section
                       ><div class="row text-bold justify-end">
-                        16
+                        {{ info.commentNum }}
                       </div></q-item-section
                     >
                   </q-item>
@@ -166,15 +166,6 @@ export default {
   },
   data() {
     return {
-      projects: ['ssafy-common', 'ssafy-special', 'ssafy-complete'],
-      // TODO : 태그에 따른 로고 색 알려주는 함수 필요
-      tags: [
-        { tagName: '#Vue', tagColor: 'rgba(65,184,131,0.5)' }, // #41B883
-        { tagName: '#Javascript', tagColor: 'rgba(247,191,51,0.5)' }, // #F7BF33
-        { tagName: '#React', tagColor: 'rgba(54,168,253,0.5)' }, // #36A8FD
-        { tagName: '#Angular', tagColor: 'rgba(181,46,49,0.5)' }, //#B52E31
-      ],
-      skills: ['HTML', 'MongoDB', 'Javascript', 'vue'],
       chartOptions: {
         responsive: true,
         cutoutPercentage: 75,
@@ -203,12 +194,12 @@ export default {
       chartData: {
         hoverBackgroundColor: 'red',
         hoverBorderWidth: 10,
-        labels: ['Javascript', 'React', 'Vue', 'Angular'],
+        labels: [],
         datasets: [
           {
             label: 'Data One',
-            backgroundColor: ['#F7BF33', '#36A8FD', '#41B883', '#B52E31'],
-            data: [23, 14, 8, 3],
+            backgroundColor: [],
+            data: [],
           },
         ],
       },
@@ -218,12 +209,23 @@ export default {
     tagColors() {
       return colorListMapper(this.tagNames, 0.5);
     },
+    tagBoldColors() {
+      return colorListMapper(this.tagNames, 1);
+    },
     tagNames() {
       return Object.keys(this.info.tags);
     },
     tagLength() {
       return this.tagNames.length;
     },
+    tagCounts() {
+      return Object.values(this.info.tags);
+    },
+  },
+  created() {
+    this.chartData.labels = this.tagNames;
+    this.chartData.datasets[0].backgroundColor = this.tagBoldColors;
+    this.chartData.datasets[0].data = this.tagCounts;
   },
 };
 </script>

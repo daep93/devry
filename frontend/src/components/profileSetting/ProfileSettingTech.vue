@@ -1,24 +1,44 @@
 <template>
-  <div class="col-12" style="margin-bottom: 70px;">
-    <div class="text-h6 text-weight-bold" style="margin-bottom: 40px;">Tech Stack</div>
-    <div>
-      <label for="tech">Skills</label>
-      <q-input
-        outlined 
-        v-model="techStack"
-        id="tech"
-        placeholder="보유하신 기술을 입력해주세요" 
-        style="margin: 7px 0 30px 0;"
-        @keypress.enter="addTechStack"
-        TODO
-        @keypress.enter.prevent="submitForm()"
-      />
+  <div class="full-width q-mb-xl">
+    <div class="text-h6 text-weight-bold q-mb-md">
+      Tech Stack
     </div>
-    <ul class="row">
-      <li v-for="(skill, index) in propsTechStackData" :key="index" style="margin-right: 10px; cursor: pointer;">
-        <q-badge color="blue">
+    <div class="full-width row q-mb-sm">
+      <q-input
+        class=" col-11"
+        outlined
+        stack-label
+        label-slot
+        v-model="techStack"
+        placeholder="보유하신 기술을 입력해주세요"
+        @keypress.enter.prevent="addTechStack"
+      >
+        <template v-slot:label>
+          <span class="text-primary">
+            Skills/Language
+          </span>
+          <br />
+        </template>
+      </q-input>
+      <div class="col-1 q-pl-sm row justify-end items-center">
+        <q-btn
+          class="overflow-auto"
+          color="primary"
+          icon="add"
+          @click="addTechStack"
+          style="height:100%"
+        />
+      </div>
+    </div>
+    <ul class="row q-gutter-sm">
+      <li
+        v-for="(skill, index) in propsTechStackData"
+        :key="index"
+        class="cursor-pointer"
+      >
+        <q-badge color="light-blue-8" class="q-pa-sm shadow-3">
           {{ skill }}
-          <span @click="removeTechStack(skill, index)" style="margin-left: 10px;">X</span>
+          <span @click="removeTechStack(skill, index)" class="q-ml-sm">X</span>
         </q-badge>
       </li>
     </ul>
@@ -31,20 +51,20 @@ export default {
   data() {
     return {
       techStack: '',
-    }
+    };
   },
   methods: {
     addTechStack: function() {
       if (this.techStack !== '') {
         this.$emit('addTechStackItem', this.techStack);
-        this.techStack = ''
+        this.techStack = '';
       }
     },
     removeTechStack: function(skill, index) {
       this.$emit('removeTechStackItem', skill, index);
     },
-  }
-}
+  },
+};
 </script>
 
 <style scoped>

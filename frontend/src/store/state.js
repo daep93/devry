@@ -10,7 +10,10 @@ export default {
   nickname: getUserNicknameFromCookie() || '',
   accountModal: false,
   accountModalType: 'login',
-  followModal: false,
+  follow: {
+    modal: false,
+    tab: 'follow',
+  },
   leftDrawal: true,
   tagFilter: false,
   myTags: [
