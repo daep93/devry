@@ -1,4 +1,4 @@
-import { loginUser } from '@/api/auth';
+import { loginUser, logoutUser } from '@/api/auth';
 import {
   saveAuthToCookie,
   saveUserIdToCookie,
@@ -16,13 +16,21 @@ export default {
     commit('setToken', data.token);
     commit('setUserid', data.user.id);
     commit('setUsername', data.user.username);
-    console.log('데이터');
-    console.log(data);
 
     // 쿠키에 저장
     saveAuthToCookie(data.token);
     saveUserIdToCookie(data.user.id);
     saveUserNicknameToCookie(data.user.username);
+    return data;
+  },
+  async LOGOUT({ commit }) {
+    const { data } = await logoutUser();
+    commit('setToken', '');
+    commit('setUserid', '');
+    commit('setUsername', '');
+    saveAuthToCookie('');
+    saveUserIdToCookie('');
+    saveUserNicknameToCookie('');
     return data;
   },
 };

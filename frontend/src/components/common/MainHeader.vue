@@ -18,13 +18,13 @@
         <div></div>
       </q-toolbar-title>
       <q-tabs align="left">
-        <q-input v-model="search" type="search" class="q-ma-sm" outlined>
+        <!-- <q-input v-model="search" type="search" class="q-ma-sm" outlined>
           <template v-slot:append>
             <q-icon name="create" />
           </template>
         </q-input>
         <q-btn color="black" :icon="$i.ionNotificationsOutline" round flat>
-        </q-btn>
+        </q-btn> -->
         <!-- 로그인 하기 이전 보여지는 버튼 구현 -->
         <q-btn color="primary" round flat v-if="!$store.getters.isLogined">
           <q-avatar :icon="$i.ionPersonCircleOutline"></q-avatar>
@@ -69,12 +69,12 @@
                 프로필 설정
               </q-item-section>
             </q-item>
-            <q-item @click="followModal" clickable>
+            <q-item @click="logout" clickable>
               <q-item-section avatar>
-                <q-icon :name="$i.ionPeopleCircleOutline"></q-icon>
+                <q-icon :name="$i.ionLogOutOutline"></q-icon>
               </q-item-section>
               <q-item-section>
-                팔로워/팔로우
+                로그아웃
               </q-item-section>
             </q-item>
           </q-menu>
@@ -121,6 +121,13 @@ export default {
     },
     toggleLeft() {
       this.$store.commit('toggleLeft');
+    },
+    async logout() {
+      try {
+        await this.$store.dispatch('LOGOUT');
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };
