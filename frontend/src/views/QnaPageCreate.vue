@@ -155,7 +155,8 @@ export default {
           // 넘길 데이터 적어주기
           title: this.title,
           // TODO : profile 번호를 어떻게 가져와야 하는 지..?(현재 로그인된 유저 번호를 하드 코딩하면 작성가능!)
-          profile: this.$store.state.id,
+          // profile: this.$store.state.id,
+          user: this.$store.state.id,
           content: this.content,
           ref_tags: this.ref_tags,
         });

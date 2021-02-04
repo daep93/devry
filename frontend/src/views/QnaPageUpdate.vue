@@ -116,6 +116,7 @@ export default {
     };
     return {
       index,
+      user: '',
       profile: '',
       title: '',
       tagItem: '',
@@ -147,15 +148,18 @@ export default {
       }
       try {
         console.log('성공!');
-        console.log(this.profile)
+        // console.log(this.profile)
+        console.log('')
         console.log(this.profile.user)
+        console.log(this.user)
         // post_id 넘겨주기
         const post_id = this.$route.params.id;
         this.$q.loading.show();
         await updateQnaItem(post_id, {
           // 넘길 데이터 적어주기
           title: this.title,
-          profile: this.profile.user,
+          // profile: this.profile.user,
+          user: this.profile.user,
           content: this.content,
           ref_tags: this.ref_tags,
         });
@@ -176,6 +180,7 @@ export default {
     try {
       this.$q.loading.show();
       const { data } = await loadQnaItem(post_id);
+        this.user = data.user;
         this.profile = data.profile;
         this.title = data.title;
         this.content = data.content;
