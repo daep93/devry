@@ -6,6 +6,7 @@
           :name="$i.ionHeartOutline"
           style="color:#727272"
           size="17px"
+          class="cursor-pointer"
         ></q-icon>
         <br />
         <span>8</span>
