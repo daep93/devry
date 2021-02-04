@@ -44,7 +44,7 @@
             color="primary"
             id="follow-btn"
             label="Follow"
-            @click="checkFollow(index)"
+            @click="checkFollow"
             style="width: 200px"
             class="q-mb-sm"
           />
@@ -55,7 +55,7 @@
             outline
             color="primary"
             label="Following"
-            @click="checkFollow(index)"
+            @click="checkFollow"
             style="width: 220px"
             class="q-mb-sm"
           />
@@ -98,8 +98,21 @@ export default {
       title: 'Add a YouTube stats widget to your iPhone with JavaScript',
       username: 'Test User',
       profile_img: 'https://cdn.quasar.dev/img/avatar.png',
-      follow: true,
+      follow: false,
     };
+  },
+  methods: {
+    checkFollow() {
+      this.follow = !this.follow;
+      console.log('111');
+
+      // for (const btn of this.follow) {
+      //   if (this.follow.indexOf(btn) === index) {
+      //     btn.follow = !btn.follow;
+      //     console.log(btn);
+      //   }
+      // }
+    },
   },
 };
 </script>
