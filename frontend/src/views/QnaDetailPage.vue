@@ -10,7 +10,7 @@
       <div class="row col-2 q-mt-lg">
         <div class="row col-9"></div>
         <div class="row col-3">
-          <qna-detail-status></qna-detail-status>
+          <qna-detail-status :info="status"></qna-detail-status>
         </div>
       </div>
       <div class="row col-10 q-mt-lg ">
@@ -53,7 +53,7 @@ import QnaDetailContent from '@/components/qna/QnaDetailContent';
 import QnaShortProfile from '@/components/qna/QnaShortProfile';
 import QnaBigComment from '@/components/qna/QnaBigComment';
 import QnaDetailStatus from '@/components/qna/QnaDetailStatus';
-
+import { loadQnaItem } from '@/api/qnaCreate';
 export default {
   components: {
     QnaDetailContent,
@@ -67,6 +67,7 @@ export default {
       username: 'test user',
       profile_img: 'https://cdn.quasar.dev/img/avatar.png',
       writerStatus: false,
+      contents: '',
     };
   },
   methods: {
@@ -75,12 +76,45 @@ export default {
     },
     checkWriter() {
       // 글 작성자 판별
-      if (this.$store.state.id === this.QnaDetailData.user_info.userid) {
+      if (this.$store.state.id === this.contents.user.id) {
         this.writerStatus = true;
       }
     },
   },
-  created() {
+  computed: {
+    status() {
+      return {
+        like_num: this.contents.like_num,
+        liked: this.contents.liked,
+        bookmarked: this.contents.bookmarked,
+        bookmark_num: this.contents.bookmark_num,
+        viewed_num: this.contents.viewed_num,
+        comment_num: this.contents.qnasmall_set,
+      };
+    },
+    questBody() {
+      return {
+        title: this.contents.title,
+        ref_tags: this.contents.ref_tags,
+        contents: this.contents.contents,
+        qnasmall_set: this.contents.qnasmall_set,
+      };
+    },
+    shortProfile() {
+      return '';
+    },
+    bigComment() {
+      return '';
+    },
+  },
+  async created() {
+    const index = this.$route.params.id;
+    try {
+      const { data } = await loadQnaItem(index);
+      this.contents = data;
+    } catch (error) {
+      console.log(error);
+    }
     this.checkWriter();
   },
 };

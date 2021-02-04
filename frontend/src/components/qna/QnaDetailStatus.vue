@@ -21,7 +21,7 @@
           ></q-icon>
         </template>
         <br />
-        <span>{{ quest_post.like_num }}</span>
+        <span>{{ info.like_num }}</span>
         <br />
         <br />
         <q-icon
@@ -30,12 +30,12 @@
           size="17px"
         ></q-icon>
         <br />
-        <span>2</span>
+        <span>{{ info.comment_num.length }}</span>
         <br />
         <br />
         <q-icon :name="$i.ionEyeOutline" color="grey-6" size="17px"></q-icon>
         <br />
-        <span>21</span>
+        <span>{{ info.viewed_num }}</span>
         <br />
         <br />
         <q-icon
@@ -45,7 +45,7 @@
           class="cursor-pointer"
         ></q-icon>
         <br />
-        <span>{{ quest_post.bookmarked_num }}</span>
+        <span>{{ info.bookmark_num }}</span>
       </div>
     </q-card>
   </div>
@@ -53,6 +53,9 @@
 
 <script>
 export default {
+  props: {
+    info: Object,
+  },
   data() {
     return {
       writer_info: {
