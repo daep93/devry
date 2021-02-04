@@ -30,4 +30,17 @@ export default {
     'react',
   ],
   selectedTags: [],
+  allTags: [
+    'javascript',
+    'vue.js',
+    'python3',
+    'backend',
+    'frontend',
+    'angular',
+    'django',
+    'java',
+    'typescript',
+    'docker',
+    'react',
+  ],
 };
