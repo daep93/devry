@@ -9,8 +9,11 @@
       <q-card-section>
         <div class="row col-12">
           <div class="row col-2">
-            <span style="cursor:pointer;" class="q-mt-xs">
-              <q-avatar @click="goToProfile" style="width: 35px; height: 35px;"
+            <span class="q-mt-xs">
+              <q-avatar
+                @click="goToProfile"
+                style="width: 35px; height: 35px;"
+                class="cursor-pointer"
                 ><img :src="profile_img" />
               </q-avatar>
             </span>
@@ -19,10 +22,10 @@
             <div class="row col-12">
               <div
                 class="q-pl-lg"
-                style="font-size: 15px; cursor:pointer; color: #464646"
+                style="font-size: 15px; color: #464646"
                 @click="goToProfile"
               >
-                <b>{{ username }}</b>
+                <b class="cursor-pointer">{{ username }}</b>
                 <div class="text-caption">
                   글 27 · 팔로워 57
                 </div>
@@ -38,7 +41,7 @@
         </div>
       </div>
       <div style="margin:0 auto;">
-        <div v-if="follow">
+        <template v-if="follow">
           <q-btn
             no-caps
             color="primary"
@@ -48,8 +51,8 @@
             style="width: 200px"
             class="q-mb-sm"
           />
-        </div>
-        <div v-else>
+        </template>
+        <template v-else>
           <q-btn
             no-caps
             outline
@@ -59,7 +62,7 @@
             style="width: 220px"
             class="q-mb-sm"
           />
-        </div>
+        </template>
       </div>
     </q-card>
     <q-card
@@ -71,7 +74,7 @@
       <div class="q-px-md q-pb-sm">
         <div style="font-size: 13px;">
           <div class="q-my-sm">
-            <span class="text-weight-bold" style="color: #598FFC"
+            <span class="text-weight-bold cursor-pointer" style="color: #598FFC"
               >Test User</span
             >
             <span>님의 글 더보기</span>
@@ -104,7 +107,7 @@ export default {
   methods: {
     checkFollow() {
       this.follow = !this.follow;
-      console.log('111');
+      console.log(this.follow);
 
       // for (const btn of this.follow) {
       //   if (this.follow.indexOf(btn) === index) {
