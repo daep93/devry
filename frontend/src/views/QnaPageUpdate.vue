@@ -158,7 +158,7 @@ export default {
           // 넘길 데이터 적어주기
           title: this.title,
           // profile: this.profile.user,
-          user: this.user,
+          user: this.user.id,
           content: this.content,
           ref_tags: this.ref_tags,
         });
