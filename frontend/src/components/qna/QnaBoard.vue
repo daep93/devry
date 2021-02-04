@@ -76,7 +76,14 @@ export default {
     },
     selectedTags() {
       // store의 selectedTags가 바뀌면 새로운 게시판의 정보를 서버로부터 받아옴
-      this.loadBoard();
+      // this.loadBoard();
+      this.board = this.board.filter(post => {
+        for (const tag of post.ref_tags) {
+          if (this.$store.state.allTags.indexOf(tag.toLowerCase()) >= 0)
+            return true;
+        }
+        return false;
+      });
     },
   },
   methods: {

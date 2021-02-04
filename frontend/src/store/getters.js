@@ -15,7 +15,7 @@ export default {
     return state.nickname;
   },
   getMyTags(state) {
-    return state.id !== '' ? ['javascript', 'vue', 'python'] : state.myTags;
+    return state.id !== '' ? ['javascript', 'vue.js', 'python3'] : state.myTags;
   },
   getSelectedTags(state) {
     return state.selectedTags;
