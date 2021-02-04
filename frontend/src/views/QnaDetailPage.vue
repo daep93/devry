@@ -80,6 +80,9 @@ export default {
       }
     },
   },
+  created() {
+    this.checkWriter();
+  },
 };
 </script>
 
