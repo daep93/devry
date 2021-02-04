@@ -18,8 +18,8 @@
 
         <div class="row q-mr-xs q-gutter-sm q-mb-sm col-12">
           <span
-            v-for="tag in entity.ref_tags"
-            :key="tag"
+            v-for="(tag, index) in entity.ref_tags"
+            :key="index"
             :style="{ 'background-color': tagColor(tag, 0.5) }"
             style="font-size:0.8em; border-radius:3pt;"
             class="q-px-xs"
