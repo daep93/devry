@@ -62,7 +62,7 @@
             {{ entity.profile.username }}
           </div>
           <div class="text-weight-thin col-12" style="font-size:8pt">
-            {{ entity.writtenTime | moment('YYYY/MM/DD HH:mm') }}
+            {{ entity.written_time | moment('YYYY/MM/DD HH:mm') }}
           </div>
         </div>
       </div>

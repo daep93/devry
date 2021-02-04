@@ -57,9 +57,22 @@ export default {
     this.loadBoard();
   },
   watch: {
-    sort() {
+    sort(newValue) {
       // sort를 감시해서 바뀌면 새로운 게시판의 정보를 서버로부터 받아옴
-      this.loadBoard();
+      // this.loadBoard();
+      if (newValue === 'time') {
+        this.board.sort((item1, item2) => {
+          return (
+            this.$moment(item2.written_time) - this.$moment(item1.written_time)
+          );
+        });
+      } else if (newValue === 'comment') {
+        this.board.sort(
+          (item1, item2) => item2.comment_num - item1.comment_num,
+        );
+      } else {
+        this.board.sort((item1, item2) => item2.like_num - item1.like_num);
+      }
     },
     selectedTags() {
       // store의 selectedTags가 바뀌면 새로운 게시판의 정보를 서버로부터 받아옴
@@ -71,12 +84,12 @@ export default {
     async loadBoard() {
       try {
         this.$q.loading.show();
-        const { data } = await getQnaList({
-          tags_filter: this.selectedTags,
-          tab: this.sort,
-        });
+        // const { data } = await getQnaList({
+        //   tags_filter: this.selectedTags,
+        //   tab: this.sort,
+        // });
+        const { data } = await getQnaList();
         this.board = data;
-        console.log(data);
       } catch (error) {
         console.log(error);
       } finally {
