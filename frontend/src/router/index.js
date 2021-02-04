@@ -49,6 +49,7 @@ const routes = [
     component: () => import('@/views/ForumPage.vue'),
   },
   {
+    // 추후 id값으로 수정 필요
     path: '/forum/forum-detail',
     name: 'ForumDetail',
     component: () => import('@/views/ForumDetailPage.vue'),
