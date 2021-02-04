@@ -45,6 +45,11 @@ const routes = [
     component: () => import('@/views/QnaPageCreate.vue'),
   },
   {
+    path: '/qna/:id',
+    name: 'QnAUpdate',
+    component: () => import('@/views/QnaPageUpdate.vue'),
+  },
+  {
     path: '/markdown',
     name: 'Markdown',
     component: () => import('@/views/Markdown.vue'),

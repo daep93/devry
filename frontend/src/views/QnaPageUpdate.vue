@@ -69,7 +69,7 @@
           class="text-weight-bold q-px-xl q-py-sm"
           label="작성하기"
           size="md"
-          @click="createQna"
+          @click="updateQna"
         />
       </div>
     </div>
@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import { createQnaItem } from '@/api/qnaCreate';
+import { loadQnaItem, updateQnaItem } from '@/api/qnaCreate';
 
 import Vue from 'vue';
 import VMdEditor from '@kangc/v-md-editor';
@@ -134,32 +134,31 @@ export default {
     removeTag(tag, index) {
       this.ref_tags.splice(index, 1);
     },
-    // 게시글 생성하기
-    async createQna() {
+    // qna 게시글 수정하기
+    async updateQna() {
       if (this.title === '') {
         alert('제목은 필수 입력 항목입니다');
       }
       if (this.ref_tags.length === 0) {
         alert('태그를 하나이상 입력해주세요');
       }
-      if (this.content === '') {
+      if (this.contents === '') {
         alert('내용은 필수 입력항목 입니다');
       }
       try {
         console.log('성공!');
-        console.log(this.$store.state.id)
-        console.log(this.$store.state)
-
+        console.log(this.profile)
+        console.log(this.profile.user)
+        // post_id 넘겨주기
+        const post_id = this.$route.params.id;
         this.$q.loading.show();
-        await createQnaItem({
+        await updateQnaItem(post_id, {
           // 넘길 데이터 적어주기
           title: this.title,
-          // TODO : profile 번호를 어떻게 가져와야 하는 지..?(현재 로그인된 유저 번호를 하드 코딩하면 작성가능!)
-          profile: this.$store.state.id,
+          profile: this.profile.user,
           content: this.content,
           ref_tags: this.ref_tags,
         });
-        console.log('페이지 이동 전까지 성공?');
         // 이동 시킬 페이지 적어주기(QnA 게시판으로 이동)
         this.$router.push({path: '/qna'});
       } catch (error) {
@@ -170,19 +169,24 @@ export default {
       }
     },
   },
-  // profile 정보 가져오기
-  // async created() {
-  //   try {
-  //     this.$q.loading.show();
-  //     const { data } = await loadQnaProfile();
-  //       this.profile = data.profile;
-  //   } catch (error) {
-  //     console.log(error)
-  //     // alert('에러가 발생했습니다.)
-  //   } finally {
-  //     this.$q.loading.hide();
-  //   }
-  // },
+  // qna 게시글 수정하기(기존 정보 가져오기)
+  async created() {
+    // id 가져오기
+    const post_id = this.$route.params.id;
+    try {
+      this.$q.loading.show();
+      const { data } = await loadQnaItem(post_id);
+        this.profile = data.profile;
+        this.title = data.title;
+        this.content = data.content;
+        this.ref_tags = data.ref_tags;
+    } catch (error) {
+      console.log(error)
+      // alert('에러가 발생했습니다.)
+    } finally {
+      this.$q.loading.hide();
+    }
+  },
   computed: {
     isValid() {
       return this.tagItem === '' || this.ref_tags.length > 0;
