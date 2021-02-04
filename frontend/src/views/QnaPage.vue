@@ -1,13 +1,8 @@
 <template>
   <div class="row justify-center q-pt-lg ">
     <div class="row col-8 justify-center q-pl-lg">
-      <div class="row q-mb-sm col-10 text-h5 text-weight-bold">
+      <div class="row q-mb-sm col-12 text-h5 text-weight-bold">
         QnA 게시판
-      </div>
-      <div class="row col-2 q-pl-xl q-mb-sm">
-        <span class="q-pl-xl q-pb-sm"
-          ><q-btn color="primary" label="글 작성" size="sm"
-        /></span>
       </div>
 
       <!-- 게시판 보드 -->
