@@ -19,8 +19,8 @@
 import HeaderBanner from '@/components/profile/HeaderBanner';
 import SideBanner from '@/components/profile/SideBanner';
 import PostBanner from '@/components/profile/PostBanner';
-// import { getProfile } from '@/api/profile.js';
-import { testCase } from '@/dummy/Profile';
+import { getProfile } from '@/api/profile.js';
+// import { testCase } from '@/dummy/Profile';
 export default {
   components: {
     HeaderBanner,
@@ -37,7 +37,7 @@ export default {
     headerInfo() {
       return {
         username: this.profile.username,
-        location: this.profile.location,
+        region: this.profile.region,
         group: this.profile.group,
         email: this.profile.email,
         links: this.profile.links,
@@ -66,17 +66,16 @@ export default {
     },
   },
   async created() {
-    // const id = this.$route.params.id;
-    // try {
-    //   this.$q.loading.show();
-    //   const { data } = await getProfile(id);
-    //   this.profile = data;
-    // } catch (error) {
-    //   console.log(error);
-    // } finally {
-    //   this.$q.loading.hide();
-    // }
-    this.profile = testCase;
+    const id = this.$route.params.id;
+    try {
+      this.$q.loading.show();
+      const { data } = await getProfile(id);
+      this.profile = data;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      this.$q.loading.hide();
+    }
   },
 };
 </script>
