@@ -90,6 +90,7 @@ export default {
         bookmark_num: this.contents.bookmark_num,
         viewed_num: this.contents.viewed_num,
         comment: this.contents.qnasmall_set,
+        post_id: this.contents.id,
       };
     },
     questBody() {

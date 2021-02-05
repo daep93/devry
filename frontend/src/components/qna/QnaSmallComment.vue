@@ -106,6 +106,10 @@ export default {
   },
   methods: {
     checkLiked(index) {
+      if (!this.$store.getters.isLogined) {
+        alert('로그인을 해주세요');
+        return;
+      }
       for (const heart of this.comments) {
         if (this.answers.indexOf(heart) === index) {
           heart.liked = !heart.liked;
