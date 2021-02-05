@@ -25,19 +25,21 @@
                 style="font-size: 15px; color: #464646"
                 @click="goToProfile"
               >
-                <b class="cursor-pointer">{{ username }}</b>
-                <div class="text-caption">
-                  글 27 · 팔로워 57
+                <b class="cursor-pointer">{{
+                  profile ? profile.username : info.user.username
+                }}</b>
+                <div class="text-caption row">
+                  글 {{ profile ? profile.post_num : 0 }} · 팔로워
+                  {{ profile ? profile.follow_num : 0 }}
                 </div>
               </div>
             </div>
           </div>
         </div>
       </q-card-section>
-      <div class="q-px-md q-pb-md">
+      <div class="q-px-md q-pb-md" v-if="profile">
         <div style="font-size: 13px;">
-          FE Engineer for en expensive cars company. Archer at night. Ask me
-          about company culture, side projects, performance and Vue.
+          {{ profile.bio }}
         </div>
       </div>
       <div style="margin:0 auto;">
@@ -70,24 +72,26 @@
       bordered
       class="my-card row col-12 q-px-sm q-pt-md"
       style="max-width: 250px; max-height: 280px;"
+      v-if="profile"
     >
       <div class="q-px-md q-pb-sm">
         <div style="font-size: 13px;">
           <div class="q-my-sm">
-            <span class="text-weight-bold cursor-pointer" style="color: #598FFC"
-              >Test User</span
+            <span
+              class="text-weight-bold cursor-pointer"
+              style="color: #598FFC"
+              >{{ profile.username }}</span
             >
             <span>님의 글 더보기</span>
           </div>
+          <template v-for="post in profile.pinned">
+            <q-separator :key="post.title" />
+            <div class="q-my-sm" :key="post.title">
+              {{ post.title }}
+            </div>
+          </template>
+
           <q-separator />
-          <div class="q-my-sm">
-            FE Engineer for en expensive cars company.
-          </div>
-          <q-separator />
-          <div class="q-my-sm">
-            Archer at night. Ask me about company culture, side projects,
-            performance and Vue.
-          </div>
         </div>
       </div>
     </q-card>
@@ -96,6 +100,9 @@
 
 <script>
 export default {
+  props: {
+    info: Object,
+  },
   data() {
     return {
       title: 'Add a YouTube stats widget to your iPhone with JavaScript',
@@ -106,12 +113,20 @@ export default {
   },
   methods: {
     checkFollow() {
-      this.follow = !this.follow;
-      console.log(this.follow);
+      if (!this.$store.getters.isLogined) alert('로그인이 필요합니다!');
+      else {
+        // TODO : follow API 연결 필요
+        this.follow = !this.follow;
+      }
     },
     goToProfile() {
       console.log('click!');
       this.$router.push({ name: 'Profile' });
+    },
+  },
+  computed: {
+    profile() {
+      return this.info.profile;
     },
   },
 };

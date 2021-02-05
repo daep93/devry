@@ -7,10 +7,10 @@ import './quasar';
 Vue.use(VueMoment);
 Vue.config.productionTip = false;
 
-import Plugin from '@quasar/quasar-ui-qmarkdown'
-import '@quasar/quasar-ui-qmarkdown/dist/index.css'
+import Plugin from '@quasar/quasar-ui-qmarkdown';
+import '@quasar/quasar-ui-qmarkdown/dist/index.css';
 
-Vue.use(Plugin)
+Vue.use(Plugin);
 
 // import {
 //   Quasar,

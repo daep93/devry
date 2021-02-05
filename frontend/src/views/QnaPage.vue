@@ -6,7 +6,7 @@
       </div>
 
       <!-- 게시판 보드 -->
-      <qna-board></qna-board>
+      <qna-board :current="current"></qna-board>
       <div class="row q-mt-md col-12 q-mb-xl justify-between">
         <!-- 답변 완료 표기 -->
         <div class="col-3 row q-py-xs">
@@ -55,7 +55,7 @@ export default {
   },
   data() {
     return {
-      current: 3,
+      current: 1,
       tagFilter: false,
     };
   },
