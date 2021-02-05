@@ -79,6 +79,7 @@ export default {
     return {
       msg: true,
       comments: this.info.comments,
+      solved: this.info.solved,
       tags: ['Vue', 'Javascript', 'Typescript'],
       writerStatus: false,
       QnaDetailData: {

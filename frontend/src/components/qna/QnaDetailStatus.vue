@@ -2,26 +2,15 @@
   <div class="q-pl-md">
     <q-card flat bordered style="width: 40px; height: 245px;">
       <div style="margin:0 auto; text-align:center" class="q-pt-sm">
-        <template v-if="writer_info.liked">
-          <q-icon
-            :name="$i.ionHeartOutline"
-            style="color:#727272"
-            size="17px"
-            class="cursor-pointer"
-            @click="checkLiked"
-          ></q-icon>
-        </template>
-        <template v-else>
-          <q-icon
-            :name="$i.ionHeart"
-            color="red"
-            size="17px"
-            class="cursor-pointer"
-            @click="checkLiked"
-          ></q-icon>
-        </template>
+        <q-icon
+          :name="liked ? $i.ionHeart : $i.ionHeartOutline"
+          :style="{ color: liked ? 'red' : '#727272' }"
+          size="17px"
+          class="cursor-pointer"
+          @click="checkLiked"
+        ></q-icon>
         <br />
-        <span>{{ info.like_num }}</span>
+        <span>{{ like_num }}</span>
         <br />
         <br />
         <q-icon
@@ -52,12 +41,15 @@
 </template>
 
 <script>
+import { toggleQnaLike } from '@/api/qnaPost';
 export default {
   props: {
     info: Object,
   },
   data() {
     return {
+      liked: this.info.liked,
+      like_num: this.info.like_num,
       writer_info: {
         userid: 1,
         username: 'fe-master',
@@ -89,12 +81,21 @@ export default {
     };
   },
   methods: {
-    checkLiked() {
-      this.writer_info.liked = !this.writer_info.liked;
-      if (this.writer_info.liked) {
-        this.quest_post.like_num = this.quest_post.like_num - 1;
-      } else {
-        this.quest_post.like_num = this.quest_post.like_num + 1;
+    async checkLiked() {
+      if (!this.$store.getters.isLogined) {
+        alert('로그인을 해주세요');
+        return;
+      }
+      try {
+        const { data } = await toggleQnaLike(this.info.post_id);
+        this.liked = !this.liked;
+        if (this.liked) {
+          this.like_num = this.like_num + 1;
+        } else {
+          this.like_num = this.like_num - 1;
+        }
+      } catch (error) {
+        console.log(error);
       }
     },
   },

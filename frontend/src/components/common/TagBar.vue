@@ -19,16 +19,17 @@
             'transition-timing-function': 'ease-in-out',
           }"
         >
-          <q-card-section
+          <!-- <q-card-section
             :style="{
               color: flag ? subColor(tag) : 'black',
               'font-size': '1.2em',
               'transition-duration': '0.5s',
               'transition-timing-function': 'ease-in-out',
             }"
+            class="q-pb-none"
           >
             #{{ tag }}
-          </q-card-section>
+          </q-card-section> -->
 
           <q-card-section>
             <q-btn
@@ -43,7 +44,9 @@
               @click="toggleFollow(tag)"
             >
               <div class="row items-center">
+                <div>#{{ tag }}</div>
                 <q-icon
+                  size="xs"
                   :name="$i.ionCheckmarkOutline"
                   v-if="flag"
                   :style="{
@@ -52,7 +55,6 @@
                     'transition-timing-function': 'ease-in-out',
                   }"
                 ></q-icon>
-                <div>{{ flag ? 'checked' : 'check' }}</div>
               </div>
             </q-btn>
           </q-card-section>
@@ -129,7 +131,7 @@ export default {
   },
   created() {
     for (const tag of this.$store.getters.getMyTags) {
-      this.tags[tag] = true;
+      this.tags[tag.toLowerCase()] = true;
     }
   },
 };
