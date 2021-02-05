@@ -19,9 +19,12 @@
           @keypress.enter="createTag"
         >
         </q-input>
-        <div class="relative-position z-top row col-3">
-          <div v-for="item in suggests" class="col-12" :key="item">
-            {{ item }}
+        <!-- 자동완성 -->
+        <div class="row col-12">
+          <div class="row col-3 bg-blue-1" style="position: absolute; z-index:999; border-radius: 5px;">
+            <div v-for="item in suggests" class="col-12 q-py-md q-px-md" :key="item">
+              {{ item }}
+            </div>
           </div>
         </div>
         <!-- 태그 보여주기 -->
@@ -44,24 +47,25 @@
           :toolbar="toolbar"
         >
         </v-md-editor>
-      </div>
-      <!-- 버튼 -->
-      <div class="q-mb-xl q-mt-xl" style="text-align: center;">
-        <q-btn
-          outline
-          color="blue-12"
-          class="text-weight-bold q-px-xl q-py-sm q-mr-md"
-          label="임시저장"
-          size="md"
-        />
-        <q-btn
-          color="blue-12"
-          class="text-weight-bold q-px-xl q-py-sm"
-          label="작성하기"
-          size="md"
-          @click="createQna"
-        />
-      </div>
+        </div>
+        <!-- 버튼 -->
+        <div class="q-mb-xl q-mt-xl" style="text-align: center;">
+          <q-btn
+            outline
+            color="blue-12"
+            class="text-weight-bold q-px-xl q-py-sm q-mr-md"
+            label="임시저장"
+            size="md"
+          />
+          <q-btn
+            color="blue-12"
+            class="text-weight-bold q-px-xl q-py-sm"
+            label="작성하기"
+            size="md"
+            @click="createQna"
+          />
+        </div>
+        
     </div>
   </div>
 </template>
