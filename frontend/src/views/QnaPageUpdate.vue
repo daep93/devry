@@ -32,8 +32,8 @@
           </li>
         </ul>
         <!-- 마크다운 에디터 -->
-        <v-md-editor 
-          v-model="content" 
+        <v-md-editor
+          v-model="content"
           height="800px"
           left-toolbar="undo redo clear | h bold italic strikethrough quote ul ol table hr link image imageLink uploadImage video code save"
           :toolbar="toolbar"
@@ -44,10 +44,11 @@
       <div class="q-mb-xl q-mt-xl" style="text-align: center;">
         <q-btn
           outline
-          color="blue-12"
+          color="red-12"
           class="text-weight-bold q-px-xl q-py-sm q-mr-md"
-          label="임시저장"
+          label="삭제하기"
           size="md"
+          @click="deleteQna"
         />
         <q-btn
           color="blue-12"
@@ -62,7 +63,7 @@
 </template>
 
 <script>
-import { loadQnaItem, updateQnaItem } from '@/api/qnaCreate';
+import { loadQnaItem, updateQnaItem, deleteQnaItem } from '@/api/qnaCreate';
 
 import Vue from 'vue';
 import VMdEditor from '@kangc/v-md-editor';
@@ -86,7 +87,7 @@ export default {
         // TODO : icon 변경하기
         icon: 'v-md-icon-tip',
         action(editor) {
-          editor.insert(function (selected) {
+          editor.insert(function(selected) {
             const imagetxt = 'Image text';
             const image = 'Screenshot image URL';
             const youtube = 'Youtube Link';
@@ -122,9 +123,6 @@ export default {
     },
     // qna 게시글 수정하기
     async updateQna() {
-      if (this.user.id !== this.$store.state.id) {
-        alert('글 작성자가 아닙니다.')
-      }
       if (this.title === '') {
         alert('제목은 필수 입력 항목입니다');
       }
@@ -146,10 +144,23 @@ export default {
           ref_tags: this.ref_tags,
         });
         // 이동 시킬 페이지 적어주기(QnA 게시판으로 이동)
-        this.$router.push({path: '/qna'});
+        this.$router.push({ path: '/qna' });
       } catch (error) {
         console.log(error);
         // alert('에러가 발생했습니다!')
+      } finally {
+        this.$q.loading.hide();
+      }
+    },
+    async deleteQna() {
+      try {
+        const post_id = this.$route.params.id;
+        this.$q.loading.show();
+        await deleteQnaItem(post_id);
+        // 이동 시킬 페이지 적어주기(QnA 게시판으로 이동)
+        this.$router.push({ path: '/qna' });
+      } catch (error) {
+        console.log(error);
       } finally {
         this.$q.loading.hide();
       }
@@ -162,13 +173,13 @@ export default {
     try {
       this.$q.loading.show();
       const { data } = await loadQnaItem(post_id);
-        this.user = data.user;
-        this.profile = data.profile;
-        this.title = data.title;
-        this.content = data.content;
-        this.ref_tags = data.ref_tags;
+      this.user = data.user;
+      this.profile = data.profile;
+      this.title = data.title;
+      this.content = data.content;
+      this.ref_tags = data.ref_tags;
     } catch (error) {
-      console.log(error)
+      console.log(error);
       // alert('에러가 발생했습니다.)
     } finally {
       this.$q.loading.hide();

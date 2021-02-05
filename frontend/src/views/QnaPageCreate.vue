@@ -19,8 +19,13 @@
           @keypress.enter="createTag"
         >
         </q-input>
+        <div class="relative-position z-top row col-3">
+          <div v-for="item in suggests" class="col-12" :key="item">
+            {{ item }}
+          </div>
+        </div>
         <!-- 태그 보여주기 -->
-        <ul class="row">
+        <ul class="row relative-position" style="">
           <li
             class="q-mb-xs cursor-pointer"
             v-for="(tag, index) in ref_tags"
@@ -32,8 +37,8 @@
           </li>
         </ul>
         <!-- 마크다운 에디터 -->
-        <v-md-editor 
-          v-model="content" 
+        <v-md-editor
+          v-model="content"
           height="800px"
           left-toolbar="undo redo clear | h bold italic strikethrough quote ul ol table hr link image imageLink uploadImage video code save"
           :toolbar="toolbar"
@@ -70,7 +75,7 @@ import '@kangc/v-md-editor/lib/style/base-editor.css';
 import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
 import '@kangc/v-md-editor/lib/theme/style/github.css';
 import koKR from '@kangc/v-md-editor/lib/lang/ko-KR';
-
+import { filtered_tags } from '@/utils/autoComplete';
 VMdEditor.lang.use('ko-KR', koKR);
 
 VMdEditor.use(githubTheme);
@@ -86,7 +91,7 @@ export default {
         // TODO : icon 변경하기
         icon: 'v-md-icon-tip',
         action(editor) {
-          editor.insert(function (selected) {
+          editor.insert(function(selected) {
             const imagetxt = 'Image text';
             const image = 'Screenshot image URL';
             const youtube = 'Youtube Link';
@@ -109,10 +114,11 @@ export default {
     };
   },
   methods: {
-    createTag(tagItem) {
+    createTag() {
       if (this.tagItem !== '') {
-        console.log(this.tagItem);
-        this.ref_tags.push(this.tagItem);
+        const str =
+          this.tagItem.charAt(0).toUpperCase() + this.tagItem.slice(1);
+        this.ref_tags.push(str);
         this.tagItem = '';
       }
     },
@@ -131,9 +137,8 @@ export default {
         alert('내용은 필수 입력항목 입니다');
       }
       try {
-        console.log('성공!');
-        console.log(this.$store.state.id)
-        console.log(this.$store.state)
+        console.log(this.$store.state.id);
+        console.log(this.$store.state);
 
         this.$q.loading.show();
         await createQnaItem({
@@ -145,7 +150,7 @@ export default {
         });
         console.log('페이지 이동 전까지 성공?');
         // 이동 시킬 페이지 적어주기(QnA 게시판으로 이동)
-        this.$router.push({path: '/qna'});
+        this.$router.push({ path: '/qna' });
       } catch (error) {
         console.log(error);
         // alert('에러가 발생했습니다!')
@@ -157,6 +162,9 @@ export default {
   computed: {
     isValid() {
       return this.tagItem === '' || this.ref_tags.length > 0;
+    },
+    suggests() {
+      return filtered_tags(this.tagItem);
     },
   },
 };

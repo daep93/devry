@@ -28,7 +28,7 @@
     </div>
     <div class="row q-mt-md col-12">
       <qna-entity
-        v-for="quest in board"
+        v-for="quest in board.slice((current - 1) * 10, current * 10)"
         :key="quest.questId"
         :entity="quest"
       ></qna-entity>
@@ -40,6 +40,9 @@
 import QnaEntity from '@/components/qna/QnaEntity.vue';
 import { getQnaList } from '@/api/board';
 export default {
+  props: {
+    current: Number,
+  },
   components: {
     QnaEntity,
   },
