@@ -18,9 +18,9 @@
                 {{ data.written_time | moment('YYYY/MM/DD HH:mm') }}
               </span>
             </div>
-            <div class="q-pl-xl row col-2">
+            <!-- <div class="q-pl-xl row col-2">
               <div class="row items-center">
-                <div v-if="data.liked" class="q-mr-xs q-ml-xl">
+                <div v-if="comments[index].liked" class="q-mr-xs q-ml-xl">
                   <q-icon
                     :name="$i.ionHeartOutline"
                     style="color:#727272"
@@ -42,7 +42,7 @@
                   {{ data.like_num }}
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
           <div class="q-ml-lg q-py-xs row col-12">
             {{ data.content }}
@@ -110,15 +110,13 @@ export default {
         alert('로그인을 해주세요');
         return;
       }
-      for (const heart of this.comments) {
-        if (this.answers.indexOf(heart) === index) {
-          heart.liked = !heart.liked;
-          if (heart.liked) {
-            heart.like_num = heart.like_num - 1;
-          } else {
-            heart.like_num = heart.like_num + 1;
-          }
-        }
+      const heart = this.comments[index];
+
+      heart.liked = !heart.liked;
+      if (heart.liked) {
+        heart.like_num = heart.like_num - 1;
+      } else {
+        heart.like_num = heart.like_num + 1;
       }
     },
     async setSmallAnswer() {
