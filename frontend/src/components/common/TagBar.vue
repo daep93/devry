@@ -99,6 +99,12 @@ export default {
         python3: false,
         react: false,
         javascript: false,
+        spring: false,
+        html5: false,
+        css3: false,
+        mysql: false,
+        mariadb: false,
+        'node.js': false,
       },
     };
   },
