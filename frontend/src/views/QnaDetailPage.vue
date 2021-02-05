@@ -101,6 +101,7 @@ export default {
         written_time: this.contents.written_time,
         solved: this.contents.solved,
         user_id: this.contents.user.id,
+        user_name: this.contents.user.username,
         post_id: this.contents.id,
       };
     },

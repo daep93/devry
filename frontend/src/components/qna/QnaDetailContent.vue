@@ -51,7 +51,13 @@
         <q-btn @click="qnaPostEdit">수정하기</q-btn>
       </q-card-section>
       <q-card-section class="row col-12">
-        <qna-small-comment :comments="info.comments"></qna-small-comment>
+        <qna-small-comment
+          :comments="comments"
+          :user_id="info.user_id"
+          :post_id="info.post_id"
+          :usernmae="info.username"
+          @reloadSmallAns="reloadSmallAns"
+        ></qna-small-comment>
       </q-card-section>
     </q-card>
   </div>
@@ -60,6 +66,7 @@
 <script>
 import QnaSmallComment from '@/components/qna/QnaSmallComment';
 import { colorSoloMapper } from '@/utils/tagColorMapper';
+import { getSmallAnswer } from '@/api/qnaPost';
 
 export default {
   props: {
@@ -71,6 +78,7 @@ export default {
   data: function() {
     return {
       msg: true,
+      comments: this.info.comments,
       tags: ['Vue', 'Javascript', 'Typescript'],
       writerStatus: false,
       QnaDetailData: {
@@ -167,6 +175,13 @@ export default {
     },
     qnaPostEdit() {
       this.$router.push(`/qna/${this.info.post_id}`);
+    },
+    async reloadSmallAns() {
+      try {
+        this.comments = await getSmallAnswer(this.info.post_id);
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };

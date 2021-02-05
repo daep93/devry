@@ -10,7 +10,7 @@
         >
           <div class="row col-12 justify-between">
             <div class="row col-10">
-              <span class="q-mr-xs">{{ data.id }}</span>
+              <span class="q-mr-xs">{{ index + 1 }}</span>
               <span class="q-mr-sm" style="color: blue">
                 @{{ data.username }}
               </span>
@@ -45,28 +45,41 @@
             </div>
           </div>
           <div class="q-ml-lg q-py-xs row col-12">
-            {{ data.contents }}
+            {{ data.content }}
           </div>
         </div>
       </div>
     </div>
     <q-separator />
     <div class="q-mt-sm row col-12">
-      <q-input borderless v-model="text" placeholder="댓글을 입력해주세요" />
+      <q-input
+        borderless
+        v-model="text"
+        placeholder="댓글을 입력해주세요"
+        class="full-width"
+      />
     </div>
     <div class="row col-12">
       <div class="row col-10"></div>
       <div class="row col-2 q-pl-xl q-mb-lg">
-        <q-btn color="primary" label="댓글 추가" size="md" />
+        <q-btn
+          color="primary"
+          label="댓글 추가"
+          size="md"
+          @click="setSmallAnswer"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { registerSmallAnswer } from '@/api/qnaPost';
 export default {
   props: {
     comments: Array,
+    user_id: Number,
+    post_id: Number,
   },
   data: function() {
     return {
@@ -93,7 +106,7 @@ export default {
   },
   methods: {
     checkLiked(index) {
-      for (const heart of this.answers) {
+      for (const heart of this.comments) {
         if (this.answers.indexOf(heart) === index) {
           heart.liked = !heart.liked;
           if (heart.liked) {
@@ -102,6 +115,23 @@ export default {
             heart.like_num = heart.like_num + 1;
           }
         }
+      }
+    },
+    async setSmallAnswer() {
+      try {
+        this.$q.loading.show();
+        const { data } = await registerSmallAnswer({
+          qna: this.post_id,
+          content: this.text,
+          userid: this.user_id,
+          username: this.user_name,
+        });
+        this.text = '';
+        this.$emit('reloadSmallAns');
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.$q.loading.hide();
       }
     },
   },
