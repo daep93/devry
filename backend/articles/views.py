@@ -4,8 +4,10 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from .serializers import ArticleListSerializer, ArticleSerializer, CommentSerializer, likeSerializer, bookmarkSerializer
+from .serializers import ArticleListSerializer, ArticleSerializer, CommentSerializer, likeSerializer, bookmarkSerializer, PinnedSerializer
 from .models import Article, Comment
+from accounts.serializers import TokenSerializer
+from accounts.models import User
 from rest_framework import viewsets
 
 
@@ -52,7 +54,8 @@ def article_list_create(request):
 def article_detail_update_delete(request, article_pk):
     article = get_object_or_404(Article, pk=article_pk)
     article.like_num = article.like_users.count()  # like_num check
-    article.bookmarked_num = article.like_users.count()  # bookmark_num check
+    article.bookmarked_num = article.bookmark_users.count()  # bookmark_num check
+    article.pinned_num = article.pinned_users.count()
     article.viewed_num = article.viewed_num + 1 # viewed_num++
     article.save()
     # like_check
@@ -62,10 +65,15 @@ def article_detail_update_delete(request, article_pk):
         article.liked="False"
     # bookmark_check
     if article.bookmark_users.filter(pk=request.user.pk).exists():
-            article.bookmarked="True"
+        article.bookmarked="True"
     else:
         article.bookmarked="False"
-       
+    # pinned_check
+    if article.pinned_users.filter(pk=request.user.pk).exists():
+        article.pinned_post="True"
+    else:
+        article.pinned_post="False" 
+
     if request.method == 'GET':
         serializer = ArticleSerializer(article)
         return Response(serializer.data)
@@ -116,49 +124,84 @@ def comment_detail_update_delete(request, comment_pk):
 def like(request, article_pk):
     # user authentication process
     # if request.user.is_authenticated:
-        article = get_object_or_404(Article, pk=article_pk)
-        if request.method == 'GET':
-            if article.like_users.filter(pk=request.user.pk).exists():
-                article.liked="True"
-                serializer = likeSerializer(article)
-            else:
-                article.liked="False"
-                serializer = likeSerializer(article)
-            return Response(serializer.data)
+    article = get_object_or_404(Article, pk=article_pk)
+    users = User.objects.all()
+    for user in users:
+        if request.META['HTTP_AUTHORIZATION'] == TokenSerializer(user.auth_token).data['key']:
+            request.user = user
+            
+    if request.method == 'GET':
+        if article.like_users.filter(pk=request.user.pk).exists():
+            article.liked="True"
+            serializer = likeSerializer(article)
+        else:
+            article.liked="False"
+            serializer = likeSerializer(article)
+        return Response(serializer.data)
 
-        # user가 article을 좋아요 누른 전체유저에 존재하는지.
-        if request.method == 'POST':
-            if article.like_users.filter(pk=request.user.pk).exists():
-                # like canceled
-                article.like_users.remove(request.user)
-                return Response("like canceled")
-            else:
-                # like 
-                article.like_users.add(request.user)
-                return Response("like !!!!!!")
+    # user가 article을 좋아요 누른 전체유저에 존재하는지.
+    if request.method == 'POST':
+        if article.like_users.filter(pk=request.user.pk).exists():
+            # like canceled
+            article.like_users.remove(request.user)
+            return Response("like canceled")
+        else:
+            # like 
+            article.like_users.add(request.user)
+            return Response("like !!!!!!")
 
 
 @api_view(['GET','POST'])
 def bookmark(request, article_pk):
     # user authentication process
     # if request.user.is_authenticated:
-        article = get_object_or_404(Article, pk=article_pk)
-        if request.method == 'GET':
-            if article.bookmark_users.filter(pk=request.user.pk).exists():
-                article.bookmarked="True"
-                serializer = bookmarkSerializer(article)
-            else:
-                article.bookmarked="False"
-                serializer = bookmarkSerializer(article)
-            return Response(serializer.data)
+    article = get_object_or_404(Article, pk=article_pk)
+    users = User.objects.all()
+    for user in users:
+        if request.META['HTTP_AUTHORIZATION'] == TokenSerializer(user.auth_token).data['key']:
+            request.user = user
 
-        # user가 article을 북마크 누른 전체유저에 존재하는지.
-        if request.method == 'POST':
-            if article.bookmark_users.filter(pk=request.user.pk).exists():
-                # bookmark cancled
-                article.bookmark_users.remove(request.user)
-                return Response("bookmark cancled")
-            else:
-                # bookmark
-                article.bookmark_users.add(request.user)
-                return Response("bookmark")
+    if request.method == 'GET':
+        if article.bookmark_users.filter(pk=request.user.pk).exists():
+            article.bookmarked="True"
+            serializer = bookmarkSerializer(article)
+        else:
+            article.bookmarked="False"
+            serializer = bookmarkSerializer(article)
+        return Response(serializer.data)
+
+    # user가 article을 북마크 누른 전체유저에 존재하는지.
+    if request.method == 'POST':
+        if article.bookmark_users.filter(pk=request.user.pk).exists():
+            # bookmark cancled
+            article.bookmark_users.remove(request.user)
+            return Response("bookmark cancled")
+        else:
+            # bookmark
+            article.bookmark_users.add(request.user)
+            return Response("bookmark")
+
+
+@api_view(['GET', 'POST'])
+def pinned(request, article_pk):
+    article = get_object_or_404(Article, pk=article_pk)
+    users = User.objects.all()
+    for user in users:
+        if request.META['HTTP_AUTHORIZATION'] == TokenSerializer(user.auth_token).data['key']:
+            request.user = user
+
+    if request.method == 'GET':
+        if article.pinned_users.filter(pk=request.user.pk).exists():
+            article.pinned_post="True"
+            serializer = PinnedSerializer(article)
+        else:
+            article.pinner_post="False"
+            serializer = PinnedSerializer(article)
+        return Response(serializer.data)
+    else:
+        if article.pinned_users.filter(pk=request.user.pk).exists():
+            article.pinned_users.remove(request.user)
+            return Response("pinned cancled")
+        else:
+            article.pinned_users.add(request.user)
+            return Response("pinned")

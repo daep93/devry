@@ -43,10 +43,12 @@ from django.views.decorators.http import require_POST
 # from .models import User, TokenModel
 from .models import User, TokenModel, UserFollowing
 # from .serializers import  UserRegistrationSerializer, UserSerializer, InfoSerializer, deleteSerializer, UserLoginSerializer
-from .serializers import  UserRegistrationSerializer, UserSerializer, InfoSerializer, deleteSerializer, UserLoginSerializer, UserFollowersSerializer, UserFollowingSerializer
+from .serializers import  UserRegistrationSerializer, UserSerializer, InfoSerializer, deleteSerializer, UserLoginSerializer, UserFollowersSerializer, UserFollowingSerializer, TokenSerializer
 from .app_settings import RegisterSerializer, register_permission_classes
 from mysite.app_settings import TokenSerializer, LoginSerializer, UserDetailsSerializer, JWTSerializer, create_token
 from mysite.utils import jwt_encode
+from profiles.models import Profile
+from profiles.serializers import ProfileSerializer
 
 sensitive_post_parameters_m = method_decorator(
     sensitive_post_parameters('password1', 'password2')
@@ -228,64 +230,76 @@ class UserInfoView(APIView):
 class UserFollowingViewSet(viewsets.ModelViewSet):
     queryset = UserFollowing.objects.all()
     serializer_class = UserFollowingSerializer
+    def post(self, request, *args, **kwargs):
+        print('asdjiasdjoiasdjoi')
     # permission_classes = (IsAuthenticatedOrReadOnly,)
+
+@api_view(['GET', 'POST'])
+def following(request):
+    users = User.objects.all()
+    for user in users:
+        if request.META['HTTP_AUTHORIZATION'] == TokenSerializer(user.auth_token).data['key']:
+            request.user = user
+    
+    print(request.user)
+    if request.method == 'GET':
+        follows = UserFollowing.objects.all()
+        followee_number = request.data.get('user')
+        following_number = request.data.get('following_user')
+        print(followee_number, following_number)
+        followee_user = User.objects.get(id=followee_number)
+        following_user = User.objects.get(id=following_number)
+        # print(follows)
+        for follow in follows:
+            # print(UserFollowingSerializer(follow).data)
+            if UserFollowingSerializer(follow).data['user'] == UserSerializer(request.user).data['id']:
+                UserSerializer(request.user).data['follower_num'] = 1
+                followee_user.follower_num += 1
+                print(followee_user.follower_num)
+        print(followee_user.follower_num)
+        # print(UserSerializer(request.user).data)
+        serializer = UserFollowingSerializer(follows, many=True)
+
+        return Response(serializer.data)
+
+    if request.method == 'POST':
+        users = User.objects.all()
+        follows = UserFollowing.objects.all()
+        followee_number = request.data.get('user')
+        following_number = request.data.get('following_user')
+        # print(followee_number, following_number)
+        followee_user = User.objects.get(id=followee_number)
+        following_user = User.objects.get(id=following_number)
+        # print(followee_user, following_user)
+
+        profile_target = Profile.objects.filter(user=followee_user).first()
+        print(profile_target)
+        print(ProfileSerializer(profile_target).data)
+        followers = following_user.follower_num
+        # print(followers)
+
+        # print(request.user)
+        serializer = UserFollowingSerializer(data=request.data)
+
+        if serializer.is_valid(raise_exception=True):
+            for follow in follows:
+                if UserFollowingSerializer(follow).data['user'] == UserSerializer(request.user).data['id']:
+                    followee_user.follower_num += 1
+                if UserFollowingSerializer(follow).data['following_user'] == UserSerializer(request.user).data['id']:
+                    following_user.followee_num += 1
+                ProfileSerializer(profile_target).data['follower_num'] += followee_user.follower_num
+                ProfileSerializer(profile_target).data['followee_num'] += following_user.followee_num
+            serializer.save()
+        return Response(serializer.data)
 
 @api_view(['GET', 'POST'])
 def follow_list(request):
     if request.method == 'GET':
         follows = UserFollowing.objects.all()
+
         serializer = UserFollowingSerializer(follows, many=True)
+
         return Response(serializer.data)
-
-# class UserFollowerView(ListAPIView):
-#     queryset = Follower.objects.all()
-#     serializer_class = UserFollowerSerializer
-#     permission_classes = [IsAuthenticated]
-
-
-# class UserFollowingView(ListCreateAPIView):
-#     queryset = Following.objects.all()
-#     serializer_class = UserFollowingSerializer
-#     permission_classes = [IsAuthenticated]
-
-# class UserFollowerView(RetrieveAPIView):
-#     queryset = Follow.objects.all()
-#     serializer_class = UserFollowerSerializer
-#     permission_classes = [IsAuthenticated]
-#     lookup_field = 'id'
-
-
-# class UserFollowingView(viewsets.ModelViewSet):
-#     permission_classes = (IsAuthenticatedOrReadOnly, )
-#     serializer_class = UserFollowingSerializer
-#     queryset = Follow.objects.all()
-
-
-#     # permission_classes = [IsAuthenticated]
-#     def post(self, request, format=None):
-#         user = User.objects.get(user_id=self.request.data.get('user_id'))
-#         follow = User.objects.get(user_id=self.request.data.get('follow'))
-#         user.following.add(follow)
-#         user.save()
-#         follow.followers.add(user)
-#         follow.save()
-#         print(str(user) + ", " + str(follow))
-#         response = {
-#             "data": "",
-#             'message': 'follow'+str(follow.user_id)
-#         }
-#         return Response(response, status=status.HTTP_200_OK)
-
-# class UserFollowerView(ListAPIView):
-#     queryset = Follower.objects.all()
-#     serializer_class = UserFollowerSerializer
-#     permission_classes = [IsAuthenticated]
-# class UserFollowingView(ListCreateAPIView):
-#     queryset = Following.objects.all()
-#     serializer_class = UserFollowingSerializer
-#     permission_classes = [IsAuthenticated]
-
-
 
 
 @api_view(['DELETE'])
@@ -305,8 +319,8 @@ def delete(request):
 
 # def send_email(request):
 #     subject = "message"
-#     to = ["rossro464@gmail.com"]
-#     from_email = "rossro464@gmail.com"
+#     to = [""]
+#     from_email = ""
 #     message = "테스트0"
 #     EmailMessage(subject=subject, body=message, to=to, from_email=from_email).send()
 

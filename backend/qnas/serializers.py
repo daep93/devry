@@ -25,12 +25,30 @@ class ProfileqnaSerializer(serializers.ModelSerializer):
         fields = ('user', 'username', 'profile_img', 'bio')
 # 'post_num' is_following,is_following추가해야함
 
+class ProfileQnaSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Qna
+        fields = ('id', 'title', 'username', 'written_time', 'thumbnail', 'like_num', 'comment_num', 'ref_tags',)
+
 
 class QnasmallSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Qnasmall
-        fields = ('id', "qna", "content", "userid", "username", "written_time")
+        fields = ('id', "qna", "content", "user", "written_time")
+
+
+class QnasmalllistSerializer(serializers.ModelSerializer):
+    
+    user = UserinfoSerializer(
+        read_only=True,
+    )
+
+    class Meta:
+        model = Qnasmall
+        fields = ('id', "qna", "content", "user", "written_time")
+
 
 
 class AnssmallSerializer(serializers.ModelSerializer):
@@ -123,7 +141,7 @@ class QnadetailSerializer(serializers.ModelSerializer):
         read_only=True,
     )
 
-    qnasmall_set = QnasmallSerializer(
+    qnasmall_set = QnasmalllistSerializer(
         many=True,
         read_only=True,
     )
@@ -198,4 +216,9 @@ class solveSerializer(serializers.ModelSerializer):
         model = Ans
         fields = ('id', "assisted")
 
-  
+
+class TagSerialier(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Qna
+        fields = ('author', 'ref_tags_count', )  

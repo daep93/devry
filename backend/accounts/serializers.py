@@ -32,22 +32,46 @@ class UserSerializer(serializers.ModelSerializer):
     following = serializers.SerializerMethodField()
     followers = serializers.SerializerMethodField()
 
+    follower_num = serializers.IntegerField()
+    followee_num = serializers.IntegerField()
     class Meta:
         model = User
         # fields = ('id', 'username', 'email', 'password')
-        fields = ('id', 'username', 'email', 'password', 'following', 'followers')
+        fields = ('id', 'username', 'email', 'password', 'following', 'followers', 'follower_num', 'followee_num', 'date_joined')
         extra_kwargs = {'password': {'write_only': True}, }
 
     def get_following(self, obj):
         return UserFollowingSerializer(obj.following.all(), many=True).data
-    def get_followers(swlf, obj):
-        return UserFollowerSerializer(obj.followers.all(), many=True).data
+    def get_followers(self, obj):
+        return UserFollowersSerializer(obj.followers.all(), many=True).data
 
+
+class UserEmailSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('id', 'email',)
 
 class UserProfileUpdateSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = User
         fields = ('id', 'username', 'email',)
+
+
+class UserJoinedSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'date_joined', )
+
+
+class UserFollowerNumberSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('follower_num', 'followee_num')
+
 
 class UserRegistrationSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=30)
@@ -98,23 +122,6 @@ class UserRegistrationSerializer(serializers.Serializer):
 
         return user
 
-# class UserRegistrationSerializer(RegisterSerializer):
-#     email = serializers.EmailField(required=True)
-#     username = serializers.CharField(required=True)
-#     password1 = serializers.CharField(write_only=True)
-#     password2 = None
-
-#     if not password2:
-#         def create(self, validated_data):
-#             user = User.objects.create(
-#                 email=validated_data['email'],
-#                 username=validated_data['username'],
-#             )
-#             user.set_password(validated_data['password'])
-#             user.save()
-#             profile = Profile(user=user, username=validated_data['username'],)
-#             profile.save()
-#             return user
 
 class UserLoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=True, allow_blank=True)
@@ -212,79 +219,17 @@ class UserLoginSerializer(serializers.Serializer):
         return attrs
 
 
-
-
-
-
 class UserFollowingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserFollowing
         fields = '__all__'
+
+
 class UserFollowersSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserFollowing
         fields = ("id", "user_id", "created")
-
-# class UserFollowerSerializer(serializers.ModelSerializer):
-
-#     class Meta:
-#         model = Follower
-#         fields = ('user','follower_user')
-#         read_only_fields = ()
-
-
-# class UserFollowingSerializer(serializers.ModelSerializer):
-
-#     new_following = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=True, write_only=True)
-#     class Meta:
-#         model = Following
-#         fields = ('user', 'following_user', 'new_following')
-#         read_only_fields = ('following_user')
-
-#     def create(self, validated_data):
-#         user = validated_data['user']
-#         new_follwoing = validated_data['new_following']
-#         user.following.following_user.add(new_follwoing)
-#         new_follwoing.followers.following_user.add(user)
-
-#         return user.following
-
-
-# class UserFollowerSerializer(serializers.ModelSerializer):
-#     # class Meta:
-#     #     model = Follow
-#     #     fields = ('id', 'user_id', 'created')
-#     user = UserSerializer(many=False)
-#     follower = serializers.SerializerMethodField()
-#     class Meta:
-#         model = Follow
-#         fields = ('user', 'follower',)
-
-#     def get_follower(self, obj):
-#         context = self.context
-#         request = context.get("request")
-#         users = request.user.following_users.all()
-#         data = [{
-#             'id': obj.pk,
-#             'username': obj.username,
-#             'email': obj.email
-#         } for obj in users]
-#         return data
-
-
-
-# class UserFollowerSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Follower
-#         fields = ('user','follower_user')
-#         read_only_fields = ()
-
-# class UserFollowingSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Following
-#         fields = ('user','following_user')
-#         read_only_fields = ()
 
 
 
@@ -315,49 +260,15 @@ class InfoSerializer(serializers.Serializer):
         return {
             'email': user.email,
             'username': user.username,
-            # 'token': jwt_token
         }
 
-# class ProfileSerializer(serializers.ModelSerializer):
+class ProfileEmailSerializer(serializers.ModelSerializer):
 
-#     user = serializers.StringRelatedField(read_only=True)
-
-#     class Meta:
-#         model = Profile
-#         fields = '__all__'
+    class Meta:
+        model = User
+        fields = ('email')
 
 
-# class ProfileStatusSerializer(serializers.ModelSerializer):
-
-#     user_profile = serializers.StringRelatedField(read_only=True)
-
-#     class Meta:
-#         model = ProfileStatus
-#         fields = '__all__'
-
-
-# class UpdateUserSerializer(serializers.ModelSerializer):
-#     profile = ProfileSerializer()
-
-#     class Meta:
-#         model = User
-#         fields = ('id', 'email', 'username', 'profile',)
-    
-#     def update(self, instance, validated_data):
-#         profile_data = validated_data.pop('profile', None)
-#         if profile_data is not None:
-#             instance.profile.profile_img = profile_data['profile_img']
-#             instance.profile.user_region = profile_data['user_region']
-#             instance.profile.group = profile_data['group']
-#             instance.profile.bio = profile_data['bio']
-#             instance.profile.sns_name = profile_data['sns_name']
-#             instance.profile.sns_url = profile_data['sns_url']
-#             instance.profile.tech_stack = profile_data['tech_stack']
-#             instance.profile.project_name = profile_data['project_name']
-#             instance.profile.project_url = profile_data['project_url']
-#             instance.profile.tag = profile_data['tag']
-#             instance.profile.save()
-#         return super().update(instance, validated_data)
 
 
 class deleteSerializer(serializers.ModelSerializer):

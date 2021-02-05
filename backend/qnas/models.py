@@ -7,16 +7,58 @@ from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill
 
 tech = (
-    ('PY', 'Python3'),
-    ('JV', 'Java'),
-    ('HT', 'HTML5'),
-    ('CS', 'CSS3'),
-    ('JS', 'JavaScript'),
-    ('VU', 'Vue.js'),
-    ('RE', 'React.js'),
-    ('AN', 'Angular'),
-    ('MY', 'MySQL'),
-    ('MD', 'MariaDB'),
+    ('Python3', 'Python3'),
+    ('Django', 'Django'),
+    ('Java', 'Java'),
+    ('Spring', 'Spring'),
+    ('HTML5', 'HTML5'),
+    ('CSS3', 'CSS3'),
+    ('JavaScript', 'JavaScript'),
+    ('TypeScript', 'TypeScript'),
+    ('Vue.js', 'Vue.js'),
+    ('React', 'React'),
+    ('Angular', 'Angular'),
+    ('Node.js', 'Node.js'),
+    ('Swift', 'Swift'),
+    ('Ruby', 'Ruby'),
+    ('Ruby on Rails', 'Ruby on Rails'),
+    ('MySQL', 'MySQL'),
+    ('MariaDB', 'MariaDB'),
+    ('MongoDB', 'MongoDB'),
+    ('Docker', 'Docker'),
+    ('Kubernetes', 'Kubernetes'),
+)
+
+tags = (
+    ('Python3', 'Python3'),
+    ('Django', 'Django'),
+    ('Java', 'Java'),
+    ('Spring', 'Spring'),
+    ('HTML5', 'HTML5'),
+    ('CSS3', 'CSS3'),
+    ('JavaScript', 'JavaScript'),
+    ('TypeScript', 'TypeScript'),
+    ('Vue.js', 'Vue.js'),
+    ('React', 'React'),
+    ('Angular', 'Angular'),
+    ('Node.js', 'Node.js'),
+    ('Swift', 'Swift'),
+    ('Ruby', 'Ruby'),
+    ('Ruby on Rails', 'Ruby on Rails'),
+    ('MySQL', 'MySQL'),
+    ('MariaDB', 'MariaDB'),
+    ('MongoDB', 'MongoDB'),
+    ('Docker', 'Docker'),
+    ('Kubernetes', 'Kubernetes'),
+    ('FrontEnd', 'FrontEnd'),
+    ('BackEnd', 'BackEnd'),
+    ('DevOps', 'DevOps'),
+    ('Artificial Intelligence', 'Artificial Intelligence'),
+    ('BigData', 'BigData'),
+    ('Blockchain', 'Blockchain'),
+    ('Internet of Things', 'Internet of Things'),
+    ('Augmented Reality', 'Augmented Reality'),
+    ('Virtual Reality', 'Virtual Reality'),
 )
     
 class Qna(models.Model): 
@@ -33,8 +75,9 @@ class Qna(models.Model):
     viewed_num = models.PositiveIntegerField(default=0)
     written_time = models.DateTimeField(auto_now_add=True)
     content = models.TextField()
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, related_name='qna_profile')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_info = models.ForeignKey(Profile, on_delete=models.CASCADE,null=True, related_name='qna_userinfo')
 
     def __str__(self):
         return self.title
@@ -42,8 +85,7 @@ class Qna(models.Model):
 
 class Qnasmall(models.Model): 
     content = models.TextField()
-    userid = models.ForeignKey(User, on_delete=models.CASCADE)
-    username =models.CharField(max_length=30, default="")
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     written_time = models.DateTimeField(auto_now_add=True)
     qna = models.ForeignKey(Qna, on_delete=models.CASCADE)
     
@@ -57,8 +99,10 @@ class Ans(models.Model):
     liked_ans = models.BooleanField(default="False")
     written_time = models.DateTimeField(auto_now_add=True)
     qna = models.ForeignKey(Qna, on_delete=models.CASCADE)
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, related_name='ans_profile')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    user_info = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, related_name='ans_userinfo')
 
     def __str__(self):
         return self.title

@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from .serializers import QnaListSerializer, QnaListforamtSerializer ,QnaSerializer, AnsSerializer, likeSerializer, bookmarkSerializer, solveSerializer, like_ansSerializer, UserinfoSerializer,ProfileListSerializer,ProfileSerializer, QnasmallSerializer, AnssmallSerializer,QnadetailSerializer,AnslistSerializer,AnsdetailSerializer
+from .serializers import QnaListSerializer, QnasmalllistSerializer, ProfileqnaSerializer, QnaListforamtSerializer, QnaSerializer,AnsSerializer, likeSerializer, bookmarkSerializer, solveSerializer, like_ansSerializer, UserinfoSerializer,ProfileListSerializer,ProfileSerializer, QnasmallSerializer, AnssmallSerializer,QnadetailSerializer,AnslistSerializer,AnsdetailSerializer
 from .models import Qna, Ans, Qnasmall, Anssmall
 from rest_framework import viewsets
 from profiles.models import Profile
@@ -250,6 +250,23 @@ def solve(request, ans_pk):
 def qna_list_small(request):
     if request.method == 'GET':
         anss = Qnasmall.objects.all()
+        serializer = QnasmalllistSerializer(anss, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['GET', 'POST'])
+def qna_list_small_q(request,qna_pk):
+    if request.method == 'GET':
+        anss = Qnasmall.objects.all()
+        anss.filter(qna=qna_pk)
+        serializer = QnasmalllistSerializer(anss, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['GET', 'POST'])
+def qna_list_create_small(request):
+    if request.method == 'GET':
+        anss = Qnasmall.objects.all()
         serializer = QnasmallSerializer(anss, many=True)
         return Response(serializer.data)
     else:
@@ -263,7 +280,7 @@ def qna_list_small(request):
 def qna_detail_update_delete_small(request, qnasmall_pk):
     qnasmall = get_object_or_404(Qnasmall, pk=qnasmall_pk)
     if request.method == 'GET':
-        serializer = QnasmallSerializer(qnasmall)
+        serializer = QnasmalllistSerializer(qnasmall)
         return Response(serializer.data)
     elif request.method == 'PUT':
         serializer = QnasmallSerializer(qnasmall, data=request.data)
