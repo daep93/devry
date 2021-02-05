@@ -131,7 +131,7 @@ export default {
   },
   created() {
     for (const tag of this.$store.getters.getMyTags) {
-      this.tags[tag] = true;
+      this.tags[tag.toLowerCase()] = true;
     }
   },
 };

@@ -15,7 +15,7 @@ export default {
     return state.nickname;
   },
   getMyTags(state) {
-    return state.id !== '' ? ['Docker', 'Spring'] : state.myTags;
+    return state.myTags;
   },
   getSelectedTags(state) {
     return state.selectedTags;
