@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { toggleQnaLike } from '@/api/qnaPost';
+import { toggleQnaLike } from '@/api/qna';
 export default {
   props: {
     info: Object,

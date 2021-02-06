@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import { registerSmallAnswer } from '@/api/qnaPost';
+import { registerSmallAnswer } from '@/api/qna';
 export default {
   props: {
     comments: Array,
