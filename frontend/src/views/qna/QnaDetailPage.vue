@@ -53,7 +53,7 @@ import QnaDetailContent from '@/components/qna/QnaDetailContent';
 import QnaShortProfile from '@/components/qna/QnaShortProfile';
 import QnaBigComment from '@/components/qna/QnaBigComment';
 import QnaDetailStatus from '@/components/qna/QnaDetailStatus';
-import { loadQnaItem } from '@/api/qnaCreate';
+import { loadQnaItem } from '@/api/qna';
 export default {
   components: {
     QnaDetailContent,

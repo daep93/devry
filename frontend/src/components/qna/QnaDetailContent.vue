@@ -66,7 +66,7 @@
 <script>
 import QnaSmallComment from '@/components/qna/QnaSmallComment';
 import { colorSoloMapper } from '@/utils/tagColorMapper';
-import { getSmallAnswer } from '@/api/qnaPost';
+import { getSmallAnswers } from '@/api/qna';
 
 export default {
   props: {
@@ -179,7 +179,7 @@ export default {
     },
     async reloadSmallAns() {
       try {
-        this.comments = await getSmallAnswer(this.info.post_id);
+        this.comments = await getSmallAnswers(this.info.post_id);
       } catch (error) {
         console.log(error);
       }

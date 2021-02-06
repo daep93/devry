@@ -23,9 +23,9 @@
 </template>
 
 <script>
-import MainEvent from '@/components/eventBoard/MainEvent';
-import RecommendEvents from '@/components/eventBoard/RecommendEvents';
-import UpcomingEvents from '@/components/eventBoard/UpcomingEvents';
+import MainEvent from '@/components/event/MainEvent';
+import RecommendEvents from '@/components/event/RecommendEvents';
+import UpcomingEvents from '@/components/event/UpcomingEvents';
 
 export default {
   components: {
