@@ -65,7 +65,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.kakao',
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.github',
-
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [

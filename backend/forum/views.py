@@ -10,10 +10,6 @@ from rest_framework import viewsets
 from profiles.models import Profile
 from accounts.models import User
 
-from mysite.utils import jwt_encode
-from rest_auth.models import TokenModel
-from rest_framework.authtoken.models import Token
-from mysite.app_settings import TokenSerializer
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Qna.objects.all()
@@ -37,17 +33,7 @@ class AnssmallViewSet(viewsets.ModelViewSet):
 
 @api_view(['GET'])
 def qna_list(request):
-    """
-    Qna(질문 글) 글 목록 보기
-
-    ---
-    """
     if request.method == 'GET':
-        # 토큰을 이용한 사용자 획인 코드
-        if request.META.get('HTTP_AUTHORIZATION'):           
-            tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-            user=User.objects.get(id=tok.user_id)
-            request.user=user
         qnas = Qna.objects.all() 
         for qna in qnas:
             qna.like_num = qna.like_users.count()
@@ -63,16 +49,6 @@ def qna_list(request):
 
 @api_view(['GET', 'POST'])
 def qna_list_create(request):
-    """
-    Qna(질문 글) 글 작성
-
-    ---
-    """
-
-    if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        user=User.objects.get(id=tok.user_id)
-        request.user=user
     if request.method == 'GET':
         qnas = Qna.objects.all()
         for qna in qnas:
@@ -98,15 +74,6 @@ def qna_list_create(request):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def qna_detail_update_delete(request, qna_pk):
-    """
-    Qna(post) 상세보기,수정,삭제
-
-    ---
-    """
-    if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        user=User.objects.get(id=tok.user_id)
-        request.user=user
     qna = get_object_or_404(Qna, pk=qna_pk)
     qna.like_num = qna.like_users.count()  # like_num check
     qna.bookmark_num = qna.bookmark_users.count()  # bookmark_num check
@@ -139,10 +106,6 @@ def qna_detail_update_delete(request, qna_pk):
 
 @api_view(['GET','POST'])
 def create_ans(request, qna_pk):
-    if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        user=User.objects.get(id=tok.user_id)
-        request.user=user
     qna = get_object_or_404(Qna, pk=qna_pk)
     serializer = AnsSerializer(data=request.data)
     if serializer.is_valid(raise_exception=True):
@@ -152,15 +115,6 @@ def create_ans(request, qna_pk):
 
 @api_view(['GET','POST'])
 def ans_list(request):
-    """
-    큰댓글(답변) 목록 불러오기 및 큰 댓글 작성
-
-    ---
-    """
-    if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        user=User.objects.get(id=tok.user_id)
-        request.user=user
     if request.method == 'GET':
         anss = Ans.objects.all()
         for ans in anss:
@@ -186,16 +140,6 @@ def ans_list(request):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def ans_detail_update_delete(request, ans_pk):
-    """
-    ans 큰댓글(답변) 상세보기,수정,삭제
-
-    ---
-    """
-
-    if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        user=User.objects.get(id=tok.user_id)
-        request.user=user
     ans = get_object_or_404(Ans, pk=ans_pk)
     if request.method == 'GET':
         serializer = AnsdetailSerializer(ans)
@@ -212,161 +156,106 @@ def ans_detail_update_delete(request, ans_pk):
 
 @api_view(['GET','POST'])
 def like(request, qna_pk):
-    """
-    Qna(질문 글) 좋아요
-
-    ---
-    """
-    if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        user=User.objects.get(id=tok.user_id)
-        request.user=user
-        print(request.user.pk)
     # user authentication process
-
-    qna = get_object_or_404(Qna, pk=qna_pk)
-    if request.method == 'GET':
-        if qna.like_users.filter(pk=request.user.pk).exists():
-            qna.liked="True"
-            serializer = likeSerializer(qna)
-        else:
-            qna.liked="False"
-            serializer = likeSerializer(qna)
-        return Response(serializer.data)
+    # if request.user.is_authenticated:
+        qna = get_object_or_404(Qna, pk=qna_pk)
+        if request.method == 'GET':
+            if qna.like_users.filter(pk=request.user.pk).exists():
+                qna.liked="True"
+                serializer = likeSerializer(qna)
+            else:
+                qna.liked="False"
+                serializer = likeSerializer(qna)
+            return Response(serializer.data)
 
         # user가 qna을 좋아요 누른 전체유저에 존재하는지.
-    if request.method == 'POST':
-        if qna.like_users.filter(pk=request.user.pk).exists():
-            # like canceled
-            qna.like_users.remove(request.user)
-            return Response("like canceled")
-        else:
-            # like 
-            qna.like_users.add(request.user)
-            return Response("like !!!!!!")
+        if request.method == 'POST':
+            if qna.like_users.filter(pk=request.user.pk).exists():
+                # like canceled
+                qna.like_users.remove(request.user)
+                return Response("like canceled")
+            else:
+                # like 
+                qna.like_users.add(request.user)
+                return Response("like !!!!!!")
 
 
 @api_view(['GET','POST'])
 def like_ans(request, ans_pk):
-    """
-    Ans(큰댓글) 좋아요
-
-    ---
-    """
-    if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        user=User.objects.get(id=tok.user_id)
-        request.user=user
     # user authentication process
     # if request.user.is_authenticated:
-    ans = get_object_or_404(Ans, pk=ans_pk)
-    if request.method == 'GET':
-        if ans.like_ans_users.filter(pk=request.user.pk).exists():
-            ans.liked_ans="True"
-            serializer = like_ansSerializer(ans)
-        else:
-            ans.liked_ans="False"
-            serializer = like_ansSerializer(ans)
-        return Response(serializer.data)
+        ans = get_object_or_404(Ans, pk=ans_pk)
+        if request.method == 'GET':
+            if ans.like_ans_users.filter(pk=request.user.pk).exists():
+                ans.liked_ans="True"
+                serializer = like_ansSerializer(ans)
+            else:
+                ans.liked_ans="False"
+                serializer = like_ansSerializer(ans)
+            return Response(serializer.data)
 
         # user가 ans 좋아요 누른 전체유저에 존재하는지.
-    if request.method == 'POST':
-        if ans.like_ans_users.filter(pk=request.user.pk).exists():
-            # like canceled
-            ans.like_ans_users.remove(request.user)
-            return Response("ans_like canceled")
-        else:
-            # like 
-            ans.like_ans_users.add(request.user)
-            return Response("ans_like !!!!!!")
+        if request.method == 'POST':
+            if ans.like_ans_users.filter(pk=request.user.pk).exists():
+                # like canceled
+                ans.like_ans_users.remove(request.user)
+                return Response("ans_like canceled")
+            else:
+                # like 
+                ans.like_ans_users.add(request.user)
+                return Response("ans_like !!!!!!")
 
 
 @api_view(['GET','POST'])
 def bookmark(request, qna_pk):
-    """
-    Qna(질문글)) 북마크 기능
-
-    ---
-    """
-    if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        user=User.objects.get(id=tok.user_id)
-        request.user=user
         qna = get_object_or_404(Qna, pk=qna_pk)
-    if request.method == 'GET':
-        if qna.bookmark_users.filter(pk=request.user.pk).exists():
-            qna.bookmarked="True"
-            serializer = bookmarkSerializer(qna)
-        else:
-            qna.bookmarked="False"
-            serializer = bookmarkSerializer(qna)
-        return Response(serializer.data)
+        if request.method == 'GET':
+            if qna.bookmark_users.filter(pk=request.user.pk).exists():
+                qna.bookmarked="True"
+                serializer = bookmarkSerializer(qna)
+            else:
+                qna.bookmarked="False"
+                serializer = bookmarkSerializer(qna)
+            return Response(serializer.data)
 
         # user가 qna을 북마크 누른 전체유저에 존재하는지.
-    if request.method == 'POST':
-        if qna.bookmark_users.filter(pk=request.user.pk).exists():
-            # bookmark cancled
-            qna.bookmark_users.remove(request.user)
-            return Response("bookmark cancled")
-        else:
-            # bookmark
-            qna.bookmark_users.add(request.user)
-            return Response("bookmark")
+        if request.method == 'POST':
+            if qna.bookmark_users.filter(pk=request.user.pk).exists():
+                # bookmark cancled
+                qna.bookmark_users.remove(request.user)
+                return Response("bookmark cancled")
+            else:
+                # bookmark
+                qna.bookmark_users.add(request.user)
+                return Response("bookmark")
 
 
 @api_view(['GET','POST'])
 def solve(request, ans_pk):
-    """
-    답변(Ans 큰댓글) 채택
-
-    ---
-    """
-    if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        user=User.objects.get(id=tok.user_id)
-        request.user=user
- 
-    ans = get_object_or_404(Ans, pk=ans_pk)
-    qna = get_object_or_404(Qna, pk=ans.qna_id)
-    if request.method == 'GET':
-        serializer = solveSerializer(ans)
-        return Response(serializer.data)
-    if request.method == 'POST': 
-        ans.assisted = "True"
-        qna.solved="True"
-        ans.save()
-        qna.save()
-        return Response("solved")
+    if request.user.is_authenticated:
+        ans = get_object_or_404(Ans, pk=ans_pk)
+        qna = get_object_or_404(Qna, pk=ans.qna_id)
+        if request.method == 'GET':
+            serializer = solveSerializer(ans)
+            return Response(serializer.data)
+        if request.method == 'POST': 
+            ans.assisted = "True"
+            qna.solved="True"
+            ans.save()
+            qna.save()
+            return Response("solved")
 
 
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 def qna_list_small(request):
-    """
-    Qna(질문글)에 달리는 작은 댓글 모두보기
-
-    ---
-    """
-    if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        user=User.objects.get(id=tok.user_id)
-        request.user=user
     if request.method == 'GET':
         anss = Qnasmall.objects.all()
         serializer = QnasmalllistSerializer(anss, many=True)
         return Response(serializer.data)
 
 
-@api_view(['GET'])
-def qna_list_small_q(request, qna_pk):
-    """
-    Qna(질문글 큰댓글)) **특정 질문 글에 달린 작은댓글 모두 보기
-
-    ---
-    """
-    if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        user=User.objects.get(id=tok.user_id)
-        request.user=user
+@api_view(['GET', 'POST'])
+def qna_list_small_q(request,qna_pk):
     if request.method == 'GET':
         anss = Qnasmall.objects.all()
         anss.filter(qna=qna_pk)
@@ -376,20 +265,7 @@ def qna_list_small_q(request, qna_pk):
 
 @api_view(['GET', 'POST'])
 def qna_list_create_small(request):
-    """
-    Qna(질문글))에 달리는 작은 댓글 작성
-
-    ---
-    """
-    if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        user=User.objects.get(id=tok.user_id)
-        request.user=user
     if request.method == 'GET':
-        users = User.objects.all()
-        for user in users:
-            if request.META['HTTP_AUTHORIZATION'] == TokenSerializer(user.auth_token).data['key']:
-                request.user = user
         anss = Qnasmall.objects.all()
         serializer = QnasmallSerializer(anss, many=True)
         return Response(serializer.data)
@@ -402,15 +278,6 @@ def qna_list_create_small(request):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def qna_detail_update_delete_small(request, qnasmall_pk):
-    """
-    Qna(질문글))에 달리는 작은 댓글 상세보기,수정,삭제
-
-    ---
-    """
-    if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        user=User.objects.get(id=tok.user_id)
-        request.user=user
     qnasmall = get_object_or_404(Qnasmall, pk=qnasmall_pk)
     if request.method == 'GET':
         serializer = QnasmalllistSerializer(qnasmall)
@@ -427,15 +294,6 @@ def qna_detail_update_delete_small(request, qnasmall_pk):
 
 @api_view(['GET', 'POST'])
 def ans_list_small(request):
-    """
-    Ans(큰댓글))에 달리는 작은 댓글 모두보기 및 작성
-
-    ---
-    """
-    if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        user=User.objects.get(id=tok.user_id)
-        request.user=user
     if request.method == 'GET':
         anss = Anssmall.objects.all()
         serializer = AnssmallSerializer(anss, many=True)
@@ -449,15 +307,6 @@ def ans_list_small(request):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def ans_detail_update_delete_small(request, anssmall_pk):
-    """
-    Ans(큰댓글))에 달리는 작은 댓글 상세보기,수정,삭제
-
-    ---
-    """
-    if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        user=User.objects.get(id=tok.user_id)
-        request.user=user
     anssmall = get_object_or_404(Anssmall, pk=anssmall_pk)
     if request.method == 'GET':
         serializer = AnssmallSerializer(anssmall)

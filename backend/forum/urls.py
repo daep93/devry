@@ -16,7 +16,7 @@ urlpatterns = [
     path('board/qna/', views.qna_list),
     path('qna/', views.qna_list_create),
     path('qna/<int:qna_pk>/', views.qna_detail_update_delete),
-    # path('qna/<int:qna_pk>/anss/', views.create_ans),
+    path('qna/<int:qna_pk>/anss/', views.create_ans),
     path('qna_like/<int:qna_pk>/', views.like),
     path('qna_bookmark/<int:qna_pk>/', views.bookmark),
     path('qna_solved/<int:ans_pk>/', views.solve),
