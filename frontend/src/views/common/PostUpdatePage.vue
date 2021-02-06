@@ -19,6 +19,25 @@
           @keypress.enter="createTag"
         >
         </q-input>
+        <!-- 자동완성 -->
+        <div class="row col-12">
+          <div
+            class="row col-3 bg-light-blue-1"
+            style="position: absolute; z-index:999; border-radius: 5px;"
+          >
+            <div
+              v-for="tag in suggests"
+              class="col-12 q-py-md q-px-md"
+              :class="{ 'bg-blue-3': tags[tag] }"
+              :key="tag"
+              @click="autoCreateTag(tag)"
+              @mouseover="tags[tag] = true"
+              @mouseout="tags[tag] = false"
+            >
+              {{ tag }}
+            </div>
+          </div>
+        </div>
         <!-- 태그 보여주기 -->
         <ul class="row">
           <li
@@ -71,7 +90,7 @@ import '@kangc/v-md-editor/lib/style/base-editor.css';
 import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
 import '@kangc/v-md-editor/lib/theme/style/github.css';
 import koKR from '@kangc/v-md-editor/lib/lang/ko-KR';
-
+import { filtered_tags, all_tags } from '@/utils/autoComplete';
 VMdEditor.lang.use('ko-KR', koKR);
 
 VMdEditor.use(githubTheme);
@@ -108,6 +127,7 @@ export default {
       tagItem: '',
       content: '',
       ref_tags: [],
+      tags: all_tags,
     };
   },
   methods: {
@@ -117,6 +137,10 @@ export default {
         this.ref_tags.push(this.tagItem);
         this.tagItem = '';
       }
+    },
+    autoCreateTag(tag) {
+      this.ref_tags.push(tag);
+      this.tagItem = '';
     },
     removeTag(tag, index) {
       this.ref_tags.splice(index, 1);
@@ -188,6 +212,9 @@ export default {
   computed: {
     isValid() {
       return this.tagItem === '' || this.ref_tags.length > 0;
+    },
+    suggests() {
+      return filtered_tags(this.tagItem);
     },
   },
 };
