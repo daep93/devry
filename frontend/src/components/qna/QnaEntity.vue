@@ -30,7 +30,11 @@
     </div>
     <div class="row col-4 q-pl-sm">
       <div class="row col-2 items-center">
-        <q-icon :name="$i.ionHeartOutline" size="sm" color="grey-6"></q-icon>
+        <q-icon
+          :name="entity.liked ? $i.ionHeart : $i.ionHeartOutline"
+          size="sm"
+          :color="entity.liked ? 'red-8' : 'grey-6'"
+        ></q-icon>
         <span class="q-pl-xs text-grey-8" style="font-size:1.2em;">{{
           entity.like_num
         }}</span>

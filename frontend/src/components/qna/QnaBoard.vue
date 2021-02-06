@@ -101,8 +101,6 @@ export default {
         // });
         const { data } = await getQnaList();
         this.origin_board = data;
-        console.log('test');
-        console.log(this.selectedTags);
         this.board = this.origin_board.filter(post => {
           for (const tag of post.ref_tags) {
             if (this.selectedTags.indexOf(tag.toLowerCase()) >= 0) {
@@ -111,7 +109,6 @@ export default {
           }
           return false;
         });
-        console.log(this.board);
         this.board.sort((item1, item2) => {
           return (
             this.$moment(item2.written_time) - this.$moment(item1.written_time)
