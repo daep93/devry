@@ -29,6 +29,7 @@
               v-for="item in suggests"
               class="col-12 q-py-md q-px-md"
               :key="item"
+              @click="autoCreateTag(item)"
             >
               {{ item }}
             </div>
@@ -131,6 +132,10 @@ export default {
         this.ref_tags.push(str);
         this.tagItem = '';
       }
+    },
+    autoCreateTag(tag) {
+      this.ref_tags.push(tag);
+      this.tagItem = '';
     },
     removeTag(tag, index) {
       this.ref_tags.splice(index, 1);

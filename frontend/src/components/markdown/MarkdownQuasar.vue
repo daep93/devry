@@ -10,18 +10,14 @@
   </div>
 </template>
 
-
 <script>
 export default {
   data() {
     return {
-      contents: ''
-    }
-  }
-}
-
+      contents: '',
+    };
+  },
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

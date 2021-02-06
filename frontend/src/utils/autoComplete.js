@@ -10,6 +10,12 @@ const tags = [
   'FrontEnd',
   'BackEnd',
   'Typescript',
+  'Spring',
+  'HTML5',
+  'CSS3',
+  'MySQL',
+  'MariaDB',
+  'Node.js',
 ];
 const filtered_tags = str => {
   const tag = str.charAt(0).toUpperCase() + str.slice(1);
