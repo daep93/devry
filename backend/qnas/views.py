@@ -47,16 +47,17 @@ def qna_list(request):
         if request.META.get('HTTP_AUTHORIZATION'):           
             tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
             user=User.objects.get(id=tok.user_id)
-            request.user=user
+            request.user = user
+            
         qnas = Qna.objects.all() 
         for qna in qnas:
-            qna.like_num = qna.like_users.count()
+            qna.like_num = qna.like_users.count() 
             if qna.like_users.filter(id=request.user.pk).exists():
                 qna.liked = "True"      
             else:
                 qna.liked = "False"
-            qna.save()
-            # qna number in user_id -> It will be "True"
+            qna.save()  
+        # qna number in user_id -> It will be "True"
         serializer = QnaListforamtSerializer(qnas, many=True)
         return Response(serializer.data) 
 
@@ -68,7 +69,6 @@ def qna_list_create(request):
 
     ---
     """
-
     if request.META.get('HTTP_AUTHORIZATION'):
         tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
         user=User.objects.get(id=tok.user_id)
@@ -76,7 +76,7 @@ def qna_list_create(request):
     if request.method == 'GET':
         qnas = Qna.objects.all()
         for qna in qnas:
-            qna.like_num = qna.like_users.count()
+            qna.like_num = qna.like_users.count() 
             if qna.like_users.filter(id=request.user.pk).exists():
                 qna.liked = "True"      
             else:
@@ -87,9 +87,10 @@ def qna_list_create(request):
         return Response(serializer.data) 
     else:
         profiles = Profile.objects.all()
-        for profile in profiles:
-            if profile.user_id==request.user.id:
-                request.data['profile']=profile.id
+        if profiles.filter(user_id=request.user.id).exists():
+            pro=profiles.get(user_id=request.user.id)
+            request.data['profile'] = pro.id
+
         serializer = QnaSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()     
@@ -175,9 +176,9 @@ def ans_list(request):
         return Response(serializer.data)
     else:
         profiles = Profile.objects.all()
-        for profile in profiles:
-            if profile.user_id==request.user.id:
-                request.data['profile']=profile.id
+        if profiles.filter(user_id=request.user.id).exists():
+            pro=profiles.get(user_id=request.user.id)
+            request.data['profile'] = pro.id
         serializer = AnsSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()     
@@ -191,7 +192,6 @@ def ans_detail_update_delete(request, ans_pk):
 
     ---
     """
-
     if request.META.get('HTTP_AUTHORIZATION'):
         tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
         user=User.objects.get(id=tok.user_id)
@@ -221,9 +221,7 @@ def like(request, qna_pk):
         tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
         user=User.objects.get(id=tok.user_id)
         request.user=user
-        print(request.user.pk)
     # user authentication process
-
     qna = get_object_or_404(Qna, pk=qna_pk)
     if request.method == 'GET':
         if qna.like_users.filter(pk=request.user.pk).exists():
@@ -386,10 +384,6 @@ def qna_list_create_small(request):
         user=User.objects.get(id=tok.user_id)
         request.user=user
     if request.method == 'GET':
-        users = User.objects.all()
-        for user in users:
-            if request.META['HTTP_AUTHORIZATION'] == TokenSerializer(user.auth_token).data['key']:
-                request.user = user
         anss = Qnasmall.objects.all()
         serializer = QnasmallSerializer(anss, many=True)
         return Response(serializer.data)
