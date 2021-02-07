@@ -42,7 +42,7 @@
         </div>
       </q-card-section>
       <q-card-section class="row col-12">
-        <q-markdown :src="info.contents"> </q-markdown>
+        <v-md-editor v-model="content" mode="preview"> </v-md-editor>
       </q-card-section>
       <q-card-section
         class="row col-12 justify-end"
@@ -77,6 +77,7 @@ export default {
   },
   data: function() {
     return {
+      content: this.info.contents,
       msg: true,
       comments: this.info.comments,
       solved: this.info.solved,

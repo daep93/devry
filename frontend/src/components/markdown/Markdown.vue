@@ -10,96 +10,22 @@
       </div>
       <!-- QnA 입력 폼 -->
       <div class="q-pa-md q-gutter-sm row">
-        <q-card flat bordered class="col">
+        <q-card flat bordered>
           <!-- 제목 입력 -->
+
           <q-input
-            class="q-mx-md q-my-md text-h4 text-weight-bold"
-            borderless
-            v-model="title"
-            placeholder="제목을 입력해주세요"
-          />
-          <!-- :rules="[ val => val && val.length > 0 || '제목은 필수항목 입니다']" -->
-          <!-- 태그 입력 -->
-          <q-input
-            class="q-mx-md"
-            borderless
-            v-model="tagItem"
-            placeholder="태그를 하나 이상 입력해주세요"
-            TODO
-            @keypress.enter="createTag"
-          >
-            <!-- :error="!isValid" -->
-            <!-- :rules="[ ref_tags.length > 0 || '태그 필요!']" -->
-            <!-- 태그 에러 -->
-            <!-- <template v-slot:error>
-              <p class="text-weight-bold">태그를 반드시 하나 이상 입력해주세요</p>
-            </template> -->
-          </q-input>
-          <ul class="row">
-            <li
-              class="q-ml-sm cursor-pointer"
-              v-for="(tag, index) in ref_tags"
-              :key="index"
-            >
-              <q-chip outline square color="primary">
-                <div @click="removeTag(tag, index)">{{ tag }}</div>
-              </q-chip>
-            </li>
-          </ul>
-          <!-- 입력 폼 -->
-          <q-editor
             v-model="contents"
             min-height="50rem"
             placeholder="내용을 입력해주세요"
-            :definitions="{
-              link: {
-                tip: 'Link your Url',
-                icon: 'link',
-              },
-              image: {
-                tip: 'Upload your Image',
-                icon: 'insert_photo',
-              },
-            }"
-            :toolbar="[
-              [
-                {
-                  label: $q.lang.editor.formatting,
-                  icon: $q.iconSet.editor.formatting,
-                  list: 'no-icons',
-                  options: ['p', 'h3', 'h4', 'h5', 'h6', 'code'],
-                },
-              ],
-              ['bold', 'italic', 'strike', 'underline'],
-              ['image', 'link'],
-            ]"
+            type="textarea"
           >
-            <pre style="white-space: pre-line"></pre>
-            <!-- TODO : 콘텐츠가 빈 값일 경우 에러 메시지를 띄워야 함  -->
-            <!-- 콘텐츠 에러 -->
-            <!-- <template v-slot:error>
-              <p class="text-weight-bold">내용은 필수 항목입니다</p>
-            </template> -->
-          </q-editor>
+          </q-input>
         </q-card>
         <!-- 미리보기 화면 -->
-        <q-card flat filled class="col bg-grey-3">
-          <q-card-section
-            class="text-h4 text-weight-bold q-mx-sm q-my-lg"
-            v-html="title"
-          />
-          <ul class="row q-ml-md">
-            <li
-              class="q-mr-sm cursor-pointer"
-              v-for="(tag, index) in ref_tags"
-              :key="index"
-            >
-              <q-chip outline square color="primary">
-                {{ tag }}
-              </q-chip>
-            </li>
-          </ul>
-          <q-card-section class="q-mx-sm" v-html="contents" />
+        <q-card flat filled class="col bg-grey-3 full-width row">
+          <q-card-section class="row col-12">
+            <q-markdown :src="contents" class="full-width"> </q-markdown>
+          </q-card-section>
         </q-card>
       </div>
       <!-- buttons -->
@@ -142,6 +68,9 @@ export default {
     };
   },
   methods: {
+    logging() {
+      console.log(this.contents);
+    },
     createTag(tagItem) {
       if (this.tagItem !== '') {
         console.log(this.tagItem);

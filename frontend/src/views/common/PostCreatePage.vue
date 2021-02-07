@@ -54,8 +54,10 @@
         <v-md-editor
           v-model="content"
           height="800px"
-          left-toolbar="undo redo clear | h bold italic strikethrough quote ul ol table hr link image imageLink uploadImage video code save"
+          left-toolbar="undo redo clear | h bold italic strikethrough quote | ul ol table hr | link image code video "
+          :disabled-menus="[]"
           :toolbar="toolbar"
+          @upload-image="handleUploadImage"
         >
         </v-md-editor>
       </div>
@@ -82,19 +84,7 @@
 
 <script>
 import { createQnaItem } from '@/api/qna';
-
-import Vue from 'vue';
-import VMdEditor from '@kangc/v-md-editor';
-import '@kangc/v-md-editor/lib/style/base-editor.css';
-import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
-import '@kangc/v-md-editor/lib/theme/style/github.css';
-import koKR from '@kangc/v-md-editor/lib/lang/ko-KR';
 import { filtered_tags, all_tags } from '@/utils/autoComplete';
-VMdEditor.lang.use('ko-KR', koKR);
-
-VMdEditor.use(githubTheme);
-
-Vue.use(VMdEditor);
 
 export default {
   data() {
@@ -103,7 +93,7 @@ export default {
       video: {
         title: '비디오',
         // TODO : icon 변경하기
-        icon: 'v-md-icon-tip',
+        icon: 'v-md-icon-toc',
         action(editor) {
           editor.insert(function() {
             const imagetxt = 'Image text';
@@ -176,6 +166,18 @@ export default {
       } finally {
         this.$q.loading.hide();
       }
+    },
+    handleUploadImage(event, insertImage, files) {
+      // Get the files and upload them to the file server, then insert the corresponding content into the editor
+      console.log(files);
+      console.log(insertImage);
+      // Here is just an example
+      insertImage({
+        url: URL.createObjectURL(files[0]),
+        desc: 'desc',
+        // width: 'auto',
+        // height: 'auto',
+      });
     },
   },
   computed: {
