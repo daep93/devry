@@ -84,18 +84,7 @@
 <script>
 import { loadQnaItem, updateQnaItem, deleteQnaItem } from '@/api/qna';
 
-import Vue from 'vue';
-import VMdEditor from '@kangc/v-md-editor';
-import '@kangc/v-md-editor/lib/style/base-editor.css';
-import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
-import '@kangc/v-md-editor/lib/theme/style/github.css';
-import koKR from '@kangc/v-md-editor/lib/lang/ko-KR';
 import { filtered_tags, all_tags } from '@/utils/autoComplete';
-VMdEditor.lang.use('ko-KR', koKR);
-
-VMdEditor.use(githubTheme);
-
-Vue.use(VMdEditor);
 
 export default {
   data() {
