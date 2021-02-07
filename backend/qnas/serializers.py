@@ -50,12 +50,22 @@ class QnasmalllistSerializer(serializers.ModelSerializer):
         fields = ('id', "qna", "content", "user", "written_time")
 
 
-
 class AnssmallSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Anssmall
-        fields = ('id', "ans", "content", "userid", "username", "written_time")
+        fields = ('id', "ans", "content", "user", "written_time")
+
+
+class AnssmalllistSerializer(serializers.ModelSerializer):
+    
+    user = UserinfoSerializer(
+        read_only=True,
+    )
+
+    class Meta:
+        model = Anssmall
+        fields = ('id', "ans", "content", "user", "written_time")
 
 
 class QnaListforamtSerializer(serializers.ModelSerializer):

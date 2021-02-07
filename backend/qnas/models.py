@@ -62,7 +62,7 @@ tags = (
 )
     
 class Qna(models.Model): 
-    title = models.CharField(max_length=80)
+    title = models.CharField(max_length=70)
     ref_tags = MultiSelectField(choices=tech)
     like_num = models.PositiveIntegerField(default=0)
     comment_num = models.PositiveIntegerField(default=0)
@@ -91,7 +91,7 @@ class Qnasmall(models.Model):
     
 
 class Ans(models.Model):
-    title = models.CharField(max_length=30)
+    title = models.CharField(max_length=70)
     content = models.TextField()
     assisted = models.BooleanField(default="False")
     like_ans_num = models.PositiveIntegerField(default=0)
@@ -110,7 +110,6 @@ class Ans(models.Model):
 
 class Anssmall(models.Model): 
     content = models.TextField()
-    userid = models.ForeignKey(User, on_delete=models.CASCADE)
-    username =models.CharField(max_length=30, default="")
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     written_time = models.DateTimeField(auto_now_add=True)
     ans = models.ForeignKey(Ans, on_delete=models.CASCADE)

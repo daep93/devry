@@ -4,7 +4,11 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from .serializers import QnaListSerializer, QnasmalllistSerializer, ProfileqnaSerializer, QnaListforamtSerializer, QnaSerializer,AnsSerializer, likeSerializer, bookmarkSerializer, solveSerializer, like_ansSerializer, UserinfoSerializer,ProfileListSerializer,ProfileSerializer, QnasmallSerializer, AnssmallSerializer,QnadetailSerializer,AnslistSerializer,AnsdetailSerializer
+from .serializers import QnaListSerializer, QnasmalllistSerializer, AnssmalllistSerializer, ProfileqnaSerializer, \
+    QnaListforamtSerializer, QnaSerializer, AnsSerializer, likeSerializer, bookmarkSerializer, solveSerializer, \
+    like_ansSerializer, UserinfoSerializer, ProfileListSerializer, ProfileSerializer, QnasmallSerializer, \
+    AnssmallSerializer, QnadetailSerializer, AnslistSerializer, AnsdetailSerializer
+    
 from .models import Qna, Ans, Qnasmall, Anssmall
 from rest_framework import viewsets
 from profiles.models import Profile
@@ -14,6 +18,7 @@ from mysite.utils import jwt_encode
 from rest_auth.models import TokenModel
 from rest_framework.authtoken.models import Token
 from mysite.app_settings import TokenSerializer
+
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Qna.objects.all()
@@ -48,7 +53,7 @@ def qna_list(request):
             tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
             user=User.objects.get(id=tok.user_id)
             request.user = user
-            
+       
         qnas = Qna.objects.all() 
         for qna in qnas:
             qna.like_num = qna.like_users.count() 
@@ -267,7 +272,7 @@ def like_ans(request, ans_pk):
             serializer = like_ansSerializer(ans)
         return Response(serializer.data)
 
-        # user가 ans 좋아요 누른 전체유저에 존재하는지.
+    # user가 ans 좋아요 누른 전체유저에 존재하는지.
     if request.method == 'POST':
         if ans.like_ans_users.filter(pk=request.user.pk).exists():
             # like canceled
@@ -367,8 +372,8 @@ def qna_list_small_q(request, qna_pk):
         request.user=user
     if request.method == 'GET':
         anss = Qnasmall.objects.all()
-        anss.filter(qna=qna_pk)
-        serializer = QnasmalllistSerializer(anss, many=True)
+        an=anss.filter(qna_id=qna_pk)
+        serializer = QnasmalllistSerializer(an, many=True)
         return Response(serializer.data)
 
 
@@ -419,10 +424,27 @@ def qna_detail_update_delete_small(request, qnasmall_pk):
         return Response({'id': qnasmall_pk}, status=status.HTTP_204_NO_CONTENT)
     
 
-@api_view(['GET', 'POST'])
+@api_view(['GET'])
 def ans_list_small(request):
     """
-    Ans(큰댓글))에 달리는 작은 댓글 모두보기 및 작성
+    Ans(큰댓글))에 달리는 작은 댓글 모두보기
+
+    ---
+    """
+    if request.META.get('HTTP_AUTHORIZATION'):
+        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user=User.objects.get(id=tok.user_id)
+        request.user=user
+    if request.method == 'GET':
+        anss = Anssmall.objects.all()
+        serializer = AnssmalllistSerializer(anss, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['GET', 'POST'])
+def ans_list_create_small(request):
+    """
+    Ans(큰댓글))에 달리는 작은 댓글 작성
 
     ---
     """
@@ -441,6 +463,24 @@ def ans_list_small(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
+@api_view(['GET'])
+def ans_list_small_q(request, ans_pk):
+    """
+    Ans(큰댓글)) **특정 큰댓글에 달린 작은댓글 모두 보기
+
+    ---
+    """
+    if request.META.get('HTTP_AUTHORIZATION'):
+        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user=User.objects.get(id=tok.user_id)
+        request.user=user
+    if request.method == 'GET':
+        anss = Anssmall.objects.all()
+        an=anss.filter(ans_id=ans_pk)
+        serializer = AnssmalllistSerializer(an, many=True)
+        return Response(serializer.data)
+
+
 @api_view(['GET', 'PUT', 'DELETE'])
 def ans_detail_update_delete_small(request, anssmall_pk):
     """
@@ -454,7 +494,7 @@ def ans_detail_update_delete_small(request, anssmall_pk):
         request.user=user
     anssmall = get_object_or_404(Anssmall, pk=anssmall_pk)
     if request.method == 'GET':
-        serializer = AnssmallSerializer(anssmall)
+        serializer = AnssmalllistSerializer(anssmall)
         return Response(serializer.data)
     elif request.method == 'PUT':
         serializer = AnssmallSerializer(anssmall, data=request.data)
@@ -463,4 +503,7 @@ def ans_detail_update_delete_small(request, anssmall_pk):
             return Response(serializer.data)
     else:
         anssmall.delete()
-        return Response({ 'id': anssmall_pk }, status=status.HTTP_204_NO_CONTENT)
+        return Response({'id': anssmall_pk}, status=status.HTTP_204_NO_CONTENT)
+        
+
+        

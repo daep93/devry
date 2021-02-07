@@ -23,7 +23,7 @@ from rest_framework.permissions import AllowAny
 from drf_yasg import openapi
 
 schema_url_v1_patterns = [
-    url(r'^v1/', include('qnas.urls'))
+    url(r'^v1/', include('qnas.urls')),
 ]
 
 schema_view_v1 = get_schema_view(
@@ -45,7 +45,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('accounts.urls')),
     path('', include('profiles.urls')),
-    path('', include('articles.urls')),
     path('', include('events.urls')),
     path('', include('qnas.urls')),
     url(r'^swagger/v1/$', schema_view_v1.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui')

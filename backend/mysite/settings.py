@@ -44,10 +44,12 @@ INSTALLED_APPS = [
     'django_rest_passwordreset',
 
     'accounts',
-    'articles',
+
     'events',
     'qnas',
     'profiles',
+    'articles',
+
     'django_seed',
     
     'corsheaders',

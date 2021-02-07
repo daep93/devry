@@ -30,6 +30,8 @@ urlpatterns = [
     path('qna_create_small/', views.qna_list_create_small),
     path('qna_small/<int:qnasmall_pk>/', views.qna_detail_update_delete_small),
 
-    path('ans_small/', views.ans_list_small),  
+    path('ans_small/', views.ans_list_small),
+    path('ans_smallq/<int:ans_pk>', views.ans_list_small_q),
+    path('ans_create_small/', views.ans_list_create_small),  
     path('ans_small/<int:anssmall_pk>/', views.ans_detail_update_delete_small),
 ]
