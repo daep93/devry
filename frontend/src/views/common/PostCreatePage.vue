@@ -50,6 +50,15 @@
             </q-chip>
           </li>
         </ul>
+        <!-- 업로드한 이미지 출력 -->
+        <!-- TODO : 이미지 여러개 출력하기, x 버튼 위치 조정, 이미지 이름 출력 -->
+        <div v-if="image" class="q-mb-md">
+          <q-img
+            :src="image"
+            style="height: 60px; width: 100px;"
+          >
+          </q-img>
+        </div>
         <!-- 마크다운 에디터 -->
         <v-md-editor
           v-model="content"
@@ -60,6 +69,10 @@
           @upload-image="handleUploadImage"
         >
         </v-md-editor>
+        <!-- <form method="post" enctype="multipart/form-data">
+          <input type="file" v-bind="img">
+          <button type="submit" @click="createQna"></button>
+        </form> -->
       </div>
       <!-- 버튼 -->
       <div class="q-mb-xl q-mt-xl" style="text-align: center;">
@@ -116,13 +129,15 @@ export default {
       content: '',
       ref_tags: [],
       tags: all_tags,
+      image: '',
+      img: [],
     };
   },
   methods: {
     createTag() {
       if (this.tagItem !== '') {
         const str =
-          this.tagItem.charAt(0).toUpperCase() + this.tagItem.slice(1);
+        this.tagItem.charAt(0).toUpperCase() + this.tagItem.slice(1);
         this.ref_tags.push(str);
         this.tagItem = '';
       }
@@ -148,6 +163,7 @@ export default {
       try {
         console.log(this.$store.state.id);
         console.log(this.$store.state);
+        console.log(this.img)
 
         this.$q.loading.show();
         await createQnaItem({
@@ -155,6 +171,7 @@ export default {
           title: this.title,
           user: this.$store.state.id,
           content: this.content,
+          img: this.img,
           ref_tags: this.ref_tags,
         });
         console.log('페이지 이동 전까지 성공?');
@@ -170,14 +187,34 @@ export default {
     handleUploadImage(event, insertImage, files) {
       // Get the files and upload them to the file server, then insert the corresponding content into the editor
       console.log(files);
-      console.log(insertImage);
+      // console.log(insertImage);
+      const file = event.target.files[0]
+
+      // 이미지 base64변환 코드 
+      const reader = new FileReader();
+      reader.onload = (event) => {
+      const image = event.target.result;
+      // console.log('base64 변환', image);
+      };
+      reader.readAsDataURL(file);
+
       // Here is just an example
       insertImage({
-        url: URL.createObjectURL(files[0]),
+        url: URL.createObjectURL(file),
+        // base64 코드 출력하기
+        // url: event.target.result,
         desc: 'desc',
         // width: 'auto',
         // height: 'auto',
       });
+      // console.log(file.name)
+      console.log(file)
+      // this.img = file
+      this.img.push(file)
+      // 이미지 출력하기(1개)
+      // this.image = URL.createObjectURL(file)
+      console.log(this.img)
+
     },
   },
   computed: {
