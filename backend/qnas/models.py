@@ -106,7 +106,7 @@ class Ans(models.Model):
     user_info = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, related_name='ans_userinfo')
 
     def __str__(self):
-        return self.title
+        return self.content
 
 
 class Anssmall(models.Model): 

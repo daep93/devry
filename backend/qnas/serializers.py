@@ -163,6 +163,26 @@ class AnsSerializer(serializers.ModelSerializer):
         fields = ('id', 'assisted','img', 'like_ans_num','user', 'content', 'qna', 'written_time', 'liked_ans', 'anssmall_set', 'profile')
 
 
+class AnsinfoSerializer(serializers.ModelSerializer):
+    
+    user = UserinfoSerializer(
+        read_only=True,
+    )
+
+    profile = ProfileListSerializer(
+        read_only=True
+    )
+
+    anssmall_set = AnssmallSerializer(
+        many=True,
+        read_only=True,
+    )
+
+    class Meta:
+        model = Ans
+        fields = ('id', 'assisted','img', 'like_ans_num','user', 'content', 'qna', 'written_time', 'liked_ans', 'anssmall_set', 'profile')
+
+
 class QnadetailSerializer(serializers.ModelSerializer):
 
     ref_tags= fields.MultipleChoiceField(choices=tech)
@@ -180,7 +200,7 @@ class QnadetailSerializer(serializers.ModelSerializer):
         read_only=True,
     )
 
-    ans_set = AnsSerializer(
+    ans_set = AnsinfoSerializer(
         many=True,
         read_only=True,
         
