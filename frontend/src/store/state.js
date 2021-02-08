@@ -18,17 +18,4 @@ export default {
   tagFilter: false,
   myTags: ['javascript', 'vue.js', 'react', 'python3'],
   selectedTags: [],
-  allTags: [
-    'javascript',
-    'vue.js',
-    'python3',
-    'backend',
-    'frontend',
-    'angular',
-    'django',
-    'java',
-    'typescript',
-    'docker',
-    'react',
-  ],
 };
