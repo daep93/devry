@@ -131,7 +131,7 @@ class AnslistformatSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ans
-        fields = ('id', 'assisted', 'like_ans_num','user', 'content', 'qna', 'written_time', 'liked_ans', 'anssmall_set' ,'profile')
+        fields = ('id', 'img', 'assisted', 'like_ans_num','user', 'content', 'qna', 'written_time', 'liked_ans', 'anssmall_set' ,'profile')
 
 
 class AnslistSerializer(serializers.ModelSerializer):
