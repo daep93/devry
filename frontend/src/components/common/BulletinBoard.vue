@@ -28,13 +28,7 @@
     </div>
     <!-- 게시물 목록 -->
     <div class="row q-mt-md col-12">
-      <div
-        class="row col-4 q-pa-sm"
-        v-for="(post, index) in board"
-        :key="index"
-      >
-        <slot name="entity" :entity="post"></slot>
-      </div>
+      <slot name="entities" :entities="board"></slot>
     </div>
   </div>
 </template>
@@ -52,14 +46,23 @@ export default {
     };
   },
   watch: {
+    origin_board(newValue) {
+      // origin_board가 바뀔 때 다음과 같이 초기 목록을 뽑아온다.
+      this.board = newValue.filter(post => {
+        for (const tag of post.ref_tags) {
+          if (this.selectedTags.indexOf(tag) >= 0) {
+            return true;
+          }
+        }
+        return false;
+      });
+      // 최신순 정렬
+      this.board.reverse();
+    },
     sort(newValue) {
       // sort값이 바뀌면 board의 정렬 순서를 바꾼다.
       if (newValue === 'time') {
-        this.board.sort((item1, item2) => {
-          return (
-            this.$moment(item2.written_time) - this.$moment(item1.written_time)
-          );
-        });
+        this.board = [...this.origin_board].reverse();
       } else if (newValue === 'comment') {
         this.board.sort(
           (item1, item2) => item2.comment_num - item1.comment_num,

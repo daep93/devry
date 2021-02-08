@@ -125,6 +125,7 @@ export default {
       console.log(error);
     }
     this.checkWriter();
+    this.$store.commit('offLeft');
   },
 };
 </script>

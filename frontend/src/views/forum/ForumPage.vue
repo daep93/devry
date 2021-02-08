@@ -10,11 +10,15 @@
           <q-tab name="feed" label="피드" />
           <q-tab name="time" label="최신글" />
         </template>
-        <forum-entity
-          slot="entity"
-          slot-scope="scopeProps"
-          :entity="scopeProps.entity"
-        ></forum-entity>
+        <template slot="entities" slot-scope="scopeProps">
+          <div
+            class="row col-4 q-pa-sm"
+            v-for="(post, index) in scopeProps.entities"
+            :key="index"
+          >
+            <forum-entity :entity="post"></forum-entity>
+          </div>
+        </template>
       </bulletin-board>
     </div>
   </div>
@@ -44,19 +48,6 @@ export default {
         // const { data } = await getQnaList();
         // this.origin_board = data;
         this.board = testCase;
-        this.board = this.board.filter(post => {
-          for (const tag of post.ref_tags) {
-            if (this.selectedTags.indexOf(tag) >= 0) {
-              return true;
-            }
-          }
-          return false;
-        });
-        this.board.sort((item1, item2) => {
-          return (
-            this.$moment(item2.written_time) - this.$moment(item1.written_time)
-          );
-        });
       } catch (error) {
         console.log(error);
       } finally {
