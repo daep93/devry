@@ -36,6 +36,28 @@ const all_tags = {
   MariaDB: false,
   'Node.js': false,
 };
+const all_tag_list = [
+  'javascript',
+  'vue.js',
+  'python3',
+  'backend',
+  'frontend',
+  'angular',
+  'django',
+  'java',
+  'typescript',
+  'docker',
+  'react',
+  'frontend',
+  'backend',
+  'typescript',
+  'spring',
+  'html5',
+  'css3',
+  'mysql',
+  'mariadb',
+  'node.js',
+].sort();
 const filtered_tags = str => {
   const tag = str.charAt(0).toUpperCase() + str.slice(1);
   const reg = new RegExp(tag.trim());
@@ -43,4 +65,4 @@ const filtered_tags = str => {
     return Object.keys(all_tags).filter(el => el.match(reg));
   } else return [];
 };
-export { filtered_tags, all_tags };
+export { filtered_tags, all_tags, all_tag_list };
