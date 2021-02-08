@@ -1,12 +1,13 @@
 <template>
   <div class="row col-12">
     <!-- 댓글 시작 -->
-    <div class="row col-12">
+    <div class="row col-12" v-for="data in info" :key="data">
+      <!-- <div class="row col-12" v-for="data in info.content" :key="data"> -->
       <div class="row col-2">
         <!-- 댓글 좋아요 수, 댓글 수, 북마크 수 -->
         <div class="row col-9"></div>
         <div class="row col-3 q-mt-lg">
-          <qna-comment-status></qna-comment-status>
+          <qna-comment-status :info="bigCommentsStatus"></qna-comment-status>
         </div>
       </div>
       <div class="row col-10">
@@ -14,10 +15,13 @@
           <q-card flat bordered class="my-card q-pa-lg q-mt-lg row col-12">
             <div class="row col-9">
               <div class="q-ml-md row col-12 q-my-sm">
-                <div style="color: blue">@{{ info.username }}</div>
+                <div style="color: blue">@{{ data.user.username }}</div>
                 <span class="q-ml-sm text-caption" style="color: gray;">
-                  {{ info.written_time | moment('YYYY/MM/DD HH:mm') }}
+                  {{ data.written_time | moment('YYYY/MM/DD HH:mm') }}
                 </span>
+              </div>
+              <div class="q-ml-md row col-12">
+                {{ data.content }}
               </div>
             </div>
             <!-- 토글이 꺼져있으며, 글 작성자가 아닌 경우 -->
@@ -125,32 +129,7 @@ export default {
       follow: true,
       blueModel: true,
       writerStatus: false,
-      QnaDetailData: {
-        user_info: {
-          userid: 1,
-          username: 'SSAFY PARK',
-          profile_img: 'user/1',
-          post_num: 5,
-          follower_num: 3,
-          bio: 'Hello DEVRY! Nice Day!!',
-          pinned: [
-            {
-              title: '2021 Awesome Tech Top 5',
-              post_id: 310,
-            },
-            {
-              title: '2020 Awesome Tech Top 3', // pinned한 게시글의 제목
-              post_id: 4, // pinned한 게시글의 번호
-            },
-            {
-              title: 'How to test your project efficiently', // pinned한 게시글의 제목
-              post_id: 203, // pinned한 게시글의 번호
-            },
-          ],
-          liked: true,
-          is_following: true,
-        },
-      },
+      contents: '',
     };
   },
   methods: {
@@ -160,6 +139,19 @@ export default {
         this.writerStatus = true;
       }
     },
+  },
+  computed: {
+    bigCommentsStatus() {
+      return this.contents.ans_set;
+    },
+    // bigCommentsStatus() {
+    //   for (let data of this.contents.ans_set) {
+    //     return {
+    //       liked_ans: data.liked_ans,
+    //       like_ans_num: data.like_ans_num,
+    //     };
+    //   }
+    // },
   },
   created() {
     this.checkWriter();

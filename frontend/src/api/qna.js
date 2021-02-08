@@ -28,6 +28,10 @@ function getSmallAnswers(postId) {
 function toggleQnaLike(postId) {
   return instance.post(`qna_like/${postId}/`);
 }
+// QnA 큰 댓글 등록하기
+function createQnaBigComment(postData) {
+  return instance.post('ans/', postData);
+}
 export {
   registerSmallAnswer,
   getSmallAnswers,
@@ -36,4 +40,5 @@ export {
   createQnaItem,
   updateQnaItem,
   deleteQnaItem,
+  createQnaBigComment,
 };

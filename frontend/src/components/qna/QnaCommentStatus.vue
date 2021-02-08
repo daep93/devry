@@ -1,9 +1,11 @@
 <template>
   <div class="q-pl-md row col-12">
-    <div v-for="(data, index) in answer_posts" :key="index" class="row col-12">
+    <div class="row col-12">
+      <!-- <div v-for="(data, index) in info" :key="index" class="row col-12"> -->
+      <!-- <div v-for="(data, index) in answer_posts" :key="index" class="row col-12"> -->
       <q-card flat bordered style="width: 40px; height: 125px;">
         <div style="margin:0 auto; text-align:center" class="q-pt-sm">
-          <template v-if="data.quest_post.liked">
+          <template v-if="liked_ans">
             <q-icon
               :name="$i.ionHeartOutline"
               style="color:#727272"
@@ -23,7 +25,7 @@
           </template>
 
           <br />
-          <span>{{ data.quest_post.like_num }}</span>
+          <span>{{ data.like_ans_num }}</span>
           <br />
           <br />
           <q-icon
@@ -43,48 +45,21 @@
 
 <script>
 export default {
+  props: {
+    info: Object,
+  },
   data() {
-    return {
-      answer_posts: [
-        {
-          user_info: {
-            userid: 5,
-            username: 'SSAFY ONE',
-            written_time: '2021-01-25T05:23',
-            profile_img: 'user/5',
-            post_num: 3,
-            follower_num: 10,
-            bio: 'SSAFY is The One!',
-          },
-          quest_post: {
-            title: 'Read vue documentation',
-            assisted: true,
-            like_num: 30,
-            comment_num: 1,
-            contents: 'Just Read it plz.',
-            answers: [
-              {
-                contents: 'I agree',
-                userid: 2,
-                username: 'SSAFY Pro',
-                written_time: '2021-01-25T05:26',
-              },
-            ],
-            liked: true,
-          },
-        },
-      ],
-    };
+    return {};
   },
   methods: {
     checkLiked(index) {
-      for (const heart of this.answer_posts) {
-        if (this.answer_posts.indexOf(heart) === index) {
-          heart.quest_post.liked = !heart.quest_post.liked;
+      for (const heart of this.info) {
+        if (this.info.indexOf(heart) === index) {
+          heart.liked_ans = !heart.liked_ans;
           if (heart.quest_post.liked) {
-            heart.quest_post.like_num = heart.quest_post.like_num - 1;
+            heart.like_ans_num = heart.like_ans_num - 1;
           } else {
-            heart.quest_post.like_num = heart.quest_post.like_num + 1;
+            heart.like_ans_num = heart.like_ans_num + 1;
           }
         }
       }
