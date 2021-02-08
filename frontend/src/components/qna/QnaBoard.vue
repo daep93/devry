@@ -81,10 +81,9 @@ export default {
     selectedTags(newValue) {
       // store의 selectedTags가 바뀌면 새로운 게시판의 정보를 서버로부터 받아옴
       // this.loadBoard();
-      console.log(newValue);
       this.board = this.origin_board.filter(post => {
         for (const tag of post.ref_tags) {
-          if (newValue.indexOf(tag.toLowerCase()) >= 0) return true;
+          if (newValue.indexOf(tag) >= 0) return true;
         }
         return false;
       });
@@ -103,7 +102,7 @@ export default {
         this.origin_board = data;
         this.board = this.origin_board.filter(post => {
           for (const tag of post.ref_tags) {
-            if (this.selectedTags.indexOf(tag.toLowerCase()) >= 0) {
+            if (this.selectedTags.indexOf(tag) >= 0) {
               return true;
             }
           }

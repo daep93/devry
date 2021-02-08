@@ -60,9 +60,9 @@
       <q-card class="row full-width justify-center" flat>
         <q-card-actions align="center" class="">
           <q-input
-            v-model="search"
+            v-model="searched_tag"
             type="text"
-            @keypress.enter="handleScroll(search)"
+            @keypress.enter="handleScroll(searched_tag)"
             label="태그 검색"
           />
         </q-card-actions>
@@ -98,39 +98,20 @@ import {
   colorSoloMapper,
   matchingColorSoloMapper,
 } from '@/utils/tagColorMapper';
-import { all_tag_list } from '@/utils/autoComplete';
 import { scroll } from 'quasar';
 const { getScrollTarget, setScrollPosition } = scroll;
 export default {
   data() {
     return {
-      search: '',
+      searched_tag: '',
       scrollInfo: {},
-      tags: {
-        frontend: false,
-        backend: false,
-        angular: false,
-        django: false,
-        java: false,
-        'vue.js': false,
-        typescript: false,
-        docker: false,
-        python3: false,
-        react: false,
-        javascript: false,
-        spring: false,
-        html5: false,
-        css3: false,
-        mysql: false,
-        mariadb: false,
-        'node.js': false,
-      },
+      tags: { ...this.$store.state.tags_selected },
     };
   },
   methods: {
     tagAutoComplete(str) {
       const reg = new RegExp(`^${str}`, 'i');
-      for (const tag of all_tag_list) {
+      for (const tag of this.$store.state.all_tag_list) {
         if (tag.match(reg)) return tag;
       }
       return '';
@@ -164,7 +145,7 @@ export default {
   },
   created() {
     for (const tag of this.$store.getters.getMyTags) {
-      this.tags[tag.toLowerCase()] = true;
+      this.tags[tag] = true;
     }
   },
 };

@@ -4,7 +4,7 @@ const testCase = [
     title: 'Add a YouTube stats widget to your iPhone with JavaScript', // 글 제목
     thumnail:
       'https://techcrunch.com/wp-content/uploads/2019/10/youtube-ios-app.jpg?w=1024', // 글의 썸네일 이미지
-    ref_tags: ['vue', 'javascript'], // 참조된 태그
+    ref_tags: ['Vue.js', 'JavaScript'], // 참조된 태그
     like_num: 7, // 글 좋아요 갯수
     like_status: true, // 현재 로그인한 유저의 해당 글에 대한 좋아요 상태 표시
     comment_num: 1, // 댓글 갯수
@@ -23,7 +23,7 @@ const testCase = [
     title: 'Git Merge Request 관련하여',
     thumnail:
       'https://cdn.shortpixel.ai/client/q_glossy,ret_img,w_796,h_448/https://techuncode.com/wp-content/uploads/2020/09/what-is-a-computer-algorithm.jpg',
-    ref_tags: ['Git'],
+    ref_tags: ['JavaScript'],
     like_num: 10,
     like_status: true,
     comment_num: 3,

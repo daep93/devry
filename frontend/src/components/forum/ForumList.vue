@@ -106,73 +106,6 @@ export default {
       // title: 'Add a YouTube stats widget to your iPhone with JavaScript',
       // username: 'test user',
       // profile_img: 'https://cdn.quasar.dev/img/avatar.png',
-
-      forumList: [
-        {
-          forum_id: 1,
-          title: 'Add a YouTube stats widget to your iPhone with JavaScript',
-          thumnail: 'https://cdn.quasar.dev/img/mountains.jpg',
-          ref_tags: ['vue', 'javascript'],
-          like_num: 7,
-          comment_num: 1,
-          viewed_num: 20,
-          user_info: {
-            // 글 작성자 정보
-            user_id: 3,
-            username: 'test1',
-            written_time: '2021-01-24T02:01',
-            profile_img: 'https://cdn.quasar.dev/img/avatar.png',
-          },
-        },
-        {
-          forum_id: 2,
-          title: '두 번째 글',
-          thumnail: 'https://placeimg.com/500/300/nature',
-          ref_tags: ['django', 'python'],
-          like_num: 10,
-          comment_num: 3,
-          viewed_num: 10,
-          user_info: {
-            // 글 작성자 정보
-            user_id: 5,
-            username: 'user2',
-            written_time: '2021-01-25T03:04',
-            profile_img: 'https://cdn.quasar.dev/img/mountains.jpg',
-          },
-        },
-        {
-          forum_id: 1,
-          title: 'Add a YouTube stats widget to your iPhone with JavaScript',
-          thumnail: 'https://cdn.quasar.dev/img/mountains.jpg',
-          ref_tags: ['vue.js', 'django'],
-          like_num: 17,
-          comment_num: 1,
-          viewed_num: 20,
-          user_info: {
-            // 글 작성자 정보
-            user_id: 3,
-            username: 'test1',
-            written_time: '2021-01-25T04:09',
-            profile_img: 'https://cdn.quasar.dev/img/avatar.png',
-          },
-        },
-        {
-          forum_id: 2,
-          title: '두 번째 글',
-          thumnail: 'https://placeimg.com/500/300/nature',
-          ref_tags: ['django', 'python3'],
-          like_num: 1,
-          comment_num: 3,
-          viewed_num: 10,
-          user_info: {
-            // 글 작성자 정보
-            user_id: 5,
-            username: 'user2',
-            written_time: '2021-01-23T05:12',
-            profile_img: 'https://cdn.quasar.dev/img/mountains.jpg',
-          },
-        },
-      ],
     };
   },
   created() {
@@ -182,9 +115,8 @@ export default {
     tagFilteredList() {
       return testCase.filter(article => {
         for (const tag of article.ref_tags) {
-          for (const selected of this.$store.getters.getSelectedTags) {
-            if (tag === selected) return true;
-          }
+          if (this.$store.getters.getSelectedTags.indexOf(tag) >= 0)
+            return true;
         }
         return false;
       });
