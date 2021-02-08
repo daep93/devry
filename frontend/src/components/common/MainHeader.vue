@@ -125,6 +125,7 @@ export default {
     async logout() {
       try {
         await this.$store.dispatch('LOGOUT');
+        location.reload();
       } catch (error) {
         console.log(error);
       }
