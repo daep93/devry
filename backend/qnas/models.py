@@ -92,7 +92,6 @@ class Qnasmall(models.Model):
     
 
 class Ans(models.Model):
-    title = models.CharField(max_length=70)
     content = models.TextField()
     img=models.ImageField(upload_to="%Y/%m/%d", default="")
     assisted = models.BooleanField(default="False")
