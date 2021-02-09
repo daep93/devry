@@ -160,7 +160,7 @@ export default {
           title: this.title,
           user: this.$store.state.id,
           content: this.content,
-          img: this.img,
+          // img: this.img,
           ref_tags: this.ref_tags,
         });
         console.log('페이지 이동 전까지 성공?');

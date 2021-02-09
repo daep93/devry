@@ -151,9 +151,14 @@ export default {
         alert('내용은 필수 입력항목 입니다');
       }
       try {
+        if (this.img.length === 0) {
+          this.img = null;
+        }
         console.log(this.$store.state.id);
         console.log(this.$store.state);
         console.log(this.img);
+        console.log(this.img);
+        console.log('여기..?');
 
         this.$q.loading.show();
         await createQnaItem({
@@ -196,14 +201,15 @@ export default {
       // Here is just an example
       insertImage({
         // 1. blob 데이터 출력하기
-        // url: URL.createObjectURL(file),
+        // url : URL.createObjectURL(file),
         // 2. 서버에서 받아온 이미지 url 출력하기
-        // url : this.imgUrl
+        url: this.imgUrl,
         // 3. 파일명 출력하기
-        url: file.name,
+        // url : file.name,
         // 4. base64 출력하기
         // url: localStorage.getItem('imgUrl'),
         desc: '글 작성 시 ' + file.name + ' 이미지가 출력됩니다.',
+        responseType: 'blob',
       });
     },
   },
