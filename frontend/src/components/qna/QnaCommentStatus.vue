@@ -64,6 +64,7 @@ export default {
       try {
         const commentId = this.info.id;
         await toggleQnaCommentLike(commentId);
+        console.log(commentId);
         this.info.liked_ans = !this.info.liked_ans;
         if (this.info.liked_ans) {
           this.info.like_ans_num = this.info.like_ans_num + 1;
