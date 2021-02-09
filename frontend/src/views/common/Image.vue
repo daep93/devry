@@ -85,13 +85,31 @@
 </template>
 
 <script>
-import { filtered_tags } from '@/utils/autoComplete';
-
-import { createQnaItem, saveQnaImage, loadQnaImage } from '@/api/qna';
+import { createQnaItem } from '@/api/qna';
+import { filtered_tags, all_tags } from '@/utils/autoComplete';
 
 export default {
   data() {
     const index = this.$route.params.id;
+    this.toolbar = {
+      video: {
+        title: '비디오',
+        // TODO : icon 변경하기
+        icon: 'v-md-icon-toc',
+        action(editor) {
+          editor.insert(function() {
+            const imagetxt = 'Image text';
+            const image = 'Screenshot image URL';
+            const youtube = 'Youtube Link';
+
+            return {
+              text: `[![${imagetxt}](${image})](${youtube})`,
+              selected: imagetxt,
+            };
+          });
+        },
+      },
+    };
     return {
       index,
       profile: '',
@@ -99,35 +117,16 @@ export default {
       tagItem: '',
       content: '',
       ref_tags: [],
-      tags: { ...this.$store.state.tags_selected },
-      toolbar: {
-        video: {
-          title: '비디오',
-          // TODO : icon 변경하기
-          icon: 'v-md-icon-toc',
-          action(editor) {
-            editor.insert(function() {
-              const imagetxt = 'Image text';
-              const image = 'Screenshot image URL';
-              const youtube = 'Youtube Link';
-
-              return {
-                text: `[![${imagetxt}](${image})](${youtube})`,
-                selected: imagetxt,
-              };
-            });
-          },
-        },
-      },
+      tags: all_tags,
       img: [],
-      imgUrl: '',
+      imgUrl: ''
     };
   },
   methods: {
     createTag() {
       if (this.tagItem !== '') {
         const str =
-          this.tagItem.charAt(0).toUpperCase() + this.tagItem.slice(1);
+        this.tagItem.charAt(0).toUpperCase() + this.tagItem.slice(1);
         this.ref_tags.push(str);
         this.tagItem = '';
       }
@@ -153,7 +152,7 @@ export default {
       try {
         console.log(this.$store.state.id);
         console.log(this.$store.state);
-        console.log(this.img);
+        console.log(this.img)
 
         this.$q.loading.show();
         await createQnaItem({
@@ -174,37 +173,36 @@ export default {
         this.$q.loading.hide();
       }
     },
-    async handleUploadImage(event, insertImage, files) {
+    handleUploadImage(event, insertImage, files) {
+      // Get the files and upload them to the file server, then insert the corresponding content into the editor
       console.log(files);
-      const file = event.target.files[0];
-      console.log(file);
-      this.img.push(file);
-      // 파일 임시 서버에 저장하기
-      try {
-        await saveQnaImage({
-          // 이미지 formData 서버에 넘겨주기
-          img: this.img,
-        });
-        console.log('성공?');
-        console.log(this.img);
-        // 이미지 url 받아오기
-        const { data } = await loadQnaImage();
-        this.imgUrl = data.imgUrl;
-      } catch (error) {
-        console.log(error);
-      }
+      // console.log(insertImage);
+      const file = event.target.files[0]
+
+      // 이미지 base64변환 코드 
+      const reader = new FileReader();
+      reader.onload = (event) => {
+      const image = event.target.result;
+      console.log('base64 변환', image);
+      localStorage.setItem('imgUrl', image)
+      };
+      reader.readAsDataURL(file);
       // Here is just an example
       insertImage({
-        // 1. blob 데이터 출력하기
         // url: URL.createObjectURL(file),
-        // 2. 서버에서 받아온 이미지 url 출력하기
-        // url : this.imgUrl
-        // 3. 파일명 출력하기
-        url: file.name,
-        // 4. base64 출력하기
+        // 파일명 출력하기
+        url : file.name,
+        // base64 출력하기
         // url: localStorage.getItem('imgUrl'),
         desc: '글 작성 시 ' + file.name + ' 이미지가 출력됩니다.',
+        // width: 'auto',
+        // height: 'auto',
       });
+      console.log(file)
+      this.img.push(file)
+      // console.log(this.img)
+      console.log(this.imgurl)
+
     },
   },
   computed: {
@@ -214,9 +212,6 @@ export default {
     suggests() {
       return filtered_tags(this.tagItem);
     },
-  },
-  created() {
-    this.$store.commit('offLeft');
   },
 };
 </script>
