@@ -48,7 +48,7 @@
           <!-- 등록된 웹싸이트 링크에 맞춰 로고를 보여주는 행-->
           <div class="row  q-mb-md">
             <q-icon
-              v-for="(url, logo) in info.links"
+              v-for="(url, logo) in links"
               :key="logo"
               :name="$i[`ionLogo${logo}`]"
               size="sm"
@@ -101,6 +101,17 @@ export default {
     onFollow(tab) {
       this.$store.commit('onFollowModal', tab);
     },
+  },
+  data() {
+    return {
+      links: {
+        Github: 'https://github.com/daep93/',
+        Gitlab: 'https://lab.ssafy.com/',
+        Facebook: 'https://www.facebook.com/groups/vuejs.korea/',
+        Linkedin:
+          'https://www.linkedin.com/in/%EB%8C%80%ED%98%84-%EB%B0%95-001319202/',
+      },
+    };
   },
 };
 </script>

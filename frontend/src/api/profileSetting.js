@@ -4,7 +4,11 @@ function loadProfile() {
   return profileSetting.get('/');
 }
 function updateProfile(profileData) {
-  return profileSetting.put('/', profileData);
+  return profileSetting.put('/', profileData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 }
 function deleteProfile() {
   return profileSetting.delete('/');

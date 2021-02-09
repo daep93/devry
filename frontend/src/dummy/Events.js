@@ -102,7 +102,7 @@ const testCase = [
     event_id: 9,
     category: 'hackathon',
     title: '제 5회 융합 해커톤',
-    tags: ['vue', 'django', 'hackathon'],
+    tags: ['vue.js', 'django', 'hackathon'],
     date: '2021.06.13',
     host_info: {
       user_id: 11,

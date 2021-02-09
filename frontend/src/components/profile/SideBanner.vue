@@ -59,12 +59,49 @@
                     v-ripple
                     style="background-color:#F0ECEC; border-radius:6px; "
                     class="q-mb-sm q-pl-lg"
-                    v-for="(url, name) in info.projects"
-                    :key="name"
+                    v-if="info.projects[0]['project_name1']"
                   >
                     <q-item-section>
-                      <div style="color: #08458C" class="text-center">
-                        {{ name }}
+                      <div
+                        style="color: #08458C"
+                        class="text-center"
+                        @click="window.open(info.projects[0]['project_url1'])"
+                      >
+                        {{ info.projects[0]['project_name1'] }}
+                      </div>
+                    </q-item-section>
+                  </q-item>
+                  <q-item
+                    clickable
+                    v-ripple
+                    style="background-color:#F0ECEC; border-radius:6px; "
+                    class="q-mb-sm q-pl-lg"
+                    v-if="info.projects[0]['project_name2']"
+                  >
+                    <q-item-section>
+                      <div
+                        style="color: #08458C"
+                        class="text-center"
+                        @click="window.open(info.projects[0]['project_url2'])"
+                      >
+                        {{ info.projects[0]['project_name2'] }}
+                      </div>
+                    </q-item-section>
+                  </q-item>
+                  <q-item
+                    clickable
+                    v-ripple
+                    style="background-color:#F0ECEC; border-radius:6px; "
+                    class="q-mb-sm q-pl-lg"
+                    v-if="info.projects[0]['project_name3']"
+                  >
+                    <q-item-section>
+                      <div
+                        style="color: #08458C"
+                        class="text-center"
+                        @click="window.open(info.projects[0]['project_url3'])"
+                      >
+                        {{ info.projects[0]['project_name3'] }}
                       </div>
                     </q-item-section>
                   </q-item>

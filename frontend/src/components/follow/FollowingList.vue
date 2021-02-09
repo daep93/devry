@@ -48,7 +48,6 @@
             <q-btn
               no-caps
               outline
-              color="primary"
               label="Following"
               style="width:90px;"
               @click="checkFollow(index)"
