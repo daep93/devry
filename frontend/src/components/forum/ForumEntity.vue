@@ -96,7 +96,7 @@ export default {
     },
     // TODO: 추후 연결 페이지 수정 필요
     goToDetail() {
-      this.$router.push(`/qna-detail/${this.entity.id}`);
+      this.$router.push(`/forum-detail/${this.entity.id}`);
     },
     goToProfile() {
       this.$router.push({ name: 'Profile' });

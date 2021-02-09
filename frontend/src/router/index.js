@@ -58,7 +58,7 @@ const routes = [
   },
   {
     // 추후 id값으로 수정 필요
-    path: '/forum/forum-detail',
+    path: '/forum-detail/:id',
     name: 'ForumDetail',
     component: () => import('@/views/forum/ForumDetailPage.vue'),
   },
