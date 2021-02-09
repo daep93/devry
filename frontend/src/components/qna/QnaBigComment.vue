@@ -20,13 +20,14 @@
                 </span>
               </div>
               <div class="q-ml-md row col-12">
-                <v-md-editor v-model="data.content" mode="preview">
+                <v-md-editor v-model="data.content" :mode="modes[index]">
                 </v-md-editor>
                 <q-card-section
                   class="row col-12 justify-end"
                   v-if="data.user.id == $store.state.id"
                 >
-                  <q-btn @click="updateQnaComment(index)">수정하기</q-btn>
+                  <!-- <q-btn @click="updateQnaComment(index)">수정하기</q-btn> -->
+                  <q-btn @click="editerOpen(index)">수정하기</q-btn>
                 </q-card-section>
                 <q-btn
                   outline
@@ -118,6 +119,9 @@ export default {
     QnaCommentStatus,
   },
   data() {
+    const res = [];
+    for (const i in this.info) res.push('preview');
+    this.modes = res;
     return {
       text: '',
       follow: true,
@@ -125,9 +129,14 @@ export default {
       content: null,
       qna: null,
       author: null,
+      modes: res,
     };
   },
   methods: {
+    editerOpen(index) {
+      this.modes[index] = 'editable';
+      this.modes = [...this.modes];
+    },
     async updateQnaComment(index) {
       if (this.contents === '') {
         alert('내용은 필수 입력항목 입니다');

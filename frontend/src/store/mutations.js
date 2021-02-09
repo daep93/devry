@@ -38,6 +38,9 @@ export default {
   onLeft(state) {
     state.leftDrawal = true;
   },
+  offLeft(state) {
+    state.leftDrawal = false;
+  },
   toggleTagFilter(state) {
     state.tagFilter = !state.tagFilter;
   },

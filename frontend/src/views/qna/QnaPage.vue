@@ -6,7 +6,24 @@
       </div>
 
       <!-- 게시판 보드 -->
-      <qna-board :current="current"></qna-board>
+      <!-- <qna-board :current="current"></qna-board> -->
+      <bulletin-board :origin_board="board">
+        <template slot="tab">
+          <q-tab name="time" label="최신순" />
+          <q-tab name="comment" label="댓글순" />
+          <q-tab name="like" label="추천순" />
+        </template>
+        <template slot="entities" slot-scope="scopeProps">
+          <qna-entity
+            v-for="quest in scopeProps.entities.slice(
+              (current - 1) * 10,
+              current * 10,
+            )"
+            :key="quest.questId"
+            :entity="quest"
+          ></qna-entity>
+        </template>
+      </bulletin-board>
       <div class="row q-mt-md col-12 q-mb-xl justify-between">
         <!-- 답변 완료 표기 -->
         <div class="col-3 row q-py-xs">
@@ -48,20 +65,42 @@
 </template>
 
 <script>
-import QnaBoard from '@/components/qna/QnaBoard';
+import BulletinBoard from '@/components/common/BulletinBoard';
+import QnaEntity from '@/components/qna/QnaEntity.vue';
+import { getQnaList } from '@/api/board';
+// import QnaBoard from '@/components/qna/QnaBoard';
 export default {
   components: {
-    QnaBoard,
+    // QnaBoard,
+    BulletinBoard,
+    QnaEntity,
   },
   data() {
     return {
       current: 1,
-      tagFilter: false,
+      board: [],
     };
   },
-  created() {
-    // 왼쪽 사이드 바 열림
-    this.$store.commit('onLeft');
+  methods: {
+    async loadBoard() {
+      try {
+        this.$q.loading.show();
+        const { data } = await getQnaList();
+        this.board = data;
+        console.log('loadBoard');
+        return data;
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.$q.loading.hide();
+      }
+    },
+  },
+  async created() {
+    // myTags로부터 selectedTags를 받아옴
+    this.$store.commit('initSelectedTags');
+    // QnA 게시판의 정보를 서버로부터 받아옴
+    await this.loadBoard();
   },
 };
 </script>

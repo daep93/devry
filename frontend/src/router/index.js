@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-
+import state from '@/store/state';
 Vue.use(VueRouter);
 
 const routes = [
@@ -58,7 +58,7 @@ const routes = [
   },
   {
     // 추후 id값으로 수정 필요
-    path: '/forum/forum-detail',
+    path: '/forum-detail/:id',
     name: 'ForumDetail',
     component: () => import('@/views/forum/ForumDetailPage.vue'),
   },
@@ -87,5 +87,4 @@ const routes = [
 const router = new VueRouter({
   routes,
 });
-
 export default router;

@@ -1,6 +1,6 @@
 <template>
   <div class="row col-12 " style="border: 1px solid #eaebef;">
-    <div class="row col-8">
+    <div class="row col-7">
       <div
         class="full-height"
         :style="{
@@ -28,7 +28,7 @@
         </div>
       </div>
     </div>
-    <div class="row col-4 q-pl-sm">
+    <div class="row col-5 q-pl-sm">
       <div class="row col-2 items-center">
         <q-icon
           :name="entity.liked ? $i.ionHeart : $i.ionHeartOutline"
@@ -49,7 +49,7 @@
           entity.comment_num
         }}</span>
       </div>
-      <div class="row col-2  items-center justify-center">
+      <div class="row col-2  items-center ">
         <q-icon :name="$i.ionEyeOutline" size="sm" color="grey-6"></q-icon>
         <span class="q-pl-xs text-grey-8" style="font-size:1.2em;">{{
           entity.viewed_num

@@ -84,7 +84,7 @@
 
 <script>
 import { createQnaItem } from '@/api/qna';
-import { filtered_tags, all_tags } from '@/utils/autoComplete';
+import { filtered_tags } from '@/utils/autoComplete';
 
 export default {
   data() {
@@ -96,7 +96,7 @@ export default {
       tagItem: '',
       content: '',
       ref_tags: [],
-      tags: all_tags,
+      tags: { ...this.$store.state.tags_selected },
       toolbar: {
         video: {
           title: '비디오',
@@ -187,6 +187,9 @@ export default {
     suggests() {
       return filtered_tags(this.tagItem);
     },
+  },
+  created() {
+    this.$store.commit('offLeft');
   },
 };
 </script>
