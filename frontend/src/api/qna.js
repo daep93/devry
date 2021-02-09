@@ -28,6 +28,14 @@ function getSmallAnswers(postId) {
 function toggleQnaLike(postId) {
   return instance.post(`qna_like/${postId}/`);
 }
+// QnA 이미지 임시저장 하기
+function saveQnaImage(postData) {
+  return instance.post('qna_image/', postData);
+}
+// QnA 이미지 임시저장한 내용 불러오기
+function loadQnaImage() {
+  return instance.get('qna/');
+}
 export {
   registerSmallAnswer,
   getSmallAnswers,
@@ -36,4 +44,6 @@ export {
   createQnaItem,
   updateQnaItem,
   deleteQnaItem,
+  saveQnaImage,
+  loadQnaImage,
 };
