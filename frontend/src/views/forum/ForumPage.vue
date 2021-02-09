@@ -1,79 +1,67 @@
 <template>
-  <div class="row justify-center q-ml-md q-mt-lg">
-    <div class="row col-8">
-      <div class="text-h4 text-weight-bold q-mb-lg col-12">Forum 게시판</div>
-      <div class="row justify-between col-12">
-        <!-- tab 라벨 -->
-        <q-tabs
-          v-model="tab"
-          no-caps
-          dense
-          class="text-grey"
-          active-color="primary"
-          indicator-color="primary"
-          narrow-indicator
-        >
-          <q-tab name="feed" label="Feed" />
-          <q-tab name="latest" label="Latest" />
-        </q-tabs>
-        <!-- 서치바, 태그 버튼 -->
-        <div class="row justify-end q-gutter-lg">
-          <q-input v-model="search" type="search" outlined>
-            <template v-slot:append>
-              <q-icon :name="$i.ionSearchOutline" />
-            </template>
-          </q-input>
-          <q-btn
-            class="tag-filter"
-            outline
-            color="primary"
-            @click="$store.commit('toggleTagFilter')"
-            >태그 선택</q-btn
-          >
-        </div>
+  <div class="row justify-center q-pt-lg ">
+    <div class="row col-8 justify-center q-pl-lg">
+      <div class="row q-mb-sm col-12 text-h5 text-weight-bold">
+        Forum 게시판
       </div>
-      <!-- 탭 시작 -->
-      <ForumList :tab="tab"></ForumList>
+      <!-- <forum-board></forum-board> -->
+      <bulletin-board :origin_board="board">
+        <template slot="tab">
+          <q-tab name="feed" label="피드" />
+          <q-tab name="time" label="최신글" />
+        </template>
+        <template slot="entities" slot-scope="scopeProps">
+          <div
+            class="row col-4 q-pa-sm"
+            v-for="(post, index) in scopeProps.entities"
+            :key="index"
+          >
+            <forum-entity :entity="post"></forum-entity>
+          </div>
+        </template>
+      </bulletin-board>
     </div>
   </div>
 </template>
 
 <script>
-import ForumList from '@/components/forum/ForumList';
-
+// import ForumBoard from '@/components/forum/ForumBoard';
+import BulletinBoard from '@/components/common/BulletinBoard';
+import ForumEntity from '@/components/forum/ForumEntity';
+import { testCase } from '@/dummy/Forum';
 export default {
+  components: {
+    // ForumBoard,
+    BulletinBoard,
+    ForumEntity,
+  },
   data() {
     return {
-      tab: 'feed',
-      search: '',
+      board: [],
     };
   },
-  components: {
-    ForumList,
+  methods: {
+    // 게시판의 정보를 서버로부터 받아옴
+    async loadBoard() {
+      try {
+        this.$q.loading.show();
+        // const { data } = await getQnaList();
+        // this.origin_board = data;
+        this.board = testCase;
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.$q.loading.hide();
+      }
+    },
   },
-  created() {
-    // 왼쪽 사이드 바 열림
-    this.$store.commit('onLeft');
+  async created() {
+    // myTags로부터 selectedTags를 받아옴
+    this.$store.commit('initSelectedTags');
+    // QnA 게시판의 정보를 서버로부터 받아옴
+    this.loadBoard();
   },
 };
 </script>
 
-<style scoped>
-.q-tab >>> .q-tab__label {
-  font-size: 13pt;
-  font-weight: bold;
-}
-.q-input >>> .q-icon {
-  size: 5px;
-}
-.q-input >>> .q-field__control {
-  height: 40px;
-}
-.q-input >>> .q-field__append {
-  height: 40px;
-}
-.tag-filter {
-  height: 38px;
-  margin-left: 15px;
-}
-</style>
+<style scoped></style>

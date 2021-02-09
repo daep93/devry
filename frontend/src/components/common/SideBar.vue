@@ -7,6 +7,7 @@
     bordered
     :width="250"
     overlay
+    persistent
   >
     <q-tabs
       v-model="tab"

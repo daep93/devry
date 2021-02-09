@@ -29,7 +29,13 @@ VMdEditor.use(githubTheme, {
     vue: 'html',
   },
 });
-
+VMdEditor.xss.extend({
+  // extend white list
+  whiteList: {
+    source: [],
+    iframe: ['src'],
+  },
+});
 Vue.use(VMdEditor);
 Vue.use(VueMoment);
 Vue.config.productionTip = false;
