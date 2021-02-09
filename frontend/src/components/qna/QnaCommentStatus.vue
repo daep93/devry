@@ -9,7 +9,7 @@
               color="red"
               size="17px"
               class="cursor-pointer"
-              @click="checkLiked(index)"
+              @click="checkLiked"
             ></q-icon>
           </template>
           <template v-else>
@@ -18,7 +18,7 @@
               style="color:#727272"
               size="17px"
               class="cursor-pointer"
-              @click="checkLiked(index)"
+              @click="checkLiked"
             ></q-icon>
           </template>
 
@@ -42,17 +42,52 @@
 </template>
 
 <script>
-// import { toggleQnaCommentLike } from '@/api/qna';
+import { toggleQnaCommentLike } from '@/api/qna';
 
 export default {
   props: {
     info: Object,
   },
+  data() {
+    return {
+      liked_ans: this.info.liked_ans,
+      like_ans_num: this.info.like_ans_num,
+    };
+  },
   methods: {
     async checkLiked() {
+      // console.log(this.info);
       if (!this.$store.getters.isLogined) {
         alert('로그인을 해주세요');
         return;
+      }
+      try {
+        const commentId = this.info.id;
+        await toggleQnaCommentLike(commentId);
+        console.log(commentId);
+        this.info.liked_ans = !this.info.liked_ans;
+        if (this.info.liked_ans) {
+          this.info.like_ans_num = this.info.like_ans_num + 1;
+        } else {
+          this.info.like_ans_num = this.info.like_ans_num - 1;
+        }
+        // console.log('체크11');
+        // await toggleQnaCommentLike({ commentId, liked_ans: this.liked_ans });
+        // console.log('체크22');
+        // console.log(this.liked_ans);
+        // const commentId = this.info.id;
+        // this.info.liked_ans = !this.info.liked_ans;
+        // if (this.info.liked_ans) {
+        //   this.info.like_ans_num = this.info.like_ans_num + 1;
+        // } else {
+        //   this.info.like_ans_num = this.info.like_ans_num - 1;
+        // }
+        // console.log('체크11');
+        // await toggleQnaCommentLike({ commentId, liked_ans: this.liked_ans });
+        // console.log('체크22');
+        // console.log(this.liked_ans);
+      } catch (error) {
+        console.log(error);
       }
     },
   },

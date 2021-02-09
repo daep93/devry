@@ -7,9 +7,8 @@
         style="color:#3B77AF"
         class="row justify-start"
       >
-        <q-tab name="time" label="최신순" />
-        <q-tab name="comment" label="댓글순" />
-        <q-tab name="like" label="추천순" />
+        <q-tab name="feed" label="피드" />
+        <q-tab name="time" label="최신글" />
       </q-tabs>
       <div class="row justify-end q-gutter-lg">
         <q-input v-model="search" type="search" class="q-mb-sm" outlined>
@@ -27,24 +26,27 @@
       </div>
     </div>
     <div class="row q-mt-md col-12">
-      <qna-entity
-        v-for="quest in board.slice((current - 1) * 10, current * 10)"
-        :key="quest.questId"
-        :entity="quest"
-      ></qna-entity>
+      <div
+        class="row col-4 q-pa-sm"
+        v-for="forum in board"
+        :key="forum.forumId"
+      >
+        <forum-entity :entity="forum"></forum-entity>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import QnaEntity from '@/components/qna/QnaEntity.vue';
-import { getQnaList } from '@/api/board';
+import ForumEntity from '@/components/forum/ForumEntity.vue';
+// import { getQnaList } from '@/api/board';
+import { testCase } from '@/dummy/Forum';
 export default {
   props: {
     current: Number,
   },
   components: {
-    QnaEntity,
+    ForumEntity,
   },
   data() {
     return {
@@ -98,8 +100,9 @@ export default {
         //   tags_filter: this.selectedTags,
         //   tab: this.sort,
         // });
-        const { data } = await getQnaList();
-        this.origin_board = data;
+        // const { data } = await getQnaList();
+        // this.origin_board = data;
+        this.origin_board = testCase;
         this.board = this.origin_board.filter(post => {
           for (const tag of post.ref_tags) {
             if (this.selectedTags.indexOf(tag) >= 0) {

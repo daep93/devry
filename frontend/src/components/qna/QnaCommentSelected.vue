@@ -1,12 +1,13 @@
 <template>
   <!-- 채택 댓글 프로필 -->
   <div>
-    <div
+    <div class="row cal-3 q-pt-lg q-ml-sm">
+      <!-- <div
       class="row cal-3 q-pt-lg q-ml-sm"
       v-for="(data, index) in info"
       :key="data"
-    >
-      <div v-if="data.assisted == true">
+    > -->
+      <div v-if="info.assisted == true">
         <q-card
           flat
           bordered
@@ -31,7 +32,7 @@
                     style="font-size: 15px; cursor:pointer; color: #464646"
                     @click="goToProfile"
                   >
-                    <b>{{ data.user.username }}</b>
+                    <b>{{ info.user.username }}</b>
                     <div class="text-caption">
                       글 27 · 팔로워 57
                     </div>
@@ -42,8 +43,7 @@
           </q-card-section>
           <div class="q-px-md q-pb-md">
             <div style="font-size: 13px;">
-              FE Engineer for en expensive cars company. Archer at night. Ask me
-              about company culture, side projects, performance and Vue.
+              프로필
             </div>
           </div>
           <div style="margin:0 auto;">

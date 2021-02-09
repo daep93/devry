@@ -1,4 +1,5 @@
 import { instance } from '@/api';
+import { setInterceptors } from '@/api/common/interceptors';
 
 // QnA 글 불러오기
 function loadQnaItem(postId) {
@@ -42,7 +43,8 @@ function deleteQnaBigComment(commentId) {
 }
 // QnA 큰 댓글 좋아요 토글하기
 function toggleQnaCommentLike(commentId) {
-  return instance.post(`ans/${commentId}/`);
+  // return instance.post(`ans_like/${commentId}/`);
+  return setInterceptors(instance).post(`ans_like/${commentId}/`);
 }
 // QnA 큰 댓글 채택 토글하기
 function toggleQnaCommentChoose(commentId) {
