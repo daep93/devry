@@ -92,9 +92,7 @@
         </div>
         <!-- 채택 댓글 프로필 -->
         <div v-if="data.assisted === true">
-          <qna-comment-selected
-            :info="bigCommentsSelected"
-          ></qna-comment-selected>
+          <qna-comment-selected :info="data"></qna-comment-selected>
         </div>
       </div>
     </div>

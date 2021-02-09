@@ -117,10 +117,6 @@ export default {
     } catch (error) {
       console.log(error);
     }
-<<<<<<< HEAD
-    // this.checkWriter();
-=======
->>>>>>> 6f1a19b798de483173a44b28d58a9683df72cd3b
   },
 };
 </script>
