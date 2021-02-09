@@ -89,25 +89,6 @@ import { filtered_tags, all_tags } from '@/utils/autoComplete';
 export default {
   data() {
     const index = this.$route.params.id;
-    this.toolbar = {
-      video: {
-        title: '비디오',
-        // TODO : icon 변경하기
-        icon: 'v-md-icon-toc',
-        action(editor) {
-          editor.insert(function() {
-            const imagetxt = 'Image text';
-            const image = 'Screenshot image URL';
-            const youtube = 'Youtube Link';
-
-            return {
-              text: `[![${imagetxt}](${image})](${youtube})`,
-              selected: imagetxt,
-            };
-          });
-        },
-      },
-    };
     return {
       index,
       profile: '',
@@ -116,6 +97,25 @@ export default {
       content: '',
       ref_tags: [],
       tags: all_tags,
+      toolbar: {
+        video: {
+          title: '비디오',
+          // TODO : icon 변경하기
+          icon: 'v-md-icon-toc',
+          action(editor) {
+            editor.insert(function() {
+              const imagetxt = 'Image text';
+              const image = 'Screenshot image URL';
+              const youtube = 'Youtube Link';
+
+              return {
+                text: `[![${imagetxt}](${image})](${youtube})`,
+                selected: imagetxt,
+              };
+            });
+          },
+        },
+      },
     };
   },
   methods: {

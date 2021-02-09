@@ -53,6 +53,7 @@ export default {
   data() {
     return {
       contents: '',
+      writerStatus: false,
     };
   },
   methods: {
@@ -99,12 +100,6 @@ export default {
     },
     bigComments() {
       return this.contents.ans_set;
-
-      // bigComments() {
-      //   return {
-      //     content: this.contents.ans_set,
-      //     title: this.contents.title,
-      //   };
     },
     createBigComments() {
       return {
@@ -118,10 +113,10 @@ export default {
       const { data } = await loadQnaItem(index);
       this.contents = data;
       // console.log(this.contents);
+      this.checkWriter();
     } catch (error) {
       console.log(error);
     }
-    this.checkWriter();
   },
 };
 </script>
