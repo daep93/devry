@@ -1,11 +1,9 @@
 from django.db import models
 from accounts.models import User
 from accounts.serializers import UserSerializer
-from articles.models import Article, Comment
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill
 from multiselectfield import MultiSelectField
-
 tech = (
     ('Python3', 'Python3'),
     ('Django', 'Django'),
@@ -50,8 +48,8 @@ user_tag = (
     ('MongoDB', 'MongoDB'),
     ('Docker', 'Docker'),
     ('Kubernetes', 'Kubernetes'),
-    ('FrontEnd', 'FrontEnd'),
-    ('BackEnd', 'BackEnd'),
+    ('Frontend', 'Frontend'),
+    ('Backend', 'Backend'),
     ('DevOps', 'DevOps'),
     ('Artificial Intelligence', 'Artificial Intelligence'),
     ('BigData', 'BigData'),
@@ -111,11 +109,11 @@ class Profile(models.Model):
     project_url2 = models.URLField(default="", max_length=100, blank=True)
     project_url3 = models.URLField(default="", max_length=100, blank=True)
     tag = MultiSelectField(choices=user_tag)
-    pinned_posts = models.ManyToManyField(Article, related_name='profile_pinned_posts')
-    posts = models.ManyToManyField(Article, related_name='profile_posts')
-    comments = models.ManyToManyField(Comment, related_name='profile_comments')
-    links = models.ManyToManyField('self', default=0 ,related_name='link_sns', blank=True)
+    pinned_posts = models.TextField(blank=True)
+    posts = models.TextField(blank=True)
+    comments = models.TextField(blank=True)
+    links = models.ManyToManyField('self', default=0 ,related_name='project_link', blank=True)
     projects = models.ManyToManyField('self', default=0, related_name='project_project', blank=True)
     joined = models.DateTimeField(blank=True)
-    tags = models.TextField(blank=True)
+    tags = models.ManyToManyField('self', default=0, related_name='project_tags', blank=True)
 

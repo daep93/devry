@@ -122,10 +122,10 @@ class UserFollowing(models.Model):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['user_id','following_user_id'],  name="unique_followers")
+            models.UniqueConstraint(fields=['user','following_user'],  name="unique_followers")
         ]
         
 
-    def __str__(self):
-        return f"user_id = {self.user_id} follows user_id = {self.following_user_id}"
+    # def __str__(self):
+    #     return f"user_id = {self.user_id} follows user_id = {self.following_user_id}"
 

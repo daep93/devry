@@ -23,20 +23,18 @@ from rest_framework_jwt.settings import api_settings
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from .models import User, UserManager, TokenModel, UserFollowing
-# from .models import User, UserManager, TokenModel, Follower, Following
 from mysite.utils import import_callable
 
 User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
-    following = serializers.SerializerMethodField()
-    followers = serializers.SerializerMethodField()
+    following = serializers.SerializerMethodField(read_only=True)
+    followers = serializers.SerializerMethodField(read_only=True)
 
-    follower_num = serializers.IntegerField()
-    followee_num = serializers.IntegerField()
+    follower_num = serializers.IntegerField(read_only=True)
+    followee_num = serializers.IntegerField(read_only=True)
     class Meta:
         model = User
-        # fields = ('id', 'username', 'email', 'password')
         fields = ('id', 'username', 'email', 'password', 'following', 'followers', 'follower_num', 'followee_num', 'date_joined')
         extra_kwargs = {'password': {'write_only': True}, }
 
@@ -63,14 +61,21 @@ class UserJoinedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'date_joined', )
+        fields = ('id', 'email', 'username', 'date_joined', )
 
 
 class UserFollowerNumberSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('follower_num', 'followee_num')
+        fields = ('id', 'follower_num', 'followee_num')
+
+
+class UserFollowingNumberSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('id', 'followee_num',)
 
 
 class UserRegistrationSerializer(serializers.Serializer):
@@ -93,13 +98,7 @@ class UserRegistrationSerializer(serializers.Serializer):
     def validate_password(self, password):
         return get_adapter().clean_password(password)
 
-    # def validate(self, data):
-    #     if data['password1'] != data['password2']:
-    #         raise serializers.ValidationError(_("The two password fields didn't match."))
-    #     return data
-
     def custom_signup(self, request, user):
-        # pass
         user.set_password(self.validated_data.get('password'))
         user.save()
 
@@ -130,15 +129,6 @@ class UserLoginSerializer(serializers.Serializer):
     def authenticate(self, **kwargs):
         return authenticate(self.context['request'], **kwargs)
 
-    # def _validate_email(self, email, password):
-    #     user = None
-
-    #     if email and password:
-    #         user = self.authenticate(email=email, password=password)
-    #     else:
-    #         msg = _('Must include "email" and "password".')
-    #         raise exceptions.ValidationError(msg)
-
         return user
 
     def _validate_username(self, username, password):
@@ -151,19 +141,6 @@ class UserLoginSerializer(serializers.Serializer):
             raise exceptions.ValidationError(msg)
 
         return user
-
-    # def _validate_username_email(self, username, email, password):
-    #     user = None
-
-    #     if email and password:
-    #         user = self.authenticate(email=email, password=password)
-    #     elif username and password:
-    #         user = self.authenticate(username=username, password=password)
-    #     else:
-    #         msg = _('Must include either "username" or "email" and "password".')
-    #         raise exceptions.ValidationError(msg)
-
-    #     return user
 
     def validate(self, attrs):
         username = attrs.get('username')
@@ -226,11 +203,37 @@ class UserFollowingSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+
+
 class UserFollowersSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserFollowing
-        fields = ("id", "user_id", "created")
+        fields = ("id", "user", "created")
 
+
+class FolloweeUserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserFollowing
+        fields = ('following_user',)
+
+
+class FollowerUserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserFollowing
+        fields = ('user',)
+
+class UserFollowSerializer(serializers.ModelSerializer):
+    user = FollowerUserSerializer()
+    following_user = FolloweeUserSerializer()
+    following = serializers.SerializerMethodField(read_only=True)
+    followers = serializers.SerializerMethodField(read_only=True) 
+    follower_num = serializers.IntegerField(read_only=True)
+    followee_num = serializers.IntegerField(read_only=True)
+    class Meta:
+        model = User
+        fields = ('user', 'following_user', 'following', 'followers', 'follower_num', 'followee_num',)
 
 
 class TokenSerializer(serializers.ModelSerializer):

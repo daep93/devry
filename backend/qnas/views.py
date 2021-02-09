@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from .serializers import QnaListSerializer, QnasmalllistSerializer, AnssmalllistSerializer, ProfileqnaSerializer, \
     QnaListforamtSerializer, QnaSerializer, AnsSerializer, likeSerializer, bookmarkSerializer, solveSerializer, \
     like_ansSerializer, UserinfoSerializer, ProfileListSerializer, ProfileSerializer, QnasmallSerializer, \
-    AnssmallSerializer, QnadetailSerializer, AnslistSerializer, AnsdetailSerializer, AnslistformatSerializer
+    AnssmallSerializer, QnadetailSerializer, AnslistSerializer, AnsdetailSerializer
     
 from .models import Qna, Ans, Qnasmall, Anssmall
 from rest_framework import viewsets
@@ -177,7 +177,7 @@ def ans_list(request):
                 ans.liked_ans = "False"
             ans.save()
         anss = Ans.objects.all()
-        serializer = AnslistformatSerializer(anss, many=True)
+        serializer = AnslistSerializer(anss, many=True)
         return Response(serializer.data)
     else:
         profiles = Profile.objects.all()

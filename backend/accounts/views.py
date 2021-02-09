@@ -43,7 +43,7 @@ from django.views.decorators.http import require_POST
 # from .models import User, TokenModel
 from .models import User, TokenModel, UserFollowing
 # from .serializers import  UserRegistrationSerializer, UserSerializer, InfoSerializer, deleteSerializer, UserLoginSerializer
-from .serializers import  UserRegistrationSerializer, UserSerializer, InfoSerializer, deleteSerializer, UserLoginSerializer, UserFollowersSerializer, UserFollowingSerializer, TokenSerializer
+from .serializers import  UserRegistrationSerializer, UserSerializer, InfoSerializer, deleteSerializer, UserLoginSerializer, UserFollowersSerializer, UserFollowingSerializer, TokenSerializer, UserFollowerNumberSerializer, UserFollowingNumberSerializer, UserFollowSerializer
 from .app_settings import RegisterSerializer, register_permission_classes
 from mysite.app_settings import TokenSerializer, LoginSerializer, UserDetailsSerializer, JWTSerializer, create_token
 from mysite.utils import jwt_encode
@@ -162,13 +162,31 @@ class UserLoginView(GenericAPIView):
         user_token = Token.objects.get(user_id = self.user.id)
 
         response = Response(serializer.data, status=status.HTTP_200_OK)
+
         response = Response({
-            "user": {
-                "id": self.user.id,
-                "username": self.user.username,
-            },
-            "token": serializer.data['key']
-        })
+                "user": {
+                    "id": self.user.id,
+                    "username": self.user.username,
+                },
+                "token": serializer.data['key']
+            })
+
+
+        # 사용자의 프로필이 존재하는 경우 로그인시 프로필의 tag 정보를 추가하는 과정
+        profiles = Profile.objects.all()
+        if profiles.filter(user_id=self.user.id).exists():
+            profile = Profile.objects.get(username=self.user.username)
+            if ProfileSerializer(profile).data['tag']:
+                user_tag = ProfileSerializer(profile).data['tag']
+                response = Response({
+                    "user": {
+                        "id": self.user.id,
+                        "username": self.user.username,
+                        "tag": user_tag
+                    },
+                    "token": serializer.data['key']
+                })
+
 
         if getattr(settings, 'REST_USE_JWT', False):
             from rest_framework_jwt.settings import api_settings as jwt_settings
@@ -181,13 +199,11 @@ class UserLoginView(GenericAPIView):
                                     httponly=True)
         return response
 
-        print(authtoken)
     def post(self, request, *args, **kwargs):
         self.request = request
         self.serializer = self.get_serializer(data=self.request.data,
                                               context={'request': request})
         self.serializer.is_valid(raise_exception=True)
-
         self.login()
         return self.get_response()
 
@@ -196,7 +212,13 @@ class UserLogoutView(LogoutView):
     headers에 유저의 토큰을 입력합니다. 
     headers={'Authorization': 'Token your_token'}
     """
-    pass
+    def post(self, request):
+        if request.META.get('HTTP_AUTHORIZATION'):
+            tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+            user=User.objects.get(id=tok.user_id)
+            if tok == user:
+                TokenSerializer(user.auth_token).remove()
+        return Response('로그아웃되었습니다', status=status.HTTP_204_NO_CONTENT)
 
 
 class UserInfoView(APIView):
@@ -230,67 +252,42 @@ class UserInfoView(APIView):
 class UserFollowingViewSet(viewsets.ModelViewSet):
     queryset = UserFollowing.objects.all()
     serializer_class = UserFollowingSerializer
-    def post(self, request, *args, **kwargs):
-        print('asdjiasdjoiasdjoi')
     # permission_classes = (IsAuthenticatedOrReadOnly,)
 
 @api_view(['GET', 'POST'])
 def following(request):
-    users = User.objects.all()
-    for user in users:
-        if request.META['HTTP_AUTHORIZATION'] == TokenSerializer(user.auth_token).data['key']:
-            request.user = user
-    
-    print(request.user)
+    '''
+    GET Method의 경우 모든 팔로잉 정보를, 
+    POST Method의 경우 팔로잉이 이루어집니다.
+    입력 값은 다음과 같고, user는 following_user를 팔로우합니다.
+    {
+        'user': user_pk,
+        'following_user': user_pk
+    }
+    '''
     if request.method == 'GET':
         follows = UserFollowing.objects.all()
-        followee_number = request.data.get('user')
-        following_number = request.data.get('following_user')
-        print(followee_number, following_number)
-        followee_user = User.objects.get(id=followee_number)
-        following_user = User.objects.get(id=following_number)
-        # print(follows)
-        for follow in follows:
-            # print(UserFollowingSerializer(follow).data)
-            if UserFollowingSerializer(follow).data['user'] == UserSerializer(request.user).data['id']:
-                UserSerializer(request.user).data['follower_num'] = 1
-                followee_user.follower_num += 1
-                print(followee_user.follower_num)
-        print(followee_user.follower_num)
-        # print(UserSerializer(request.user).data)
         serializer = UserFollowingSerializer(follows, many=True)
+
+        fo_user = User.objects.get(pk=1)
+        print(UserSerializer(fo_user).data)
+
+
 
         return Response(serializer.data)
 
     if request.method == 'POST':
-        users = User.objects.all()
-        follows = UserFollowing.objects.all()
-        followee_number = request.data.get('user')
-        following_number = request.data.get('following_user')
-        # print(followee_number, following_number)
-        followee_user = User.objects.get(id=followee_number)
-        following_user = User.objects.get(id=following_number)
-        # print(followee_user, following_user)
-
-        profile_target = Profile.objects.filter(user=followee_user).first()
-        print(profile_target)
-        print(ProfileSerializer(profile_target).data)
-        followers = following_user.follower_num
-        # print(followers)
-
-        # print(request.user)
         serializer = UserFollowingSerializer(data=request.data)
 
+        followee_people = User.objects.get(pk=request.data['user'])
+        following_people = User.objects.get(pk=request.data['following_user'])
+
         if serializer.is_valid(raise_exception=True):
-            for follow in follows:
-                if UserFollowingSerializer(follow).data['user'] == UserSerializer(request.user).data['id']:
-                    followee_user.follower_num += 1
-                if UserFollowingSerializer(follow).data['following_user'] == UserSerializer(request.user).data['id']:
-                    following_user.followee_num += 1
-                ProfileSerializer(profile_target).data['follower_num'] += followee_user.follower_num
-                ProfileSerializer(profile_target).data['followee_num'] += following_user.followee_num
             serializer.save()
         return Response(serializer.data)
+
+
+
 
 @api_view(['GET', 'POST'])
 def follow_list(request):
@@ -311,18 +308,6 @@ def delete(request):
         user = User.objects.get(email=email)
         user.delete()
         return Response({'email': email}, status=status.HTTP_204_NO_CONTENT)
-
-# def req(request):
-#     credentials = {'username': 'pie3', 'email': 'apple@apple.com3'}
-#     response = requests.post("http://127.0.0.1:8000/auth/", data=credentials)
-#     return HttpResponse(response)
-
-# def send_email(request):
-#     subject = "message"
-#     to = [""]
-#     from_email = ""
-#     message = "테스트0"
-#     EmailMessage(subject=subject, body=message, to=to, from_email=from_email).send()
 
 
 class UserPasswordResetView(PasswordResetView):

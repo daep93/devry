@@ -25,6 +25,15 @@ tech = (
     ('MongoDB', 'MongoDB'),
     ('Docker', 'Docker'),
     ('Kubernetes', 'Kubernetes'),
+    ('Frontend', 'Frontend'),
+    ('Backend', 'Backend'),
+    ('DevOps', 'DevOps'),
+    ('Artificial Intelligence', 'Artificial Intelligence'),
+    ('BigData', 'BigData'),
+    ('Blockchain', 'Blockchain'),
+    ('Internet of Things', 'Internet of Things'),
+    ('Augmented Reality', 'Augmented Reality'),
+    ('Virtual Reality', 'Virtual Reality'),
 )
 
 tags = (
