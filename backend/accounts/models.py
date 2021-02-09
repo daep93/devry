@@ -1,5 +1,6 @@
 import os
 
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
@@ -18,6 +19,9 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from multiselectfield import MultiSelectField
+
+from rest_framework.authtoken.models import Token as DefaultTokenModel
+from mysite.utils import import_callable
 # Create your models here.
 
 class UserManager(BaseUserManager):
@@ -52,9 +56,12 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField('email', max_length=80, unique=True)
     username = models.CharField('username', max_length=30, unique=True)
+    # password = models.CharField('password', max_length=20)
     is_staff = models.BooleanField('is_staff', default=False)
     is_active = models.BooleanField('is_active', default=True)
     date_joined = models.DateTimeField('date_joined', default=timezone.now)
+    follower_num = models.PositiveIntegerField(default=0)
+    followee_num = models.PositiveIntegerField(default=0)
 
     objects = UserManager()
 
@@ -71,8 +78,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.username
 
-    # email = models.EmailField('email', unique=True)
-    # username = models.CharField(max_length=20, unique=True)
 
 
 @receiver(reset_password_token_created)
@@ -104,79 +109,23 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
     msg.send()
 
 
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    # user_pk = models.IntegerField(blank=True)
-    # email = models.EmailField(max_length=500, unique=True)
-    username = models.CharField(max_length=20)
-    profile_img = ProcessedImageField(
-        blank = True,
-        upload_to = 'accounts/images',
-        processors= [ResizeToFill(150, 150)],
-        format='JPEG',
-        options= {'quality': 90},
-    )
-    REGION = (
-        ('SEL', '서울'),
-        ('PUS', '부산'),
-        ('TAE', '대구'),
-        ('INC', '인천'),
-        ('KWJ', '광주'),
-        ('TAJ', '대전'),
-        ('USN', '울산'),
-        ('KYG', '경기'),
-        ('KAW', '강원'),
-        ('CCB', '충북'),
-        ('CCN', '충남'),
-        ('CLB', '전북'),
-        ('CLN', '전남'),
-        ('KSB', '경북'),
-        ('KSN', '경남'),
-        ('CHJ', '제주')
-    )
-    user_region = models.CharField(max_length=4, choices=REGION, blank=True)
-    group = models.CharField(max_length=40, blank=True)
-    bio = models.TextField(blank=True)
-    sns_name = models.TextField(blank=True)
-    sns_url = models.URLField(blank=True)
-    tech = (
-        ('PY', 'Python3'),
-        ('JV', 'Java'),
-        ('HT', 'HTML5'),
-        ('CS', 'CSS3'),
-        ('JS', 'JavaScript'),
-        ('VU', 'Vue.js'),
-        ('RE', 'React.js'),
-        ('AN', 'Angular'),
-        ('MY', 'MySQL'),
-        ('MD', 'MariaDB'),
-    )
-    tech_stack = MultiSelectField(choices=tech)
-    project_name = models.CharField(max_length=100, blank=True)
-    project_url = models.URLField(blank=True)
-    tag = models.CharField(max_length=20, blank=True)
+TokenModel = import_callable(
+    getattr(settings, 'REST_AUTH_TOKEN_MODEL', DefaultTokenModel))
 
+ 
+class UserFollowing(models.Model):
 
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        # Profile.objects.create(user=instance, user_pk=instance.id)
-        Profile.objects.create(user=instance)
+    user = models.ForeignKey(User, related_name="following", on_delete=models.CASCADE)
+    following_user = models.ForeignKey(User, related_name="followers", on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
 
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
-
-
-class ProfileStatus(models.Model):
-    user_profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    # status_content = models.CharField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name_plural = "statuses"
-    
-    def __str__(self):
-        return str(self.user_profile)
-    
+        constraints = [
+            models.UniqueConstraint(fields=['user','following_user'],  name="unique_followers")
+        ]
+        
+
+    # def __str__(self):
+    #     return f"user_id = {self.user_id} follows user_id = {self.following_user_id}"
+
