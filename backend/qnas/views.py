@@ -119,6 +119,14 @@ def qna_detail_update_delete(request, qna_pk):
     qna.viewed_num = qna.viewed_num + 1 # viewed_num++
     qna.save()
     # like_check
+    anss = Ans.objects.all()
+    for ans in anss:
+        ans.like_ans_num = ans.like_ans_users.count()
+        if ans.like_ans_users.filter(id=request.user.pk).exists():
+            ans.liked_ans = "True"      
+        else:
+            ans.liked_ans = "False"
+        ans.save()
     if qna.like_users.filter(pk=request.user.pk).exists():
         qna.liked="True"
     else:
