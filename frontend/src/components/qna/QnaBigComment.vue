@@ -19,28 +19,9 @@
                   {{ data.written_time | moment('YYYY/MM/DD HH:mm') }}
                 </span>
               </div>
-              <div class="q-ml-md row col-12">
-                <v-md-editor v-model="data.content" :mode="modes[index]">
-                </v-md-editor>
-                <q-card-section
-                  class="row col-12 justify-end"
-                  v-if="data.user.id == $store.state.id"
-                >
-                  <!-- <q-btn @click="updateQnaComment(index)">수정하기</q-btn> -->
-                  <q-btn @click="editerOpen(index)">수정하기</q-btn>
-                </q-card-section>
-                <q-btn
-                  outline
-                  color="red-12"
-                  class="text-weight-bold q-px-xl q-py-sm q-mr-md"
-                  label="삭제하기"
-                  size="md"
-                  @click="deleteQnaComment(index)"
-                />
-              </div>
             </div>
             <div class="row col-3">
-              <div class="row col-8" v-if="data.assisted == true">
+              <div v-if="data.assisted == true">
                 <div class="q-pl-xl q-mt-sm">
                   <div
                     class="row col-12 shadow-1 overflow-hidden"
@@ -51,12 +32,8 @@
                   </div>
                 </div>
               </div>
-              <div
-                class="row col-4 q-mb-sm q-pl-sm"
-                v-if="$store.state.id == author"
-              >
+              <div v-if="$store.state.id == author" class="q-mb-sm q-pl-sm">
                 <q-toggle
-                  label="채택하기"
                   :true-value="true"
                   :false-value="false"
                   v-model="data.assisted"
@@ -65,15 +42,34 @@
               </div>
             </div>
             <div class="q-ml-md row col-12">
+              <v-md-editor v-model="data.content" :mode="modes[index]">
+              </v-md-editor>
+              <q-card-section
+                class="row col-12 justify-end"
+                v-if="data.user.id == $store.state.id"
+              >
+                <q-btn @click="updateQnaComment(index)">수정 적용</q-btn>
+                <q-btn @click="editerOpen(index)">수정하기</q-btn>
+                <q-btn
+                  outline
+                  color="red-12"
+                  label="삭제하기"
+                  @click="deleteQnaComment(index)"
+                />
+              </q-card-section>
+            </div>
+
+            <div class="q-ml-md row col-12">
               <div class="q-mr-md q-pb-lg">
                 <q-card-section class="row col-12">
                   <q-markdown :src="info.contents"> </q-markdown>
                 </q-card-section>
               </div>
             </div>
-            <div class="row col-12 q-px-md">
-              <q-separator />
-            </div>
+
+            <q-separator />
+            <!-- 큰 댓글의 작은 댓글 -->
+            <!-- <qna-recomment></qna-recomment> -->
             <div class="q-mt-sm q-px-md row col-12">
               <q-input
                 borderless
@@ -101,9 +97,10 @@
 </template>
 
 <script>
-import { toggleQnaCommentChoose } from '@/api/qna';
+// import { toggleQnaCommentChoose } from '@/api/qna';
 import QnaCommentSelected from '@/components/qna/QnaCommentSelected';
 import QnaCommentStatus from '@/components/qna/QnaCommentStatus';
+// import QnaRecomment from '@/components/qna/QnaRecomment';
 import {
   loadQnaItem,
   updateQnaBigComment,
@@ -126,10 +123,11 @@ export default {
       text: '',
       follow: true,
       contents: '',
-      content: null,
+      content: '',
       qna: null,
       author: null,
       modes: res,
+      ans_pk: null,
     };
   },
   methods: {
@@ -142,12 +140,14 @@ export default {
         alert('내용은 필수 입력항목 입니다');
       }
       try {
-        const commentId = this.info[index].id;
+        const ans_pk = this.info[index].id;
         const qnaId = this.info[index].qna;
+        this.modes[index] = 'preview';
+        this.modes = [...this.modes];
         this.$q.loading.show();
-        await updateQnaBigComment(commentId, {
+        await updateQnaBigComment(ans_pk, {
+          content: this.info[index].content,
           qna: qnaId,
-          content: this.content,
         });
       } catch (error) {
         console.log(error);
@@ -168,9 +168,6 @@ export default {
       }
     },
   },
-  // created() {
-  //   this.checkWriter();
-  // },
   async created() {
     const index = this.$route.params.id;
     try {
@@ -180,7 +177,6 @@ export default {
     } catch (error) {
       console.log(error);
     }
-    // this.checkWriter();
   },
 };
 </script>

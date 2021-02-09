@@ -12,41 +12,18 @@
             <div class="row col-10">
               <span class="q-mr-xs">{{ index + 1 }}</span>
               <span class="q-mr-sm" style="color: blue">
-                @{{ data.username }}
+                @{{ data.user.username }}
               </span>
               <span class="text-caption" style="color: gray">
                 {{ data.written_time | moment('YYYY/MM/DD HH:mm') }}
               </span>
             </div>
-            <!-- <div class="q-pl-xl row col-2">
-              <div class="row items-center">
-                <div v-if="comments[index].liked" class="q-mr-xs q-ml-xl">
-                  <q-icon
-                    :name="$i.ionHeartOutline"
-                    style="color:#727272"
-                    size="17px"
-                    class="cursor-pointer"
-                    @click="checkLiked(index)"
-                  ></q-icon>
-                </div>
-                <div v-else class="q-mr-xs q-ml-xl">
-                  <q-icon
-                    :name="$i.ionHeart"
-                    color="red"
-                    size="17px"
-                    class="cursor-pointer"
-                    @click="checkLiked(index)"
-                  ></q-icon>
-                </div>
-                <div class="text-body2 q-pt-xs">
-                  {{ data.like_num }}
-                </div>
-              </div>
-            </div> -->
           </div>
           <div class="q-ml-lg q-py-xs row col-12">
             {{ data.content }}
           </div>
+          <q-btn @click="qnaSmallCommentDelete(index)">삭제하기</q-btn>
+          <q-btn @click="qnaSmallCommentUpdate(index)">수정하기</q-btn>
         </div>
       </div>
     </div>
@@ -74,34 +51,22 @@
 </template>
 
 <script>
-import { registerSmallAnswer } from '@/api/qna';
+import {
+  registerSmallAnswer,
+  deleteSmallAnswers,
+  updateSmallAnswers,
+} from '@/api/qna';
 export default {
   props: {
     comments: Array,
     user_id: Number,
     post_id: Number,
+    username: String,
   },
   data: function() {
     return {
       text: '',
-      answers: [
-        {
-          contents: 'this is test small comment 1',
-          userid: 1,
-          username: 'test1',
-          written_time: '2021-01-25T03:02',
-          liked: true,
-          like_num: 3,
-        },
-        {
-          contents: 'this is test small comment 22',
-          userid: 2,
-          username: 'test2',
-          written_time: '2021-01-25T03:02',
-          liked: false,
-          like_num: 1,
-        },
-      ],
+      // update: false,
     };
   },
   methods: {
@@ -125,17 +90,49 @@ export default {
         const { data } = await registerSmallAnswer({
           qna: this.post_id,
           content: this.text,
-          userid: this.user_id,
-          username: this.user_name,
+          user: this.$store.state.id,
         });
         this.text = '';
         this.$emit('reloadSmallAns');
+        location.reload();
       } catch (error) {
         console.log(error);
       } finally {
         this.$q.loading.hide();
       }
     },
+    async qnaSmallCommentDelete(index) {
+      try {
+        this.$q.loading.show();
+        const qnasmall_pk = this.comments[index].id;
+        await deleteSmallAnswers(qnasmall_pk);
+        location.reload();
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.$q.loading.hide();
+      }
+    },
+    async qnaSmallCommentUpdate(index) {
+      try {
+        this.$q.loading.show();
+        const qnasmall_pk = this.comments[index].id;
+        console.log(qnasmall_pk);
+        await updateSmallAnswers(qnasmall_pk, {
+          content: this.text,
+        });
+        // location.reload();
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.$q.loading.hide();
+      }
+    },
+    // qnaSmallCommentUpdate(index) {
+    //   this.update = !this.update;
+    //   console.log(this.update);
+    //   console.log(index);
+    // },
   },
 };
 </script>

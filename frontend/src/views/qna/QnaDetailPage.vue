@@ -113,11 +113,9 @@ export default {
       const { data } = await loadQnaItem(index);
       this.contents = data;
       // console.log(this.contents);
-      this.checkWriter();
     } catch (error) {
       console.log(error);
     }
-    this.checkWriter();
     this.$store.commit('offLeft');
   },
 };
