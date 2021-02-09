@@ -9,7 +9,7 @@
               style="color:#727272"
               size="17px"
               class="cursor-pointer"
-              @click="checkLiked(index)"
+              @click="checkLiked"
             ></q-icon>
           </template>
           <template v-else>
@@ -18,7 +18,7 @@
               color="red"
               size="17px"
               class="cursor-pointer"
-              @click="checkLiked(index)"
+              @click="checkLiked"
             ></q-icon>
           </template>
 
@@ -49,12 +49,12 @@ export default {
     info: Object,
     idx: Number,
   },
-  data() {
-    return {
-      liked_ans: this.liked_ans,
-      like_ans_num: this.like_ans_num,
-    };
-  },
+  // data() {
+  //   return {
+  //     liked_ans: this.liked_ans,
+  //     like_ans_num: this.like_ans_num,
+  //   };
+  // },
   methods: {
     // checkLiked(index) {
     //   console.log(this.idx);
@@ -70,22 +70,21 @@ export default {
     //     }
     //   }
     // },
-    async checkLiked(index) {
+    async checkLiked() {
       if (!this.$store.getters.isLogined) {
         alert('로그인을 해주세요');
         return;
       }
       try {
-        console.log(this.info[0]);
-        // const commentId = this.info[this.idx].id;
-        // console.log(this.liked_ans);
-        // const { data } = await toggleQnaCommentLike(commentId);
-        // this.liked_ans = !this.liked_ans;
-        // if (this.liked_ans) {
-        //   this.like_ans_num = this.like_ans_num + 1;
-        // } else {
-        //   this.like_ans_num = this.like_ans_num - 1;
-        // }
+        console.log(this.info.liked_ans);
+        const commentId = this.info.id;
+        const { data } = await toggleQnaCommentLike(commentId);
+        this.info.liked_ans = !this.info.liked_ans;
+        if (this.info.liked_ans) {
+          this.info.like_ans_num = this.info.like_ans_num + 1;
+        } else {
+          this.info.like_ans_num = this.info.like_ans_num - 1;
+        }
       } catch (error) {
         console.log(error);
       }

@@ -6,10 +6,11 @@
         <!-- 댓글 좋아요 수, 댓글 수, 북마크 수 -->
         <div class="row col-9"></div>
         <div class="row col-3 q-mt-lg">
-          <qna-comment-status
-            :info="bigCommentsStatus(index)"
+          <qna-comment-status :info="info[index]"></qna-comment-status>
+          <!-- <qna-comment-status
+            :info="bigCommentsStatus"
             :idx="index"
-          ></qna-comment-status>
+          ></qna-comment-status> -->
         </div>
       </div>
       <div class="row col-10">
@@ -116,7 +117,7 @@ import {
 
 export default {
   props: {
-    info: Object,
+    info: Array,
   },
   components: {
     QnaCommentSelected,
@@ -182,9 +183,6 @@ export default {
     bigCommentsStatus() {
       return this.contents.ans_set;
     },
-    bigCommentsSelected(index) {
-      return this.contents.ans_set[index];
-    },
     // bigCommentsSelected(index) {
     //   return this.contents.ans_set[index];
     // },
@@ -202,7 +200,7 @@ export default {
     } catch (error) {
       console.log(error);
     }
-    this.checkWriter();
+    // this.checkWriter();
   },
 };
 </script>
