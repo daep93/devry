@@ -1,16 +1,12 @@
 <template>
   <div class="row col-12">
     <!-- 댓글 시작 -->
-    <div class="row col-12" v-for="(data, index) in info" :key="data">
+    <div class="row col-12" v-for="(data, index) in info" :key="index">
       <div class="row col-2">
         <!-- 댓글 좋아요 수, 댓글 수, 북마크 수 -->
         <div class="row col-9"></div>
         <div class="row col-3 q-mt-lg">
-          <qna-comment-status :info="info[index]"></qna-comment-status>
-          <!-- <qna-comment-status
-            :info="bigCommentsStatus"
-            :idx="index"
-          ></qna-comment-status> -->
+          <qna-comment-status :info="data"></qna-comment-status>
         </div>
       </div>
       <div class="row col-10">
@@ -59,7 +55,7 @@
                 v-if="$store.state.id == author"
               >
                 <q-toggle
-                  :label="채택하기"
+                  label="채택하기"
                   :true-value="true"
                   :false-value="false"
                   v-model="data.assisted"
@@ -134,20 +130,6 @@ export default {
     };
   },
   methods: {
-    // async chooseBigComment(index) {
-    //   if (!this.$store.getters.isLogined) {
-    //     alert('로그인을 해주세요');
-    //     return;
-    //   }
-    //   try {
-    //     const commentId = this.info[index].id;
-    //     const { data } = await toggleQnaCommentChoose(commentId);
-    //     console.log(commentId);
-    //     this.liked = !this.liked;
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // },
     async updateQnaComment(index) {
       if (this.contents === '') {
         alert('내용은 필수 입력항목 입니다');
@@ -179,14 +161,6 @@ export default {
       }
     },
   },
-  computed: {
-    bigCommentsStatus() {
-      return this.contents.ans_set;
-    },
-    // bigCommentsSelected(index) {
-    //   return this.contents.ans_set[index];
-    // },
-  },
   // created() {
   //   this.checkWriter();
   // },
@@ -194,7 +168,6 @@ export default {
     const index = this.$route.params.id;
     try {
       const { data } = await loadQnaItem(index);
-      console.log(this.info);
       this.contents = data;
       this.author = data.user.id;
     } catch (error) {

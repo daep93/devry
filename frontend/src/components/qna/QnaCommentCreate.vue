@@ -49,6 +49,25 @@ export default {
   data() {
     return {
       content: '',
+      toolbar: {
+        video: {
+          title: '비디오',
+          // TODO : icon 변경하기
+          icon: 'v-md-icon-toc',
+          action(editor) {
+            editor.insert(function() {
+              const imagetxt = 'Image text';
+              const image = 'Screenshot image URL';
+              const youtube = 'Youtube Link';
+
+              return {
+                text: `[![${imagetxt}](${image})](${youtube})`,
+                selected: imagetxt,
+              };
+            });
+          },
+        },
+      },
     };
   },
   methods: {
@@ -72,6 +91,18 @@ export default {
       } finally {
         this.$q.loading.hide();
       }
+    },
+    handleUploadImage(event, insertImage, files) {
+      // Get the files and upload them to the file server, then insert the corresponding content into the editor
+      console.log(files);
+      console.log(insertImage);
+      // Here is just an example
+      insertImage({
+        url: URL.createObjectURL(files[0]),
+        desc: 'desc',
+        // width: 'auto',
+        // height: 'auto',
+      });
     },
   },
 };
