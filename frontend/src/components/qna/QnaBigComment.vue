@@ -1,12 +1,12 @@
 <template>
   <div class="row col-12">
     <!-- 댓글 시작 -->
-    <div class="row col-12">
+    <div class="row col-12" v-for="(data, index) in info" :key="index">
       <div class="row col-2">
         <!-- 댓글 좋아요 수, 댓글 수, 북마크 수 -->
         <div class="row col-9"></div>
         <div class="row col-3 q-mt-lg">
-          <qna-comment-status></qna-comment-status>
+          <qna-comment-status :info="data"></qna-comment-status>
         </div>
       </div>
       <div class="row col-10">
@@ -14,44 +14,32 @@
           <q-card flat bordered class="my-card q-pa-lg q-mt-lg row col-12">
             <div class="row col-9">
               <div class="q-ml-md row col-12 q-my-sm">
-                <div style="color: blue">@{{ info.username }}</div>
+                <div style="color: blue">@{{ data.user.username }}</div>
                 <span class="q-ml-sm text-caption" style="color: gray;">
-                  {{ info.written_time | moment('YYYY/MM/DD HH:mm') }}
+                  {{ data.written_time | moment('YYYY/MM/DD HH:mm') }}
                 </span>
               </div>
-            </div>
-            <!-- 토글이 꺼져있으며, 글 작성자가 아닌 경우 -->
-            <div v-if="blueModel && !writerStatus" class="row col-3"></div>
-            <!-- 토글이 켜져있으며 글 작성자가 아닌 경우 -->
-            <div v-else-if="!blueModel && !writerStatus" class="row col-3">
-              <div class="row col-3 q-mb-sm q-pl-sm"></div>
-              <div class="row col-9">
-                <div class="q-pl-xl q-mt-sm">
-                  <div
-                    class="row col-12 shadow-1 overflow-hidden"
-                    style="border-radius:5px; width: 100px; height: 20px;"
-                  >
-                    <div class="col-2" style="background-color: #1976D2"></div>
-                    <div class="col-10 text-center">답변 채택</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- 토글이 꺼져있으며 글 작성자가 맞는 경우 -->
-            <div v-else-if="blueModel && writerStatus" class="row col-3">
-              <div class="row col-8"></div>
-              <div class="row col-4 q-mb-sm q-pl-sm">
-                <q-toggle
-                  :label="채택하기"
-                  :true-value="false"
-                  :false-value="true"
-                  v-model="blueModel"
+              <div class="q-ml-md row col-12">
+                <v-md-editor v-model="data.content" mode="preview">
+                </v-md-editor>
+                <q-card-section
+                  class="row col-12 justify-end"
+                  v-if="data.user.id == $store.state.id"
+                >
+                  <q-btn @click="updateQnaComment(index)">수정하기</q-btn>
+                </q-card-section>
+                <q-btn
+                  outline
+                  color="red-12"
+                  class="text-weight-bold q-px-xl q-py-sm q-mr-md"
+                  label="삭제하기"
+                  size="md"
+                  @click="deleteQnaComment(index)"
                 />
               </div>
             </div>
-            <!-- 토글이 켜져있으며, 글 작성자가 맞는 경우 -->
-            <div v-else-if="!blueModel && writerStatus" class="row col-3">
-              <div class="row col-8">
+            <div class="row col-3">
+              <div class="row col-8" v-if="data.assisted == true">
                 <div class="q-pl-xl q-mt-sm">
                   <div
                     class="row col-12 shadow-1 overflow-hidden"
@@ -62,12 +50,16 @@
                   </div>
                 </div>
               </div>
-              <div class="row col-4 q-mb-sm q-pl-sm">
+              <div
+                class="row col-4 q-mb-sm q-pl-sm"
+                v-if="$store.state.id == author"
+              >
                 <q-toggle
-                  :label="채택하기"
-                  :true-value="false"
-                  :false-value="true"
-                  v-model="blueModel"
+                  label="채택하기"
+                  :true-value="true"
+                  :false-value="false"
+                  v-model="data.assisted"
+                  @click="chooseBigComment(index)"
                 />
               </div>
             </div>
@@ -99,8 +91,10 @@
           </q-card>
         </div>
         <!-- 채택 댓글 프로필 -->
-        <div v-if="!blueModel">
-          <qna-comment-selected></qna-comment-selected>
+        <div v-if="data.assisted === true">
+          <qna-comment-selected
+            :info="bigCommentsSelected"
+          ></qna-comment-selected>
         </div>
       </div>
     </div>
@@ -108,12 +102,18 @@
 </template>
 
 <script>
+import { toggleQnaCommentChoose } from '@/api/qna';
 import QnaCommentSelected from '@/components/qna/QnaCommentSelected';
 import QnaCommentStatus from '@/components/qna/QnaCommentStatus';
+import {
+  loadQnaItem,
+  updateQnaBigComment,
+  deleteQnaBigComment,
+} from '@/api/qna';
 
 export default {
   props: {
-    info: Object,
+    info: Array,
   },
   components: {
     QnaCommentSelected,
@@ -123,46 +123,58 @@ export default {
     return {
       text: '',
       follow: true,
-      blueModel: true,
-      writerStatus: false,
-      QnaDetailData: {
-        user_info: {
-          userid: 1,
-          username: 'SSAFY PARK',
-          profile_img: 'user/1',
-          post_num: 5,
-          follower_num: 3,
-          bio: 'Hello DEVRY! Nice Day!!',
-          pinned: [
-            {
-              title: '2021 Awesome Tech Top 5',
-              post_id: 310,
-            },
-            {
-              title: '2020 Awesome Tech Top 3', // pinned한 게시글의 제목
-              post_id: 4, // pinned한 게시글의 번호
-            },
-            {
-              title: 'How to test your project efficiently', // pinned한 게시글의 제목
-              post_id: 203, // pinned한 게시글의 번호
-            },
-          ],
-          liked: true,
-          is_following: true,
-        },
-      },
+      contents: '',
+      content: null,
+      qna: null,
+      author: null,
     };
   },
   methods: {
-    checkWriter() {
-      // 글 작성자 판별
-      if (this.$store.state.id === this.QnaDetailData.user_info.userid) {
-        this.writerStatus = true;
+    async updateQnaComment(index) {
+      if (this.contents === '') {
+        alert('내용은 필수 입력항목 입니다');
+      }
+      try {
+        const commentId = this.info[index].id;
+        const qnaId = this.info[index].qna;
+        this.$q.loading.show();
+        await updateQnaBigComment(commentId, {
+          qna: qnaId,
+          content: this.content,
+        });
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.$q.loading.hide();
+      }
+    },
+    async deleteQnaComment(index) {
+      try {
+        this.$q.loading.show();
+        const commentId = this.info[index].id;
+        await deleteQnaBigComment(commentId);
+        location.reload();
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.$q.loading.hide();
       }
     },
   },
-  created() {
-    this.checkWriter();
+
+  // created() {
+  //   this.checkWriter();
+  // },
+  async created() {
+    const index = this.$route.params.id;
+    try {
+      const { data } = await loadQnaItem(index);
+      this.contents = data;
+      this.author = data.user.id;
+    } catch (error) {
+      console.log(error);
+    }
+    // this.checkWriter();
   },
 };
 </script>

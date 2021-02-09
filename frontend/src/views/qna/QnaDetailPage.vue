@@ -24,26 +24,13 @@
         </div>
       </div>
     </div>
-    <div class="row col-12" v-if="bigComments.length">
+    <div class="row col-12">
+      <!-- <div class="row col-12" v-if="bigComments.length"> -->
+      <!-- <qna-big-comment></qna-big-comment> -->
       <qna-big-comment :info="bigComments"></qna-big-comment>
     </div>
-
-    <div class="row col-9 q-mt-lg q-pl-xl">
-      <div class="row col-3"></div>
-      <div class="row col-9">
-        <div class="row col-12">
-          <div style="margin:0 auto;">
-            <q-btn
-              no-caps
-              color="primary"
-              id="follow-btn"
-              label="답변 작성하기"
-              style="width: 200px"
-              class="q-mb-xl"
-            />
-          </div>
-        </div>
-      </div>
+    <div class="row col-12">
+      <qna-comment-create :info="createBigComments"></qna-comment-create>
     </div>
   </div>
 </template>
@@ -53,6 +40,7 @@ import QnaDetailContent from '@/components/qna/QnaDetailContent';
 import QnaShortProfile from '@/components/qna/QnaShortProfile';
 import QnaBigComment from '@/components/qna/QnaBigComment';
 import QnaDetailStatus from '@/components/qna/QnaDetailStatus';
+import QnaCommentCreate from '@/components/qna/QnaCommentCreate';
 import { loadQnaItem } from '@/api/qna';
 export default {
   components: {
@@ -60,14 +48,12 @@ export default {
     QnaShortProfile,
     QnaBigComment,
     QnaDetailStatus,
+    QnaCommentCreate,
   },
   data() {
     return {
-      title: 'Add a YouTube stats widget to your iPhone with JavaScript',
-      username: 'test user',
-      profile_img: 'https://cdn.quasar.dev/img/avatar.png',
-      writerStatus: false,
       contents: '',
+      writerStatus: false,
     };
   },
   methods: {
@@ -115,12 +101,19 @@ export default {
     bigComments() {
       return this.contents.ans_set;
     },
+    createBigComments() {
+      return {
+        post_id: this.contents.id,
+      };
+    },
   },
   async created() {
     const index = this.$route.params.id;
     try {
       const { data } = await loadQnaItem(index);
       this.contents = data;
+      // console.log(this.contents);
+      this.checkWriter();
     } catch (error) {
       console.log(error);
     }

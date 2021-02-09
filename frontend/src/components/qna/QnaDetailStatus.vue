@@ -50,34 +50,6 @@ export default {
     return {
       liked: this.info.liked,
       like_num: this.info.like_num,
-      writer_info: {
-        userid: 1,
-        username: 'fe-master',
-        profile_img: null,
-        post_num: 27,
-        follower_num: 57,
-        bio: '소개입니다.',
-        pinned: [
-          {
-            title: 'pinned 1 title',
-            post_id: 3,
-          },
-        ],
-        liked: true,
-        is_following: false,
-      },
-      quest_post: {
-        title: 'How can I use axios in Vue.js?',
-        written_time: '2021-01-24T02:02',
-        ref_tags: ['vue', 'javascript'],
-        solved: true,
-        like_num: 3,
-        comment_num: 2,
-        viewed_num: 300,
-        bookmarked_num: 6,
-        contents:
-          'One of the most essential parts of frontend development is communication with the backend by making HTTP requests. There are a few ways how we can make API calls in Javascript asynchronously.',
-      },
     };
   },
   methods: {
