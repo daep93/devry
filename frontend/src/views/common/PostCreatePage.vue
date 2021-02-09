@@ -188,6 +188,9 @@ export default {
       return filtered_tags(this.tagItem);
     },
   },
+  created() {
+    this.$store.commit('offLeft');
+  },
 };
 </script>
 
