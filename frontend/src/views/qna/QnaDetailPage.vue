@@ -117,7 +117,7 @@ export default {
     try {
       const { data } = await loadQnaItem(index);
       this.contents = data;
-      console.log(this.contents);
+      // console.log(this.contents);
     } catch (error) {
       console.log(error);
     }

@@ -32,6 +32,22 @@ function toggleQnaLike(postId) {
 function createQnaBigComment(postData) {
   return instance.post('ans/', postData);
 }
+// QnA 큰 댓글 수정하기
+function updateQnaBigComment(commentId) {
+  return instance.put(`ans/${commentId}/`);
+}
+// QnA 큰 댓글 삭제하기
+function deleteQnaBigComment(commentId) {
+  return instance.delete(`ans/${commentId}/`);
+}
+// QnA 큰 댓글 좋아요 토글하기
+function toggleQnaCommentLike(commentId) {
+  return instance.post(`ans/${commentId}/`);
+}
+// QnA 큰 댓글 채택 토글하기
+function toggleQnaCommentChoose(commentId) {
+  return instance.post(`qna_solved/${commentId}/`);
+}
 export {
   registerSmallAnswer,
   getSmallAnswers,
@@ -41,4 +57,8 @@ export {
   updateQnaItem,
   deleteQnaItem,
   createQnaBigComment,
+  updateQnaBigComment,
+  deleteQnaBigComment,
+  toggleQnaCommentLike,
+  toggleQnaCommentChoose,
 };

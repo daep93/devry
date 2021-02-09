@@ -1,11 +1,9 @@
 <template>
   <div class="q-pl-md row col-12">
     <div class="row col-12">
-      <!-- <div v-for="(data, index) in info" :key="index" class="row col-12"> -->
-      <!-- <div v-for="(data, index) in answer_posts" :key="index" class="row col-12"> -->
       <q-card flat bordered style="width: 40px; height: 125px;">
         <div style="margin:0 auto; text-align:center" class="q-pt-sm">
-          <template v-if="liked_ans">
+          <template v-if="info.liked_ans">
             <q-icon
               :name="$i.ionHeartOutline"
               style="color:#727272"
@@ -25,7 +23,7 @@
           </template>
 
           <br />
-          <span>{{ data.like_ans_num }}</span>
+          <span>{{ info.like_ans_num }}</span>
           <br />
           <br />
           <q-icon
@@ -44,24 +42,52 @@
 </template>
 
 <script>
+import { toggleQnaCommentLike } from '@/api/qna';
+
 export default {
   props: {
     info: Object,
+    idx: Number,
   },
   data() {
-    return {};
+    return {
+      liked_ans: this.liked_ans,
+      like_ans_num: this.like_ans_num,
+    };
   },
   methods: {
-    checkLiked(index) {
-      for (const heart of this.info) {
-        if (this.info.indexOf(heart) === index) {
-          heart.liked_ans = !heart.liked_ans;
-          if (heart.quest_post.liked) {
-            heart.like_ans_num = heart.like_ans_num - 1;
-          } else {
-            heart.like_ans_num = heart.like_ans_num + 1;
-          }
-        }
+    // checkLiked(index) {
+    //   console.log(this.idx);
+    //   console.log(this.info[this.idx]);
+    //   for (const heart of this.info) {
+    //     if (this.info.indexOf(heart) === index) {
+    //       heart.liked_ans = !heart.liked_ans;
+    //       if (heart.quest_post.liked) {
+    //         heart.like_ans_num = heart.like_ans_num - 1;
+    //       } else {
+    //         heart.like_ans_num = heart.like_ans_num + 1;
+    //       }
+    //     }
+    //   }
+    // },
+    async checkLiked(index) {
+      if (!this.$store.getters.isLogined) {
+        alert('로그인을 해주세요');
+        return;
+      }
+      try {
+        console.log(this.info[0]);
+        // const commentId = this.info[this.idx].id;
+        // console.log(this.liked_ans);
+        // const { data } = await toggleQnaCommentLike(commentId);
+        // this.liked_ans = !this.liked_ans;
+        // if (this.liked_ans) {
+        //   this.like_ans_num = this.like_ans_num + 1;
+        // } else {
+        //   this.like_ans_num = this.like_ans_num - 1;
+        // }
+      } catch (error) {
+        console.log(error);
       }
     },
   },

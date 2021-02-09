@@ -1,18 +1,12 @@
 <template>
   <div class="row col-12">
-    <div class="row col-2">a</div>
+    <div class="row col-2"></div>
     <div class="row col-10">
       <div class="row col-9">
-        <div class="q-ml-md row col-12 q-my-sm">
-          <div style="color: blue">@작성자</div>
-          <span class="q-ml-sm text-caption" style="color: gray;">
-            {{ info.title }}
-          </span>
-        </div>
         <div class="q-ml-md row col-12">
           <v-md-editor
             v-model="content"
-            height="800px"
+            height="400px"
             left-toolbar="undo redo clear | h bold italic strikethrough quote | ul ol table hr | link image code video "
             :disabled-menus="[]"
             :toolbar="toolbar"
@@ -63,7 +57,6 @@ export default {
         alert('댓글 내용을 작성해주세요.');
       }
       try {
-        console.log(this.info.post_id);
         this.$q.loading.show();
         await createQnaBigComment({
           // 넘길 데이터
