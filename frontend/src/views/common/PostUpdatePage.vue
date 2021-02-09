@@ -138,12 +138,15 @@ export default {
     async updateQna() {
       if (this.title === '') {
         alert('제목은 필수 입력 항목입니다');
+        return;
       }
-      if (this.ref_tags.length === 0) {
-        alert('태그를 하나이상 입력해주세요');
+      if (this.ref_tags.length < 2) {
+        alert('태그를 둘 이상 입력해주세요');
+        return;
       }
-      if (this.contents === '') {
+      if (this.content === '') {
         alert('내용은 필수 입력항목 입니다');
+        return;
       }
       try {
         // post_id 넘겨주기
