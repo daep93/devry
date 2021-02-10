@@ -1,6 +1,6 @@
 <template>
   <div class="row col-12">
-    <div class="row col-12">
+    <div class="row col-12 q-mb-sm">
       <div class="row col-12">
         <q-separator />
         <div
@@ -45,19 +45,21 @@
             <q-input
               clearable
               clear-icon="close"
-              type="text"
+              type="textarea"
               v-model="data.content"
-              class="full-width q-pa-none"
+              class="full-width q-pa-none "
               color="blue-10"
               dense
+              autogrow
               borderless
-              style="height:20.382px;"
-              @keypress.enter="updateComment(data.id, index, data.content)"
+              @keypress.enter="
+                updateComment($event, data.id, index, data.content)
+              "
             />
           </div>
-          <div class=" q-py-xs row col-12" v-else>
-            {{ data.content }}
-          </div>
+          <pre class=" q-py-xs row col-12 q-my-none" v-else>{{
+            data.content
+          }}</pre>
           <!-- 수정 클릭 시 보이는 영역 -->
           <!-- <template v-if="modes[index] == false">
             <q-btn @click="qnaSmallCommentUpdate(index)">수정진행</q-btn>
@@ -67,24 +69,15 @@
     </div>
     <q-separator />
     <div class="q-mt-sm row col-12">
-      <div class="row col-11">
+      <div class="row col-12">
         <q-input
           borderless
           v-model="newComment"
           autogrow
           placeholder="댓글을 입력해주세요"
           class="full-width"
+          @keypress.enter="registerComment"
         />
-      </div>
-      <div class="row col-1">
-        <div class="q-mt-sm ">
-          <q-btn
-            color="primary"
-            label="등록"
-            size="13px"
-            @click="registerComment"
-          />
-        </div>
       </div>
     </div>
   </div>
@@ -123,7 +116,8 @@ export default {
       this.editables[index] = false;
       this.editables = [...this.editables];
     },
-    async registerComment() {
+    async registerComment(e) {
+      if (e.shiftKey) return;
       try {
         await registerSmallComment({
           qna: this.post_id,
@@ -132,7 +126,7 @@ export default {
         });
         this.newComment = '';
         // this.$emit('reloadSmallAns');
-        location.reload();
+        this.getComments();
       } catch (error) {
         console.log(error);
       }
@@ -145,7 +139,8 @@ export default {
         console.log(error);
       }
     },
-    async updateComment(quset_small_id, index, content) {
+    async updateComment(e, quset_small_id, index, content) {
+      if (e.shiftKey) return;
       try {
         await updateSmallComment(quset_small_id, {
           qna: this.post_id,
@@ -162,7 +157,7 @@ export default {
     async deleteComment(quset_small_id) {
       try {
         await deleteSmallComment(quset_small_id);
-        location.reload();
+        this.getComments();
       } catch (error) {
         console.log(error);
       }
