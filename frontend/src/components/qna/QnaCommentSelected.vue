@@ -2,11 +2,6 @@
   <!-- 채택 댓글 프로필 -->
   <div>
     <div class="row cal-3 q-pt-lg q-ml-sm">
-      <!-- <div
-      class="row cal-3 q-pt-lg q-ml-sm"
-      v-for="(data, index) in info"
-      :key="data"
-    > -->
       <div v-if="info.assisted == true">
         <q-card
           flat
@@ -40,7 +35,7 @@
           </q-card-section>
           <div class="q-px-md q-pb-md">
             <div style="font-size: 13px;">
-              프로필
+              프로필 정보 필요
             </div>
           </div>
           <div style="margin:0 auto;">

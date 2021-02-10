@@ -6,7 +6,7 @@
         <div class="text-h6 text-weight-bold q-mb-md">새 답변 작성하기</div>
         <v-md-editor
           v-model="content"
-          height="300px"
+          height="400px"
           left-toolbar="undo redo clear | h bold italic strikethrough quote | ul ol table hr | link image code video "
           :disabled-menus="[]"
           :toolbar="toolbar"

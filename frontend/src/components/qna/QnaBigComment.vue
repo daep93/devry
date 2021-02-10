@@ -13,7 +13,7 @@
         <div class="row col-9">
           <q-card flat bordered class="my-card q-pa-lg q-mt-lg row col-12">
             <div class="row col-10">
-              <div class="q-ml-md row col-12">
+              <div class="q-ml-md row col-12 q-mt-sm">
                 <span
                   class="text-body1 text-weight-bold"
                   style="color: #585858"
@@ -89,7 +89,6 @@
             <div class="row col-12">
               <v-md-editor v-model="data.content" :mode="modes[index]">
               </v-md-editor>
-              <!-- <q-btn @click="updateQnaComment(index)">수정 적용</q-btn> -->
             </div>
 
             <div class="q-ml-md row col-12">
@@ -98,25 +97,17 @@
               </q-card-section>
             </div>
 
-            <q-separator />
             <!-- 큰 댓글의 작은 댓글 -->
-            <!-- <qna-recomment></qna-recomment> -->
-            <div class="q-mt-sm q-px-md row col-12">
-              <div class="row col-11">
-                <q-input
-                  borderless
-                  v-model="text"
-                  autogrow
-                  placeholder="댓글을 입력해주세요"
-                  class="full-width"
-                />
-              </div>
-              <div class="row col-1">
-                <div class="q-mt-sm ">
-                  <q-btn color="primary" label="등록" size="13px" />
-                </div>
-              </div>
-            </div>
+            <q-card-section class="row col-12">
+              <template v-if="data.anssmall_set.length">
+                <q-separator />
+              </template>
+              <qna-recomment
+                :ans_id="data.id"
+                :recomments="data.anssmall_set"
+                @reloadRecomment="reloadRecomment(index)"
+              ></qna-recomment>
+            </q-card-section>
           </q-card>
         </div>
         <!-- 채택 댓글 프로필 -->
@@ -132,11 +123,12 @@
 import { toggleQnaCommentChoose } from '@/api/qna';
 import QnaCommentSelected from '@/components/qna/QnaCommentSelected';
 import QnaCommentStatus from '@/components/qna/QnaCommentStatus';
-// import QnaRecomment from '@/components/qna/QnaRecomment';
+import QnaRecomment from '@/components/qna/QnaRecomment';
 import {
   loadQnaItem,
   updateQnaBigComment,
   deleteQnaBigComment,
+  getRecomments,
 } from '@/api/qna';
 
 export default {
@@ -146,6 +138,7 @@ export default {
   components: {
     QnaCommentSelected,
     QnaCommentStatus,
+    QnaRecomment,
   },
   data() {
     const res = [];
@@ -160,6 +153,7 @@ export default {
       author: null,
       modes: res,
       ans_pk: null,
+      recomments: Array,
     };
   },
   methods: {
@@ -191,7 +185,6 @@ export default {
       try {
         this.$q.loading.show();
         const ans_pk = this.info[index].id;
-        console.log(ans_pk);
         await deleteQnaBigComment(ans_pk);
         location.reload();
       } catch (error) {
@@ -202,6 +195,7 @@ export default {
     },
     async chooseComment(index) {
       try {
+        // console.log(this.info);
         for (let check of this.info) {
           if (check.assisted == true && !this.info[index].assisted) {
             check.assisted = false;
@@ -215,15 +209,13 @@ export default {
         console.log(error);
       }
     },
-    // async chooseComment(index) {
-    //   try {
-    //     const ans_pk = this.info[index].id;
-    //     await toggleQnaCommentChoose(ans_pk);
-    //     this.info[index].assisted = !this.info[index].assisted;
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // },
+    async reloadRecomment(index) {
+      try {
+        this.recomments = await getRecomments(this.info[index].id);
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
   async created() {
     const index = this.$route.params.id;

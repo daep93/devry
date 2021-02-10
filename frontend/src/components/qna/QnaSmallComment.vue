@@ -1,70 +1,63 @@
 <template>
   <div class="row col-12">
     <div class="row col-12 q-mb-sm">
-      <div class="row col-12">
-        <q-separator />
-        <div
-          class="row col-12 q-py-sm"
-          v-for="(data, index) in commentList"
-          :key="index"
-        >
-          <div class="row col-12 justify-between">
-            <div class="row col-10">
-              <span class="q-mr-xs">{{ index + 1 }}.</span>
-              <span class="q-mr-sm text-weight-bold" style="color: #585858">
-                @{{ data.user.username }}
+      <div
+        class="row col-12 q-py-sm"
+        v-for="(data, index) in commentList"
+        :key="index"
+      >
+        <div class="row col-12 justify-between">
+          <div class="row col-10">
+            <span class="q-mr-xs">{{ index + 1 }}.</span>
+            <span class="q-mr-sm text-weight-bold" style="color: #585858">
+              @{{ data.user.username }}
+            </span>
+            <span class="text-caption" style="color: gray">
+              {{ data.written_time | moment('YYYY/MM/DD HH:mm') }}
+            </span>
+            <template v-if="data.user.id == $store.state.id">
+              <span class="q-ml-sm">
+                <q-icon
+                  :name="$i.ionCreateOutline"
+                  class="cursor-pointer"
+                  size="17px"
+                  style="color: #727272"
+                  @click="editComment(index)"
+                >
+                </q-icon>
               </span>
-              <span class="text-caption" style="color: gray">
-                {{ data.written_time | moment('YYYY/MM/DD HH:mm') }}
+              <span class="q-ml-sm">
+                <q-icon
+                  :name="$i.ionTrashOutline"
+                  class="cursor-pointer"
+                  size="16px"
+                  style="color: #727272"
+                  @click="deleteComment(data.id)"
+                >
+                </q-icon>
               </span>
-              <template v-if="data.user.id == $store.state.id">
-                <span class="q-ml-sm">
-                  <q-icon
-                    :name="$i.ionCreateOutline"
-                    class="cursor-pointer"
-                    size="17px"
-                    style="color: #727272"
-                    @click="editComment(index)"
-                  >
-                  </q-icon>
-                </span>
-                <span class="q-ml-sm">
-                  <q-icon
-                    :name="$i.ionTrashOutline"
-                    class="cursor-pointer"
-                    size="16px"
-                    style="color: #727272"
-                    @click="deleteComment(data.id)"
-                  >
-                  </q-icon>
-                </span>
-              </template>
-            </div>
+            </template>
           </div>
-          <div class=" q-py-xs row col-12" v-if="editables[index]">
-            <q-input
-              clearable
-              clear-icon="close"
-              type="textarea"
-              v-model="data.content"
-              class="full-width q-pa-none "
-              color="blue-10"
-              dense
-              autogrow
-              borderless
-              @keypress.enter="
-                updateComment($event, data.id, index, data.content)
-              "
-            />
-          </div>
-          <pre class=" q-py-xs row col-12 q-my-none" v-else>{{
-            data.content
-          }}</pre>
-          <!-- 수정 클릭 시 보이는 영역 -->
-          <!-- <template v-if="modes[index] == false">
-            <q-btn @click="qnaSmallCommentUpdate(index)">수정진행</q-btn>
-          </template> -->
         </div>
+        <div class=" q-py-xs row col-12" v-if="editables[index]">
+          <q-input
+            clearable
+            clear-icon="close"
+            type="textarea"
+            v-model="data.content"
+            class="full-width q-pa-none "
+            color="blue-10"
+            dense
+            autogrow
+            borderless
+            @keypress.enter="
+              updateComment($event, data.id, index, data.content)
+            "
+          />
+        </div>
+        <pre class=" q-py-xs row col-12 q-my-none" v-else>{{
+          data.content
+        }}</pre>
       </div>
     </div>
     <q-separator />

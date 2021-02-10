@@ -71,21 +71,6 @@ export default {
         } else {
           this.info.like_ans_num = this.info.like_ans_num - 1;
         }
-        // console.log('체크11');
-        // await toggleQnaCommentLike({ commentId, liked_ans: this.liked_ans });
-        // console.log('체크22');
-        // console.log(this.liked_ans);
-        // const commentId = this.info.id;
-        // this.info.liked_ans = !this.info.liked_ans;
-        // if (this.info.liked_ans) {
-        //   this.info.like_ans_num = this.info.like_ans_num + 1;
-        // } else {
-        //   this.info.like_ans_num = this.info.like_ans_num - 1;
-        // }
-        // console.log('체크11');
-        // await toggleQnaCommentLike({ commentId, liked_ans: this.liked_ans });
-        // console.log('체크22');
-        // console.log(this.liked_ans);
       } catch (error) {
         console.log(error);
       }

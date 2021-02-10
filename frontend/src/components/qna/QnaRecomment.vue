@@ -1,49 +1,77 @@
 <template>
   <div class="row col-12">
-    <div class="row col-12">
+    <div class="row col-12 q-mb-sm">
       <div class="row col-12">
-        <q-separator />
         <div
           class="row col-12 q-py-sm"
-          v-for="(data, index) in comments"
+          v-for="(data, index) in recommentList"
           :key="index"
         >
           <div class="row col-12 justify-between">
             <div class="row col-10">
-              <span class="q-mr-xs">{{ index + 1 }}</span>
-              <span class="q-mr-sm" style="color: blue">
-                @{{ data.user.username }}
+              <span class="q-mr-xs">{{ index + 1 }}.</span>
+              <span class="q-mr-sm text-weight-bold" style="color: #585858">
+                @{{ data.user }}
               </span>
               <span class="text-caption" style="color: gray">
                 {{ data.written_time | moment('YYYY/MM/DD HH:mm') }}
               </span>
+              <template v-if="data.user == $store.state.id">
+                <span class="q-ml-sm">
+                  <q-icon
+                    :name="$i.ionCreateOutline"
+                    class="cursor-pointer"
+                    size="17px"
+                    style="color: #727272"
+                    @click="editRecomment(index)"
+                  >
+                  </q-icon>
+                </span>
+                <span class="q-ml-sm">
+                  <q-icon
+                    :name="$i.ionTrashOutline"
+                    class="cursor-pointer"
+                    size="16px"
+                    style="color: #727272"
+                    @click="deleteAnsRecomment(data.id)"
+                  >
+                  </q-icon>
+                </span>
+              </template>
             </div>
           </div>
-          <div class="q-ml-lg q-py-xs row col-12">
-            {{ data.content }}
+          <div class=" q-py-xs row col-12" v-if="editables[index]">
+            <q-input
+              clearable
+              clear-icon="close"
+              type="textarea"
+              v-model="data.content"
+              class="full-width q-pa-none "
+              color="blue-10"
+              dense
+              autogrow
+              borderless
+              @keypress.enter="
+                updateRecomment($event, data.id, index, data.content)
+              "
+            />
           </div>
-          <q-btn @click="qnaSmallCommentDelete(index)">삭제하기</q-btn>
-          <q-btn @click="qnaSmallCommentUpdate(index)">수정하기</q-btn>
+          <pre class=" q-py-xs row col-12 q-my-none" v-else>{{
+            data.content
+          }}</pre>
         </div>
       </div>
     </div>
     <q-separator />
     <div class="q-mt-sm row col-12">
-      <q-input
-        borderless
-        v-model="text"
-        placeholder="댓글을 입력해주세요"
-        class="full-width"
-      />
-    </div>
-    <div class="row col-12">
-      <div class="row col-10"></div>
-      <div class="row col-2 q-pl-xl q-mb-lg">
-        <q-btn
-          color="primary"
-          label="댓글 추가"
-          size="md"
-          @click="setSmallAnswer"
+      <div class="row col-12">
+        <q-input
+          borderless
+          v-model="newComment"
+          autogrow
+          placeholder="댓글을 입력해주세요"
+          class="full-width"
+          @keypress.enter="postRecomment"
         />
       </div>
     </div>
@@ -51,13 +79,78 @@
 </template>
 
 <script>
-import { getRecomment } from '@/api/qna';
+import {
+  getRecomments,
+  registerRecomment,
+  updateRecomment,
+  deleteRecomment,
+} from '@/api/qna';
 
 export default {
+  props: {
+    ans_id: Number,
+    recomments: Array,
+  },
+  data() {
+    const res = [];
+    for (const i in this.recomments) res.push(false);
+    return {
+      newComment: '',
+      editables: [...res],
+      updatedContent: '',
+      recommentList: this.recomments,
+    };
+  },
   methods: {
-    async reloadSmallAns() {
+    editRecomment(index) {
+      this.editables[index] = true;
+      this.editables = [...this.editables];
+    },
+    closeEditor(index) {
+      this.editables[index] = false;
+      this.editables = [...this.editables];
+    },
+    async reloadRecomment() {
       try {
-        this.comments = await getRecomment(this.info.post_id);
+        const { data } = await getRecomments(this.ans_id);
+        this.recommentList = data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async postRecomment(e) {
+      if (e.shiftKey) return;
+      try {
+        await registerRecomment({
+          ans: this.ans_id,
+          content: this.newComment,
+          user: this.$store.state.id,
+        });
+        this.newComment = '';
+        this.reloadRecomment();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async updateRecomment(e, anssmall_pk, index, content) {
+      if (e.shiftKey) return;
+      try {
+        await updateRecomment(anssmall_pk, {
+          ans: this.ans_id,
+          content,
+          user: this.$store.state.id,
+        });
+
+        this.reloadRecomment();
+        this.closeEditor(index);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async deleteAnsRecomment(anssmall_pk) {
+      try {
+        await deleteRecomment(anssmall_pk);
+        this.reloadRecomment();
       } catch (error) {
         console.log(error);
       }
@@ -66,4 +159,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.q-input >>> input {
+  padding: 0;
+}
+</style>

@@ -2,7 +2,7 @@
   <div class="row full-width">
     <q-card flat bordered class="my-card q-px-lg q-pt-xs row col-12">
       <div class="row col-11">
-        <q-card-section class="row full-width q-pb-sm q-px-none justify-end">
+        <!-- <q-card-section class="row full-width q-pb-sm q-px-none justify-end">
           <div class="row col-2 justify-end">
             <div
               class="row col-12 shadow-1 overflow-hidden"
@@ -19,7 +19,7 @@
               </div>
             </div>
           </div>
-        </q-card-section>
+        </q-card-section> -->
       </div>
       <div v-if="info.user_id == $store.state.id" class="row col-1 justify-end">
         <q-btn flat round dense icon="more_vert" class="q-mt-md">
@@ -38,15 +38,24 @@
       </div>
 
       <q-card-section class="row col-12 q-py-none q-mb-sm">
-        <div class="row col-12 text-h4 text-weight-bold">
-          {{ info.title }}
+        <div class="row col-12 text-h4 text-weight-bold q-mb-sm">
+          <span
+            >{{ info.title }}
+            <span v-if="info.solved" class="q-ml-xs">
+              <q-icon
+                :name="$i.ionCheckmarkCircleOutline"
+                style="color: #35D24F"
+                size="lg"
+                class="q-pb-sm"
+              ></q-icon> </span
+          ></span>
         </div>
-        <div class="text-subtitle2 text-grey-6">
+        <div class="text-subtitle2 text-grey-6 q-mb-md">
           {{ info.written_time | moment('YYYY/MM/DD HH:mm') }}
         </div>
       </q-card-section>
       <q-card-section class="q-pa-none full-width q-mb-sm">
-        <div class="q-ml-md">
+        <div class="q-ml-sm">
           <span v-for="tag in info.ref_tags" :key="tag" class="q-px-xs">
             <q-badge
               class="q-pa-sm text-black"
@@ -58,10 +67,13 @@
           </span>
         </div>
       </q-card-section>
-      <q-card-section class="row col-12">
+      <div class="row col-12">
         <v-md-editor v-model="content" mode="preview"> </v-md-editor>
-      </q-card-section>
+      </div>
       <q-card-section class="row col-12">
+        <template v-if="info.comments.length">
+          <q-separator />
+        </template>
         <qna-small-comment
           :comments="comments"
           :user_id="info.user_id"
