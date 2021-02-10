@@ -61,7 +61,9 @@ def qna_list(request):
                 qna.liked = "True"      
             else:
                 qna.liked = "False"
-            qna.save()  
+            qna.ref_tags=list(qna.ref_tags)
+            qna.save()
+             
         # qna number in user_id -> It will be "True"
         serializer = QnaListforamtSerializer(qnas, many=True)
         return Response(serializer.data) 
@@ -95,7 +97,6 @@ def qna_list_create(request):
         if profiles.filter(user_id=request.user.id).exists():
             pro=profiles.get(user_id=request.user.id)
             request.data['profile'] = pro.id
-
         serializer = QnaSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()     
@@ -342,12 +343,23 @@ def solve(request, ans_pk):
     if request.method == 'GET':
         serializer = solveSerializer(ans)
         return Response(serializer.data)
-    if request.method == 'POST': 
-        ans.assisted = "True"
-        qna.solved="True"
-        ans.save()
-        qna.save()
-        return Response("solved")
+    if request.method == 'POST':
+        ans = get_object_or_404(Ans, pk=ans_pk)
+        qna = get_object_or_404(Qna, pk=ans.qna_id)   
+        if ans.assisted == 1:
+            ans.assisted = "False"
+            qna.solved = "False"
+            ans.save()
+            qna.save()
+            return Response("sovled canceled")
+
+        elif ans.assisted == 0:
+            ans.assisted = "True"
+            qna.solved = "True"
+            ans.save()
+            qna.save()
+            return Response("sovled!!!!!!!!")
+        return Response("오류!!!!!!!!")
 
 
 @api_view(['GET'])
