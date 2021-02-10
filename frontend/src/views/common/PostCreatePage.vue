@@ -85,7 +85,7 @@
 </template>
 
 <script>
-import { filtered_tags } from '@/utils/autoComplete';
+import { filtered_tags, first_matched_tag } from '@/utils/autoComplete';
 
 import { createQnaItem, saveQnaImage, loadQnaImage } from '@/api/qna';
 
@@ -126,15 +126,18 @@ export default {
   methods: {
     createTag() {
       if (this.tagItem !== '') {
-        const str =
-          this.tagItem.charAt(0).toUpperCase() + this.tagItem.slice(1);
-        this.ref_tags.push(str);
-        this.tagItem = '';
+        const str = first_matched_tag(this.tagItem);
+        if (str && this.ref_tags.indexOf(str) < 0) {
+          this.ref_tags.push(str);
+          this.tagItem = '';
+        }
       }
     },
     autoCreateTag(tag) {
-      this.ref_tags.push(tag);
-      this.tagItem = '';
+      if (tag && this.ref_tags.indexOf(tag) < 0) {
+        this.ref_tags.push(tag);
+        this.tagItem = '';
+      }
     },
     removeTag(tag, index) {
       this.ref_tags.splice(index, 1);

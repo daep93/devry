@@ -83,8 +83,7 @@
 
 <script>
 import { loadQnaItem, updateQnaItem, deleteQnaItem } from '@/api/qna';
-
-import { filtered_tags } from '@/utils/autoComplete';
+import { filtered_tags, first_matched_tag } from '@/utils/autoComplete';
 
 export default {
   data() {
@@ -122,14 +121,18 @@ export default {
   methods: {
     createTag() {
       if (this.tagItem !== '') {
-        console.log(this.tagItem);
-        this.ref_tags.push(this.tagItem);
-        this.tagItem = '';
+        const str = first_matched_tag(this.tagItem);
+        if (str && this.ref_tags.indexOf(str) < 0) {
+          this.ref_tags.push(str);
+          this.tagItem = '';
+        }
       }
     },
     autoCreateTag(tag) {
-      this.ref_tags.push(tag);
-      this.tagItem = '';
+      if (tag && this.ref_tags.indexOf(tag) < 0) {
+        this.ref_tags.push(tag);
+        this.tagItem = '';
+      }
     },
     removeTag(tag, index) {
       this.ref_tags.splice(index, 1);

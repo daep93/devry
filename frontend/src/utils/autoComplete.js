@@ -1,10 +1,13 @@
 import store from '@/store/state.js';
 
 const filtered_tags = str => {
-  const tag = str.charAt(0).toUpperCase() + str.toLowerCase().slice(1);
-  const reg = new RegExp(tag.trim());
   if (str !== '') {
-    return store.all_tag_list.filter(el => el.match(reg));
+    const reg = new RegExp(`^${str}`, 'gi');
+    return store.all_tag_list.filter(tag => tag.match(reg));
   } else return [];
 };
-export { filtered_tags };
+const first_matched_tag = str => {
+  const reg = new RegExp(`^${str}`, 'i');
+  return store.all_tag_list.find(tag => tag.match(reg));
+};
+export { filtered_tags, first_matched_tag };
