@@ -74,6 +74,11 @@ const routes = [
     component: () => import('@/views/event/EventDetailPage.vue'),
   },
   {
+    path: '/event-registration',
+    name: 'EventRegistration',
+    component: () => import('@/views/event/EventRegistrationPage.vue'),
+  },
+  {
     path: '/jobs',
     name: 'Jobs',
     component: () => import('@/views/JobsPage.vue'),
