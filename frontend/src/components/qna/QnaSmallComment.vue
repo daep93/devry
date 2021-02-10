@@ -17,32 +17,47 @@
               <span class="text-caption" style="color: gray">
                 {{ data.written_time | moment('YYYY/MM/DD HH:mm') }}
               </span>
-              <span class="q-ml-sm">
-                <q-icon
-                  :name="$i.ionCreateOutline"
-                  class="cursor-pointer"
-                  size="17px"
-                  style="color: #727272"
-                  @click="fixComment(index)"
-                >
-                </q-icon>
-              </span>
-              <span class="q-ml-sm">
-                <q-icon
-                  :name="$i.ionTrashOutline"
-                  class="cursor-pointer"
-                  size="16px"
-                  style="color: #727272"
-                  @click="qnaSmallCommentDelete(index)"
-                >
-                </q-icon>
-              </span>
+              <template v-if="data.user.id == $store.state.id">
+                <span class="q-ml-sm">
+                  <q-icon
+                    :name="$i.ionCreateOutline"
+                    class="cursor-pointer"
+                    size="17px"
+                    style="color: #727272"
+                    @click="editComment(index)"
+                  >
+                  </q-icon>
+                </span>
+                <span class="q-ml-sm">
+                  <q-icon
+                    :name="$i.ionTrashOutline"
+                    class="cursor-pointer"
+                    size="16px"
+                    style="color: #727272"
+                    @click="deleteComment(data.id)"
+                  >
+                  </q-icon>
+                </span>
+              </template>
             </div>
           </div>
-          <div class="q-ml-lg q-py-xs row col-12">
+          <div class=" q-py-xs row col-12" v-if="editables[index]">
+            <q-input
+              clearable
+              clear-icon="close"
+              type="text"
+              v-model="updatedContent"
+              class="full-width q-pa-none"
+              color="blue-10"
+              dense
+              borderless
+              style="height:20.382px;"
+              @keypress.enter="updateComment(data.id)"
+            />
+          </div>
+          <div class=" q-py-xs row col-12" v-else>
             {{ data.content }}
           </div>
-
           <!-- 수정 클릭 시 보이는 영역 -->
           <!-- <template v-if="modes[index] == false">
             <q-btn @click="qnaSmallCommentUpdate(index)">수정진행</q-btn>
@@ -55,7 +70,7 @@
       <div class="row col-11">
         <q-input
           borderless
-          v-model="text"
+          v-model="newComment"
           autogrow
           placeholder="댓글을 입력해주세요"
           class="full-width"
@@ -67,7 +82,7 @@
             color="primary"
             label="등록"
             size="13px"
-            @click="setSmallAnswer"
+            @click="registerComment"
           />
         </div>
       </div>
@@ -77,9 +92,9 @@
 
 <script>
 import {
-  registerSmallAnswer,
-  deleteSmallAnswers,
-  updateSmallAnswers,
+  registerSmallComment,
+  deleteSmallComment,
+  updateSmallComment,
 } from '@/api/qna';
 export default {
   props: {
@@ -91,83 +106,72 @@ export default {
   data: function() {
     const res = [];
     for (const i in this.comments) res.push(false);
-    this.modes = res;
     return {
-      text: '',
-      modes: res,
+      newComment: '',
+      editables: [...res],
+      updatedContent: '',
     };
   },
   methods: {
-    fixComment(index) {
-      console.log(this.modes[index]);
-      console.log(this.modes);
-      this.modes[index] = !this.modes[index];
+    editComment(index) {
+      this.editables[index] = true;
+      this.editables = [...this.editables];
+      this.updatedContent = this.comments[index].content;
     },
-    checkLiked(index) {
-      if (!this.$store.getters.isLogined) {
-        alert('로그인을 해주세요');
-        return;
-      }
-      const heart = this.comments[index];
-
-      heart.liked = !heart.liked;
-      if (heart.liked) {
-        heart.like_num = heart.like_num - 1;
-      } else {
-        heart.like_num = heart.like_num + 1;
-      }
-    },
-    async setSmallAnswer() {
+    async registerComment() {
       try {
-        this.$q.loading.show();
-        const { data } = await registerSmallAnswer({
+        await registerSmallComment({
           qna: this.post_id,
-          content: this.text,
+          content: this.newComment,
           user: this.$store.state.id,
         });
-        this.text = '';
-        this.$emit('reloadSmallAns');
+        this.newComment = '';
+        // this.$emit('reloadSmallAns');
         location.reload();
       } catch (error) {
         console.log(error);
-      } finally {
-        this.$q.loading.hide();
       }
     },
-    async qnaSmallCommentDelete(index) {
+    async updateComment(id) {
       try {
-        this.$q.loading.show();
-        const qnasmall_pk = this.comments[index].id;
-        await deleteSmallAnswers(qnasmall_pk);
-        location.reload();
-      } catch (error) {
-        console.log(error);
-      } finally {
-        this.$q.loading.hide();
-      }
-    },
-    async qnaSmallCommentUpdate(index) {
-      try {
-        this.$q.loading.show();
-        const qnasmall_pk = this.comments[index].id;
-        console.log(qnasmall_pk);
-        await updateSmallAnswers(qnasmall_pk, {
-          content: this.text,
+        await updateSmallComment(id, {
+          qna: this.post_id,
+          content: this.updatedContent,
+          user: this.$store.state.id,
         });
-        // location.reload();
+        location.reload();
       } catch (error) {
         console.log(error);
-      } finally {
-        this.$q.loading.hide();
       }
     },
-    // qnaSmallCommentUpdate(index) {
-    //   this.update = !this.update;
-    //   console.log(this.update);
-    //   console.log(index);
+    async deleteComment(id) {
+      try {
+        await deleteSmallComment(id);
+        location.reload();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    // checkLiked(index) {
+    //   if (!this.$store.getters.isLogined) {
+    //     alert('로그인을 해주세요');
+    //     return;
+    //   }
+    //   const heart = this.comments[index];
+
+    //   heart.liked = !heart.liked;
+    //   if (heart.liked) {
+    //     heart.like_num = heart.like_num - 1;
+    //   } else {
+    //     heart.like_num = heart.like_num + 1;
+    //   }
     // },
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.q-input >>> input {
+  padding: 0;
+}
+</style>
