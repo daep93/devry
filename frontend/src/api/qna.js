@@ -42,8 +42,8 @@ function createQnaBigComment(postData) {
   return instance.post('ans/', postData);
 }
 // QnA 큰 댓글 수정하기
-function updateQnaBigComment(ans_pk) {
-  return instance.put(`ans/${ans_pk}/`);
+function updateQnaBigComment(ans_pk, putData) {
+  return instance.put(`ans/${ans_pk}/`, putData);
 }
 // QnA 큰 댓글 삭제하기
 function deleteQnaBigComment(commentId) {

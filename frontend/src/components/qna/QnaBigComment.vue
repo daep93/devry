@@ -42,6 +42,13 @@
                       @click="chooseComment(index)"
                     ></q-icon> -->
                   </span>
+                  <span v-else-if="data.assisted" class="q-ml-sm">
+                    <q-icon
+                      :name="$i.ionCheckmarkCircleOutline"
+                      style="color: blue"
+                      size="sm"
+                    ></q-icon>
+                  </span>
                 </span>
               </div>
             </div>
@@ -167,12 +174,15 @@ export default {
       try {
         const ans_pk = this.info[index].id;
         const qnaId = this.info[index].qna;
+        console.log('댓글번호', ans_pk);
+        console.log('글번호', qnaId);
+        console.log(this.info[index].content);
         this.modes[index] = 'preview';
         this.modes = [...this.modes];
         this.$q.loading.show();
         await updateQnaBigComment(ans_pk, {
           content: this.info[index].content,
-          qna: qnaId,
+          qna: this.info[index].qna,
         });
       } catch (error) {
         console.log(error);
