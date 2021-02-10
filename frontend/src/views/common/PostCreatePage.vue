@@ -85,7 +85,7 @@
 </template>
 
 <script>
-import { filtered_tags } from '@/utils/autoComplete';
+import { filtered_tags, first_matched_tag } from '@/utils/autoComplete';
 
 import { createQnaItem, saveQnaImage, loadQnaImage } from '@/api/qna';
 
@@ -126,15 +126,18 @@ export default {
   methods: {
     createTag() {
       if (this.tagItem !== '') {
-        const str =
-          this.tagItem.charAt(0).toUpperCase() + this.tagItem.slice(1);
-        this.ref_tags.push(str);
-        this.tagItem = '';
+        const str = first_matched_tag(this.tagItem);
+        if (str && this.ref_tags.indexOf(str) < 0) {
+          this.ref_tags.push(str);
+          this.tagItem = '';
+        }
       }
     },
     autoCreateTag(tag) {
-      this.ref_tags.push(tag);
-      this.tagItem = '';
+      if (tag && this.ref_tags.indexOf(tag) < 0) {
+        this.ref_tags.push(tag);
+        this.tagItem = '';
+      }
     },
     removeTag(tag, index) {
       this.ref_tags.splice(index, 1);
@@ -155,9 +158,14 @@ export default {
       }
 
       try {
+        if (this.img.length === 0) {
+          this.img = null;
+        }
         console.log(this.$store.state.id);
         console.log(this.$store.state);
         console.log(this.img);
+        console.log(this.img);
+        console.log('여기..?');
 
         this.$q.loading.show();
         await createQnaItem({
@@ -200,14 +208,15 @@ export default {
       // Here is just an example
       insertImage({
         // 1. blob 데이터 출력하기
-        // url: URL.createObjectURL(file),
+        // url : URL.createObjectURL(file),
         // 2. 서버에서 받아온 이미지 url 출력하기
-        // url : this.imgUrl
+        url: this.imgUrl,
         // 3. 파일명 출력하기
-        url: file.name,
+        // url : file.name,
         // 4. base64 출력하기
         // url: localStorage.getItem('imgUrl'),
         desc: '글 작성 시 ' + file.name + ' 이미지가 출력됩니다.',
+        responseType: 'blob',
       });
     },
   },
