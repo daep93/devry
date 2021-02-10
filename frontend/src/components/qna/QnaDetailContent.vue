@@ -1,24 +1,41 @@
 <template>
   <div class="row full-width">
     <q-card flat bordered class="my-card q-px-lg q-pt-xs row col-12">
-      <q-card-section class="row full-width q-pb-sm q-px-none justify-end">
-        <div class="row col-2 justify-end">
-          <div
-            class="row col-12 shadow-1 overflow-hidden"
-            style="border-radius:5px; height:25px; max-width:100px;"
-          >
+      <div class="row col-11">
+        <q-card-section class="row full-width q-pb-sm q-px-none justify-end">
+          <div class="row col-2 justify-end">
             <div
-              class="col-2"
-              :style="{
-                'background-color': info.solved ? '#1976D2' : '#C8DAFE',
-              }"
-            ></div>
-            <div class="col-10 text-center row items-center justify-center">
-              {{ info.solved ? '답변 완료' : '답변 대기' }}
+              class="row col-12 shadow-1 overflow-hidden"
+              style="border-radius:5px; height:25px; max-width:100px;"
+            >
+              <div
+                class="col-2"
+                :style="{
+                  'background-color': info.solved ? '#1976D2' : '#C8DAFE',
+                }"
+              ></div>
+              <div class="col-10 text-center row items-center justify-center">
+                {{ info.solved ? '답변 완료' : '답변 대기' }}
+              </div>
             </div>
           </div>
-        </div>
-      </q-card-section>
+        </q-card-section>
+      </div>
+      <div v-if="info.user_id == $store.state.id" class="row col-1 justify-end">
+        <q-btn flat round dense icon="more_vert" class="q-mt-md">
+          <q-menu>
+            <q-list style="min-width: 100px">
+              <q-item clickable v-close-popup @click="qnaPostEdit">
+                <q-item-section>수정하기</q-item-section>
+              </q-item>
+              <q-item clickable v-close-popup @click="deleteQna">
+                <q-item-section>삭제하기</q-item-section>
+              </q-item>
+              <q-separator />
+            </q-list>
+          </q-menu>
+        </q-btn>
+      </div>
 
       <q-card-section class="row col-12 q-py-none q-mb-sm">
         <div class="row col-12 text-h4 text-weight-bold">
@@ -44,12 +61,6 @@
       <q-card-section class="row col-12">
         <v-md-editor v-model="content" mode="preview"> </v-md-editor>
       </q-card-section>
-      <q-card-section
-        class="row col-12 justify-end"
-        v-if="info.user_id == $store.state.id"
-      >
-        <q-btn @click="qnaPostEdit">수정하기</q-btn>
-      </q-card-section>
       <q-card-section class="row col-12">
         <qna-small-comment
           :comments="comments"
@@ -66,7 +77,7 @@
 <script>
 import QnaSmallComment from '@/components/qna/QnaSmallComment';
 import { colorSoloMapper } from '@/utils/tagColorMapper';
-import { getSmallAnswers } from '@/api/qna';
+import { getSmallAnswers, deleteQnaItem } from '@/api/qna';
 
 export default {
   props: {
@@ -97,6 +108,19 @@ export default {
         this.comments = await getSmallAnswers(this.info.post_id);
       } catch (error) {
         console.log(error);
+      }
+    },
+    async deleteQna() {
+      try {
+        const post_id = this.$route.params.id;
+        this.$q.loading.show();
+        await deleteQnaItem(post_id);
+        // 이동 시킬 페이지 적어주기(QnA 게시판으로 이동)
+        this.$router.push({ path: '/qna' });
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.$q.loading.hide();
       }
     },
   },
