@@ -174,15 +174,12 @@ export default {
       try {
         const ans_pk = this.info[index].id;
         const qnaId = this.info[index].qna;
-        console.log('댓글번호', ans_pk);
-        console.log('글번호', qnaId);
-        console.log(this.info[index].content);
         this.modes[index] = 'preview';
         this.modes = [...this.modes];
         this.$q.loading.show();
         await updateQnaBigComment(ans_pk, {
           content: this.info[index].content,
-          qna: this.info[index].qna,
+          qna: qnaId,
         });
       } catch (error) {
         console.log(error);
@@ -193,8 +190,9 @@ export default {
     async deleteQnaComment(index) {
       try {
         this.$q.loading.show();
-        const commentId = this.info[index].id;
-        await deleteQnaBigComment(commentId);
+        const ans_pk = this.info[index].id;
+        console.log(ans_pk);
+        await deleteQnaBigComment(ans_pk);
         location.reload();
       } catch (error) {
         console.log(error);

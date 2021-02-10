@@ -46,8 +46,8 @@ function updateQnaBigComment(ans_pk, putData) {
   return instance.put(`ans/${ans_pk}/`, putData);
 }
 // QnA 큰 댓글 삭제하기
-function deleteQnaBigComment(commentId) {
-  return instance.delete(`ans/${commentId}/`);
+function deleteQnaBigComment(ans_pk) {
+  return instance.delete(`ans/${ans_pk}/`);
 }
 // QnA 큰 댓글 좋아요 토글하기
 function toggleQnaCommentLike(commentId) {
