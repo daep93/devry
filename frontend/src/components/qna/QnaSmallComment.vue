@@ -5,7 +5,7 @@
         <q-separator />
         <div
           class="row col-12 q-py-sm"
-          v-for="(data, index) in comments"
+          v-for="(data, index) in commentList"
           :key="index"
         >
           <div class="row col-12 justify-between">
@@ -46,13 +46,13 @@
               clearable
               clear-icon="close"
               type="text"
-              v-model="updatedContent"
+              v-model="data.content"
               class="full-width q-pa-none"
               color="blue-10"
               dense
               borderless
               style="height:20.382px;"
-              @keypress.enter="updateComment(data.id)"
+              @keypress.enter="updateComment(data.id, index, data.content)"
             />
           </div>
           <div class=" q-py-xs row col-12" v-else>
@@ -95,6 +95,7 @@ import {
   registerSmallComment,
   deleteSmallComment,
   updateSmallComment,
+  getSmallComments,
 } from '@/api/qna';
 export default {
   props: {
@@ -110,13 +111,17 @@ export default {
       newComment: '',
       editables: [...res],
       updatedContent: '',
+      commentList: this.comments,
     };
   },
   methods: {
     editComment(index) {
       this.editables[index] = true;
       this.editables = [...this.editables];
-      this.updatedContent = this.comments[index].content;
+    },
+    closeEditor(index) {
+      this.editables[index] = false;
+      this.editables = [...this.editables];
     },
     async registerComment() {
       try {
@@ -132,21 +137,31 @@ export default {
         console.log(error);
       }
     },
-    async updateComment(id) {
+    async getComments() {
       try {
-        await updateSmallComment(id, {
-          qna: this.post_id,
-          content: this.updatedContent,
-          user: this.$store.state.id,
-        });
-        location.reload();
+        const { data } = await getSmallComments(this.post_id);
+        this.commentList = data;
       } catch (error) {
         console.log(error);
       }
     },
-    async deleteComment(id) {
+    async updateComment(quset_small_id, index, content) {
       try {
-        await deleteSmallComment(id);
+        await updateSmallComment(quset_small_id, {
+          qna: this.post_id,
+          content,
+          user: this.$store.state.id,
+        });
+
+        this.getComments();
+        this.closeEditor(index);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async deleteComment(quset_small_id) {
+      try {
+        await deleteSmallComment(quset_small_id);
         location.reload();
       } catch (error) {
         console.log(error);

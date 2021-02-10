@@ -23,7 +23,7 @@ function registerSmallComment(postData) {
 }
 // QnA 작은 댓글들 불러오기
 function getSmallComments(postId) {
-  return instance.get(`qna_small/${postId}/`);
+  return instance.get(`qna_smallq/${postId}/`);
 }
 // QnA 작은 댓글 수정하기
 function updateSmallComment(qnasmall_pk, putData) {
