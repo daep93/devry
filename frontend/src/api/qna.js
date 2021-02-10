@@ -55,8 +55,8 @@ function toggleQnaCommentLike(commentId) {
   return setInterceptors(instance).post(`ans_like/${commentId}/`);
 }
 // QnA 큰 댓글 채택 토글하기
-function toggleQnaCommentChoose(commentId) {
-  return instance.post(`qna_solved/${commentId}/`);
+function toggleQnaCommentChoose(ans_pk) {
+  return instance.post(`qna_solved/${ans_pk}/`);
 }
 // QnA 큰 댓글의 작은 댓글 가져오기
 function getRecomment(ans_pk) {

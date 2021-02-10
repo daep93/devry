@@ -6,7 +6,7 @@
         <div class="text-h6 text-weight-bold q-mb-md">새 답변 작성하기</div>
         <v-md-editor
           v-model="content"
-          height="400px"
+          height="300px"
           left-toolbar="undo redo clear | h bold italic strikethrough quote | ul ol table hr | link image code video "
           :disabled-menus="[]"
           :toolbar="toolbar"
@@ -20,7 +20,7 @@
       <div class="row col-9 q-mt-lg q-pl-xl">
         <div class="row col-3"></div>
         <div class="row col-9">
-          <div class="row col-12">
+          <div class="row col-12 q-mb-xl">
             <div style="margin:0 auto;">
               <q-btn
                 no-caps
@@ -28,7 +28,7 @@
                 id="follow-btn"
                 label="답변 작성하기"
                 style="width: 200px"
-                class="q-mb-xl"
+                class="q-mb-xl q-mt-lg"
                 @click="createBigComment"
               />
             </div>

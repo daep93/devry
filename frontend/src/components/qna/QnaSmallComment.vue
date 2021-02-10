@@ -10,41 +10,66 @@
         >
           <div class="row col-12 justify-between">
             <div class="row col-10">
-              <span class="q-mr-xs">{{ index + 1 }}</span>
-              <span class="q-mr-sm" style="color: blue">
+              <span class="q-mr-xs">{{ index + 1 }}.</span>
+              <span class="q-mr-sm text-weight-bold" style="color: #585858">
                 @{{ data.user.username }}
               </span>
               <span class="text-caption" style="color: gray">
                 {{ data.written_time | moment('YYYY/MM/DD HH:mm') }}
+              </span>
+              <span class="q-ml-sm">
+                <q-icon
+                  :name="$i.ionCreateOutline"
+                  class="cursor-pointer"
+                  size="17px"
+                  style="color: #727272"
+                  @click="fixComment(index)"
+                >
+                </q-icon>
+              </span>
+              <span class="q-ml-sm">
+                <q-icon
+                  :name="$i.ionTrashOutline"
+                  class="cursor-pointer"
+                  size="16px"
+                  style="color: #727272"
+                  @click="qnaSmallCommentDelete(index)"
+                >
+                </q-icon>
               </span>
             </div>
           </div>
           <div class="q-ml-lg q-py-xs row col-12">
             {{ data.content }}
           </div>
-          <q-btn @click="qnaSmallCommentDelete(index)">삭제하기</q-btn>
-          <q-btn @click="qnaSmallCommentUpdate(index)">수정하기</q-btn>
+
+          <!-- 수정 클릭 시 보이는 영역 -->
+          <!-- <template v-if="modes[index] == false">
+            <q-btn @click="qnaSmallCommentUpdate(index)">수정진행</q-btn>
+          </template> -->
         </div>
       </div>
     </div>
     <q-separator />
     <div class="q-mt-sm row col-12">
-      <q-input
-        borderless
-        v-model="text"
-        placeholder="댓글을 입력해주세요"
-        class="full-width"
-      />
-    </div>
-    <div class="row col-12">
-      <div class="row col-10"></div>
-      <div class="row col-2 q-pl-xl q-mb-lg">
-        <q-btn
-          color="primary"
-          label="댓글 추가"
-          size="md"
-          @click="setSmallAnswer"
+      <div class="row col-11">
+        <q-input
+          borderless
+          v-model="text"
+          autogrow
+          placeholder="댓글을 입력해주세요"
+          class="full-width"
         />
+      </div>
+      <div class="row col-1">
+        <div class="q-mt-sm ">
+          <q-btn
+            color="primary"
+            label="등록"
+            size="13px"
+            @click="setSmallAnswer"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -64,12 +89,20 @@ export default {
     username: String,
   },
   data: function() {
+    const res = [];
+    for (const i in this.comments) res.push(false);
+    this.modes = res;
     return {
       text: '',
-      // update: false,
+      modes: res,
     };
   },
   methods: {
+    fixComment(index) {
+      console.log(this.modes[index]);
+      console.log(this.modes);
+      this.modes[index] = !this.modes[index];
+    },
     checkLiked(index) {
       if (!this.$store.getters.isLogined) {
         alert('로그인을 해주세요');
