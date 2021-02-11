@@ -102,7 +102,7 @@ class Qnasmall(models.Model):
 
 class Ans(models.Model):
     content = models.TextField()
-    img = models.ImageField(upload_to="%Y/%m/%d", default="")
+    img = models.ImageField(upload_to="%Y/%m/%d", default="", null="True")
     assist_ans_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='assist_anss')
     assisted = models.BooleanField(default="False")
     like_ans_num = models.PositiveIntegerField(default=0)

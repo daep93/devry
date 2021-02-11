@@ -12,90 +12,125 @@
       <div class="row col-10">
         <div class="row col-9">
           <q-card flat bordered class="my-card q-pa-lg q-mt-lg row col-12">
-            <div class="row col-9">
-              <div class="q-ml-md row col-12 q-my-sm">
-                <div style="color: blue">@{{ data.user.username }}</div>
-                <span class="q-ml-sm text-caption" style="color: gray;">
+            <div class="row col-10">
+              <div class="q-ml-md row col-12 q-mt-sm">
+                <span
+                  class="text-body1 text-weight-bold"
+                  style="color: #585858"
+                >
+                  @{{ data.user.username }}
+                </span>
+                <span
+                  class="q-ml-sm text-caption"
+                  style="color: gray; margin-top: 2px"
+                >
                   {{ data.written_time | moment('YYYY/MM/DD HH:mm') }}
+                  <!-- 답변 채택 버튼 -->
+
+                  <span v-if="$store.state.id == author" class="q-ml-sm">
+                    <template v-if="data.assisted">
+                      <q-badge
+                        color="blue"
+                        @click="chooseComment(index)"
+                        class="cursor-pointer"
+                      >
+                        채택 답변
+                      </q-badge>
+                      🥇
+                    </template>
+                    <template v-else>
+                      <q-badge
+                        color="grey-5"
+                        @click="chooseComment(index)"
+                        class="cursor-pointer"
+                      >
+                        채택 하기
+                      </q-badge>
+                    </template>
+                    <!-- <q-icon
+                      :name="$i.ionCheckmarkCircleOutline"
+                      :style="{ color: data.assisted ? 'blue' : '#B7B7B7' }"
+                      class="cursor-pointer"
+                      size="sm"
+                      @click="chooseComment(index)"
+                    ></q-icon> -->
+                  </span>
+                  <span v-else-if="data.assisted" class="q-ml-sm">
+                    <q-badge color="blue">
+                      채택 답변
+                    </q-badge>
+                    🥇
+                  </span>
                 </span>
               </div>
-              <div class="q-ml-md row col-12">
-                <v-md-editor v-model="data.content" :mode="modes[index]">
-                </v-md-editor>
-                <q-card-section
-                  class="row col-12 justify-end"
-                  v-if="data.user.id == $store.state.id"
-                >
-                  <!-- <q-btn @click="updateQnaComment(index)">수정하기</q-btn> -->
-                  <q-btn @click="editerOpen(index)">수정하기</q-btn>
-                </q-card-section>
-                <q-btn
-                  outline
-                  color="red-12"
-                  class="text-weight-bold q-px-xl q-py-sm q-mr-md"
-                  label="삭제하기"
-                  size="md"
-                  @click="deleteQnaComment(index)"
-                />
+            </div>
+
+            <div class="row col-2 justify-end">
+              <div v-if="data.user.id == $store.state.id">
+                <q-btn flat round dense icon="more_vert">
+                  <q-menu>
+                    <q-list style="min-width: 100px">
+                      <q-item
+                        clickable
+                        v-close-popup
+                        @click="editerOpen(index)"
+                      >
+                        <q-item-section>수정하기</q-item-section>
+                      </q-item>
+                      <q-item
+                        clickable
+                        v-close-popup
+                        @click="deleteQnaComment(index)"
+                      >
+                        <q-item-section>삭제하기</q-item-section>
+                      </q-item>
+                      <q-separator />
+                    </q-list>
+                  </q-menu>
+                </q-btn>
               </div>
             </div>
-            <div class="row col-3">
-              <div class="row col-8" v-if="data.assisted == true">
-                <div class="q-pl-xl q-mt-sm">
-                  <div
-                    class="row col-12 shadow-1 overflow-hidden"
-                    style="border-radius:5px; width: 100px; height: 20px;"
-                  >
-                    <div class="col-2" style="background-color:#1976D2"></div>
-                    <div class="col-10 text-center">답변 채택</div>
-                  </div>
-                </div>
-              </div>
-              <div
-                class="row col-4 q-mb-sm q-pl-sm"
-                v-if="$store.state.id == author"
+
+            <div class="row col-12 justify-center">
+              <v-md-editor
+                v-model="data.content"
+                :mode="modes[index]"
+                class="q-mb-md"
+                :style="{
+                  height: modes[index] === 'preview' ? 'auto' : '500px',
+                }"
               >
-                <q-toggle
-                  label="채택하기"
-                  :true-value="true"
-                  :false-value="false"
-                  v-model="data.assisted"
-                  @click="chooseBigComment(index)"
-                />
-              </div>
+              </v-md-editor>
+              <q-btn
+                @click="updateQnaComment(index)"
+                color="primary"
+                v-if="modes[index] === 'editable'"
+                >수정 완료</q-btn
+              >
             </div>
+
             <div class="q-ml-md row col-12">
-              <div class="q-mr-md q-pb-lg">
-                <q-card-section class="row col-12">
-                  <q-markdown :src="info.contents"> </q-markdown>
-                </q-card-section>
-              </div>
+              <q-card-section class="row col-12">
+                <q-markdown :src="info.contents"> </q-markdown>
+              </q-card-section>
             </div>
-            <div class="row col-12 q-px-md">
-              <q-separator />
-            </div>
-            <div class="q-mt-sm q-px-md row col-12">
-              <q-input
-                borderless
-                v-model="text"
-                placeholder="댓글을 입력해주세요"
-              />
-            </div>
-            <div class="row col-12">
-              <div class="row col-10"></div>
-              <div class="row col-2 q-pl-lg q-mb-sm">
-                <span class="q-pl-md"
-                  ><q-btn color="primary" label="댓글 추가" size="md"
-                /></span>
-              </div>
-            </div>
+
+            <!-- 큰 댓글의 작은 댓글 -->
+            <q-card-section class="row col-12">
+              <template v-if="data.anssmall_set.length">
+                <q-separator />
+              </template>
+              <qna-recomment
+                :ans_id="data.id"
+                :recomments="data.anssmall_set"
+                @reloadRecomment="reloadRecomment(index)"
+              ></qna-recomment>
+            </q-card-section>
           </q-card>
         </div>
         <!-- 채택 댓글 프로필 -->
         <div v-if="data.assisted === true">
-          <qna-comment-selected
-            :info="bigCommentsSelected"
-          ></qna-comment-selected>
+          <qna-comment-selected :info="data"></qna-comment-selected>
         </div>
       </div>
     </div>
@@ -106,10 +141,12 @@
 import { toggleQnaCommentChoose } from '@/api/qna';
 import QnaCommentSelected from '@/components/qna/QnaCommentSelected';
 import QnaCommentStatus from '@/components/qna/QnaCommentStatus';
+import QnaRecomment from '@/components/qna/QnaRecomment';
 import {
   loadQnaItem,
   updateQnaBigComment,
   deleteQnaBigComment,
+  getRecomments,
 } from '@/api/qna';
 
 export default {
@@ -119,6 +156,7 @@ export default {
   components: {
     QnaCommentSelected,
     QnaCommentStatus,
+    QnaRecomment,
   },
   data() {
     const res = [];
@@ -128,10 +166,12 @@ export default {
       text: '',
       follow: true,
       contents: '',
-      content: null,
+      content: '',
       qna: null,
       author: null,
       modes: res,
+      ans_pk: null,
+      recomments: Array,
     };
   },
   methods: {
@@ -144,12 +184,14 @@ export default {
         alert('내용은 필수 입력항목 입니다');
       }
       try {
-        const commentId = this.info[index].id;
+        const ans_pk = this.info[index].id;
         const qnaId = this.info[index].qna;
+        this.modes[index] = 'preview';
+        this.modes = [...this.modes];
         this.$q.loading.show();
-        await updateQnaBigComment(commentId, {
+        await updateQnaBigComment(ans_pk, {
+          content: this.info[index].content,
           qna: qnaId,
-          content: this.content,
         });
       } catch (error) {
         console.log(error);
@@ -160,8 +202,8 @@ export default {
     async deleteQnaComment(index) {
       try {
         this.$q.loading.show();
-        const commentId = this.info[index].id;
-        await deleteQnaBigComment(commentId);
+        const ans_pk = this.info[index].id;
+        await deleteQnaBigComment(ans_pk);
         location.reload();
       } catch (error) {
         console.log(error);
@@ -169,11 +211,30 @@ export default {
         this.$q.loading.hide();
       }
     },
+    async chooseComment(index) {
+      try {
+        // console.log(this.info);
+        for (let check of this.info) {
+          if (check.assisted == true && !this.info[index].assisted) {
+            check.assisted = false;
+            await toggleQnaCommentChoose(check.id);
+          }
+        }
+        const ans_pk = this.info[index].id;
+        await toggleQnaCommentChoose(ans_pk);
+        this.info[index].assisted = !this.info[index].assisted;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async reloadRecomment(index) {
+      try {
+        this.recomments = await getRecomments(this.info[index].id);
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
-
-  // created() {
-  //   this.checkWriter();
-  // },
   async created() {
     const index = this.$route.params.id;
     try {
@@ -183,7 +244,6 @@ export default {
     } catch (error) {
       console.log(error);
     }
-    // this.checkWriter();
   },
 };
 </script>

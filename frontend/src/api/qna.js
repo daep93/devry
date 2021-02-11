@@ -1,4 +1,5 @@
 import { instance } from '@/api';
+import { setInterceptors } from '@/api/common/interceptors';
 
 // QnA 글 불러오기
 function loadQnaItem(postId) {
@@ -21,13 +22,21 @@ function deleteQnaItem(postId) {
 }
 
 // QnA 작은 댓글 등록하기
-function registerSmallAnswer(ansData) {
-  return instance.post(`qna_small/`, ansData);
+function registerSmallComment(postData) {
+  return instance.post('qna_create_small/', postData);
 }
 
 // QnA 작은 댓글들 불러오기
-function getSmallAnswers(postId) {
-  return instance.get(`qna_small/${postId}/`);
+function getSmallComments(postId) {
+  return instance.get(`qna_smallq/${postId}/`);
+}
+// QnA 작은 댓글 수정하기
+function updateSmallComment(qnasmall_pk, putData) {
+  return instance.put(`qna_small/${qnasmall_pk}/`, putData);
+}
+// QnA 작은 댓글 삭제하기
+function deleteSmallComment(qnasmall_pk) {
+  return instance.delete(`qna_small/${qnasmall_pk}/`);
 }
 
 // QnA 글 좋아요 토글하기
@@ -41,23 +50,41 @@ function createQnaBigComment(postData) {
 }
 
 // QnA 큰 댓글 수정하기
-function updateQnaBigComment(commentId) {
-  return instance.put(`ans/${commentId}/`);
+function updateQnaBigComment(ans_pk, putData) {
+  return instance.put(`ans/${ans_pk}/`, putData);
 }
 
 // QnA 큰 댓글 삭제하기
-function deleteQnaBigComment(commentId) {
-  return instance.delete(`ans/${commentId}/`);
+function deleteQnaBigComment(ans_pk) {
+  return instance.delete(`ans/${ans_pk}/`);
 }
 
 // QnA 큰 댓글 좋아요 토글하기
 function toggleQnaCommentLike(commentId) {
-  return instance.post(`ans/${commentId}/`);
+  // return instance.post(`ans_like/${commentId}/`);
+  return setInterceptors(instance).post(`ans_like/${commentId}/`);
 }
 
 // QnA 큰 댓글 채택 토글하기
-function toggleQnaCommentChoose(commentId) {
-  return instance.post(`qna_solved/${commentId}/`);
+function toggleQnaCommentChoose(ans_pk) {
+  return instance.post(`qna_solved/${ans_pk}/`);
+}
+/////
+// QnA 큰 댓글의 작은 댓글들 불러오기
+function getRecomments(ans_pk) {
+  return instance.get(`ans_smallq/${ans_pk}/`);
+}
+// QnA 큰 댓글에 작은 댓글 등록하기
+function registerRecomment(postData) {
+  return instance.post('ans_create_small/', postData);
+}
+// QnA 큰 댓글의 작은 댓글 수정하기
+function updateRecomment(anssmall_pk, putData) {
+  return instance.put(`ans_small/${anssmall_pk}/`, putData);
+}
+// QnA 큰 댓글의 작은 댓글 삭제하기
+function deleteRecomment(anssmall_pk) {
+  return instance.delete(`ans_small/${anssmall_pk}/`);
 }
 
 // QnA 이미지 임시저장 하기
@@ -71,8 +98,8 @@ function loadQnaImage() {
 }
 
 export {
-  registerSmallAnswer,
-  getSmallAnswers,
+  registerSmallComment,
+  getSmallComments,
   toggleQnaLike,
   loadQnaItem,
   createQnaItem,
@@ -83,6 +110,12 @@ export {
   deleteQnaBigComment,
   toggleQnaCommentLike,
   toggleQnaCommentChoose,
+  updateSmallComment,
+  deleteSmallComment,
+  getRecomments,
+  registerRecomment,
+  updateRecomment,
+  deleteRecomment,
   saveQnaImage,
   loadQnaImage,
 };
