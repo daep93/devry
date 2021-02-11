@@ -40,12 +40,11 @@
                     </template>
                     <template v-else>
                       <q-badge
-                        color="primary"
-                        outline
+                        color="grey-5"
                         @click="chooseComment(index)"
                         class="cursor-pointer"
                       >
-                        채택 대기
+                        채택 하기
                       </q-badge>
                     </template>
                     <!-- <q-icon
@@ -81,13 +80,6 @@
                       <q-item
                         clickable
                         v-close-popup
-                        @click="updateQnaComment(index)"
-                      >
-                        <q-item-section>수정 적용</q-item-section>
-                      </q-item>
-                      <q-item
-                        clickable
-                        v-close-popup
                         @click="deleteQnaComment(index)"
                       >
                         <q-item-section>삭제하기</q-item-section>
@@ -99,9 +91,22 @@
               </div>
             </div>
 
-            <div class="row col-12">
-              <v-md-editor v-model="data.content" :mode="modes[index]">
+            <div class="row col-12 justify-center">
+              <v-md-editor
+                v-model="data.content"
+                :mode="modes[index]"
+                class="q-mb-md"
+                :style="{
+                  height: modes[index] === 'preview' ? 'auto' : '500px',
+                }"
+              >
               </v-md-editor>
+              <q-btn
+                @click="updateQnaComment(index)"
+                color="primary"
+                v-if="modes[index] === 'editable'"
+                >수정 완료</q-btn
+              >
             </div>
 
             <div class="q-ml-md row col-12">
