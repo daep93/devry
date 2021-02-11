@@ -1,37 +1,37 @@
 <template>
   <div class="row col-12">
-    <div class="row col-2"></div>
-    <div class="row col-10">
-      <div class="row col-9">
-        <div class="q-ml-md row col-12">
-          <v-md-editor
-            v-model="content"
-            height="400px"
-            left-toolbar="undo redo clear | h bold italic strikethrough quote | ul ol table hr | link image code video "
-            :disabled-menus="[]"
-            :toolbar="toolbar"
-            @upload-image="handleUploadImage"
-          >
-          </v-md-editor>
-        </div>
+    <div class="row col-12 q-mt-xl q-pr-md">
+      <div class="row col-2"></div>
+      <div class="row col-8 q-pr-xl">
+        <div class="text-h6 text-weight-bold q-mb-md">새 답변 작성하기</div>
+        <v-md-editor
+          v-model="content"
+          height="400px"
+          left-toolbar="undo redo clear | h bold italic strikethrough quote | ul ol table hr | link image code video "
+          :disabled-menus="[]"
+          :toolbar="toolbar"
+          @upload-image="handleUploadImage"
+        >
+        </v-md-editor>
       </div>
-    </div>
+      <div class="row col-2"></div>
 
-    <!-- 제출 버튼 -->
-    <div class="row col-9 q-mt-lg q-pl-xl">
-      <div class="row col-3"></div>
-      <div class="row col-9">
-        <div class="row col-12">
-          <div style="margin:0 auto;">
-            <q-btn
-              no-caps
-              color="primary"
-              id="follow-btn"
-              label="답변 작성하기"
-              style="width: 200px"
-              class="q-mb-xl"
-              @click="createBigComment"
-            />
+      <!-- 제출 버튼 -->
+      <div class="row col-9 q-mt-lg q-pl-xl">
+        <div class="row col-3"></div>
+        <div class="row col-9">
+          <div class="row col-12 q-mb-xl">
+            <div style="margin:0 auto;">
+              <q-btn
+                no-caps
+                color="primary"
+                id="follow-btn"
+                label="답변 작성하기"
+                style="width: 200px"
+                class="q-mb-xl q-mt-lg"
+                @click="createBigComment"
+              />
+            </div>
           </div>
         </div>
       </div>
