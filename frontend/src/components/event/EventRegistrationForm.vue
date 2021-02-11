@@ -11,8 +11,8 @@
           <q-img
             :src="thumnail"
             spinner-color="white"
-            style="height: 215px; max-width: 500px; "
-            class="rounded-borders col-"
+            style="height: 215px;"
+            class="rounded-borders col-8"
           />
           <div class="q-ml-lg col-3">
             <!-- 이미지 등록 버튼 -->
@@ -26,6 +26,7 @@
               @click="onClickThumnailUpload"
               color="primary"
               label="이미지 등록"
+              class="float-right"
               style="width: 150px; height: 40px; border-radius:5px; position:absolute; bottom:0px;"
             >
             </q-btn>
