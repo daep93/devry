@@ -324,9 +324,19 @@
     <!-- 버튼 -->
     <div class="row q-mb-md q-mt-xl float-right" style="margin-bottom: 150px;">
       <q-btn
-        color="primary"
+          v-if="this.$route.params.id !== undefined"
+          outline
+          color="red-12"
+          class="text-weight-bold q-px-xl q-py-sm q-mr-md"
+          label="삭제하기"
+          size="md"
+          @click="deleteEvent"
+      />
+      <q-btn
+        color="blue-12"
         label="등록하기"
-        style="width:200px; height:50px; border-radius:5px;"
+        class="text-weight-bold q-px-xl q-py-sm"
+        size="md"
         type="submit"
       />
     </div>
@@ -335,7 +345,7 @@
 
 <script>
 import EventTag from '@/components/event/EventTag';
-import { createEventItem } from '@/api/eventRegistration';
+import { loadEventItem, createEventItem, updateEventItem, deleteEventItem } from '@/api/eventRegistration';
 
 export default {
   components: {
@@ -398,11 +408,14 @@ export default {
       const start_date = sArray[0]+'-'+sArray[1]+'-'+sArray[2]
       const eArray = this.edata.split('/')
       const end_date = eArray[0]+'-'+eArray[1]+'-'+eArray[2]
+      // id 가져오기
+      const post_id = this.$route.params.id;
       try {
         this.$q.loading.show();
-        // 이벤트 생성하기
-        await createEventItem({
-          // 넘길 데이터 적어주기
+        // 이벤트 새로 생성하기
+        if (post_id === undefined) {
+          await createEventItem({
+            // 넘길 데이터 적어주기
             state: this.state,
             thumnail: this.thumnail,
             title: this.title,
@@ -418,7 +431,29 @@ export default {
             schedule: this.schedule,
             host_info: this.host_info,
             ref_tags: this.ref_tags,
-        })
+          })
+        }
+        // 이벤트 수정하기
+        else {
+          await updateEventItem(post_id, {
+            // 넘길 데이터 적어주기
+            state: this.state,
+            thumnail: this.thumnail,
+            title: this.title,
+            category: this.category,
+            location: this.location,
+            sdata: start_date,
+            edata: end_date,
+            stime: this.stime,
+            etime: this.etime,
+            cost: this.cost,
+            participation: this.participation,
+            introduction: this.introduction,
+            schedule: this.schedule,
+            host_info: this.host_info,
+            ref_tags: this.ref_tags,
+          })
+        }
         console.log('데이터 넘어갔나?')
         // 이동 시킬 페이지 적어주기(이벤트 게시판)
         this.$router.push({ path: '/event' });
@@ -427,8 +462,59 @@ export default {
       } finally {
         this.$q.loading.hide();
       }
+    },
+    // 이벤트 삭제하기
+    async deleteEvent() {
+      try {
+        const post_id = this.$route.params.id;
+        this.$q.loading.show();
+        await deleteEventItem(post_id);
+        this.$router.push({ path: '/event' });
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.$q.loading.hide();
+      }
+    },
+  },
+  // Event 수정하기 (데이터 받아오기)
+  async created() {
+    // id 가져오기
+    const post_id = this.$route.params.id;
+    // post_id가 존재할 경우에 기존 정보 가져오기
+    if (post_id !== undefined) {
+      try {
+        this.$q.loading.show();
+        const { data } = await loadEventItem(post_id);
+        // 날짜 형식 변환
+        const sArray = data.sdata.split('-')
+        const start_date = sArray[0]+'/'+sArray[1]+'/'+sArray[2]
+        const eArray = data.edata.split('-')
+        const end_date = eArray[0]+'/'+eArray[1]+'/'+eArray[2]
+        // 가져올 데이터 목록
+        this.state = data.state;
+        this.thumnail = data.thumnail;
+        this.title = data.title;
+        this.category = data.category;
+        this.location = data.location;
+        this.sdata = start_date;
+        this.edata = end_date;
+        this.stime = data.stime;
+        this.etime = data.etime;
+        this.cost = data.cost;
+        this.participation = data.participation;
+        this.introduction = data.introduction;
+        this.schedule = data.schedule;
+        this.host_info = data.host_info;
+        this.ref_tags = data.ref_tags;
+      } catch (error) {
+        console.log(error);
+        // alert('에러가 발생했습니다.)
+      } finally {
+        this.$q.loading.hide();
+      }
     }
-  }
+  },
 }
 </script>
 
