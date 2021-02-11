@@ -45,9 +45,6 @@
               <span class="text-primary">진행 상태</span>
               <br />
             </template>
-             <template v-if="state" v-slot:append>
-              <q-icon name="cancel" @click.stop="state = null" class="cursor-pointer" />
-            </template>
           </q-select>
           <q-select 
             class="col-6"
@@ -60,9 +57,6 @@
             <template v-slot:label>
               <span class="text-primary">카테고리</span>
               <br />
-            </template>
-            <template v-if="category" v-slot:append>
-              <q-icon name="cancel" @click.stop="category = null" class="cursor-pointer" />
             </template>
           </q-select>
         </div>
@@ -89,7 +83,7 @@
             stack-label
             label-slot
             outlined
-            v-model="period.start"
+            v-model="sdata"
             placeholder="이벤트 시작일을 입력해주세요"
           >
             <template v-slot:label>
@@ -99,7 +93,7 @@
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
                 <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
-                  <q-date v-model="period.start">
+                  <q-date v-model="sdata">
                     <div class="row items-center justify-end">
                       <q-btn v-close-popup label="Close" color="primary" flat />
                     </div>
@@ -113,7 +107,7 @@
             stack-label
             label-slot
             outlined
-            v-model="period.end"
+            v-model="edata"
             placeholder="이벤트 종료일을 입력해주세요"
           >
             <template v-slot:label>
@@ -123,7 +117,7 @@
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
                 <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
-                  <q-date v-model="period.end">
+                  <q-date v-model="edata">
                     <div class="row items-center justify-end">
                       <q-btn v-close-popup label="Close" color="primary" flat />
                     </div>
@@ -140,7 +134,7 @@
             stack-label
             label-slot
             outlined
-            v-model="time.start"
+            v-model="stime"
             placeholder="시작 시간을 입력해주세요"
           >
             <template v-slot:label>
@@ -150,7 +144,7 @@
             <template v-slot:append>
               <q-icon name="access_time" class="cursor-pointer">
                 <q-popup-proxy transition-show="scale" transition-hide="scale">
-                  <q-time v-model="time.start">
+                  <q-time v-model="stime">
                     <div class="row items-center justify-end">
                       <q-btn v-close-popup label="Close" color="primary" flat />
                     </div>
@@ -164,7 +158,7 @@
             stack-label
             label-slot
             outlined
-            v-model="time.end"
+            v-model="etime"
             placeholder="종료 시간을 입력해주세요"
           >
             <template v-slot:label>
@@ -174,7 +168,7 @@
             <template v-slot:append>
               <q-icon name="access_time" class="cursor-pointer">
                 <q-popup-proxy transition-show="scale" transition-hide="scale">
-                  <q-time v-model="time.end">
+                  <q-time v-model="etime">
                     <div class="row items-center justify-end">
                       <q-btn v-close-popup label="Close" color="primary" flat />
                     </div>
@@ -191,7 +185,7 @@
             stack-label
             label-slot
             outlined
-            v-model="place"
+            v-model="location"
             placeholder="이벤트 장소를 입력해주세요"
           >
             <template v-slot:label>
@@ -257,6 +251,7 @@
         <div class="full-width q-mb-xl">
           <q-input
             class="col-12"
+            type="textarea"
             stack-label
             label-slot
             outlined
@@ -340,6 +335,8 @@
 
 <script>
 import EventTag from '@/components/event/EventTag';
+import { createEventItem } from '@/api/eventRegistration';
+
 export default {
   components: {
     EventTag,
@@ -356,16 +353,12 @@ export default {
       category_options: [
         '컨퍼런스', '워크샵', '해커톤', '경진대회', '모임'
       ],
-      place: '',
-      time: {
-        start: '',
-        end: '',
-      },
+      location: '',
+      sdata: '',
+      edata: '',
+      stime: '',
+      etime: '',
       cost: '',
-      period: {
-        start: '',
-        end: '',
-      },
       participation: '',
       introduction: '',
       schedule: '',
@@ -399,6 +392,42 @@ export default {
     removeOneTag(tag, index) {
       this.ref_tags.splice(index, 1);
     },
+    async submitForm() {
+      // 날짜 형식 변경
+      const sArray = this.sdata.split('/')
+      const start_date = sArray[0]+'-'+sArray[1]+'-'+sArray[2]
+      const eArray = this.edata.split('/')
+      const end_date = eArray[0]+'-'+eArray[1]+'-'+eArray[2]
+      try {
+        this.$q.loading.show();
+        // 이벤트 생성하기
+        await createEventItem({
+          // 넘길 데이터 적어주기
+            state: this.state,
+            thumnail: this.thumnail,
+            title: this.title,
+            category: this.category,
+            location: this.location,
+            sdata: start_date,
+            edata: end_date,
+            stime: this.stime,
+            etime: this.etime,
+            cost: this.cost,
+            participation: this.participation,
+            introduction: this.introduction,
+            schedule: this.schedule,
+            host_info: this.host_info,
+            ref_tags: this.ref_tags,
+        })
+        console.log('데이터 넘어갔나?')
+        // 이동 시킬 페이지 적어주기(이벤트 게시판)
+        this.$router.push({ path: '/event' });
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.$q.loading.hide();
+      }
+    }
   }
 }
 </script>
