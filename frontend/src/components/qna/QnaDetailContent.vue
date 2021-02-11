@@ -1,7 +1,7 @@
 <template>
   <div class="row full-width">
     <q-card flat bordered class="my-card q-px-lg q-pt-xs row col-12">
-      <div class="row col-11">
+      <div class="row col-11 q-mt-xl">
         <!-- <q-card-section class="row full-width q-pb-sm q-px-none justify-end">
           <div class="row col-2 justify-end">
             <div
@@ -41,14 +41,25 @@
         <div class="row col-12 text-h4 text-weight-bold q-mb-sm">
           <span
             >{{ info.title }}
-            <span v-if="info.solved" class="q-ml-xs">
+            <!-- <span v-if="info.solved" class="q-ml-xs">
               <q-icon
                 :name="$i.ionCheckmarkCircleOutline"
                 style="color: #35D24F"
                 size="lg"
                 class="q-pb-sm"
-              ></q-icon> </span
-          ></span>
+              ></q-icon>
+              </span> -->
+          </span>
+          <div v-if="info.solved" class="q-ml-lg">
+            <q-badge color="blue" align="middle">
+              답변 완료 ✔
+            </q-badge>
+          </div>
+          <div v-else class="q-ml-lg">
+            <q-badge color="primary" outline align="middle">
+              답변 대기
+            </q-badge>
+          </div>
         </div>
         <div class="text-subtitle2 text-grey-6 q-mb-md">
           {{ info.written_time | moment('YYYY/MM/DD HH:mm') }}

@@ -26,28 +26,41 @@
                 >
                   {{ data.written_time | moment('YYYY/MM/DD HH:mm') }}
                   <!-- 답변 채택 버튼 -->
+
                   <span v-if="$store.state.id == author" class="q-ml-sm">
-                    <q-icon
+                    <template v-if="data.assisted">
+                      <q-badge
+                        color="blue"
+                        @click="chooseComment(index)"
+                        class="cursor-pointer"
+                      >
+                        채택 답변
+                      </q-badge>
+                      🥇
+                    </template>
+                    <template v-else>
+                      <q-badge
+                        color="primary"
+                        outline
+                        @click="chooseComment(index)"
+                        class="cursor-pointer"
+                      >
+                        채택 대기
+                      </q-badge>
+                    </template>
+                    <!-- <q-icon
                       :name="$i.ionCheckmarkCircleOutline"
                       :style="{ color: data.assisted ? 'blue' : '#B7B7B7' }"
-                      class="cursor-pointer"
-                      size="sm"
-                      @click="chooseComment(index)"
-                    ></q-icon>
-                    <!-- <q-icon
-                      :name="$i.ionRibbonOutline"
-                      :style="{ color: data.assisted ? 'blue' : '#727272' }"
                       class="cursor-pointer"
                       size="sm"
                       @click="chooseComment(index)"
                     ></q-icon> -->
                   </span>
                   <span v-else-if="data.assisted" class="q-ml-sm">
-                    <q-icon
-                      :name="$i.ionCheckmarkCircleOutline"
-                      style="color: blue"
-                      size="sm"
-                    ></q-icon>
+                    <q-badge color="blue">
+                      채택 답변
+                    </q-badge>
+                    🥇
                   </span>
                 </span>
               </div>

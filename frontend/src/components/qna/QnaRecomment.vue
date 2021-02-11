@@ -11,12 +11,13 @@
             <div class="row col-10">
               <span class="q-mr-xs">{{ index + 1 }}.</span>
               <span class="q-mr-sm text-weight-bold" style="color: #585858">
-                @{{ data.user }}
+                @{{ data.user.username }}
               </span>
               <span class="text-caption" style="color: gray">
                 {{ data.written_time | moment('YYYY/MM/DD HH:mm') }}
               </span>
-              <template v-if="data.user == $store.state.id">
+
+              <template v-if="data.user.id == $store.state.id">
                 <span class="q-ml-sm">
                   <q-icon
                     :name="$i.ionCreateOutline"
@@ -40,6 +41,7 @@
               </template>
             </div>
           </div>
+
           <div class=" q-py-xs row col-12" v-if="editables[index]">
             <q-input
               clearable
