@@ -5,6 +5,8 @@ import store from './store';
 import VueMoment from 'vue-moment';
 import './quasar';
 import VMdEditor from '@kangc/v-md-editor/lib/codemirror-editor';
+import VMdPreview from '@kangc/v-md-editor/lib/preview';
+import '@kangc/v-md-editor/lib/style/preview.css';
 import createCopyCodePlugin from '@kangc/v-md-editor/lib/plugins/copy-code/index';
 import '@kangc/v-md-editor/lib/style/codemirror-editor.css';
 import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
@@ -36,6 +38,8 @@ VMdEditor.xss.extend({
     iframe: ['src'],
   },
 });
+VMdPreview.use(githubTheme);
+Vue.use(VMdPreview);
 Vue.use(VMdEditor);
 Vue.use(VueMoment);
 Vue.config.productionTip = false;

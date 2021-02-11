@@ -51,13 +51,35 @@
           </li>
         </ul>
         <!-- 마크다운 에디터 -->
-        <v-md-editor
-          v-model="content"
-          height="800px"
-          left-toolbar="undo redo clear | h bold italic strikethrough quote ul ol table hr link image imageLink uploadImage video code save"
-          :toolbar="toolbar"
-        >
-        </v-md-editor>
+        <div class="row full-width">
+          <div class="col-6">
+            <v-md-editor
+              v-model="content"
+              height="800px"
+              left-toolbar="undo redo clear | h bold italic strikethrough quote | ul ol table hr | link image code video | save"
+              right-toolbar=""
+              :disabled-menus="['undo']"
+              :toolbar="toolbar"
+              mode="edit"
+              @upload-image="handleUploadImage"
+              @save="renderPreview"
+            >
+            </v-md-editor>
+          </div>
+
+          <q-scroll-area
+            :thumb-style="thumbStyle"
+            :bar-style="barStyle"
+            class="col-6  preview-shadow q-py-lg"
+            style="height:800px; "
+          >
+            <v-md-editor
+              v-model="content2"
+              mode="preview"
+              class="col-6"
+            ></v-md-editor>
+          </q-scroll-area>
+        </div>
       </div>
       <!-- 버튼 -->
       <div class="q-mb-xl q-mt-xl" style="text-align: center;">
@@ -84,7 +106,7 @@
 <script>
 import { loadQnaItem, updateQnaItem, deleteQnaItem } from '@/api/qna';
 import { filtered_tags, first_matched_tag } from '@/utils/autoComplete';
-
+import { liquidResolver } from '@/utils/liquidTag';
 export default {
   data() {
     const index = this.$route.params.id;
@@ -108,6 +130,22 @@ export default {
       },
     };
     return {
+      thumbStyle: {
+        right: '4px',
+        borderRadius: '5px',
+        backgroundColor: '#dddddd',
+        width: '6px',
+        opacity: 0.75,
+      },
+
+      barStyle: {
+        right: '2px',
+        borderRadius: '9px',
+        backgroundColor: '#dddddd',
+        width: '7px',
+        opacity: 0.2,
+      },
+      content2: '',
       index,
       user: '',
       profile: '',
@@ -119,6 +157,9 @@ export default {
     };
   },
   methods: {
+    renderPreview(text) {
+      this.content2 = liquidResolver(text);
+    },
     createTag() {
       if (this.tagItem !== '') {
         const str = first_matched_tag(this.tagItem);
@@ -219,5 +260,8 @@ export default {
 ul {
   list-style-type: none;
   padding-left: 0px;
+}
+.preview-shadow {
+  box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
 }
 </style>
