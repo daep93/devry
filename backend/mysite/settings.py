@@ -44,11 +44,14 @@ INSTALLED_APPS = [
     'django_rest_passwordreset',
 
     'accounts',
-    'articles',
+
     'events',
     'qnas',
-    'django_seed',
+    'profiles',
+    'articles',
 
+    'django_seed',
+    
     'corsheaders',
     'imagekit',
     'rest_framework',
@@ -64,7 +67,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.kakao',
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.github',
-
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -189,6 +192,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
+        
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ]
 }
 
@@ -274,5 +280,5 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 # DJANGO_REST_MULTITOKENAUTH_RESET_TOKEN_EXPIRY_TIME = 24
 # DJANGO_REST_LOOKUP_FIELD = 'custom_email_field'
 
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 SITE_ID = 1

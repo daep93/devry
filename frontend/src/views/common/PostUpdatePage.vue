@@ -83,8 +83,7 @@
 
 <script>
 import { loadQnaItem, updateQnaItem, deleteQnaItem } from '@/api/qna';
-
-import { filtered_tags } from '@/utils/autoComplete';
+import { filtered_tags, first_matched_tag } from '@/utils/autoComplete';
 
 export default {
   data() {
@@ -122,14 +121,18 @@ export default {
   methods: {
     createTag() {
       if (this.tagItem !== '') {
-        console.log(this.tagItem);
-        this.ref_tags.push(this.tagItem);
-        this.tagItem = '';
+        const str = first_matched_tag(this.tagItem);
+        if (str && this.ref_tags.indexOf(str) < 0) {
+          this.ref_tags.push(str);
+          this.tagItem = '';
+        }
       }
     },
     autoCreateTag(tag) {
-      this.ref_tags.push(tag);
-      this.tagItem = '';
+      if (tag && this.ref_tags.indexOf(tag) < 0) {
+        this.ref_tags.push(tag);
+        this.tagItem = '';
+      }
     },
     removeTag(tag, index) {
       this.ref_tags.splice(index, 1);
@@ -138,12 +141,15 @@ export default {
     async updateQna() {
       if (this.title === '') {
         alert('제목은 필수 입력 항목입니다');
+        return;
       }
-      if (this.ref_tags.length === 0) {
-        alert('태그를 하나이상 입력해주세요');
+      if (this.ref_tags.length < 2) {
+        alert('태그를 둘 이상 입력해주세요');
+        return;
       }
-      if (this.contents === '') {
+      if (this.content === '') {
         alert('내용은 필수 입력항목 입니다');
+        return;
       }
       try {
         // post_id 넘겨주기

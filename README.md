@@ -47,7 +47,82 @@
 ## ⚙️ Install and Usage
 
 ### Frontend
+
+#### frontend 실행 방법
+
+- step0. frontend 폴더 클릭
+
+- step1. 패키지 설치
+
+```
+$ npm i
+```
+
+- step2. 프로젝트 실행
+
+```
+$ npm run serve
+```
+
+### Backend
+
+#### backend 실행 방법
+
+- step0. backend 폴더 클릭
+- step1. 가상환경 구동
+
+```bash
+$ python -m venv venv       # 첫 venv 뒤의 venv에서는 가상환경 이름을 자유롭게 정의 가능합니다.
+```
+
+```bash
+# 만들어진 가상환경을 활성화하는 과정입니다. 
+$ source venv/Scripts/activate  # windows
+
+$ source venv/bin/activate     # Mac / Linux
+```
+
+```bash
+$ source venv/Scripts/activate     # 가상환경이 정상적으로 활성화되었습니다.
+(venv) 
+```
+
+```bash
+$ deactivate                # 가상환경 비활성화
+```
+
+- step2. pip 업그레이드
+  - 현재 가상 환경을 새로 생성한 경우 pip의 버전이 낮아 라이브러리 설치 시 cryptography 라이브러리와 충돌하는 문제가 있습니다. 이를 해결하기 위해 다른 라이브러리들을 설치해주기 전 pip의 업그레이드를 먼저 진행합니다.
+
+```bash
+$ python -m pip install --upgrade pip
+```
+
+```bash
+# 라이브러리들을 requirements.txt에 기록된 라이브러리와 버전을 기준으로 설치합니다.
+$ pip install -r requirements.txt     
+```
+
+- step3. 마이그레이션 진행
+
+```bash
+$ python manage.py makemigrations
+```
+
+```bash
+$ python manage.py migrate
+```
+
+- step4. 서버 구동
+
+```bash
+$ python manage.py runserver
+```
+
+
+
 #### Node Version Manager
+
 - 맥: [NVM](https://github.com/joshua1988/vue-til-server#nvm-%EC%84%A4%EC%B9%98-%EB%B0%8F-%EB%B2%84%EC%A0%84-%EB%B3%80%EA%B2%BD-%EB%B0%A9%EB%B2%95)
 - 윈도우: [NVM-window](http://hong.adfeel.info/backend/nodejs/window%EC%97%90%EC%84%9C-nvmnode-version-manager-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0/)
 #### vscode 플러그인
