@@ -43,7 +43,6 @@ const routes = [
     path: '/qna/create',
     name: 'QnACreate',
     component: () => import('@/views/common/PostCreatePage.vue'),
-    // component: () => import('@/components/markdown/Markdown.vue'),
   },
   {
     path: '/qna/:id',
@@ -71,6 +70,11 @@ const routes = [
     path: '/event-detail',
     name: 'EventDetail',
     component: () => import('@/views/event/EventDetailPage.vue'),
+  },
+  {
+    path: '/event-registration',
+    name: 'EventRegistration',
+    component: () => import('@/views/event/EventRegistrationPage.vue'),
   },
   {
     path: '/jobs',

@@ -1,8 +1,10 @@
 from django.db import models
 from accounts.models import User
+from profiles.models import Profile
 from django.conf import settings
 from multiselectfield import MultiSelectField
-
+from imagekit.models import ProcessedImageField
+from imagekit.processors import ResizeToFill
 
 tech = (
     ('Python3', 'Python3'),
@@ -25,15 +27,6 @@ tech = (
     ('MongoDB', 'MongoDB'),
     ('Docker', 'Docker'),
     ('Kubernetes', 'Kubernetes'),
-    ('Frontend', 'Frontend'),
-    ('Backend', 'Backend'),
-    ('DevOps', 'DevOps'),
-    ('Artificial Intelligence', 'Artificial Intelligence'),
-    ('BigData', 'BigData'),
-    ('Blockchain', 'Blockchain'),
-    ('Internet of Things', 'Internet of Things'),
-    ('Augmented Reality', 'Augmented Reality'),
-    ('Virtual Reality', 'Virtual Reality'),
 )
 
 tags = (
@@ -68,35 +61,38 @@ tags = (
     ('Virtual Reality', 'Virtual Reality'),
 )
     
-class Article(models.Model): 
-    title = models.CharField(max_length=30)
-    thumbnail_img = models.ImageField(upload_to="%Y/%m/%d", default="")   
-    tags = MultiSelectField(choices=tags)
+class Post(models.Model): 
+    title = models.CharField(max_length=80)
+    ref_tags = MultiSelectField(choices=tech)
     like_num = models.PositiveIntegerField(default=0)
-    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_articles', blank=True)
+    comment_num = models.PositiveIntegerField(default=0)
+    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_posts')
     liked = models.BooleanField(default="False")
     bookmark_num = models.PositiveIntegerField(default=0)
-    bookmark_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='bookmark_articles', blank=True)
-    bookmarked= models.BooleanField(default="False")
-    # bio = models.TextField()
+    bookmark_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='bookmark_posts')
+    bookmarked = models.BooleanField(default="False")
     viewed_num = models.PositiveIntegerField(default=0)
     written_time = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    # username =models.CharField(default="")
     content = models.TextField()
-    profile_img=models.ImageField(upload_to="%Y/%m/%d", default="")
-    pinned_num = models.PositiveIntegerField(default=0)
-    pinned_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='pinned_articles')
-    pinned_post = models.BooleanField(default="False")
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, related_name='post_profile')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_info = models.ForeignKey(Profile, on_delete=models.CASCADE,null=True, related_name='post_userinfo')
+
+    def __str__(self):
+        return self.title
+
 
 class Comment(models.Model):
     comment_content = models.TextField()
-    profile_img=models.ImageField(upload_to="%Y/%m/%d", default="")
+    assisted = models.BooleanField(default="False")
+    like_comment_num = models.PositiveIntegerField(default=0)
+    like_comment_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_comments')
+    liked_comment = models.BooleanField(default="False")
     written_time = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, related_name='comments_profile')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='article_profile_title')
-    username = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comment_username')
-    # parent = models.ForeignKey('self', related_name='reply', on_delete=models.CASCADE, null=True, blank=True)
+    user_info = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, related_name='comments_userinfo')
+
+    def __str__(self):
+        return self.comment_content

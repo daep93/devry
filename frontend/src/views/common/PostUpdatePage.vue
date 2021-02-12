@@ -1,257 +1,34 @@
 <template>
-  <div class="q-pa-md q-gutter-sm row justify-center">
-    <div class="q-pa-sm" style="width: 85vw;">
-      <div class="q-pa-md q-gutter-sm">
-        <!-- 제목 입력 -->
-        <q-input
-          class="q-mx-md q-my-md text-h3 text-weight-bold"
-          borderless
-          v-model="title"
-          placeholder="제목을 입력해주세요"
-        />
-        <!-- 태그 입력 -->
-        <q-input
-          class="q-mx-md"
-          borderless
-          v-model="tagItem"
-          placeholder="태그를 하나 이상 입력해주세요"
-          TODO
-          @keypress.enter="createTag"
-        >
-        </q-input>
-        <!-- 자동완성 -->
-        <div class="row col-12">
-          <div
-            class="row col-3 bg-light-blue-1"
-            style="position: absolute; z-index:999; border-radius: 5px;"
-          >
-            <div
-              v-for="tag in suggests"
-              class="col-12 q-py-md q-px-md"
-              :class="{ 'bg-blue-3': tags[tag] }"
-              :key="tag"
-              @click="autoCreateTag(tag)"
-              @mouseover="tags[tag] = true"
-              @mouseout="tags[tag] = false"
-            >
-              {{ tag }}
-            </div>
-          </div>
-        </div>
-        <!-- 태그 보여주기 -->
-        <ul class="row">
-          <li
-            class="q-mb-xs cursor-pointer"
-            v-for="(tag, index) in ref_tags"
-            :key="index"
-          >
-            <q-chip outline square color="primary">
-              <div @click="removeTag(tag, index)">{{ tag }}</div>
-            </q-chip>
-          </li>
-        </ul>
-        <!-- 마크다운 에디터 -->
-        <div class="row full-width">
-          <div class="col-6">
-            <v-md-editor
-              v-model="content"
-              height="800px"
-              left-toolbar="undo redo clear | h bold italic strikethrough quote | ul ol table hr | link image code video | save"
-              right-toolbar=""
-              :disabled-menus="['undo']"
-              :toolbar="toolbar"
-              mode="edit"
-              @upload-image="handleUploadImage"
-              @save="renderPreview"
-            >
-            </v-md-editor>
-          </div>
-
-          <q-scroll-area
-            :thumb-style="thumbStyle"
-            :bar-style="barStyle"
-            class="col-6  preview-shadow q-py-lg"
-            style="height:800px; "
-          >
-            <v-md-editor
-              v-model="content2"
-              mode="preview"
-              class="col-6"
-            ></v-md-editor>
-          </q-scroll-area>
-        </div>
-      </div>
-      <!-- 버튼 -->
-      <div class="q-mb-xl q-mt-xl" style="text-align: center;">
-        <q-btn
-          outline
-          color="red-12"
-          class="text-weight-bold q-px-xl q-py-sm q-mr-md"
-          label="삭제하기"
-          size="md"
-          @click="deleteQna"
-        />
-        <q-btn
-          color="blue-12"
-          class="text-weight-bold q-px-xl q-py-sm"
-          label="작성하기"
-          size="md"
-          @click="updateQna"
-        />
-      </div>
-    </div>
-  </div>
+  <post-edit-form>
+    <template slot="buttons" slot-scope="scopeProps">
+      <q-btn
+        outline
+        color="red-12"
+        class="text-weight-bold q-px-xl q-py-sm q-mr-md"
+        label="삭제하기"
+        size="md"
+        @click="scopeProps.deleteQna"
+      />
+      <q-btn
+        color="blue-12"
+        class="text-weight-bold q-px-xl q-py-sm"
+        label="작성하기"
+        size="md"
+        @click="scopeProps.updateQna"
+      />
+    </template>
+  </post-edit-form>
 </template>
 
 <script>
-import { loadQnaItem, updateQnaItem, deleteQnaItem } from '@/api/qna';
-import { filtered_tags, first_matched_tag } from '@/utils/autoComplete';
-import { liquidResolver } from '@/utils/liquidTag';
+import PostEditForm from '@/components/common/PostEditForm';
+
 export default {
-  data() {
-    const index = this.$route.params.id;
-    this.toolbar = {
-      video: {
-        title: '비디오',
-        // TODO : icon 변경하기
-        icon: 'v-md-icon-tip',
-        action(editor) {
-          editor.insert(function() {
-            const imagetxt = 'Image text';
-            const image = 'Screenshot image URL';
-            const youtube = 'Youtube Link';
-
-            return {
-              text: `[![${imagetxt}](${image})](${youtube})`,
-              selected: imagetxt,
-            };
-          });
-        },
-      },
-    };
-    return {
-      thumbStyle: {
-        right: '4px',
-        borderRadius: '5px',
-        backgroundColor: '#dddddd',
-        width: '6px',
-        opacity: 0.75,
-      },
-
-      barStyle: {
-        right: '2px',
-        borderRadius: '9px',
-        backgroundColor: '#dddddd',
-        width: '7px',
-        opacity: 0.2,
-      },
-      content2: '',
-      index,
-      user: '',
-      profile: '',
-      title: '',
-      tagItem: '',
-      content: '',
-      ref_tags: [],
-      tags: { ...this.$store.state.tags_selected },
-    };
+  components: {
+    PostEditForm,
   },
-  methods: {
-    renderPreview(text) {
-      this.content2 = liquidResolver(text);
-    },
-    createTag() {
-      if (this.tagItem !== '') {
-        const str = first_matched_tag(this.tagItem);
-        if (str && this.ref_tags.indexOf(str) < 0) {
-          this.ref_tags.push(str);
-          this.tagItem = '';
-        }
-      }
-    },
-    autoCreateTag(tag) {
-      if (tag && this.ref_tags.indexOf(tag) < 0) {
-        this.ref_tags.push(tag);
-        this.tagItem = '';
-      }
-    },
-    removeTag(tag, index) {
-      this.ref_tags.splice(index, 1);
-    },
-    // qna 게시글 수정하기
-    async updateQna() {
-      if (this.title === '') {
-        alert('제목은 필수 입력 항목입니다');
-        return;
-      }
-      if (this.ref_tags.length < 2) {
-        alert('태그를 둘 이상 입력해주세요');
-        return;
-      }
-      if (this.content === '') {
-        alert('내용은 필수 입력항목 입니다');
-        return;
-      }
-      try {
-        // post_id 넘겨주기
-        const post_id = this.$route.params.id;
-        this.$q.loading.show();
-        await updateQnaItem(post_id, {
-          // 넘길 데이터 적어주기
-          title: this.title,
-          user: this.user.id,
-          content: this.content,
-          ref_tags: this.ref_tags,
-        });
-        // 이동 시킬 페이지 적어주기(QnA 게시판으로 이동)
-        this.$router.push({ path: '/qna' });
-      } catch (error) {
-        console.log(error);
-        // alert('에러가 발생했습니다!')
-      } finally {
-        this.$q.loading.hide();
-      }
-    },
-    async deleteQna() {
-      try {
-        const post_id = this.$route.params.id;
-        this.$q.loading.show();
-        await deleteQnaItem(post_id);
-        // 이동 시킬 페이지 적어주기(QnA 게시판으로 이동)
-        this.$router.push({ path: '/qna' });
-      } catch (error) {
-        console.log(error);
-      } finally {
-        this.$q.loading.hide();
-      }
-    },
-  },
-  // qna 게시글 수정하기(기존 정보 가져오기)
   async created() {
-    // id 가져오기
-    const post_id = this.$route.params.id;
-    try {
-      this.$q.loading.show();
-      const { data } = await loadQnaItem(post_id);
-      this.user = data.user;
-      this.profile = data.profile;
-      this.title = data.title;
-      this.content = data.content;
-      this.ref_tags = data.ref_tags;
-    } catch (error) {
-      console.log(error);
-      // alert('에러가 발생했습니다.)
-    } finally {
-      this.$q.loading.hide();
-    }
-  },
-  computed: {
-    isValid() {
-      return this.tagItem === '' || this.ref_tags.length > 0;
-    },
-    suggests() {
-      return filtered_tags(this.tagItem);
-    },
+    this.$store.commit('offLeft');
   },
 };
 </script>

@@ -1,19 +1,75 @@
-from rest_framework import serializers
-from .models import Event
+from rest_framework import serializers, fields
+from .models import Event, tech
+from profiles.models import Profile
+from accounts.models import User
+
+
+class ProfileEventSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Profile
+        fields = ( 'id', 'username', 'profile_img')
+
+
+class UserinfoSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ( 'id', 'username')
+
+
+class EventMainSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Event
+        fields = ('id', 'thumnail')
 
 
 class EventListSerializer(serializers.ModelSerializer):
     
+    user = UserinfoSerializer(
+        read_only=True,
+    )
+
+    host = ProfileEventSerializer(
+        read_only=True,
+    )
+
     class Meta:
         model = Event
-        fields = ('id', 'title', 'image', 'sdata', 'stime', 'edata', 'etime', 'author')
+        fields = ('id', 'state', 'thumnail', 'category', 'title', 'ref_tags', 'start_day', 'end_day', 'host', 'bookmarked', 'viewed_num', 'bookmark_num', 'user')
+
+
+class EventdetailSerializer(serializers.ModelSerializer):
+    
+    ref_tags = fields.MultipleChoiceField(choices=tech)
+    
+    user = UserinfoSerializer(
+        read_only=True,
+    )
+
+    host = ProfileEventSerializer(
+        read_only=True,
+    )
+    
+    class Meta:
+        model = Event
+        fields = ('id', 'state', 'thumnail', 'title', 'category', 'place', 'start', 'end', 'start_day', 'end_day', 'cost', 'participation', 'introduction', 'schedule',
+        'host', 'ref_tags', 'bookmarked', 'bookmark_num', 'viewed_num', 'user')
 
 
 class EventSerializer(serializers.ModelSerializer):
 
+    ref_tags = fields.MultipleChoiceField(choices=tech)
+    
     class Meta:
         model = Event
-        fields = ('id', 'title','author', 'image', 'like', 'view', 'sdata', 'stime', 'edata', 'etime', 'location', 'cost',
-        'target','introduction','schedule','hostinfo','tag','created_at','updated_at')
+        fields = ('id', 'state', 'thumnail', 'title', 'category', 'place', 'start', 'end', 'start_day', 'end_day', 'cost', 'participation', 'introduction', 'schedule',
+        'host', 'ref_tags', 'bookmarked', 'bookmark_num', 'viewed_num', 'user')
 
- 
+
+class bookmarkSerializer(serializers.ModelSerializer):
+        
+    class Meta:
+        model = Event
+        fields = ('id', "bookmarked")
