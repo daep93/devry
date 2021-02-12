@@ -16,7 +16,6 @@ urlpatterns = [
     path('forum_like/<int:post_pk>/', views.like),
     path('forum_bookmark/<int:post_pk>/', views.bookmark),
  
-
     path('comment/', views.comment_list),
     path('comment/<int:comment_pk>/', views.comment_detail_update_delete),
     path('comment_like/<int:comment_pk>/', views.like_comment),
