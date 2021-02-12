@@ -1,5 +1,5 @@
 <template>
-  <post-edit>
+  <post-edit-form>
     <template slot="buttons" slot-scope="scopeProps">
       <q-btn
         outline
@@ -16,14 +16,14 @@
         @click="scopeProps.createQna"
       />
     </template>
-  </post-edit>
+  </post-edit-form>
 </template>
 
 <script>
-import PostEdit from '@/components/common/PostEdit';
+import PostEditForm from '@/components/common/PostEditForm';
 export default {
   components: {
-    PostEdit,
+    PostEditForm,
   },
   methods: {},
   created() {

@@ -1,5 +1,5 @@
 <template>
-  <post-edit>
+  <post-edit-form>
     <template slot="buttons" slot-scope="scopeProps">
       <q-btn
         outline
@@ -17,15 +17,15 @@
         @click="scopeProps.updateQna"
       />
     </template>
-  </post-edit>
+  </post-edit-form>
 </template>
 
 <script>
-import PostEdit from '@/components/common/PostEdit';
+import PostEditForm from '@/components/common/PostEditForm';
 
 export default {
   components: {
-    PostEdit,
+    PostEditForm,
   },
   async created() {
     this.$store.commit('offLeft');

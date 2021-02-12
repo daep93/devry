@@ -93,14 +93,19 @@
 
             <div class="row col-12 justify-center">
               <v-md-editor
-                v-model="data.content"
-                :mode="modes[index]"
+                v-if="modes[index] == 'preview'"
+                :value="liquidResolve(data.content)"
+                mode="preview"
                 class="q-mb-md"
-                :style="{
-                  height: modes[index] === 'preview' ? 'auto' : '500px',
-                }"
               >
               </v-md-editor>
+              <markdown-editor
+                v-else
+                height="500px"
+                :fetchData="data.content"
+                @input="getContents(data, $event)"
+                class="q-mb-md q-px-md"
+              ></markdown-editor>
               <q-btn
                 @click="updateQnaComment(index)"
                 color="primary"
@@ -142,12 +147,14 @@ import { toggleQnaCommentChoose } from '@/api/qna';
 import QnaCommentSelected from '@/components/qna/QnaCommentSelected';
 import QnaCommentStatus from '@/components/qna/QnaCommentStatus';
 import QnaRecomment from '@/components/qna/QnaRecomment';
+import { liquidResolver } from '@/utils/liquidTag';
 import {
   loadQnaItem,
   updateQnaBigComment,
   deleteQnaBigComment,
   getRecomments,
 } from '@/api/qna';
+import MarkdownEditor from '@/components/common/MarkdownEditor';
 
 export default {
   props: {
@@ -157,6 +164,7 @@ export default {
     QnaCommentSelected,
     QnaCommentStatus,
     QnaRecomment,
+    MarkdownEditor,
   },
   data() {
     const res = [];
@@ -175,6 +183,12 @@ export default {
     };
   },
   methods: {
+    liquidResolve(tag) {
+      return liquidResolver(tag);
+    },
+    getContents(fetchData, data) {
+      fetchData.content = data;
+    },
     editerOpen(index) {
       this.modes[index] = 'editable';
       this.modes = [...this.modes];

@@ -4,15 +4,10 @@
       <div class="row col-2"></div>
       <div class="row col-8 q-pr-xl">
         <div class="text-h6 text-weight-bold q-mb-md">새 답변 작성하기</div>
-        <v-md-editor
-          v-model="content"
-          height="400px"
-          left-toolbar="undo redo clear | h bold italic strikethrough quote | ul ol table hr | link image code video "
-          :disabled-menus="[]"
-          :toolbar="toolbar"
-          @upload-image="handleUploadImage"
-        >
-        </v-md-editor>
+        <markdown-editor
+          @input="getContents"
+          :height="'400px'"
+        ></markdown-editor>
       </div>
       <div class="row col-2"></div>
 
@@ -41,36 +36,22 @@
 
 <script>
 import { createQnaBigComment } from '@/api/qna';
+import MarkdownEditor from '@/components/common/MarkdownEditor';
 
 export default {
+  components: { MarkdownEditor },
   props: {
     info: Object,
   },
   data() {
     return {
       content: '',
-      toolbar: {
-        video: {
-          title: '비디오',
-          // TODO : icon 변경하기
-          icon: 'v-md-icon-toc',
-          action(editor) {
-            editor.insert(function() {
-              const imagetxt = 'Image text';
-              const image = 'Screenshot image URL';
-              const youtube = 'Youtube Link';
-
-              return {
-                text: `[![${imagetxt}](${image})](${youtube})`,
-                selected: imagetxt,
-              };
-            });
-          },
-        },
-      },
     };
   },
   methods: {
+    getContents(data) {
+      this.content = data;
+    },
     async createBigComment() {
       if (this.content === '') {
         alert('댓글 내용을 작성해주세요.');
@@ -91,18 +72,6 @@ export default {
       } finally {
         this.$q.loading.hide();
       }
-    },
-    handleUploadImage(event, insertImage, files) {
-      // Get the files and upload them to the file server, then insert the corresponding content into the editor
-      console.log(files);
-      console.log(insertImage);
-      // Here is just an example
-      insertImage({
-        url: URL.createObjectURL(files[0]),
-        desc: 'desc',
-        // width: 'auto',
-        // height: 'auto',
-      });
     },
   },
 };

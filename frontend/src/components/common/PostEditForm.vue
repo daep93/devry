@@ -14,7 +14,6 @@
           borderless
           v-model="tagItem"
           placeholder="태그를 하나 이상 입력해주세요"
-          TODO
           @keypress.enter="createTag"
         >
         </q-input>
@@ -29,7 +28,7 @@
               class="col-12 q-py-md q-px-md"
               :class="{ 'bg-blue-3': tags[tag] }"
               :key="tag"
-              @click="autoCreateTag(tag)"
+              @click="checkDuplicateTag(tag)"
               @mouseover="tags[tag] = true"
               @mouseout="tags[tag] = false"
             >
@@ -49,39 +48,12 @@
             </q-chip>
           </li>
         </ul>
-        <div class="text-grey-4">
-          Ctrl+S를 통해서 입력한 내용을 미리 보기할 수 있습니다
-        </div>
         <!-- 마크다운 에디터 -->
-        <div class="row full-width">
-          <div class="col-6">
-            <v-md-editor
-              v-model="content"
-              height="800px"
-              left-toolbar="undo redo clear | h bold italic strikethrough quote | ul ol table hr | link image code video | save"
-              right-toolbar=""
-              :disabled-menus="['undo']"
-              :toolbar="toolbar"
-              mode="edit"
-              @upload-image="handleUploadImage"
-              @save="renderPreview"
-            >
-            </v-md-editor>
-          </div>
-
-          <q-scroll-area
-            :thumb-style="thumbStyle"
-            :bar-style="barStyle"
-            class="col-6  preview-shadow q-py-lg"
-            style="height:800px; "
-          >
-            <v-md-editor
-              v-model="translation"
-              mode="preview"
-              class="col-6"
-            ></v-md-editor>
-          </q-scroll-area>
-        </div>
+        <markdown-editor
+          :height="'800px'"
+          :fetchData="content"
+          @input="getContents"
+        ></markdown-editor>
       </div>
       <!-- 버튼 -->
       <div class="q-mb-xl q-mt-xl" style="text-align: center;">
@@ -98,65 +70,36 @@
 
 <script>
 import { filtered_tags, first_matched_tag } from '@/utils/autoComplete';
-import { liquidResolver } from '@/utils/liquidTag';
+import MarkdownEditor from '@/components/common/MarkdownEditor';
 import {
   createQnaItem,
-  saveQnaImage,
-  loadQnaImage,
   updateQnaItem,
   deleteQnaItem,
   loadQnaItem,
 } from '@/api/qna';
 export default {
+  components: {
+    MarkdownEditor,
+  },
   data() {
     return {
-      thumbStyle: {
-        right: '4px',
-        borderRadius: '5px',
-        backgroundColor: '#dddddd',
-        width: '6px',
-        opacity: 0.75,
-      },
-
-      barStyle: {
-        right: '2px',
-        borderRadius: '9px',
-        backgroundColor: '#dddddd',
-        width: '7px',
-        opacity: 0.2,
-      },
       user: '',
       profile: '',
       title: '',
       tagItem: '',
       content: '',
-      translation: '',
       ref_tags: [],
       img: '',
       imgUrl: 'https//',
       tags: { ...this.$store.state.tags_selected },
-      toolbar: {
-        video: {
-          title: '비디오',
-          icon: 'v-md-icon-toc',
-
-          action(editor) {
-            editor.insert(function() {
-              const imagetxt = 'Image text';
-              const image = 'Screenshot image URL';
-              const youtube = 'Youtube Link';
-
-              return {
-                text: `[![${imagetxt}](${image})](${youtube})`,
-                selected: imagetxt,
-              };
-            });
-          },
-        },
-      },
     };
   },
   methods: {
+    // 마크다운 에디터에서 input 이벤트가 발생할 경우 데이터를 content에 저장한다.
+    getContents(data) {
+      this.content = data;
+    },
+    // QnA 포스트를 새롭게 생성한다.
     async createQna() {
       if (this.title === '') {
         alert('제목은 필수 입력 항목입니다');
@@ -191,6 +134,7 @@ export default {
         this.$q.loading.hide();
       }
     },
+    // 기존의 QnA 포스트를 수정한다.
     async updateQna() {
       if (this.title === '') {
         alert('제목은 필수 입력 항목입니다');
@@ -226,6 +170,7 @@ export default {
         this.$q.loading.hide();
       }
     },
+    // 기존의 QnA 포스트를 삭제한다.
     async deleteQna() {
       try {
         const post_id = this.$route.params.id;
@@ -239,57 +184,33 @@ export default {
         this.$q.loading.hide();
       }
     },
-    renderPreview(text) {
-      this.translation = liquidResolver(text);
-    },
+    // 태그 일부 입력시 정규 표현식을 통해 적합한 태그를 자동 등록해줌
     createTag() {
       if (this.tagItem !== '') {
         const str = first_matched_tag(this.tagItem);
-        if (str && this.ref_tags.indexOf(str) < 0) {
-          this.ref_tags.push(str);
-          this.tagItem = '';
-        }
+        this.checkDuplicateTag(str);
       }
     },
-    autoCreateTag(tag) {
+    // 태그 중복 확인
+    checkDuplicateTag(tag) {
       if (tag && this.ref_tags.indexOf(tag) < 0) {
         this.ref_tags.push(tag);
         this.tagItem = '';
       }
     },
+    // 태그 삭제
     removeTag(tag, index) {
       this.ref_tags.splice(index, 1);
     },
-    // TODO: img 폼데이터로 연결해서 전송
-    async handleUploadImage(event, insertImage) {
-      const frm = new FormData();
-      frm.append('img', event.target.files[0]);
-      try {
-        await saveQnaImage(frm);
-        // 이미지 url 받아오기
-        const { data } = await loadQnaImage();
-        this.imgUrl = this.imgUrl + data.imgUrl;
-      } catch (error) {
-        console.log(error);
-      }
-      // Here is just an example
-      insertImage({
-        url: this.imgUrl,
-        desc: 'file_name',
-        // responseType: 'blob',
-      });
-    },
   },
   computed: {
-    isValid() {
-      return this.tagItem === '' || this.ref_tags.length > 0;
-    },
+    // 일부 문자열을 받고 정규 표현식을 활용하여 비슷한 형태의 문자열 목록을 반환
     suggests() {
       return filtered_tags(this.tagItem);
     },
   },
   async created() {
-    // update의 경우에만 해당 됨
+    // update의 경우에만 기존의 data를 불러옴
     const post_id = this.$route.params.id;
     if (post_id) {
       try {
