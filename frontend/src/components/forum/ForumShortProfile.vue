@@ -1,92 +1,75 @@
 <template>
   <div>
-    <div style="margin-top: 16px;">
-      <q-card
-        flat
-        bordered
-        class="my-card margin:0 auto;"
-        style="padding: 10px; width: 250px; "
-      >
-        <q-card-section>
-          <div class="row">
-            <div class="col-2">
-              <span style="cursor:pointer;">
-                <q-avatar
-                  @click="goToProfile"
-                  style="width: 35px; height: 35px;"
-                  ><img :src="profile_img" />
-                </q-avatar>
-              </span>
-            </div>
-            <div class="col-10">
+    <q-card flat bordered class="my-card row col-12 q-pa-sm q-mb-sm">
+      <q-card-section>
+        <div class="row col-12">
+          <div class="row col-2">
+            <span class="q-mt-xs">
+              <q-avatar
+                style="width: 35px; height: 35px;"
+                class="cursor-pointer"
+                ><img :src="profile_img" />
+              </q-avatar>
+            </span>
+          </div>
+          <div class="row col-10">
+            <div class="row col-12">
               <div
-                style="margin-left: 12px; font-size: 15px; cursor:pointer; height: 17px; color: #464646"
+                class="q-pl-lg"
+                style="font-size: 15px; color: #464646"
                 @click="goToProfile"
               >
-                <b>{{ username }}</b>
+                <b class="cursor-pointer">유저이름</b>
+                <div class="text-caption row">
+                  글 0 · 팔로워 0
+                </div>
               </div>
-              <span style="font-size: 10px; margin-left: 12px;"
-                >글 12 · 팔로워 58</span
-              >
             </div>
           </div>
-        </q-card-section>
-        <div style="margin-left: 15px; margin-right: 12px;">
-          <p style="font-size: 13px;">
-            FE Engineer for en expensive cars company. Archer at night. Ask me
-            about company culture, side projects, performance and Vue.
-          </p>
         </div>
-        <center>
-          <div style="margin-bottom: 10px;">
-            <div v-if="follow">
-              <q-btn
-                no-caps
-                color="primary"
-                id="follow-btn"
-                label="Follow"
-                style="width:200px;"
-                @click="checkFollow(index)"
-              />
-            </div>
-            <div v-else>
-              <q-btn
-                no-caps
-                outline
-                color="primary"
-                label="Following"
-                style="width:200px;"
-                @click="checkFollow(index)"
-              />
-            </div>
-          </div>
-        </center>
-      </q-card>
-    </div>
-
-    <!-- 작성자 글 리스트 -->
-    <div style="margin-top: 16px;">
-      <q-card flat bordered class="my-card" style="padding: 8px; width: 250px;">
-        <q-card-section>
-          <span style="color: #598FFC">
-            <b>{{ username }}</b></span
-          >
-          님의 대표글 더 보기
-        </q-card-section>
-        <q-separator inset />
-        <q-card-section>
-          <div @click="goToDetail" style="cursor:pointer">
-            Products Quantity Counter Using HTML CSS
-          </div>
-        </q-card-section>
-        <q-separator inset />
-        <q-card-section>
-          <div @click="goToDetail" style="cursor:pointer">
-            {{ title }}
-          </div>
-        </q-card-section>
-      </q-card>
-    </div>
+      </q-card-section>
+      <div class="q-px-md q-pb-md row col-12">
+        <div class="text-body2">
+          상태메시지
+        </div>
+      </div>
+      <div class="row col-12 justify-center">
+        <template v-if="follow">
+          <q-btn
+            no-caps
+            color="primary"
+            id="follow-btn"
+            label="Follow"
+            @click="checkFollow"
+            class="q-mb-sm row col-10"
+          />
+        </template>
+        <template v-else>
+          <q-btn
+            no-caps
+            outline
+            color="primary"
+            label="Following"
+            @click="checkFollow"
+            class="q-mb-sm row col-10"
+          />
+        </template>
+      </div>
+    </q-card>
+    <q-card flat bordered class="my-card row col-12 q-pa-lg">
+      <div class="q-mb-md">
+        <span class="text-weight-bold cursor-pointer" style="color: #598FFC"
+          >유저이름</span
+        >
+        <span>님의 글 더 보기</span>
+      </div>
+      <template>
+        <q-separator />
+        <div class="q-mt-md">
+          제목
+        </div>
+      </template>
+    </q-card>
   </div>
 </template>
 
