@@ -1,5 +1,4 @@
 from django.shortcuts import get_object_or_404
-
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -13,7 +12,6 @@ from .models import Qna, Ans, Qnasmall, Anssmall
 from rest_framework import viewsets
 from profiles.models import Profile
 from accounts.models import User
-
 from mysite.utils import jwt_encode
 from rest_auth.models import TokenModel
 from rest_framework.authtoken.models import Token
@@ -246,7 +244,7 @@ def like(request, qna_pk):
             serializer = likeSerializer(qna)
         return Response(serializer.data)
 
-        # user가 qna을 좋아요 누른 전체유저에 존재하는지.
+    # user가 qna을 좋아요 누른 전체유저에 존재하는지.
     if request.method == 'POST':
         if qna.like_users.filter(pk=request.user.pk).exists():
             # like canceled
@@ -270,7 +268,6 @@ def like_ans(request, ans_pk):
         user=User.objects.get(id=tok.user_id)
         request.user=user
     # user authentication process
-    # if request.user.is_authenticated:
     ans = get_object_or_404(Ans, pk=ans_pk)
     if request.method == 'GET':
         if ans.like_ans_users.filter(pk=request.user.pk).exists():
@@ -314,7 +311,7 @@ def bookmark(request, qna_pk):
             serializer = bookmarkSerializer(qna)
         return Response(serializer.data)
 
-        # user가 qna을 북마크 누른 전체유저에 존재하는지.
+    # user가 qna을 북마크 누른 전체유저에 존재하는지.
     if request.method == 'POST':
         if qna.bookmark_users.filter(pk=request.user.pk).exists():
             # bookmark cancled

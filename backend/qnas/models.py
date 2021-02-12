@@ -75,7 +75,6 @@ class Qna(models.Model):
     # img=models.ImageField(upload_to="%Y/%m/%d", default="", null=True)
     ref_tags = MultiSelectField(choices=tech)
     like_num = models.PositiveIntegerField(default=0)
-    comment_num = models.PositiveIntegerField(default=0)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_qnas')
     liked = models.BooleanField(default="False")
     bookmark_num = models.PositiveIntegerField(default=0)
