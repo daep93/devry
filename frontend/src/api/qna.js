@@ -89,7 +89,11 @@ function deleteRecomment(anssmall_pk) {
 
 // QnA 이미지 임시저장 하기
 function saveQnaImage(postData) {
-  return instance.post('qna_image/', postData);
+  return instance.post('qna_image/', postData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 }
 
 // QnA 이미지 임시저장한 내용 불러오기

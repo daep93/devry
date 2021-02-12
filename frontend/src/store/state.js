@@ -34,7 +34,7 @@ export default {
     Python3: false,
     React: false,
     Spring: false,
-    Typescript: false,
+    TypeScript: false,
     'Vue.js': false,
   },
   all_tag_list: [
@@ -53,7 +53,7 @@ export default {
     'Python3',
     'React',
     'Spring',
-    'Typescript',
+    'TypeScript',
     'Vue.js',
   ],
 };
