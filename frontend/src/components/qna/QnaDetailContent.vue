@@ -79,7 +79,8 @@
         </div>
       </q-card-section>
       <div class="row col-12">
-        <v-md-editor v-model="content" mode="preview"> </v-md-editor>
+        <v-md-editor :value="liquidResolve(content)" mode="preview">
+        </v-md-editor>
       </div>
       <q-card-section class="row col-12">
         <template v-if="info.comments.length">
@@ -101,7 +102,7 @@
 import QnaSmallComment from '@/components/qna/QnaSmallComment';
 import { colorSoloMapper } from '@/utils/tagColorMapper';
 import { getSmallComments, deleteQnaItem } from '@/api/qna';
-
+import { liquidResolver } from '@/utils/liquidTag';
 export default {
   props: {
     info: Object,
@@ -120,6 +121,9 @@ export default {
     };
   },
   methods: {
+    liquidResolve(tag) {
+      return liquidResolver(tag);
+    },
     tagColor(tag, alpha) {
       return colorSoloMapper(tag, alpha);
     },
