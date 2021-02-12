@@ -9,10 +9,10 @@
           spinner-color="white"
           style="max-width: 450px; height:330px;"
           class="rounded-borders q-ml-xl col-6">
-          <q-badge v-if="bookmarked === false" @click="bookmark" class="q-ma-xs" float-left>
+          <q-badge v-if="bookmarked === false" @click="checkbookmarked" class="q-ma-xs" float-left>
             <q-icon size="sm" name="turned_in_not" />
           </q-badge>
-          <q-badge v-else @click="bookmark" class="q-ma-xs" float-left>
+          <q-badge v-else @click="checkbookmarked" class="q-ma-xs" float-left>
             <q-icon size="sm" name="turned_in" />
           </q-badge>
         </q-img>    
@@ -25,8 +25,6 @@
             <q-badge class="q-px-sm" color="purple">
               {{ category }}
             </q-badge>
-             <!-- <div class="col-2 text-caption text-primary">{{ state }}</div>
-             <div class="col-5 text-caption text-primary">{{ category }}</div> -->
           </div>
           <div class="text-h4 text-weight-bold q-mb-lg">{{ title }}</div>
           <div class="q-mb-md">
@@ -42,7 +40,7 @@
           </div>
           <div class="q-mb-md">
             <span class="text-h6 text-weight-bold q-mr-md">주최</span>
-            <span class="text-h7">{{ hostInfo.host_name }}</span>
+            <span class="text-h7">{{ host_info.host_name }}</span>
           </div>
           <div class="q-mb-md">
             <span class="text-h6 text-weight-bold q-mr-md">비용</span>
@@ -58,19 +56,10 @@
           <p><q-icon size="xs" name="calendar_today" /> 신청기간 : ~ {{ sdata }} 까지 </p>
         </div>
         <q-btn
-          v-if="registerState === false"
           @click="register"
           color="blue-12"
           class="col-4 rounded-borders q-ml-xl"
           label="참가 신청"
-          style="max-width:300px; height:50px;"
-        />
-        <q-btn
-          v-else
-          @click="register"
-          color="grey-7"
-          class="col-4 rounded-borders q-ml-xl"
-          label="신청 취소"
           style="max-width:300px; height:50px;"
         />
       </div>
@@ -97,11 +86,11 @@
           <div class="text-h6 text-weight-bold q-mb-md">주최자 정보</div>
           <div class="row">
             <img
-              :src="hostInfo.profile_img"
+              :src="host_info.profile_img"
               class="col-6 float-left q-mr-md rounded-borders"
               style="width: 70px; height: 50px;"
             >
-            <div class="col-6 q-pt-sm text-h6 text-weight-bold">{{ hostInfo.host_name }}</div>
+            <div class="col-6 q-pt-sm text-h6 text-weight-bold">{{ host_info.host_name }}</div>
           </div>
         </div>
         <!-- 관련 태그 -->
@@ -130,6 +119,7 @@
 </template>
 
 <script>
+import { getEvent, toggleEventBookmark } from '@/api/event';
 import {
   colorSoloMapper,
   // matchingColorSoloMapper,
@@ -151,37 +141,76 @@ export default {
       participation: '개발자 혹은 개발에 관심있는 누구나',
       introduction: '프론트엔드 개발을 위한 Vue.js 컨퍼런스입니다.',
       schedule: '1. 주최자 소개 | 2. 컨퍼런스 소개 | 3. 프론트엔드 프레임워크 소개',
-      hostInfo: {
+      host_info: {
         host_name: 'Eddie',
         profile_img: 'https://cdn.quasar.dev/img/parallax1.jpg',
+        register_url: 'https://google.com',
       },
       ref_tags: ['Vue.js', 'Python', 'JavaScript', 'React'],
       bookmarked: false,
       bookmarked_num: 159,
-      registerState : false
     }
   },
   methods: {
-    bookmark() {
-      this.bookmarked = !this.bookmarked
-      if(this.bookmarked) {
-        this.bookmarked_num = this.bookmarked_num + 1
-      }else {
-        this.bookmarked_num = this.bookmarked_num - 1
+    // 북마크 토글하기
+    async checkbookmarked() {
+      if (!this.$store.getters.isLogined) {
+        alert('로그인이 필요합니다');
+        return
+      }
+      const post_id = this.$route.params.id;
+      try {
+        const { data } = await toggleEventBookmark(post_id); 
+        // 넘겨줄 데이터
+        this.bookmarked = !this.bookmarked
+        if(this.bookmarked) {
+          this.bookmarked_num = this.bookmarked_num + 1
+        }else {
+          this.bookmarked_num = this.bookmarked_num - 1
+        }
+      } catch (error) {
+        console.log(error);
       }
     },
-    register: function() {
-      this.registerState = !this.registerState
-      // if(this.registerState) {
-      //   this.applicant = this.applicant + 1
-      // }else {
-      //   this.applicant = this.applicant - 1
-      // }
+    register() {
+      window.open(this.host_info.register_url, "_blank");  
     },
     tagColor(tag) {
       return colorSoloMapper(tag, 0.5);
     },
-  }
+  },
+  async created() {
+    this.$store.commit('offLeft');
+    // id 가져오기
+    const post_id = this.$route.params.id;
+    try {
+      this.$q.loading.show();
+      const { data } = await getEvent(post_id);
+      // 가져올 데이터 목록
+      this.state = data.state;
+      this.thumnail = data.thumnail;
+      this.title = data.title;
+      this.location = data.location;
+      this.category = data.category;
+      this.sdata = data.sdata;
+      this.edata = data.edata;
+      this.stime = data.stime;
+      this.etime = data.etime;
+      this.cost = data.cost;
+      this.participation = data.participation;
+      this.introduction = data.introduction;
+      this.schedule = data.schedule;
+      this.host_info = data.host_info;
+      this.ref_tags = data.ref_tags;
+      this.bookmarked = data.bookmarked;
+      this.bookmarked_num = data.bookmarked_num;
+    } catch (error) {
+      console.log(error);
+      // alert('에러가 발생했습니다.)
+    } finally {
+      this.$q.loading.hide();
+    }
+  },
 }
 </script>
 
