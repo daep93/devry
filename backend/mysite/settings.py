@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'events',
     'qnas',
     'profiles',
-    'articles',
+    'forums',
 
     'django_seed',
     
