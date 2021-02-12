@@ -10,8 +10,6 @@ from .serializers import ProfileSerializer, ProfileListSerializer, ProfileLinkSe
 from .models import Profile
 from rest_framework import viewsets
 
-
-from articles.models import Article, Comment
 from qnas.serializers import QnaSerializer, AnsSerializer
 from qnas.models import Qna, Ans
 class PostViewSet(viewsets.ModelViewSet):
