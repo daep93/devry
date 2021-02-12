@@ -181,7 +181,6 @@ export default {
           title: this.title,
           user: this.$store.state.id,
           content: this.content,
-          img: this.img.length ? this.img : null,
           ref_tags: this.ref_tags,
         });
         // 이전 페이지로 이동
