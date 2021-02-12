@@ -35,7 +35,7 @@ VMdEditor.xss.extend({
   // extend white list
   whiteList: {
     source: [],
-    iframe: ['src'],
+    iframe: ['src', 'height', 'width', 'frameborder'],
   },
 });
 VMdPreview.use(githubTheme);
