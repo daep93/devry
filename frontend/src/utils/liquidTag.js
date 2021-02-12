@@ -1,4 +1,4 @@
-const youtubeReg = /{% youtube (\w+) %}/gi;
+const youtubeReg = /{% youtube (\S+) %}/gi;
 const youtubeExp =
   "<div class='row justify-center q-pa-sm full-width'><iframe style='width:60%; height:300px' src='https://www.youtube.com/embed/$1'></iframe></div>";
 const codesandboxReg = /{% codesandbox (\S+) %}/g;
