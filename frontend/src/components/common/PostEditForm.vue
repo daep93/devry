@@ -120,6 +120,7 @@ export default {
 
       try {
         this.$q.loading.show();
+        console.log('problem');
         await createQnaItem({
           title: this.title,
           user: this.$store.state.id,

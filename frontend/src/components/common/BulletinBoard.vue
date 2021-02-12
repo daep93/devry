@@ -75,12 +75,14 @@ export default {
     },
     selectedTags(newValue) {
       // store의 selectedTags가 바뀌면 새롭게 개시될 게시물들을 필터링한다.
-      this.board = this.origin_board.filter(post => {
-        for (const tag of post.ref_tags) {
-          if (newValue.indexOf(tag) >= 0) return true;
-        }
-        return false;
-      });
+      this.board = this.origin_board
+        .filter(post => {
+          for (const tag of post.ref_tags) {
+            if (newValue.indexOf(tag) >= 0) return true;
+          }
+          return false;
+        })
+        .reverse();
     },
   },
   computed: {
