@@ -4,13 +4,6 @@ from profiles.models import Profile
 from accounts.models import User
 
 
-class ProfileEventSerializer(serializers.ModelSerializer):
-    
-    class Meta:
-        model = Profile
-        fields = ( 'id', 'username', 'profile_img')
-
-
 class UserinfoSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -31,13 +24,9 @@ class EventListSerializer(serializers.ModelSerializer):
         read_only=True,
     )
 
-    host = ProfileEventSerializer(
-        read_only=True,
-    )
-
     class Meta:
         model = Event
-        fields = ('id', 'state', 'thumnail', 'category', 'title', 'ref_tags', 'start_day', 'end_day', 'host', 'bookmarked', 'viewed_num', 'bookmark_num', 'user')
+        fields = ('id', 'thumnail', 'category', 'title', 'ref_tags', 'start_day', 'end_day', 'host_name', 'profile_img', 'bookmarked', 'viewed_num', 'bookmark_num', 'user')
 
 
 class EventdetailSerializer(serializers.ModelSerializer):
@@ -47,15 +36,11 @@ class EventdetailSerializer(serializers.ModelSerializer):
     user = UserinfoSerializer(
         read_only=True,
     )
-
-    host = ProfileEventSerializer(
-        read_only=True,
-    )
     
     class Meta:
         model = Event
         fields = ('id', 'state', 'thumnail', 'title', 'category', 'place', 'start', 'end', 'start_day', 'end_day', 'cost', 'participation', 'introduction', 'schedule',
-        'host', 'ref_tags', 'bookmarked', 'bookmark_num', 'viewed_num', 'user')
+        'host_name', 'profile_img', 'register_url', 'ref_tags', 'bookmarked', 'bookmark_num', 'viewed_num', 'user')
 
 
 class EventSerializer(serializers.ModelSerializer):
@@ -65,7 +50,7 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = ('id', 'state', 'thumnail', 'title', 'category', 'place', 'start', 'end', 'start_day', 'end_day', 'cost', 'participation', 'introduction', 'schedule',
-        'host', 'ref_tags', 'bookmarked', 'bookmark_num', 'viewed_num', 'user')
+       'host_name', 'profile_img', 'register_url', 'ref_tags', 'bookmarked', 'bookmark_num', 'viewed_num', 'user')
 
 
 class bookmarkSerializer(serializers.ModelSerializer):

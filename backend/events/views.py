@@ -34,14 +34,10 @@ def event_main_list(request):
     if request.method == 'GET':
         events = Event.objects.filter(start__lte=now_day, end__gt=now_day).order_by('start')
         for event in events:
-            event.bookmark_num = event.bookmark_users.count() 
-            if event.bookmark_users.filter(id=request.user.pk).exists():
-                event.bookmarked = "True"      
-            else:
-                event.bookmarked = "False"
-
-            if str(event.start) <= now_day:
-                event.state =  "Start"
+            # if str(event.start) < now_day:
+            #     event.state = "Ready"      
+            # if event.end >= now_day:
+            #     event.state = "start"
             event.save()
         events = Event.objects.filter(start__lte=now_day, end__gt=now_day).order_by('start')
         serializer = EventMainSerializer(events, many=True)
@@ -52,9 +48,8 @@ def event_main_list(request):
 def event_list(request):
     """
     Event 목록 보기
-    user=글 쓴 유저
-    host=글 쓴 유저의 프로필 정보
-
+    user=글 쓴 유저의 정보
+    host_name=호스트의 정보
     ---
     """
     now = datetime.datetime.now()
@@ -92,7 +87,6 @@ def event_list_create(request):
     Event 글 생성
     start_day = 년,월,일 을 입력받음
     start= 년,월,일,시간 모두 입력받음
-
     ---
     """
     if request.META.get('HTTP_AUTHORIZATION'):
@@ -152,10 +146,14 @@ def event_detail_update_delete(request, event_pk):
    
     if request.method == 'GET':
         if str(event.start) <= now_day:
-            event.state = "Start"      
+                event.state =  "Start" 
         elif str(event.start) > now_day:
-            event.state = "Ready"
-            
+                event.state = "Ready"
+        
+        if str(event.end) < now_day:
+                event.state = "end"
+        event.save()
+
         serializer = EventdetailSerializer(event)
         return Response(serializer.data)
 

@@ -111,7 +111,7 @@ class AnsdetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ans
-        fields = ( 'id','assisted','img', 'user','like_ans_num', 'content', 'qna', 'written_time', 'liked_ans', 'anssmall_set' ,'profile')
+        fields = ( 'id', 'assisted', 'user','like_ans_num', 'content', 'qna', 'written_time', 'liked_ans', 'anssmall_set' ,'profile')
 
  
 class AnslistformatSerializer(serializers.ModelSerializer):
@@ -131,7 +131,7 @@ class AnslistformatSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ans
-        fields = ('id', 'img', 'assisted', 'like_ans_num','user', 'content', 'qna', 'written_time', 'liked_ans', 'anssmall_set' ,'profile')
+        fields = ('id', 'assisted', 'like_ans_num','user', 'content', 'qna', 'written_time', 'liked_ans', 'anssmall_set' ,'profile')
 
 
 class AnslistSerializer(serializers.ModelSerializer):
@@ -160,7 +160,7 @@ class AnsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ans
-        fields = ('id', 'assisted','img', 'like_ans_num','user', 'content', 'qna', 'written_time', 'liked_ans', 'anssmall_set', 'profile')
+        fields = ('id', 'assisted', 'like_ans_num','user', 'content', 'qna', 'written_time', 'liked_ans', 'anssmall_set', 'profile')
 
 
 class AnsinfoSerializer(serializers.ModelSerializer):
@@ -180,7 +180,7 @@ class AnsinfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ans
-        fields = ('id', 'assisted','img', 'like_ans_num','user', 'content', 'qna', 'written_time', 'liked_ans', 'anssmall_set', 'profile')
+        fields = ('id', 'assisted', 'like_ans_num','user', 'content', 'qna', 'written_time', 'liked_ans', 'anssmall_set', 'profile')
 
 
 class QnadetailSerializer(serializers.ModelSerializer):
@@ -213,7 +213,7 @@ class QnadetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Qna
-        fields = ('id','profile', 'img', 'title','written_time', 'ref_tags', 'solved', 'like_num', 'ans_count',
+        fields = ('id','profile', 'title','written_time', 'ref_tags', 'solved', 'like_num', 'ans_count',
         'viewed_num', 'bookmark_num','content', 'qnasmall_set', 'ans_set', 'liked', 'bookmarked','user' )
 
 
@@ -239,7 +239,7 @@ class QnaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Qna
-        fields = ('id','title', 'img','user','profile','content','ref_tags', 'liked', 'like_num', 'bookmarked',
+        fields = ('id','title','user','profile','content','ref_tags', 'liked', 'like_num', 'bookmarked',
         'solved','bookmark_num', 'viewed_num', 'written_time','ans_set', 'ans_count','qnasmall_set')
 
 
@@ -269,10 +269,3 @@ class solveSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ans
         fields = ('id', "assisted")
-
-
-class TagSerialier(serializers.ModelSerializer):
-    
-    class Meta:
-        model = Qna
-        fields = ('author', 'ref_tags_count', )  
