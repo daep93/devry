@@ -24,13 +24,19 @@ class ProfilepostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ('user', 'username', 'profile_img', 'bio')
-# 'post_num' is_following,is_following추가해야함
+# 부족한 필드 추가해야함
+
 
 class ProfilePostSerializer(serializers.ModelSerializer):
     
+    comment_count = serializers.IntegerField(
+        source='comment_set.count',
+        read_only=True,
+        )
+
     class Meta:
         model = Post
-        fields = ('id', 'title', 'username', 'written_time', 'thumbnail', 'like_num', 'comment_num', 'ref_tags',)
+        fields = ('id', 'title', 'username', 'written_time', 'thumbnail', 'like_num', 'comment_count', 'ref_tags',)
 
 
 class PostListforamtSerializer(serializers.ModelSerializer):
@@ -43,9 +49,14 @@ class PostListforamtSerializer(serializers.ModelSerializer):
         read_only=True,
     )
     
+    comment_count = serializers.IntegerField(
+        source='comment_set.count',
+        read_only=True,
+    )
+
     class Meta:
         model = Post
-        fields = ('id', 'title','user', 'written_time', 'ref_tags', 'like_num', 'comment_num', 'viewed_num', 'liked', 'profile')
+        fields = ('id', 'title','user', 'written_time', 'ref_tags', 'like_num', 'comment_count', 'viewed_num', 'liked', 'profile')
 
 
 class PostListSerializer(serializers.ModelSerializer):
@@ -54,9 +65,14 @@ class PostListSerializer(serializers.ModelSerializer):
         read_only=True,
     )
     
+    comment_count = serializers.IntegerField(
+        source='comment_set.count',
+        read_only=True,
+    )
+
     class Meta:
         model = Post
-        fields = ('id', 'title', 'written_time', 'ref_tags', 'like_num', 'comment_num', 'viewed_num', 'liked', 'profile')
+        fields = ('id', 'title', 'written_time', 'ref_tags', 'like_num', 'comment_count', 'viewed_num', 'liked', 'profile')
 
 
 class CommentdetailSerializer(serializers.ModelSerializer):
@@ -64,7 +80,6 @@ class CommentdetailSerializer(serializers.ModelSerializer):
     profile = ProfilepostListSerializer(
         read_only=True,
     )
-
 
     class Meta:
         model = Comment
@@ -88,7 +103,6 @@ class CommentlistSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
 
-
     class Meta:
         model = Comment
         fields = ('id',  'comment_content', 'like_comment_num', 'user', 'post', 'written_time', 'liked_comment', 'profile')
@@ -108,8 +122,7 @@ class PostdetailSerializer(serializers.ModelSerializer):
 
     comment_set = CommentlistSerializer(
         many=True,
-        read_only=True,
-        
+        read_only=True,    
     )
 
     comment_count = serializers.IntegerField(
@@ -125,9 +138,7 @@ class PostdetailSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
 
-
     ref_tags= fields.MultipleChoiceField(choices=tech)
-
 
     comment_set = CommentSerializer(
         many=True,
