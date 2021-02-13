@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django.db.models import F
 
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -97,7 +98,6 @@ def profile_show(request, profile_pk):
     GET Method를 통해 사용자의 상세 프로필을 조회합니다. 
     '''
     profile = get_object_or_404(Profile, pk=profile_pk) 
-    comments = Comment.objects.all()
     
     real_tags = []
     tags_list = {
@@ -138,12 +138,12 @@ def profile_show(request, profile_pk):
         email = User.objects.filter(pk=ProfileSerializer(profile).data['user']).first()
         profile_user = User.objects.get(pk=ProfileSerializer(profile).data['user'])
 
-        
-        if len(UserSerializer(profile_user).data['following']):
-            # print(len(UserSerializer(profile_user).data['following']))   # 사용자가 팔로잉하는 사용자들
-            # print(len(UserSerializer(profile_user).data['followers']))   # 사용자를 팔로우하는 사용자들
-            serializer.data['follower_num'] += len(UserSerializer(profile_user).data['following'])
-            serializer.data['followee_num'] = len(UserSerializer(profile_user).data['followers'])
+
+        serializer.data['followee_num'] = (UserSerializer(profile_user).data['followee_num'])
+        serializer.data['follower_num'] = ((UserSerializer(profile_user).data['follower_num']))
+
+
+
 
         # 모든 qna에서의 글 중 사용자가 쓴 글만 불러오고, 해당 글에서 참조된 태그들을 추가하는 과정
         all_qnas = Qna.objects.filter(user=UserJoinedSerializer(profile).data['id'])
@@ -178,18 +178,18 @@ def profile_show(request, profile_pk):
         for real in real_tags:
             serializer.data['tags'].append(real)
 
-        for number in range(1, 4):
-            sns_name = 'sns_name' + str(number)
-            sns_url = 'sns_url' + str(number)
+        # for number in range(1, 4):
+        #     sns_name = 'sns_name' + str(number)
+        #     sns_url = 'sns_url' + str(number)
 
-            project_name = 'project_name' + str(number)
-            project_url = 'project_url' + str(number)
+        #     project_name = 'project_name' + str(number)
+        #     project_url = 'project_url' + str(number)
 
-            if ProfileSerializer(profile).data[sns_name] and ProfileSerializer(profile).data[sns_url]:
-                serializer.data['links'].append({ProfileSerializer(profile).data[sns_name]: ProfileSerializer(profile).data[sns_url]})
+        #     if ProfileSerializer(profile).data[sns_name] and ProfileSerializer(profile).data[sns_url]:
+        #         serializer.data['links'].append({ProfileSerializer(profile).data[sns_name]: ProfileSerializer(profile).data[sns_url]})
 
-            if ProfileSerializer(profile).data[project_name] and ProfileSerializer(profile).data[project_url]:
-                serializer.data['projects'].append({ProfileSerializer(profile).data[project_name]: ProfileSerializer(profile).data[project_url]})
+        #     if ProfileSerializer(profile).data[project_name] and ProfileSerializer(profile).data[project_url]:
+        #         serializer.data['projects'].append({ProfileSerializer(profile).data[project_name]: ProfileSerializer(profile).data[project_url]})
 
         return Response(serializer.data)
 
@@ -202,41 +202,79 @@ def profile_setting(request, profile_pk):
     프로필 정보를 보여주거나, 수정할 수 있습니다.
     '''
 
-    # 현재 PUT 메서드에서 CSRF 관련 오류가 발생하고 있습니다. 빠른 시일 내로 수정하겠습니다. 
-    # GET 메서드로 보여주는 기능은 정상적으로 동작합니다. 
 
     profile = get_object_or_404(Profile, pk=profile_pk)
-
+    new_profile = Profile.objects.filter(pk=profile_pk).first()
+    print(new_profile)
     user = User.objects.filter(pk=ProfileSerializer(profile).data['user']).first()
+    
+    # profile_links =[]
+    profile_links = [
+    # {
+    #     'sns_name1': request.data.get('sns_name1'),
+    #     'sns_url1': request.data.get('sns_url1')
+    # },
+    # {
+    #     'sns_name2': request.data.get('sns_name2'),
+    #     'sns_url2': request.data.get('sns_url2')
+    # },
+    # {
+    #     'sns_name3': request.data.get('sns_name3'),
+    #     'sns_url3': request.data.get('sns_url3')
+    # }
+    {
+        'sns_name1': request.POST.get('sns_name1', False),
+        'sns_url1': request.POST.get('sns_url1', False)
+    },
+    {
+        'sns_name2': request.POST.get('sns_name2', False),
+        'sns_url2': request.POST.get('sns_url2', False)
+    },
+    {
+        'sns_name3': request.POST.get('sns_name3', False),
+        'sns_url3': request.POST.get('sns_url3', False)
+    }
+    ]
 
-    if request.META['HTTP_AUTHORIZATION'] == TokenSerializer(user.auth_token).data['key']:
-        if request.method == 'GET':
-            serializer = ProfileListSerializer(profile)
+    profile_projects = [
+    {
+        'project_name1': request.POST.get('project_name1', False),
+        'project_url1': request.POST.get('project_url1', False)
+    },
+    {
+        'project_name2': request.POST.get('project_name2', False),
+        'project_url2': request.POST.get('project_url2', False)
+    },
+    {
+        'project_name3': request.POST.get('project_name3', False),
+        'project_url3': request.POST.get('project_url3', False)
+    }
+    ]
 
-            # email_user = User.objects.get(pk=ProfileListSerializer(profile).data['user'])
+    # if request.META['HTTP_AUTHORIZATION'] == TokenSerializer(user.auth_token).data['key']:
+    if request.method == 'GET':
+        serializer = ProfileListSerializer(profile)
+        print(serializer.data)
 
-            for number in range(1, 4):
-                sns_name = 'sns_name' + str(number)
-                sns_url = 'sns_url' + str(number)
+        return Response(serializer.data)
 
-                project_name = 'project_name' + str(number)
-                project_url = 'project_url' + str(number)
+    if request.method == 'PUT':
 
-                if ProfileSerializer(profile).data[sns_name] and ProfileSerializer(profile).data[sns_url]:
-                    serializer.data['links'].append({ProfileSerializer(profile).data[sns_name]: ProfileSerializer(profile).data[sns_url]})
+        serializer = ProfileUpdateSerializer(instance=profile, data=request.data, partial=True)
 
-                if ProfileSerializer(profile).data[project_name] and ProfileSerializer(profile).data[project_url]:
-                    serializer.data['projects'].append({ProfileSerializer(profile).data[project_name]: ProfileSerializer(profile).data[project_url]})
+        if serializer.is_valid(raise_exception=True):
+        
+            # 이미지 받아오기
+            serializer.validated_data['profile_img'] = request.FILES['profile_img']
 
 
-            return Response(serializer.data)
+            image_field = profile.profile_img
+            img_name = serializer.validated_data['profile_img']
+            # 이미지 주소
+            # print(image_field)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        if request.method == 'PUT':
-            serializer = ProfileUpdateSerializer(profile, data=request.data)
-            if serializer.is_valid(raise_exception=True):
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    else:
-        return Response('잘못된 요청입니다.', status=status.HTTP_400_BAD_REQUEST)
+    # else:
+    #     return Response('잘못된 요청입니다.', status=status.HTTP_400_BAD_REQUEST)
     

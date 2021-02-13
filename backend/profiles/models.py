@@ -4,6 +4,8 @@ from accounts.serializers import UserSerializer
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill
 from multiselectfield import MultiSelectField
+from django.dispatch import receiver
+from django.db.models.signals import post_save, m2m_changed
 tech = (
     ('Python3', 'Python3'),
     ('Django', 'Django'),
@@ -112,8 +114,23 @@ class Profile(models.Model):
     pinned_posts = models.TextField(blank=True)
     posts = models.TextField(blank=True)
     comments = models.TextField(blank=True)
-    links = models.ManyToManyField('self', default=0 ,related_name='project_link', blank=True)
-    projects = models.ManyToManyField('self', default=0, related_name='project_project', blank=True)
-    joined = models.DateTimeField(blank=True)
+    links = models.ManyToManyField('self', related_name='project_link', blank=True)
+    # links = models.TextField(blank=True)
+    # links = models.ForeignKey("self", on_delete=models.CASCADE, related_name='project_link')
+    projects = models.ManyToManyField('self', related_name='project_project', blank=True)
+    # projects = models.TextField(blank=True)
+    joined = models.DateTimeField(blank=True, null=True)
     tags = models.ManyToManyField('self', default=0, related_name='project_tags', blank=True)
 
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+    
+    instance.profile.username = UserSerializer(instance).data['username']
+    instance.profile.email = UserSerializer(instance).data['email']
+    instance.profile.joined = UserSerializer(instance).data['date_joined']
+    instance.profile.save()
+
+
+# def links_changed(sender, instance, updated, **kwargs):

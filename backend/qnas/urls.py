@@ -3,7 +3,6 @@ from . import views
 from rest_framework import routers
 from .views import PostViewSet, CommentViewSet, QnasmallViewSet, AnssmallViewSet
 
-
 routerq = routers.DefaultRouter()
 routerq.register('qna', PostViewSet)
 routerq.register('ans', CommentViewSet)
