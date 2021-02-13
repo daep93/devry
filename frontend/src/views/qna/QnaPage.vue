@@ -49,15 +49,13 @@
           <q-pagination
             v-model="current"
             color="grey"
-            :max="5"
+            :max="max"
             :boundary-links="true"
           >
           </q-pagination>
         </div>
         <div class="col-3 row justify-end">
-          <q-btn color="blue-7" @click="$router.push('/qna/create')"
-            >질문하기</q-btn
-          >
+          <q-btn color="blue-7" @click="goToDetail">질문하기</q-btn>
         </div>
       </div>
     </div>
@@ -79,15 +77,23 @@ export default {
     return {
       current: 1,
       board: [],
+      max: 1,
     };
   },
   methods: {
+    goToDetail() {
+      if (this.$store.getters.isLogined) this.$router.push('/qna/create');
+      else {
+        this.$store.commit('setAccountModalType', 'login');
+        this.$store.commit('onAccountModal');
+      }
+    },
     async loadBoard() {
       try {
         this.$q.loading.show();
         const { data } = await getQnaList();
         this.board = data;
-        console.log('loadBoard');
+        this.max = Math.ceil(data.length / 10);
         return data;
       } catch (error) {
         console.log(error);

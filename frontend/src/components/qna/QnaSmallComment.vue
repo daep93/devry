@@ -111,6 +111,10 @@ export default {
     },
     async registerComment(e) {
       if (e.shiftKey) return;
+      if (!this.$store.getters.isLogined) {
+        alert('로그인을 해주세요');
+        return;
+      }
       try {
         await registerSmallComment({
           qna: this.post_id,

@@ -122,6 +122,10 @@ export default {
     },
     async postRecomment(e) {
       if (e.shiftKey) return;
+      if (!this.$store.getters.isLogined) {
+        alert('로그인을 해주세요');
+        return;
+      }
       try {
         await registerRecomment({
           ans: this.ans_id,
