@@ -314,6 +314,22 @@
             </template>
           </q-input>
         </div>
+        <!-- 이벤트 등록 url -->
+        <div class="full-width q-mb-xl">
+          <q-input
+            class="col-12"
+            stack-label
+            label-slot
+            outlined
+            v-model="host_info.register_url"
+            placeholder="이벤트 등록을 위한 url을 입력해주세요"
+          >
+            <template v-slot:label>
+              <span class="text-primary">이벤트 등록 URL</span>
+              <br />
+            </template>
+          </q-input>
+        </div>
       </div> 
     </div> 
     <!-- 이벤트 관련 태그 -->
@@ -376,6 +392,7 @@ export default {
       host_info: {
         host_name: '',
         profile_img: 'https://placeimg.com/500/300/nature',
+        register_url: '',
       },
       ref_tags: [],
     }
