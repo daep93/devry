@@ -31,7 +31,14 @@ VMdEditor.use(githubTheme, {
     vue: 'html',
   },
 });
-VMdEditor.xss.extend({
+// VMdEditor.xss.extend({
+//   // extend white list
+//   whiteList: {
+//     source: [],
+//     iframe: ['src', 'height', 'width', 'frameborder'],
+//   },
+// });
+VMdPreview.xss.extend({
   // extend white list
   whiteList: {
     source: [],
