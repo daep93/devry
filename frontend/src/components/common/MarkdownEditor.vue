@@ -33,7 +33,11 @@
         class="col-6  preview-shadow q-py-lg"
         :style="{ height: height }"
       >
-        <v-md-preview :text="translation" class="col-6"></v-md-preview>
+        <v-md-editor
+          v-model="translation"
+          mode="preview"
+          class="col-6"
+        ></v-md-editor>
       </q-scroll-area>
     </div>
   </div>
