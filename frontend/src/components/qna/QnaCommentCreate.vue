@@ -4,6 +4,7 @@
       <div class="row col-2"></div>
       <div class="row col-8 q-pr-xl">
         <div class="text-h6 text-weight-bold q-mb-md">새 답변 작성하기</div>
+
         <markdown-editor
           @input="getContents"
           :height="'400px'"

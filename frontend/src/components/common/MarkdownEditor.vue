@@ -1,5 +1,11 @@
 <template>
   <div class="row full-width">
+    <div
+      class="text-primary cursor-pointer full-width"
+      @click="$store.commit('onLiquidGuideModal')"
+    >
+      Liquid 태그 가이드 보기
+    </div>
     <div class="text-grey-4">
       Ctrl+S를 통해서 입력한 내용을 미리 보기할 수 있습니다
     </div>

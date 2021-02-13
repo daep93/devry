@@ -2,6 +2,9 @@ export default {
   isLogined(state) {
     return state.id !== '';
   },
+  getLiquidTagGuideModal(state) {
+    return state.liquidTagGuideModal;
+  },
   getAccountModal(state) {
     return state.accountModal;
   },

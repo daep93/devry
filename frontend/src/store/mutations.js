@@ -12,6 +12,9 @@ export default {
   offFollowModal(state) {
     state.follow.modal = false;
   },
+  onLiquidGuideModal(state) {
+    state.liquidTagGuideModal = true;
+  },
   setAccountModalType(state, type) {
     state.accountModalType = type;
   },
