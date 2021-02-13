@@ -1,3 +1,6 @@
+const iframeReg1 = /<iframe.*iframe>/gis;
+const iframeReg2 = /<iframe.*>/gis;
+const iframeExp = '';
 const youtubeReg = /{% youtube (\S+) (\S+) (\S+) %}/gi;
 const youtubeExp =
   "<div class='row justify-center q-pa-sm full-width'><iframe style='width:$2; height:$3;' src='https://www.youtube.com/embed/$1'></iframe></div>";
@@ -12,6 +15,8 @@ const instagramExp =
   "<div class='row justify-center q-pa-sm full-width'><iframe width='$2' height='$3' src='https://www.instagram.com/p/$1/embed' frameborder='0'></iframe></div>";
 const liquidResolver = str => {
   return str
+    .replace(iframeReg1, iframeExp)
+    .replace(iframeReg2, iframeExp)
     .replace(youtubeReg, youtubeExp)
     .replace(codesandboxReg, codesandboxExp)
     .replace(replReg, replExp)
