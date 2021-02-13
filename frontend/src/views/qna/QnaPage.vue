@@ -49,7 +49,7 @@
           <q-pagination
             v-model="current"
             color="grey"
-            :max="5"
+            :max="max"
             :boundary-links="true"
           >
           </q-pagination>
@@ -77,6 +77,7 @@ export default {
     return {
       current: 1,
       board: [],
+      max: 1,
     };
   },
   methods: {
@@ -92,7 +93,7 @@ export default {
         this.$q.loading.show();
         const { data } = await getQnaList();
         this.board = data;
-        console.log('loadBoard');
+        this.max = Math.ceil(data.length / 10);
         return data;
       } catch (error) {
         console.log(error);
