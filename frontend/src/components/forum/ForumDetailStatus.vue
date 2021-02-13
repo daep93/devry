@@ -7,9 +7,10 @@
           :style="{ color: liked ? 'red' : '#727272' }"
           size="17px"
           class="cursor-pointer"
+          @click="checkLiked"
         ></q-icon>
         <br />
-        <span>5</span>
+        <span>{{ like_num }}</span>
         <br />
         <br />
         <q-icon
@@ -44,9 +45,28 @@ export default {
   data() {
     return {
       liked: false,
+      like_num: 0,
     };
   },
-  methods: {},
+  methods: {
+    async checkLiked() {
+      if (!this.$store.getters.isLogined) {
+        alert('로그인을 해주세요');
+        return;
+      }
+      try {
+        // const { data } = await toggleQnaLike(this.info.post_id);
+        this.liked = !this.liked;
+        if (this.liked) {
+          this.like_num = this.like_num + 1;
+        } else {
+          this.like_num = this.like_num - 1;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
 };
 </script>
 

@@ -10,7 +10,7 @@
       <div class="row col-10 q-mt-lg">
         <div class="col-9">
           <div class="row col-12">
-            <forum-detail-content></forum-detail-content>
+            <forum-detail-content :info="forumBody"></forum-detail-content>
           </div>
         </div>
         <div class="col-3 q-pl-sm q-pr-xl">
@@ -21,9 +21,9 @@
     <div class="row col-12">
       <forum-comment></forum-comment>
     </div>
-    <!-- <div class="row col-12">
-      <qna-comment-create :info="createBigComments"></qna-comment-create>
-    </div> -->
+    <div class="row col-12 q-my-xl">
+      <forum-comment-create></forum-comment-create>
+    </div>
   </div>
 </template>
 
@@ -32,6 +32,8 @@ import ForumShortProfile from '@/components/forum/ForumShortProfile';
 import ForumComment from '@/components/forum/ForumComment';
 import ForumDetailStatus from '@/components/forum/ForumDetailStatus';
 import ForumDetailContent from '@/components/forum/ForumDetailContent';
+import ForumCommentCreate from '@/components/forum/ForumCommentCreate';
+import { loadForumItem } from '@/api/forum';
 
 export default {
   components: {
@@ -39,28 +41,36 @@ export default {
     ForumComment,
     ForumDetailStatus,
     ForumDetailContent,
+    ForumCommentCreate,
   },
   data() {
     return {
-      // forumData: {
-      //   forum_id: 3,
-      //   title: 'Add a YouTube stats widget to your iPhone with JavaScript',
-      //   ref_tags: ['javascript', 'vue'],
-      //   like_num: 5,
-      //   comment_num: 7,
-      //   viewed_num: 50,
-      //   user_idfo : {
-      //     user_id: 3,
-      //     username: 'testuser',
-      //     written_time: '2021-01-06T02:02',
-      //   }
-      // }
+      contents: '',
     };
   },
-  methods: {
-    // goToProfile() {
-    //   this.$router.push({ name: 'Profile' });
-    // },
+  computed: {
+    forumBody() {
+      return {
+        title: this.contents.title,
+        ref_tags: this.contents.ref_tags,
+        content: this.contents.content,
+        written_time: this.contents.written_time,
+        // user_id: this.contents.user.id,
+        // user_name: this.contents.user.username,
+        post_id: this.contents.id,
+      };
+    },
+  },
+  async created() {
+    const index = this.$route.params.id;
+    try {
+      const { data } = await loadForumItem(index);
+      this.contents = data;
+      console.log(this.contents);
+    } catch (error) {
+      console.log(error);
+    }
+    this.$store.commit('offLeft');
   },
 };
 </script>
