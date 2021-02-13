@@ -54,8 +54,13 @@ export default {
       this.content = data;
     },
     async createBigComment() {
+      if (!this.$store.getters.isLogined) {
+        alert('로그인을 해주세요');
+        return;
+      }
       if (this.content === '') {
         alert('댓글 내용을 작성해주세요.');
+        return;
       }
       try {
         this.$q.loading.show();
