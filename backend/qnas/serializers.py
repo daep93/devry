@@ -16,6 +16,12 @@ class QnaImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Qna
         fields = ('title', 'user', 'content', 'ref_tags',)
+class AnsImageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Ans
+        fields = ('user', 'content',)
+
 
 class AnssmalllistSerializer(serializers.ModelSerializer):
     

@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.github',
     'drf_yasg',
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [

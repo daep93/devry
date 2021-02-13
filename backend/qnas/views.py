@@ -13,14 +13,14 @@ from rest_framework.response import Response
 from .serializers import QnaListSerializer, QnasmalllistSerializer, AnssmalllistSerializer, ProfileqnaSerializer, \
     QnaListforamtSerializer, QnaSerializer, AnsSerializer, likeSerializer, bookmarkSerializer, solveSerializer, \
     like_ansSerializer, UserinfoSerializer, ProfileListSerializer, ProfileSerializer, QnasmallSerializer, \
-    AnssmallSerializer, QnadetailSerializer, AnslistSerializer, AnsdetailSerializer, QnaImageSerializer
+    AnssmallSerializer, QnadetailSerializer, AnslistSerializer, AnsdetailSerializer, QnaImageSerializer, AnsImageSerializer
     
 from .models import Qna, Ans, Qnasmall, Anssmall
 from rest_framework import viewsets
 from profiles.models import Profile
 from accounts.models import User
-from image_server.models import QnaValidate
-from image_server.serializers import QnaImageValidationSerializer
+from image_server.models import QnaValidate, AnsValidate
+from image_server.serializers import QnaImageValidationSerializer, AnsImageValidationSerializer
 
 from mysite.utils import jwt_encode
 from rest_auth.models import TokenModel
@@ -118,31 +118,31 @@ def qna_list_create(request):
         if serializer.is_valid(raise_exception=True):
             serializer.save()    
 
-
-        qnas = Qna.objects.all()
+        post_qna = Qna.objects.all()
+        qna = Qna.objects.get(id=QnaSerializer(post_qna[len(post_qna) - 1]).data['id'])
         image_list = []
-        for qna in qnas:
-            post_content = QnaImageSerializer(qna).data['content']
-            for word in range(1, len(post_content)):
-                if post_content[word - 1: word + 1] == '(h':
-                    start_idx = word
-                if post_content[word] == ')':
-                    if start_idx:
-                        if post_content[start_idx: word] not in ['http://', 'https://'] and post_content[start_idx: word][-3:] in ['jpg', 'png', 'jpeg', 'gif', 'svg']:
-                            image_list.append(post_content[start_idx: word])
-
+        post_content = QnaImageSerializer(qna).data['content']
+        for word in range(1, len(post_content)):
+            if post_content[word - 1: word + 1] == '(h':
+                start_idx = word
+            if post_content[word] == ')':
+                if start_idx:
+                    if post_content[start_idx: word][-3:] in ['jpg', 'png', 'jpeg', 'gif', 'svg']:
+                        image_list.append(post_content[start_idx: word])
+        
         qnavalidate = QnaValidate()
+        print(image_list)
         for url in image_list:
             image_url = url
             name = urlparse(image_url).path.split('/')[-1]
             response = requests.get(image_url) 
-
+            print(name)
             if response.status_code == 200:
                 qnavalidate.qna_image.save(name, ContentFile(response.content), save=True)
 
 
 
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
         
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -194,6 +194,8 @@ def qna_detail_update_delete(request, qna_pk):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
     else:
+        qnavalidate = QnaValidate.objects.get(id=qna_pk)
+        qnavalidate.qna_image.delete(save=True)
         qna.delete()
         return Response({ 'id': qna_pk }, status=status.HTTP_204_NO_CONTENT)
 
@@ -242,6 +244,29 @@ def ans_list(request):
         serializer = AnsSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()     
+
+            post_ans = Ans.objects.all()
+
+            ans = Ans.objects.get(id=AnsSerializer(post_ans[len(post_ans) - 1]).data['id'])
+            image_list = []
+            post_content = AnsImageSerializer(ans).data['content']
+            for word in range(1, len(post_content)):
+                if post_content[word - 1: word + 1] == '(h':
+                    start_idx = word
+                if post_content[word] == ')':
+                    if start_idx:
+                        if post_content[start_idx: word][-3:] in ['jpg', 'png', 'jpeg', 'gif', 'svg']:
+                            image_list.append(post_content[start_idx: word])
+            
+            ansvalidate = AnsValidate()
+            print(image_list)
+            for url in image_list:
+                image_url = url
+                name = urlparse(image_url).path.split('/')[-1]
+                response = requests.get(image_url) 
+                print(name)
+                if response.status_code == 200:
+                    ansvalidate.ans_image.save(name, ContentFile(response.content), save=True)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -266,6 +291,8 @@ def ans_detail_update_delete(request, ans_pk):
             serializer.save()
             return Response(serializer.data)
     else:
+        ansvalidate = AnsValidate.objects.get(id=ans_pk)
+        ansvalidate.ans_image.delete(save=True)
         ans.delete()
         return Response({ 'id': ans_pk }, status=status.HTTP_204_NO_CONTENT)
 
