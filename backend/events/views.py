@@ -33,13 +33,6 @@ def event_main_list(request):
 
     if request.method == 'GET':
         events = Event.objects.filter(start__lte=now_day, end__gt=now_day).order_by('start')
-        for event in events:
-            # if str(event.start) < now_day:
-            #     event.state = "Ready"      
-            # if event.end >= now_day:
-            #     event.state = "start"
-            event.save()
-        events = Event.objects.filter(start__lte=now_day, end__gt=now_day).order_by('start')
         serializer = EventMainSerializer(events, many=True)
         return Response(serializer.data)
 

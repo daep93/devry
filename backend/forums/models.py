@@ -65,7 +65,6 @@ class Post(models.Model):
     title = models.CharField(max_length=80)
     ref_tags = MultiSelectField(choices=tech)
     like_num = models.PositiveIntegerField(default=0)
-    comment_num = models.PositiveIntegerField(default=0)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_posts')
     liked = models.BooleanField(default="False")
     bookmark_num = models.PositiveIntegerField(default=0)

@@ -8,6 +8,7 @@ export default {
   id: getUserIdFromCookie() || '',
   token: getAuthFromCookie() || '',
   nickname: getUserNicknameFromCookie() || '',
+  liquidTagGuideModal: false,
   accountModal: false,
   accountModalType: 'login',
   follow: {

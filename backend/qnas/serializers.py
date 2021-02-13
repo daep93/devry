@@ -36,12 +36,6 @@ class ProfileqnaSerializer(serializers.ModelSerializer):
         fields = ('user', 'username', 'profile_img', 'bio')
 # 'post_num' is_following,is_following추가해야함
 
-class ProfileQnaSerializer(serializers.ModelSerializer):
-    
-    class Meta:
-        model = Qna
-        fields = ('id', 'title', 'username', 'written_time', 'thumbnail', 'like_num', 'comment_num', 'ref_tags',)
-
 
 class QnasmallSerializer(serializers.ModelSerializer):
     
@@ -78,6 +72,11 @@ class QnaListforamtSerializer(serializers.ModelSerializer):
         read_only=True,
     )
     
+    comment_num = serializers.IntegerField(
+        source='ans_set.count',
+        read_only=True,
+    )
+
     class Meta:
         model = Qna
         fields = ('id', 'title','user', 'written_time', 'ref_tags', 'like_num', 'comment_num', 'viewed_num', 'solved', 'liked', 'profile')
@@ -86,6 +85,11 @@ class QnaListforamtSerializer(serializers.ModelSerializer):
 class QnaListSerializer(serializers.ModelSerializer):
     
     profile = ProfileqnaListSerializer(
+        read_only=True,
+    )
+
+    comment_num = serializers.IntegerField(
+        source='ans_set.count',
         read_only=True,
     )
     
@@ -178,9 +182,14 @@ class AnsinfoSerializer(serializers.ModelSerializer):
         read_only=True,
     )
 
+    comment_anssmall_num = serializers.IntegerField(
+        source='anssmall_set.count',
+        read_only=True,
+    )
+
     class Meta:
         model = Ans
-        fields = ('id', 'assisted', 'like_ans_num','user', 'content', 'qna', 'written_time', 'liked_ans', 'anssmall_set', 'profile')
+        fields = ('id', 'assisted', 'like_ans_num','user', 'content', 'qna', 'written_time', 'liked_ans', 'anssmall_set', 'comment_anssmall_num','profile')
 
 
 class QnadetailSerializer(serializers.ModelSerializer):
@@ -203,17 +212,16 @@ class QnadetailSerializer(serializers.ModelSerializer):
     ans_set = AnsinfoSerializer(
         many=True,
         read_only=True,
-        
     )
 
-    ans_count = serializers.IntegerField(
+    comment_num = serializers.IntegerField(
         source='ans_set.count',
         read_only=True,
     )
 
     class Meta:
         model = Qna
-        fields = ('id','profile', 'title','written_time', 'ref_tags', 'solved', 'like_num', 'ans_count',
+        fields = ('id','profile', 'title','written_time', 'ref_tags', 'solved', 'like_num', 'comment_num',
         'viewed_num', 'bookmark_num','content', 'qnasmall_set', 'ans_set', 'liked', 'bookmarked','user' )
 
 
@@ -232,7 +240,7 @@ class QnaSerializer(serializers.ModelSerializer):
         read_only=True,   
     )
 
-    ans_count = serializers.IntegerField(
+    comment_num = serializers.IntegerField(
         source='ans_set.count',
         read_only=True,
     )
@@ -240,7 +248,7 @@ class QnaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Qna
         fields = ('id','title','user','profile','content','ref_tags', 'liked', 'like_num', 'bookmarked',
-        'solved','bookmark_num', 'viewed_num', 'written_time','ans_set', 'ans_count','qnasmall_set')
+        'solved','bookmark_num', 'viewed_num', 'written_time','ans_set', 'comment_num','qnasmall_set')
 
 
 class likeSerializer(serializers.ModelSerializer):

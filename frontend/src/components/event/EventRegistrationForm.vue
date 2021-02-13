@@ -84,68 +84,28 @@
             stack-label
             label-slot
             outlined
-            v-model="sdata"
-            placeholder="이벤트 시작일을 입력해주세요"
+            v-model="start"
+            placeholder="이벤트 시작일과 시간을 입력해주세요"
           >
             <template v-slot:label>
-              <span class="text-primary">시작일</span>
+              <span class="text-primary">시작일정</span>
               <br />
             </template>
-            <template v-slot:append>
+            <template v-slot:prepend>
               <q-icon name="event" class="cursor-pointer">
                 <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
-                  <q-date v-model="sdata">
+                  <q-date v-model="start" mask="YYYY-MM-DD HH:mm">
                     <div class="row items-center justify-end">
                       <q-btn v-close-popup label="Close" color="primary" flat />
                     </div>
                   </q-date>
                 </q-popup-proxy>
               </q-icon>
-            </template>
-          </q-input>
-          <q-input 
-            class="col-6"
-            stack-label
-            label-slot
-            outlined
-            v-model="edata"
-            placeholder="이벤트 종료일을 입력해주세요"
-          >
-            <template v-slot:label>
-              <span class="text-primary">종료일</span>
-              <br />
-            </template>
-            <template v-slot:append>
-              <q-icon name="event" class="cursor-pointer">
-                <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
-                  <q-date v-model="edata">
-                    <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Close" color="primary" flat />
-                    </div>
-                  </q-date>
-                </q-popup-proxy>
-              </q-icon>
-            </template>
-          </q-input>
-        </div>
-        <!-- 이벤트 시간 -->
-        <div class="full-width row q-mb-xl">
-          <q-input 
-            class="col-6 q-pr-sm"
-            stack-label
-            label-slot
-            outlined
-            v-model="stime"
-            placeholder="시작 시간을 입력해주세요"
-          >
-            <template v-slot:label>
-              <span class="text-primary">시작시간</span>
-              <br />
             </template>
             <template v-slot:append>
               <q-icon name="access_time" class="cursor-pointer">
                 <q-popup-proxy transition-show="scale" transition-hide="scale">
-                  <q-time v-model="stime">
+                  <q-time v-model="start" mask="YYYY-MM-DD HH:mm" format24h>
                     <div class="row items-center justify-end">
                       <q-btn v-close-popup label="Close" color="primary" flat />
                     </div>
@@ -159,17 +119,28 @@
             stack-label
             label-slot
             outlined
-            v-model="etime"
-            placeholder="종료 시간을 입력해주세요"
+            v-model="end"
+            placeholder="이벤트 종료일과 시간을 입력해주세요"
           >
             <template v-slot:label>
-              <span class="text-primary">종료시간</span>
+              <span class="text-primary">종료일정</span>
               <br />
+            </template>
+            <template v-slot:prepend>
+              <q-icon name="event" class="cursor-pointer">
+                <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
+                  <q-date v-model="end" mask="YYYY-MM-DD HH:mm">
+                    <div class="row items-center justify-end">
+                      <q-btn v-close-popup label="Close" color="primary" flat />
+                    </div>
+                  </q-date>
+                </q-popup-proxy>
+              </q-icon>
             </template>
             <template v-slot:append>
               <q-icon name="access_time" class="cursor-pointer">
                 <q-popup-proxy transition-show="scale" transition-hide="scale">
-                  <q-time v-model="etime">
+                  <q-time v-model="end" mask="YYYY-MM-DD HH:mm" format24h>
                     <div class="row items-center justify-end">
                       <q-btn v-close-popup label="Close" color="primary" flat />
                     </div>
@@ -276,7 +247,7 @@
         <div class="row q-mb-xl relative-position">
           <!-- 프로필 이미지 등록 -->
           <q-img
-            :src="host_info.profile_img"
+            :src="profile_img"
             spinner-color="white"
             style="height: 127px; max-width: 250px; "
             class="rounded-borders col-3"
@@ -305,11 +276,27 @@
             stack-label
             label-slot
             outlined
-            v-model="host_info.host_name"
+            v-model="host_name"
             placeholder="호스트 명을 입력해주세요"
           >
             <template v-slot:label>
               <span class="text-primary">호스트 이름</span>
+              <br />
+            </template>
+          </q-input>
+        </div>
+        <!-- 이벤트 등록 url -->
+        <div class="full-width q-mb-xl">
+          <q-input
+            class="col-12"
+            stack-label
+            label-slot
+            outlined
+            v-model="register_url"
+            placeholder="이벤트 등록을 위한 url을 입력해주세요"
+          >
+            <template v-slot:label>
+              <span class="text-primary">이벤트 등록 URL</span>
               <br />
             </template>
           </q-input>
@@ -365,18 +352,15 @@ export default {
         '컨퍼런스', '워크샵', '해커톤', '경진대회', '모임'
       ],
       location: '',
-      sdata: '',
-      edata: '',
-      stime: '',
-      etime: '',
+      start: '',
+      end: '',
       cost: '',
       participation: '',
       introduction: '',
       schedule: '',
-      host_info: {
-        host_name: '',
-        profile_img: 'https://placeimg.com/500/300/nature',
-      },
+      host_name: '',
+      profile_img: 'https://placeimg.com/500/300/nature',
+      register_url: '',
       ref_tags: [],
     }
   },
