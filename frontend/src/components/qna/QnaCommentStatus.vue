@@ -32,7 +32,7 @@
             size="17px"
           ></q-icon>
           <br />
-          <span>0</span>
+          <span>{{ info.comment_anssmall_num }}</span>
           <br />
           <br />
         </div>
