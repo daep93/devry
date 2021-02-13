@@ -20,7 +20,10 @@ urlpatterns = [
     path('qna_like/<int:qna_pk>/', views.like),
     path('qna_bookmark/<int:qna_pk>/', views.bookmark),
     path('qna_solved/<int:ans_pk>/', views.solve),
- 
+    path('qna/mybookmark/', views.qna_mybookmark),
+    path('qna/myqna/', views.qna_myqna),
+    path('qna/myans/', views.qna_myans),
+
     path('ans/', views.ans_list),
     path('ans/<int:ans_pk>/', views.ans_detail_update_delete),
     path('ans_like/<int:ans_pk>/', views.like_ans),

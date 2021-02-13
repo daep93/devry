@@ -175,10 +175,3 @@ class bookmarkSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ('id', "bookmarked")
-
-
-class TagSerialier(serializers.ModelSerializer):
-    
-    class Meta:
-        model = Post
-        fields = ('author', 'ref_tags_count', )  

@@ -26,7 +26,7 @@ class EventListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Event
-        fields = ('id', 'thumnail', 'category', 'title', 'ref_tags', 'start_day', 'end_day', 'host_name', 'profile_img', 'bookmarked', 'viewed_num', 'bookmark_num', 'user')
+        fields = ('id', 'thumnail', 'category', 'title', 'ref_tags', 'start', 'end', 'host_name', 'profile_img', 'bookmarked', 'viewed_num', 'bookmark_num', 'user')
 
 
 class EventdetailSerializer(serializers.ModelSerializer):
@@ -39,7 +39,7 @@ class EventdetailSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Event
-        fields = ('id', 'state', 'thumnail', 'title', 'category', 'place', 'start', 'end', 'start_day', 'end_day', 'cost', 'participation', 'introduction', 'schedule',
+        fields = ('id', 'state', 'thumnail', 'title', 'category', 'place', 'start', 'end', 'start', 'end', 'cost', 'participation', 'introduction', 'schedule',
         'host_name', 'profile_img', 'register_url', 'ref_tags', 'bookmarked', 'bookmark_num', 'viewed_num', 'user')
 
 
@@ -49,7 +49,7 @@ class EventSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Event
-        fields = ('id', 'state', 'thumnail', 'title', 'category', 'place', 'start', 'end', 'start_day', 'end_day', 'cost', 'participation', 'introduction', 'schedule',
+        fields = ('id', 'state', 'thumnail', 'title', 'category', 'place', 'start', 'end', 'cost', 'participation', 'introduction', 'schedule',
        'host_name', 'profile_img', 'register_url', 'ref_tags', 'bookmarked', 'bookmark_num', 'viewed_num', 'user')
 
 
@@ -58,3 +58,14 @@ class bookmarkSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = ('id', "bookmarked")
+
+
+class mybookmarkSerializer(serializers.ModelSerializer):
+         
+    user = UserinfoSerializer(
+        read_only=True,
+    )
+
+    class Meta:
+        model = Event
+        fields = ('id', 'thumnail', 'category', 'title', 'ref_tags', 'start', 'end', 'host_name', 'profile_img', 'bookmarked', 'viewed_num', 'bookmark_num', 'user')
