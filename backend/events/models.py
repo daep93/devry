@@ -61,8 +61,6 @@ class Event(models.Model):
     place = models.CharField(max_length=70, default="")
     start = models.DateTimeField()
     end = models.DateTimeField()
-    start_day = models.DateField()
-    end_day = models.DateField()
     cost = models.CharField(max_length=50, default="")
     participation = models.CharField(max_length=50, default="")
     introduction = models.TextField(default="")

@@ -316,3 +316,62 @@ def bookmark(request, post_pk):
             # bookmark
             post.bookmark_users.add(request.user)
             return Response("bookmark")
+
+
+@api_view(['GET'])
+def forum_mybookmark(request):
+    """
+    my bookmark 목록 불러오기
+
+    ---
+    """
+    if request.META.get('HTTP_AUTHORIZATION'):
+        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user=User.objects.get(id=tok.user_id)
+        request.user = user
+
+    if request.method == 'GET':
+        mark=[]
+        posts = Post.objects.all()
+        for post in posts:
+            if post.bookmark_users.filter(id=request.user.pk).exists():
+                mark.append(post)
+        
+        serializer = PostListforamtSerializer(mark, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['GET'])
+def forum_mypost(request):
+    """
+    내가 작성한 forum 작성 글 목록 불러오기
+
+    ---
+    """
+    if request.META.get('HTTP_AUTHORIZATION'):
+        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user=User.objects.get(id=tok.user_id)
+        request.user = user
+
+    if request.method == 'GET':
+        post = Post.objects.filter(user_id=request.user.pk)
+        serializer = PostListforamtSerializer(post, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['GET'])
+def forum_mycomment(request):
+    """
+    내가 작성한 forum 댓글 목록 불러오기
+
+    ---
+    """
+    if request.META.get('HTTP_AUTHORIZATION'):
+        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user=User.objects.get(id=tok.user_id)
+        request.user = user
+
+    if request.method == 'GET':
+        comment = Comment.objects.filter(user_id=request.user.pk)
+        serializer = CommentlistSerializer(comment, many=True)
+        return Response(serializer.data)

@@ -9,7 +9,7 @@ from .models import Event
 from rest_framework import viewsets
 from profiles.models import Profile
 import datetime
-
+from accounts.models import User
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
@@ -192,3 +192,26 @@ def bookmark(request, event_pk):
             # bookmark
             event.bookmark_users.add(request.user)
             return Response("bookmark")
+
+
+@api_view(['GET'])
+def event_mybookmark(request):
+    """
+    my bookmark 목록 불러오기
+
+    ---
+    """
+    if request.META.get('HTTP_AUTHORIZATION'):
+        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user=User.objects.get(id=tok.user_id)
+        request.user = user
+
+    if request.method == 'GET':
+        mark=[]
+        events = Event.objects.all()
+        for event in events:
+            if event.bookmark_users.filter(id=request.user.pk).exists():
+                mark.append(event)
+        
+        serializer = EventListSerializer(mark, many=True)
+        return Response(serializer.data)
