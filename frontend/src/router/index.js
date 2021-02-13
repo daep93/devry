@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import state from '@/store/state';
+import store from '@/store/index';
 Vue.use(VueRouter);
 
 const routes = [
@@ -23,6 +23,13 @@ const routes = [
     path: '/profile-setting',
     name: 'ProfileSetting',
     component: () => import('@/views/profile/ProfileSettingPage.vue'),
+    beforeEnter: (to, from, next) => {
+      if (!store.getters.isLogined) {
+        alert('로그인이 필요합니다');
+        return;
+      }
+      next();
+    },
   },
   {
     path: '/twit',
@@ -43,11 +50,25 @@ const routes = [
     path: '/qna/create',
     name: 'QnACreate',
     component: () => import('@/views/common/PostCreatePage.vue'),
+    beforeEnter: (to, from, next) => {
+      if (!store.getters.isLogined) {
+        alert('로그인이 필요합니다');
+        return;
+      }
+      next();
+    },
   },
   {
     path: '/qna/:id',
     name: 'QnAUpdate',
     component: () => import('@/views/common/PostUpdatePage.vue'),
+    beforeEnter: (to, from, next) => {
+      if (!store.getters.isLogined) {
+        alert('로그인이 필요합니다');
+        return;
+      }
+      next();
+    },
   },
   {
     path: '/forum',
@@ -75,6 +96,13 @@ const routes = [
     path: '/event-registration',
     name: 'EventRegistration',
     component: () => import('@/views/event/EventRegistrationPage.vue'),
+    beforeEnter: (to, from, next) => {
+      if (!store.getters.isLogined) {
+        alert('로그인이 필요합니다');
+        return;
+      }
+      next();
+    },
   },
   {
     path: '/jobs',
