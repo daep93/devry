@@ -277,3 +277,23 @@ class solveSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ans
         fields = ('id', "assisted")
+
+
+class mybookmarkSerializer(serializers.ModelSerializer):
+    
+    user = UserinfoSerializer(
+        read_only=True,
+    )
+
+    profile = ProfileqnaListSerializer(
+        read_only=True,
+    )
+    
+    comment_num = serializers.IntegerField(
+        source='ans_set.count',
+        read_only=True,
+    )
+
+    class Meta:
+        model = Qna
+        fields = ('id', 'title','user', 'written_time', 'ref_tags', 'like_num', 'comment_num', 'viewed_num', 'solved', 'liked', 'profile')

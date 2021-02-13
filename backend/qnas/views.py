@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from .serializers import QnaListSerializer, QnasmalllistSerializer, AnssmalllistSerializer, ProfileqnaSerializer, \
     QnaListforamtSerializer, QnaSerializer, AnsSerializer, likeSerializer, bookmarkSerializer, solveSerializer, \
     like_ansSerializer, UserinfoSerializer, ProfileListSerializer, ProfileSerializer, QnasmallSerializer, \
-    AnssmallSerializer, QnadetailSerializer, AnslistSerializer, AnsdetailSerializer
+    AnssmallSerializer, QnadetailSerializer, AnslistSerializer, AnsdetailSerializer,AnslistformatSerializer
     
 from .models import Qna, Ans, Qnasmall, Anssmall
 from rest_framework import viewsets
@@ -301,7 +301,7 @@ def bookmark(request, qna_pk):
         tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
         user=User.objects.get(id=tok.user_id)
         request.user=user
-        qna = get_object_or_404(Qna, pk=qna_pk)
+    qna = get_object_or_404(Qna, pk=qna_pk)
     if request.method == 'GET':
         if qna.bookmark_users.filter(pk=request.user.pk).exists():
             qna.bookmarked="True"
@@ -523,4 +523,61 @@ def ans_detail_update_delete_small(request, anssmall_pk):
         return Response({'id': anssmall_pk}, status=status.HTTP_204_NO_CONTENT)
         
 
+@api_view(['GET'])
+def qna_mybookmark(request):
+    """
+    my bookmark 목록 불러오기
+
+    ---
+    """
+    if request.META.get('HTTP_AUTHORIZATION'):
+        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user=User.objects.get(id=tok.user_id)
+        request.user = user
+
+    if request.method == 'GET':
+        mark=[]
+        qnas = Qna.objects.all()
+        for qna in qnas:
+            if qna.bookmark_users.filter(id=request.user.pk).exists():
+                mark.append(qna)
+        
+        serializer = QnaListforamtSerializer(mark, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['GET'])
+def qna_myqna(request):
+    """
+    내가 작성한 qna 작성 글 목록 불러오기
+
+    ---
+    """
+    if request.META.get('HTTP_AUTHORIZATION'):
+        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user=User.objects.get(id=tok.user_id)
+        request.user = user
+
+    if request.method == 'GET':
+        qna = Qna.objects.filter(user_id=request.user.pk)
+        serializer = QnaListforamtSerializer(qna, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['GET'])
+def qna_myans(request):
+    """
+    내가 작성한 ans 작성 큰댓글 목록 불러오기
+
+    ---
+    """
+    if request.META.get('HTTP_AUTHORIZATION'):
+        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user=User.objects.get(id=tok.user_id)
+        request.user = user
+
+    if request.method == 'GET':
+        ans = Ans.objects.filter(user_id=request.user.pk)
+        serializer = AnslistformatSerializer(ans, many=True)
+        return Response(serializer.data)
         
