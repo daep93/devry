@@ -73,7 +73,7 @@ class Post(models.Model):
     viewed_num = models.PositiveIntegerField(default=0)
     written_time = models.DateTimeField(auto_now_add=True)
     content = models.TextField()
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, related_name='post_profile')
+    writer_info = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, related_name='post_profile')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     user_info = models.ForeignKey(Profile, on_delete=models.CASCADE,null=True, related_name='post_userinfo')
 
