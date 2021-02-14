@@ -24,7 +24,7 @@
         <br />
         <q-icon :name="$i.ionEyeOutline" color="grey-6" size="17px"></q-icon>
         <br />
-        <span>{{ info.viewed_num }}</span>
+        <span>{{ info.viewed_num | formatNumber }}</span>
         <br />
         <br />
         <q-icon
