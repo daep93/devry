@@ -1,6 +1,6 @@
 <template>
   <div class="q-pl-md">
-    <q-card flat bordered style="width: 40px; height: 245px;">
+    <q-card flat bordered style="width: 50px; height: 245px;">
       <div style="margin:0 auto; text-align:center" class="q-pt-sm">
         <q-icon
           :name="liked ? $i.ionHeart : $i.ionHeartOutline"
@@ -19,7 +19,7 @@
           size="17px"
         ></q-icon>
         <br />
-        <span>{{ info.comment.length }}</span>
+        <span>{{ info.comment_num }}</span>
         <br />
         <br />
         <q-icon :name="$i.ionEyeOutline" color="grey-6" size="17px"></q-icon>

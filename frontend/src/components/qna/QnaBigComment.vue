@@ -123,6 +123,14 @@
             <!-- 큰 댓글의 작은 댓글 -->
             <q-card-section class="row col-12">
               <template v-if="data.anssmall_set.length">
+                <div class="row full-width items-end q-mb-xs">
+                  <q-icon
+                    :name="$i.ionChatbubblesOutline"
+                    style="color:#727272"
+                    size="sm"
+                  ></q-icon>
+                  <span>댓글 {{ data.anssmall_set.length }}개</span>
+                </div>
                 <q-separator />
               </template>
               <qna-recomment
