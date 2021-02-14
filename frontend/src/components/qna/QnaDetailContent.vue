@@ -84,6 +84,14 @@
       </div>
       <q-card-section class="row col-12">
         <template v-if="info.comments.length">
+          <div class="row full-width items-end q-mb-xs">
+            <q-icon
+              :name="$i.ionChatbubblesOutline"
+              style="color:#727272"
+              size="sm"
+            ></q-icon>
+            <span>댓글 {{ info.comments.length }}개</span>
+          </div>
           <q-separator />
         </template>
         <qna-small-comment
