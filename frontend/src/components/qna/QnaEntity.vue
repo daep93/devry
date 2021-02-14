@@ -52,7 +52,7 @@
       <div class="row col-2  items-center ">
         <q-icon :name="$i.ionEyeOutline" size="sm" color="grey-6"></q-icon>
         <span class="q-pl-xs text-grey-8" style="font-size:1.2em;">{{
-          entity.viewed_num
+          entity.viewed_num | formatNumber
         }}</span>
       </div>
       <div class="row col-6 items-center justify-center q-py-xs ">

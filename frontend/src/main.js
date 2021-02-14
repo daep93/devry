@@ -4,6 +4,7 @@ import router from './router';
 import store from './store';
 import VueMoment from 'vue-moment';
 import './quasar';
+// Resources for the basic markdown editor
 import VMdEditor from '@kangc/v-md-editor/lib/codemirror-editor';
 import VMdPreview from '@kangc/v-md-editor/lib/preview';
 import '@kangc/v-md-editor/lib/style/preview.css';
@@ -21,6 +22,8 @@ import 'codemirror/addon/selection/active-line';
 import 'codemirror/addon/scroll/simplescrollbars';
 import 'codemirror/addon/scroll/simplescrollbars.css';
 import 'codemirror/lib/codemirror.css';
+// filter
+import { formatNumber } from '@/utils/filters';
 
 VMdEditor.lang.use('ko-KR', koKR);
 VMdEditor.Codemirror = Codemirror;
@@ -44,25 +47,7 @@ Vue.use(VMdEditor);
 Vue.use(VueMoment);
 Vue.config.productionTip = false;
 
-import Plugin from '@quasar/quasar-ui-qmarkdown';
-import '@quasar/quasar-ui-qmarkdown/dist/index.css';
-
-Vue.use(Plugin);
-
-// import {
-//   Quasar,
-//   Notify
-// } from 'quasar'
-
-// Vue.use(Quasar, {
-//   plugins: {
-//     Notify
-//   },
-//   config: {
-//     notify: { /* look at QUASARCONFOPTIONS from the API card (bottom of page) */ }
-//   }
-// })
-
+Vue.filter('formatNumber', formatNumber);
 new Vue({
   router,
   store,

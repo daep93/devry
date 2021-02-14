@@ -75,7 +75,7 @@ export default {
         bookmarked: this.contents.bookmarked,
         bookmark_num: this.contents.bookmark_num,
         viewed_num: this.contents.viewed_num,
-        comment: this.contents.qnasmall_set,
+        comment_num: this.contents.comment_num,
         post_id: this.contents.id,
       };
     },

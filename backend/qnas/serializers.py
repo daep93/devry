@@ -10,6 +10,18 @@ class UserinfoSerializer(serializers.ModelSerializer):
         model = User
         fields = ( 'id', 'username')
 
+#  추가했음
+class QnaImageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Qna
+        fields = ('title', 'user', 'content', 'ref_tags',)
+class AnsImageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Ans
+        fields = ('user', 'content',)
+
 
 class AnssmalllistSerializer(serializers.ModelSerializer):
     
@@ -247,7 +259,7 @@ class QnaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Qna
-        fields = ('id','title','user','profile','content','ref_tags', 'liked', 'like_num', 'bookmarked',
+        fields = ('id','title','user','profile','content','ref_tags', 'liked', 'like_num', 'bookmarked', 'pinned', 'pinned_num',
         'solved','bookmark_num', 'viewed_num', 'written_time','ans_set', 'comment_num','qnasmall_set')
 
 
@@ -271,6 +283,11 @@ class bookmarkSerializer(serializers.ModelSerializer):
         model = Qna
         fields = ('id', "bookmarked")
 
+class pinnedSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Qna
+        fields = ('id', 'pinned',)
 
 class solveSerializer(serializers.ModelSerializer):
     

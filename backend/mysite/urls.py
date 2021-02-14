@@ -84,6 +84,7 @@ urlpatterns = [
     path('', include('events.urls')),
     path('', include('qnas.urls')),
     path('', include('forums.urls')),
+    path('', include('image_server.urls')),
     url(r'^swagger/qna/$', schema_view_v1.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     url(r'^swagger/event/$', schema_view_v2.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     url(r'^swagger/forum/$', schema_view_v3.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
