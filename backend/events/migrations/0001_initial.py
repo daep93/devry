@@ -26,6 +26,8 @@ class Migration(migrations.Migration):
                 ('place', models.CharField(default='', max_length=70)),
                 ('start', models.DateTimeField()),
                 ('end', models.DateTimeField()),
+                ('start_day', models.DateField()),
+                ('end_day', models.DateField()),
                 ('cost', models.CharField(default='', max_length=50)),
                 ('participation', models.CharField(default='', max_length=50)),
                 ('introduction', models.TextField(default='')),

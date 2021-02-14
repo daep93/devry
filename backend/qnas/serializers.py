@@ -10,6 +10,18 @@ class UserinfoSerializer(serializers.ModelSerializer):
         model = User
         fields = ( 'id', 'username')
 
+#  추가했음
+class QnaImageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Qna
+        fields = ('title', 'user', 'content', 'ref_tags',)
+class AnsImageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Ans
+        fields = ('user', 'content',)
+
 
 class AnssmalllistSerializer(serializers.ModelSerializer):
     

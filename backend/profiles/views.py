@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django.db.models import F
 
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -36,16 +37,7 @@ class PostViewSet(viewsets.ModelViewSet):
 @api_view(['GET', 'POST'])
 def profile_list_create(request):
     '''
-    사용자의 profile을 생성할 수 있습니다.
-    GET Method의 경우 프로필 정보들을 조회하고, 
-    POST Method의 경우 프로필을 생성합니다.
-    필수 값은 다음과 같습니다.
-    {
-        "user": user_pk,
-        "teck_stack": ["stack"],
-        "tag": ["tag"]
-    }
-    
+    GET Method를 통해 사용자들의 프로필을 조회할 수 있습니다.
     '''
     if request.method == 'GET':
         profiles = Profile.objects.all()
@@ -73,22 +65,22 @@ def profile_list_create(request):
 
         return Response(serializer.data)
         
-    else:
-        serializer = ProfileSerializer(data=request.data)
-        target_user = User.objects.get(pk=request.data['user'])
-        target_user_joined = UserJoinedSerializer(target_user).data['date_joined']        # 프로필을 만드려는 사용자가 회원가입한 시점
+    # else:
+    #     serializer = ProfileSerializer(data=request.data)
+    #     target_user = User.objects.get(pk=request.data['user'])
+    #     target_user_joined = UserJoinedSerializer(target_user).data['date_joined']        # 프로필을 만드려는 사용자가 회원가입한 시점
 
-        if serializer.is_valid(raise_exception=True):
+    #     if serializer.is_valid(raise_exception=True):
 
-            serializer.validated_data['email'] = UserSerializer(target_user).data['email']
-            serializer.validated_data['username'] = UserSerializer(target_user).data['username']
-            serializer.validated_data['joined'] = target_user_joined
-            # followers, following은 UserSerializer 내부에서 OrderedDict 형태로 확인이 가능합니다. 각각 id, user, following_user, created(팔로잉한 시간)으로 구성되어 있습니다.(accounts.models.py 참고)
-            serializer.validated_data['followee_num'] = len(UserSerializer(target_user).data['followers'])   # 사용자를 팔로우하고 있는 사용자들의 수
-            serializer.validated_data['follower_num'] = len(UserSerializer(target_user).data['following'])   # 사용자가 팔로우하고 있는 사용자들의 수
+    #         serializer.validated_data['email'] = UserSerializer(target_user).data['email']
+    #         serializer.validated_data['username'] = UserSerializer(target_user).data['username']
+    #         serializer.validated_data['joined'] = target_user_joined
+    #         # followers, following은 UserSerializer 내부에서 OrderedDict 형태로 확인이 가능합니다. 각각 id, user, following_user, created(팔로잉한 시간)으로 구성되어 있습니다.(accounts.models.py 참고)
+    #         serializer.validated_data['followee_num'] = len(UserSerializer(target_user).data['followers'])   # 사용자를 팔로우하고 있는 사용자들의 수
+    #         serializer.validated_data['follower_num'] = len(UserSerializer(target_user).data['following'])   # 사용자가 팔로우하고 있는 사용자들의 수
         
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+    #         serializer.save()
+    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 @api_view(['GET'])
@@ -97,7 +89,6 @@ def profile_show(request, profile_pk):
     GET Method를 통해 사용자의 상세 프로필을 조회합니다. 
     '''
     profile = get_object_or_404(Profile, pk=profile_pk) 
-    # comments = Comment.objects.all()
     
     real_tags = []
     tags_list = {
@@ -139,6 +130,12 @@ def profile_show(request, profile_pk):
         profile_user = User.objects.get(pk=ProfileSerializer(profile).data['user'])
 
 
+        serializer.data['followee_num'] = (UserSerializer(profile_user).data['followee_num'])
+        serializer.data['follower_num'] = ((UserSerializer(profile_user).data['follower_num']))
+
+
+
+
         # 모든 qna에서의 글 중 사용자가 쓴 글만 불러오고, 해당 글에서 참조된 태그들을 추가하는 과정
         all_qnas = Qna.objects.filter(user=UserJoinedSerializer(profile).data['id'])
         for some_qna in all_qnas:
@@ -150,18 +147,18 @@ def profile_show(request, profile_pk):
             if tags_list[single_tag] > 0:
                 real_tags.append({single_tag: tags_list[single_tag]})
 
+        # User정보 안에 저장된 follow 내역들을 profile에 저장하는 과정
         profile.follower_num = profile_user.follower_num
         profile.followee_num = profile_user.followee_num
         profile.save()
 
-
-        qna_data = []
-
+        # 사용자가 작성한 qna, ans, pinned한 글들만 filter해줌
         qnas = Qna.objects.filter(user=ProfileSerializer(profile).data['user'])
         comments = Ans.objects.filter(user=ProfileSerializer(profile).data['user'])
         pinned_posts = Qna.objects.filter(user=pinnedSerializer(profile).data['id'])  
         print(qnas)  
         print(pinned_posts)
+        # 사용자 프로필의 각 필드에 해당 정보들을 추가해서 보여주는 과정
         for qna in qnas:
             serializer.data['posts'].append(QnaSerializer(qna).data)
         for comment in comments:
@@ -173,6 +170,7 @@ def profile_show(request, profile_pk):
         for real in real_tags:
             serializer.data['tags'].append(real)
 
+        # 저장된 sns_name, sns_url, project_name, project_url들을 각각 links와 projects에 추가해 보여주는 과정
         for number in range(1, 4):
             sns_name = 'sns_name' + str(number)
             sns_url = 'sns_url' + str(number)
@@ -198,8 +196,11 @@ def profile_setting(request, profile_pk):
     '''
 
     profile = get_object_or_404(Profile, pk=profile_pk)
-
+    new_profile = Profile.objects.filter(pk=profile_pk).first()
+    print(new_profile)
     user = User.objects.filter(pk=ProfileSerializer(profile).data['user']).first()
+    
+
 
     profile_links = [
     {
@@ -231,26 +232,10 @@ def profile_setting(request, profile_pk):
     }
     ]
 
-
     if request.META['HTTP_AUTHORIZATION'] == TokenSerializer(user.auth_token).data['key']:
         if request.method == 'GET':
             serializer = ProfileListSerializer(profile)
-
-            # email_user = User.objects.get(pk=ProfileListSerializer(profile).data['user'])
-
-            for number in range(1, 4):
-                sns_name = 'sns_name' + str(number)
-                sns_url = 'sns_url' + str(number)
-
-                project_name = 'project_name' + str(number)
-                project_url = 'project_url' + str(number)
-
-                if ProfileSerializer(profile).data[sns_name] and ProfileSerializer(profile).data[sns_url]:
-                    serializer.data['links'].append({ProfileSerializer(profile).data[sns_name]: ProfileSerializer(profile).data[sns_url]})
-
-                if ProfileSerializer(profile).data[project_name] and ProfileSerializer(profile).data[project_url]:
-                    serializer.data['projects'].append({ProfileSerializer(profile).data[project_name]: ProfileSerializer(profile).data[project_url]})
-
+            print(serializer.data)
 
             return Response(serializer.data)
 

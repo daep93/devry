@@ -1,3 +1,9 @@
+import json
+import requests
+import urllib.request
+from django.http import HttpResponse, FileResponse
+from urllib.parse import urlparse
+
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -6,8 +12,10 @@ from rest_framework.response import Response
 from .serializers import QnaListSerializer, QnasmalllistSerializer, AnssmalllistSerializer, ProfileqnaSerializer, \
     QnaListforamtSerializer, QnaSerializer, AnsSerializer, likeSerializer, bookmarkSerializer, solveSerializer, \
     like_ansSerializer, UserinfoSerializer, ProfileListSerializer, ProfileSerializer, QnasmallSerializer, \
-    AnssmallSerializer, QnadetailSerializer, AnslistSerializer, AnsdetailSerializer,AnslistformatSerializer, pinnedSerializer
-    
+    AnssmallSerializer, QnadetailSerializer, AnslistSerializer, AnsdetailSerializer,AnslistformatSerializer, pinnedSerializer, QnaImageSerializer, AnsImageSerializer
+
+from image_server.models import QnaValidate, AnsValidate
+from image_server.serializers import QnaImageValidationSerializer, AnsImageValidationSerializer
 from .models import Qna, Ans, Qnasmall, Anssmall
 from rest_framework import viewsets
 from profiles.models import Profile
@@ -16,7 +24,12 @@ from mysite.utils import jwt_encode
 from rest_auth.models import TokenModel
 from rest_framework.authtoken.models import Token
 from mysite.app_settings import TokenSerializer
+import json
+import requests
+from urllib.parse import urlparse
+from django.core.files.base import ContentFile
 
+from django.http import HttpResponse, JsonResponse
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Qna.objects.all()
@@ -36,6 +49,8 @@ class QnasmallViewSet(viewsets.ModelViewSet):
 class AnssmallViewSet(viewsets.ModelViewSet):
     queryset = Anssmall.objects.all()
     serializer_class = AnssmallSerializer
+
+    
 
 
 @api_view(['GET'])
@@ -89,6 +104,8 @@ def qna_list_create(request):
             qna.save()
             # qna number in user_id -> It will be "True"
         serializer = QnaListSerializer(qnas, many=True)
+
+
         return Response(serializer.data) 
     else:
         profiles = Profile.objects.all()
@@ -97,8 +114,33 @@ def qna_list_create(request):
             request.data['profile'] = pro.id
         serializer = QnaSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save()     
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            serializer.save()    
+
+        post_qna = Qna.objects.all()
+        qna = Qna.objects.get(id=QnaSerializer(post_qna[len(post_qna) - 1]).data['id'])
+        image_list = []
+        post_content = QnaImageSerializer(qna).data['content']
+        for word in range(1, len(post_content)):
+            if post_content[word - 1: word + 1] == '(h':
+                start_idx = word
+            if post_content[word] == ')':
+                if start_idx:
+                    if post_content[start_idx: word][-3:] in ['jpg', 'png', 'jpeg', 'gif', 'svg']:
+                        image_list.append(post_content[start_idx: word])
+        
+        qnavalidate = QnaValidate()
+        print(image_list)
+        for url in image_list:
+            image_url = url
+            name = urlparse(image_url).path.split('/')[-1]
+            response = requests.get(image_url) 
+            print(name)
+            if response.status_code == 200:
+                qnavalidate.qna_image.save(name, ContentFile(response.content), save=True)
+
+
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
         
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -117,6 +159,10 @@ def qna_detail_update_delete(request, qna_pk):
     qna.bookmark_num = qna.bookmark_users.count()  # bookmark_num check
     qna.viewed_num = qna.viewed_num + 1 # viewed_num++
     qna.save()
+
+    # url = urlparse('http://localhost:8080/#/qna-detail/'+str(qna_pk))
+    # print(url)
+
     # like_check
     anss = Ans.objects.all()
     for ans in anss:
@@ -146,6 +192,8 @@ def qna_detail_update_delete(request, qna_pk):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
     else:
+        qnavalidate = QnaValidate.objects.get(id=qna_pk)
+        qnavalidate.qna_image.delete(save=True)
         qna.delete()
         return Response({ 'id': qna_pk }, status=status.HTTP_204_NO_CONTENT)
 
@@ -194,6 +242,29 @@ def ans_list(request):
         serializer = AnsSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()     
+
+            post_ans = Ans.objects.all()
+
+            ans = Ans.objects.get(id=AnsSerializer(post_ans[len(post_ans) - 1]).data['id'])
+            image_list = []
+            post_content = AnsImageSerializer(ans).data['content']
+            for word in range(1, len(post_content)):
+                if post_content[word - 1: word + 1] == '(h':
+                    start_idx = word
+                if post_content[word] == ')':
+                    if start_idx:
+                        if post_content[start_idx: word][-3:] in ['jpg', 'png', 'jpeg', 'gif', 'svg']:
+                            image_list.append(post_content[start_idx: word])
+            
+            ansvalidate = AnsValidate()
+            print(image_list)
+            for url in image_list:
+                image_url = url
+                name = urlparse(image_url).path.split('/')[-1]
+                response = requests.get(image_url) 
+                print(name)
+                if response.status_code == 200:
+                    ansvalidate.ans_image.save(name, ContentFile(response.content), save=True)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -218,6 +289,8 @@ def ans_detail_update_delete(request, ans_pk):
             serializer.save()
             return Response(serializer.data)
     else:
+        ansvalidate = AnsValidate.objects.get(id=ans_pk)
+        ansvalidate.ans_image.delete(save=True)
         ans.delete()
         return Response({ 'id': ans_pk }, status=status.HTTP_204_NO_CONTENT)
 

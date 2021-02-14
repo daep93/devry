@@ -278,18 +278,18 @@ def following(request):
 
     if request.method == 'POST':
         serializer = UserFollowingSerializer(data=request.data)
-
         followee_people = User.objects.get(pk=request.data['user'])
         following_people = User.objects.get(pk=request.data['following_user'])
 
         if serializer.is_valid(raise_exception=True):
+            print(serializer.validated_data)
             serializer.save()
 
         followee_people.follower_num += 1
         following_people.followee_num += 1
         followee_people.save()
         following_people.save()
-
+        
         return Response(serializer.data)
 
 
