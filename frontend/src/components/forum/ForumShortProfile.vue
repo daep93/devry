@@ -1,11 +1,17 @@
 <template>
   <div>
-    <q-card flat bordered class="my-card row col-12 q-pa-sm q-mb-sm">
+    <q-card
+      flat
+      bordered
+      class="my-card row col-12 q-pa-sm q-mb-sm"
+      style="max-width: 250px; max-height: 280px;"
+    >
       <q-card-section>
         <div class="row col-12">
           <div class="row col-2">
             <span class="q-mt-xs">
               <q-avatar
+                @click="goToProfile"
                 style="width: 35px; height: 35px;"
                 class="cursor-pointer"
                 ><img :src="profile_img" />
@@ -19,18 +25,21 @@
                 style="font-size: 15px; color: #464646"
                 @click="goToProfile"
               >
-                <b class="cursor-pointer">유저이름</b>
+                <b class="cursor-pointer">{{
+                  profile ? profile.username : info.user.username
+                }}</b>
                 <div class="text-caption row">
-                  글 0 · 팔로워 0
+                  글 {{ profile ? profile.post_num : 0 }} · 팔로워
+                  {{ profile ? profile.follow_num : 0 }}
                 </div>
               </div>
             </div>
           </div>
         </div>
       </q-card-section>
-      <div class="q-px-md q-pb-md row col-12">
-        <div class="text-body2">
-          상태메시지
+      <div class="q-px-md q-pb-md" v-if="profile">
+        <div style="font-size: 13px;">
+          {{ profile.bio }}
         </div>
       </div>
       <div class="row col-12 justify-center">
@@ -41,6 +50,7 @@
             id="follow-btn"
             label="Follow"
             @click="checkFollow"
+            style="width: 200px"
             class="q-mb-sm row col-10"
           />
         </template>
@@ -51,30 +61,48 @@
             color="primary"
             label="Following"
             @click="checkFollow"
+            style="width: 200px"
             class="q-mb-sm row col-10"
           />
         </template>
       </div>
     </q-card>
-    <q-card flat bordered class="my-card row col-12 q-pa-lg">
-      <div class="q-mb-md">
-        <span class="text-weight-bold cursor-pointer" style="color: #598FFC"
-          >유저이름</span
-        >
-        <span>님의 글 더 보기</span>
-      </div>
-      <template>
-        <q-separator />
-        <div class="q-mt-md">
-          제목
+    <q-card
+      flat
+      bordered
+      class="my-card row col-12 q-px-sm q-pt-md"
+      style="max-width: 250px; max-height: 280px;"
+      v-if="profile"
+    >
+      <div class="q-px-md q-pb-sm">
+        <div style="font-size: 13px;">
+          <div class="q-my-sm">
+            <span
+              class="text-weight-bold cursor-pointer"
+              style="color: #598FFC"
+              >{{ profile.username }}</span
+            >
+            <span>님의 글 더보기</span>
+          </div>
+          <template v-for="post in profile.pinned">
+            <q-separator :key="post.title" />
+            <div class="q-my-sm" :key="post.title">
+              {{ post.title }}
+            </div>
+          </template>
+
+          <q-separator />
         </div>
-      </template>
+      </div>
     </q-card>
   </div>
 </template>
 
 <script>
 export default {
+  props: {
+    info: Object,
+  },
   data() {
     return {
       title: 'Add a YouTube stats widget to your iPhone with JavaScript',
@@ -84,6 +112,13 @@ export default {
     };
   },
   methods: {
+    checkFollow() {
+      if (!this.$store.getters.isLogined) alert('로그인이 필요합니다!');
+      else {
+        // TODO : follow API 연결 필요
+        this.follow = !this.follow;
+      }
+    },
     goToProfile() {
       this.$router.push({ name: 'Profile' });
     },
@@ -92,6 +127,11 @@ export default {
     },
     checkFollow() {
       this.follow = !this.follow;
+    },
+  },
+  computed: {
+    profile() {
+      return this.info.profile;
     },
   },
 };

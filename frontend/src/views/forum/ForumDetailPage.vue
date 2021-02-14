@@ -14,7 +14,7 @@
           </div>
         </div>
         <div class="col-3 q-pl-sm q-pr-xl">
-          <forum-short-profile></forum-short-profile>
+          <forum-short-profile :info="shortProfile"></forum-short-profile>
         </div>
       </div>
     </div>
@@ -75,6 +75,12 @@ export default {
     createComments() {
       return {
         post_id: this.contents.id,
+      };
+    },
+    shortProfile() {
+      return {
+        profile: this.contents.profile,
+        user: this.contents.user,
       };
     },
   },
