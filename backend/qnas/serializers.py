@@ -1,5 +1,5 @@
-from rest_framework import serializers, fields
-from .models import Qna, Ans, tech, Qnasmall, Anssmall
+from rest_framework import serializers, fields, renderers
+from .models import Qna, Ans, tech, Qnasmall, Anssmall, QnaPicture, ImageFile
 from profiles.models import Profile
 from profiles.serializers import ProfileSerializer, ProfileListSerializer
 from accounts.models import User
@@ -21,8 +21,77 @@ class AnsImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ans
         fields = ('user', 'content',)
+class QnaPictureSerializer(serializers.ModelSerializer):
+    image_url = serializers.SerializerMethodField('get_image_url')
+    class Meta:
+        model = QnaPicture
+        fields = ( 'post_image', 'image', 'image_url')
+
+    def get_image_url(self, obj):
+        request = self.context.get("request")
+        return request.build_absolute_uri(obj.image.url)
+
+# 이미지 업로드
+class ImageFileSerializer(serializers.ModelSerializer):
+
+    class Meta():
+        model = ImageFile
+        fields = ('id', 'img_file', 'img_url',)
 
 
+        
+
+class ImageShowSerializer(serializers.ModelSerializer):
+    qna_image = serializers.SerializerMethodField()
+    class Meta():
+        model = ImageFile
+        fields = ('id', 'qna', 'qna_image')
+
+    def get_qna_image(self, obj):
+        request = self.context.get('request')
+        qna_image = obj.img_file.url
+        return request.build_absolute_uri(qna_image)
+
+class JPEGRenderer(renderers.BaseRenderer):
+    media_type = 'image/jpeg'
+    format = 'jpg'
+    charset = None
+    render_style = 'binary'
+
+    def render(self, data, media_type=None, renderer_context=None):
+        return data
+
+class PNGRenderer(renderers.BaseRenderer):
+    media_type = 'image/png'
+    format = 'png'
+    charset = None
+    render_style = 'binary'
+
+    def render(self, data, media_type=None, renderer_context=None):
+        return data
+
+class GIFRenderer(renderers.BaseRenderer):
+    media_type = 'image/gif'
+    format = 'gif'
+    charset = None
+    render_style = 'binary'
+
+    def render(self, data, media_type=None, renderer_context=None):
+        return data
+
+class SVGRenderer(renderers.BaseRenderer):
+    media_type = 'image/svg'
+    format = 'svg'
+    charset = None
+    render_style = 'binary'
+
+    def render(self, data, media_type=None, renderer_context=None):
+        return data
+
+
+
+
+        
 class AnssmalllistSerializer(serializers.ModelSerializer):
     
     user = UserinfoSerializer(

@@ -6,17 +6,21 @@ from urllib.parse import urlparse
 
 from django.shortcuts import get_object_or_404
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, parser_classes
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .serializers import QnaListSerializer, QnasmalllistSerializer, AnssmalllistSerializer, ProfileqnaSerializer, \
     QnaListforamtSerializer, QnaSerializer, AnsSerializer, likeSerializer, bookmarkSerializer, solveSerializer, \
     like_ansSerializer, UserinfoSerializer, ProfileListSerializer, ProfileSerializer, QnasmallSerializer, \
-    AnssmallSerializer, QnadetailSerializer, AnslistSerializer, AnsdetailSerializer,AnslistformatSerializer, pinnedSerializer, QnaImageSerializer, AnsImageSerializer
+    AnssmallSerializer, QnadetailSerializer, AnslistSerializer, AnsdetailSerializer,AnslistformatSerializer, pinnedSerializer, \
+    QnaImageSerializer, AnsImageSerializer, QnaPictureSerializer, ImageFileSerializer, ImageShowSerializer
+
+from wsgiref.util import FileWrapper
 
 from image_server.models import QnaValidate, AnsValidate
 from image_server.serializers import QnaImageValidationSerializer, AnsImageValidationSerializer
-from .models import Qna, Ans, Qnasmall, Anssmall
+from .models import Qna, Ans, Qnasmall, Anssmall, QnaPicture, ImageFile
 from rest_framework import viewsets
 from profiles.models import Profile
 from accounts.models import User
@@ -28,9 +32,28 @@ import json
 import requests
 from urllib.parse import urlparse
 from django.core.files.base import ContentFile
-
+# from django.http.multipartparser import MultiPartParser
+from rest_framework.parsers import FileUploadParser, FormParser, MultiPartParser
+from PIL import Image
 from django.http import HttpResponse, JsonResponse
+from django.conf import settings
 
+
+class PostFileView(APIView):
+    parser_classes = [MultiPartParser, FormParser]
+    def post(self, request, *args, **kwargs):
+        file_serializer = ImageFileSerializer(data=request.data)
+        if file_serializer.is_valid():
+            file_serializer.validated_data['img_url'] = ''
+            file_serializer.validated_data['img_url'] = 'http://127.0.0.1:8000/media/qna/' + str(file_serializer.validated_data['img_file'])
+            file_serializer.save()
+            return Response(file_serializer.data)
+        else:
+            return Response(file_serializer.errors)
+
+
+
+    
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Qna.objects.all()
     serializer_class = QnaSerializer
@@ -108,35 +131,38 @@ def qna_list_create(request):
 
         return Response(serializer.data) 
     else:
+        # print(request.FILES)
         profiles = Profile.objects.all()
         if profiles.filter(user_id=request.user.id).exists():
             pro=profiles.get(user_id=request.user.id)
             request.data['profile'] = pro.id
         serializer = QnaSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()    
 
-        post_qna = Qna.objects.all()
-        qna = Qna.objects.get(id=QnaSerializer(post_qna[len(post_qna) - 1]).data['id'])
-        image_list = []
-        post_content = QnaImageSerializer(qna).data['content']
-        for word in range(1, len(post_content)):
-            if post_content[word - 1: word + 1] == '(h':
-                start_idx = word
-            if post_content[word] == ')':
-                if start_idx:
-                    if post_content[start_idx: word][-3:] in ['jpg', 'png', 'jpeg', 'gif', 'svg']:
-                        image_list.append(post_content[start_idx: word])
-        
-        qnavalidate = QnaValidate()
-        print(image_list)
-        for url in image_list:
-            image_url = url
-            name = urlparse(image_url).path.split('/')[-1]
-            response = requests.get(image_url) 
-            print(name)
-            if response.status_code == 200:
-                qnavalidate.qna_image.save(name, ContentFile(response.content), save=True)
+        if serializer.is_valid(raise_exception=True):
+
+            serializer.save()    
+            post_qna = Qna.objects.all()
+            qna = Qna.objects.get(id=QnaSerializer(post_qna[len(post_qna) - 1]).data['id'])
+            image_list = []
+            post_content = QnaImageSerializer(qna).data['content']
+            for word in range(1, len(post_content)):
+                if post_content[word - 1: word + 1] == '(h':
+                    start_idx = word
+                if post_content[word] == ')':
+                    if start_idx:
+                        if post_content[start_idx: word][-3:] in ['jpg', 'png', 'jpeg', 'gif', 'svg']:
+                            image_list.append(post_content[start_idx: word])
+            
+            qnavalidate = QnaValidate()
+            print(image_list)
+            for url in image_list:
+                image_url = url
+                name = urlparse(image_url).path.split('/')[-1]
+                response = requests.get(image_url) 
+                print(name)
+                if response.status_code == 200:
+                    qnavalidate.qna_image.save(name, ContentFile(response.content), save=True)
+
 
 
 
