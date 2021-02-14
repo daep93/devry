@@ -1,9 +1,9 @@
 <template>
   <div class="q-pl-md row col-12">
     <div class="row col-12">
-      <q-card flat bordered style="width: 40px; height: 125px;">
+      <q-card flat bordered style="width: 50px; height: 65px;">
         <div style="margin:0 auto; text-align:center" class="q-pt-sm">
-          <template v-if="liked">
+          <template v-if="liked_comment">
             <q-icon
               :name="$i.ionHeart"
               color="red"
@@ -23,16 +23,7 @@
           </template>
 
           <br />
-          <span>{{ like_num }}</span>
-          <br />
-          <br />
-          <q-icon
-            :name="$i.ionChatboxEllipsesOutline"
-            style="color:#727272"
-            size="17px"
-          ></q-icon>
-          <br />
-          <span>0</span>
+          <span>{{ like_comment_num }}</span>
           <br />
           <br />
         </div>
@@ -42,12 +33,22 @@
 </template>
 
 <script>
+import { toggleForumCommentLike } from '@/api/forum';
 export default {
+  props: {
+    info: Object,
+  },
   data() {
     return {
-      liked: false,
-      like_num: 0,
+      liked_comment: this.info.liked_comment,
+      like_comment_num: this.info.like_comment_num,
     };
+  },
+  watch: {
+    info(newValue) {
+      (this.liked_comment = newValue.liked_comment),
+        (this.like_comment_num = newValue.like_comment_num);
+    },
   },
   methods: {
     async checkLiked() {
@@ -56,11 +57,13 @@ export default {
         return;
       }
       try {
-        this.liked = !this.liked;
-        if (this.liked) {
-          this.like_num = this.like_num + 1;
+        const commentId = this.info.id;
+        await toggleForumCommentLike(commentId);
+        this.liked_comment = !this.liked_comment;
+        if (this.liked_comment) {
+          this.like_comment_num = this.like_comment_num + 1;
         } else {
-          this.like_num = this.like_num - 1;
+          this.like_comment_num = this.like_comment_num - 1;
         }
       } catch (error) {
         console.log(error);

@@ -4,15 +4,10 @@
       <div class="row col-2"></div>
       <div class="row col-8 q-pr-xl">
         <div class="text-h6 text-weight-bold q-mb-md">댓글 작성하기</div>
-        <v-md-editor
-          v-model="content"
-          height="300px"
-          left-toolbar="undo redo clear | h bold italic strikethrough quote | ul ol table hr | link image code video "
-          :disabled-menus="[]"
-          :toolbar="toolbar"
-          @upload-image="handleUploadImage"
-        >
-        </v-md-editor>
+        <markdown-editor
+          @input="getContents"
+          :height="'400px'"
+        ></markdown-editor>
       </div>
       <div class="row col-2"></div>
 
@@ -28,7 +23,7 @@
                 label="댓글 작성하기"
                 style="width: 200px"
                 class="q-mb-xl q-mt-lg"
-                @click="createBigComment"
+                @click="createComment"
               />
             </div>
           </div>
@@ -39,43 +34,46 @@
 </template>
 
 <script>
+import { createForumComment } from '@/api/forum';
+import MarkdownEditor from '@/components/common/MarkdownEditor';
+
 export default {
+  components: { MarkdownEditor },
+  props: {
+    info: Object,
+  },
   data() {
     return {
       content: '',
-      toolbar: {
-        video: {
-          title: '비디오',
-          // TODO : icon 변경하기
-          icon: 'v-md-icon-toc',
-          action(editor) {
-            editor.insert(function() {
-              const imagetxt = 'Image text';
-              const image = 'Screenshot image URL';
-              const youtube = 'Youtube Link';
-
-              return {
-                text: `[![${imagetxt}](${image})](${youtube})`,
-                selected: imagetxt,
-              };
-            });
-          },
-        },
-      },
     };
   },
   methods: {
-    handleUploadImage(event, insertImage, files) {
-      // Get the files and upload them to the file server, then insert the corresponding content into the editor
-      console.log(files);
-      console.log(insertImage);
-      // Here is just an example
-      insertImage({
-        url: URL.createObjectURL(files[0]),
-        desc: 'desc',
-        // width: 'auto',
-        // height: 'auto',
-      });
+    getContents(data) {
+      this.content = data;
+    },
+    async createComment() {
+      if (!this.$store.getters.isLogined) {
+        alert('로그인을 해주세요');
+        return;
+      }
+      if (this.content === '') {
+        alert('댓글 내용을 작성해주세요.');
+        return;
+      }
+      try {
+        this.$q.loading.show();
+        await createForumComment({
+          // 넘길 데이터
+          user: this.$store.state.id,
+          comment_content: this.content,
+          post: this.info.post_id,
+        });
+        location.reload();
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.$q.loading.hide();
+      }
     },
   },
 };

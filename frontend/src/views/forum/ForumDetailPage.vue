@@ -4,7 +4,7 @@
       <div class="row col-2 q-mt-lg">
         <div class="row col-9"></div>
         <div class="row col-3">
-          <forum-detail-status></forum-detail-status>
+          <forum-detail-status :info="status"></forum-detail-status>
         </div>
       </div>
       <div class="row col-10 q-mt-lg">
@@ -19,10 +19,10 @@
       </div>
     </div>
     <div class="row col-12">
-      <forum-comment></forum-comment>
+      <forum-comment :info="comments"></forum-comment>
     </div>
     <div class="row col-12 q-my-xl">
-      <forum-comment-create></forum-comment-create>
+      <forum-comment-create :info="createComments"></forum-comment-create>
     </div>
   </div>
 </template>
@@ -49,14 +49,31 @@ export default {
     };
   },
   computed: {
+    status() {
+      return {
+        like_num: this.contents.like_num,
+        liked: this.contents.liked,
+        bookmarked: this.contents.bookmarked,
+        bookmark_num: this.contents.bookmark_num,
+        viewed_num: this.contents.viewed_num,
+        post_id: this.contents.id,
+        comment_count: this.contents.comment_count,
+      };
+    },
     forumBody() {
       return {
         title: this.contents.title,
         ref_tags: this.contents.ref_tags,
         content: this.contents.content,
         written_time: this.contents.written_time,
-        // user_id: this.contents.user.id,
-        // user_name: this.contents.user.username,
+        post_id: this.contents.id,
+      };
+    },
+    comments() {
+      return this.contents.comment_set;
+    },
+    createComments() {
+      return {
         post_id: this.contents.id,
       };
     },
@@ -66,7 +83,7 @@ export default {
     try {
       const { data } = await loadForumItem(index);
       this.contents = data;
-      console.log(this.contents);
+      // console.log(this.contents);
     } catch (error) {
       console.log(error);
     }

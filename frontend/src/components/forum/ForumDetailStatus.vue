@@ -1,14 +1,25 @@
 <template>
   <div class="q-pl-md">
-    <q-card flat bordered style="width: 40px; height: 245px;">
+    <q-card flat bordered style="width: 50px; height: 245px;">
       <div style="margin:0 auto; text-align:center" class="q-pt-sm">
-        <q-icon
-          :name="liked ? $i.ionHeart : $i.ionHeartOutline"
-          :style="{ color: liked ? 'red' : '#727272' }"
-          size="17px"
-          class="cursor-pointer"
-          @click="checkLiked"
-        ></q-icon>
+        <template v-if="liked">
+          <q-icon
+            :name="$i.ionHeart"
+            color="red"
+            size="17px"
+            class="cursor-pointer"
+            @click="checkLiked"
+          ></q-icon>
+        </template>
+        <template v-else>
+          <q-icon
+            :name="$i.ionHeartOutline"
+            style="color:#727272"
+            size="17px"
+            class="cursor-pointer"
+            @click="checkLiked"
+          ></q-icon>
+        </template>
         <br />
         <span>{{ like_num }}</span>
         <br />
@@ -19,12 +30,12 @@
           size="17px"
         ></q-icon>
         <br />
-        <span>2</span>
+        <span>{{ info.comment_count }}</span>
         <br />
         <br />
         <q-icon :name="$i.ionEyeOutline" color="grey-6" size="17px"></q-icon>
         <br />
-        <span>10</span>
+        <span>{{ info.viewed_num }}</span>
         <br />
         <br />
         <q-icon
@@ -34,19 +45,28 @@
           class="cursor-pointer"
         ></q-icon>
         <br />
-        <span>5</span>
+        <span>{{ info.bookmark_num }}</span>
       </div>
     </q-card>
   </div>
 </template>
 
 <script>
+import { toggleForumLike } from '@/api/forum';
 export default {
+  props: {
+    info: Object,
+  },
   data() {
     return {
-      liked: false,
-      like_num: 0,
+      liked: this.info.liked,
+      like_num: this.info.like_num,
     };
+  },
+  watch: {
+    info(newValue) {
+      (this.liked = newValue.liked), (this.like_num = newValue.like_num);
+    },
   },
   methods: {
     async checkLiked() {
@@ -55,13 +75,17 @@ export default {
         return;
       }
       try {
-        // const { data } = await toggleQnaLike(this.info.post_id);
+        await toggleForumLike(this.info.post_id);
         this.liked = !this.liked;
         if (this.liked) {
           this.like_num = this.like_num + 1;
         } else {
           this.like_num = this.like_num - 1;
         }
+        // console.log(this.liked);
+        // console.log(this.like_num);
+        // console.log(this.info.liked);
+        console.log(this.info);
       } catch (error) {
         console.log(error);
       }
