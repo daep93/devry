@@ -284,6 +284,12 @@ def following(request):
 
         if serializer.is_valid(raise_exception=True):
             serializer.save()
+
+        followee_people.follower_num += 1
+        following_people.followee_num += 1
+        followee_people.save()
+        following_people.save()
+
         return Response(serializer.data)
 
 

@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from .serializers import QnaListSerializer, QnasmalllistSerializer, AnssmalllistSerializer, ProfileqnaSerializer, \
     QnaListforamtSerializer, QnaSerializer, AnsSerializer, likeSerializer, bookmarkSerializer, solveSerializer, \
     like_ansSerializer, UserinfoSerializer, ProfileListSerializer, ProfileSerializer, QnasmallSerializer, \
-    AnssmallSerializer, QnadetailSerializer, AnslistSerializer, AnsdetailSerializer,AnslistformatSerializer
+    AnssmallSerializer, QnadetailSerializer, AnslistSerializer, AnsdetailSerializer,AnslistformatSerializer, pinnedSerializer
     
 from .models import Qna, Ans, Qnasmall, Anssmall
 from rest_framework import viewsets
@@ -254,6 +254,37 @@ def like(request, qna_pk):
             # like 
             qna.like_users.add(request.user)
             return Response("like !!!!!!")
+
+@api_view(['GET','POST'])
+def pinned(request, qna_pk):
+    '''
+    Qna(질문 글) pinned
+    '''
+    if request.META.get('HTTP_AUTHORIZATION'):
+        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user=User.objects.get(id=tok.user_id)
+        request.user=user
+    # user authentication process
+    qna = get_object_or_404(Qna, pk=qna_pk)
+    if request.method == 'GET':
+        if qna.pinned_users.filter(pk=request.user.pk).exists():
+            qna.pinned="True"
+            serializer = pinnedSerializer(qna)
+        else:
+            qna.pinned="False"
+            serializer = pinnedSerializer(qna)
+        return Response(serializer.data)
+
+    # user가 qna을 pinned한 전체유저에 존재하는지.
+    if request.method == 'POST':
+        if qna.pinned_users.filter(pk=request.user.pk).exists():
+            # pinned canceled
+            qna.pinned_users.remove(request.user)
+            return Response("pinned canceled")
+        else:
+            # pinned 
+            qna.pinned_users.add(request.user)
+            return Response("pinned !!!!!!")
 
 
 @api_view(['GET','POST'])

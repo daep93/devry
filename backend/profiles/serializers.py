@@ -87,7 +87,7 @@ class ProfileListSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Profile
-        fields = ('user', 'email', 'profile_img', 'region', 'group', 'bio', 'links', 'tech_stack', 'projects', 'tag',)
+        fields = ( 'email', 'profile_img', 'region', 'group', 'bio', 'links', 'tech_stack', 'projects', 'tag',)
  
  
 class ProfileUpdateSerializer(serializers.ModelSerializer):
@@ -98,8 +98,50 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
     projects = ProfileProjectSerializer(many=True, read_only=True)
     class Meta:
         model = Profile
-        fields = ('user', 'username', 'profile_img', 'region', 'group', 'bio', 'links', 'tech_stack', 'projects', 'tag')
+        fields = ( 'username', 'profile_img', 'region', 'group', 'bio', 'links', 'tech_stack', 'projects', 'tag',
+        'sns_name1', 'sns_name2', 'sns_name3', 'sns_url1', 'sns_url2', 'sns_url3', 'project_name1', 'project_name2', 'project_name3', 'project_url1', 'project_url2', 'project_url3')
+        extra_kwargs = {
+            'sns_name1': {"write_only": True},
+            'sns_name2': {"write_only": True}, 
+            'sns_name3': {"write_only": True}, 
+            'sns_url1': {"write_only": True},
+            'sns_url2': {"write_only": True},
+            'sns_url3': {"write_only": True},  
+            'project_name1': {"write_only": True},
+            'project_name2': {"write_only": True}, 
+            'project_name3': {"write_only": True}, 
+            'project_url1': {"write_only": True},
+            'project_url2': {"write_only": True},
+            'project_url3': {"write_only": True},  
 
+        }
+
+
+    def update(self, instance, validated_data):
+
+        instance.username = validated_data.get('username', instance.username)
+        instance.profile_img = validated_data.get('profile_img', instance.profile_img)
+        instance.region = validated_data.get('region', instance.region)
+        instance.group = validated_data.get('group', instance.group)
+        instance.bio = validated_data.get('bio', instance.bio)
+        # instance.links = validated_data.get('links', instance.links)
+        instance.tech_stack = validated_data.get('tech_stack', instance.tech_stack)
+        # instance.projects = validated_data.get('project', instance.projects)
+        instance.tag = validated_data.get('tag', instance.tag)
+        instance.sns_name1 = validated_data.get('sns_name1', instance.sns_name1)
+        instance.sns_url1 = validated_data.get('sns_url1', instance.sns_url1)
+        instance.sns_name2 = validated_data.get('sns_name2', instance.sns_name2)
+        instance.sns_url2 = validated_data.get('sns_url2', instance.sns_url2)
+        instance.sns_name3 = validated_data.get('sns_name3', instance.sns_name3)
+        instance.sns_url3 = validated_data.get('sns_url3', instance.sns_url3)
+        instance.project_name1 = validated_data.get('project_name1', instance.project_name1)
+        instance.project_url1 = validated_data.get('project_url1', instance.project_url1)
+        instance.project_name2 = validated_data.get('project_name2', instance.project_name2)
+        instance.project_url2 = validated_data.get('project_url2', instance.project_url2)
+        instance.project_name3 = validated_data.get('project_name3', instance.project_name3)
+        instance.project_url3 = validated_data.get('project_url3', instance.project_url3)
+        instance.save()
+        return instance
 
 class ProfileImageSerializer(serializers.ModelSerializer):
 
