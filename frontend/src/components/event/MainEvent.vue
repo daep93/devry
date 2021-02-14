@@ -86,7 +86,8 @@ export default {
   },
   methods: {
     moveToDetailPage: function() {
-      this.$router.push({ path: '/event-detail' });
+      const post_id = this.$route.params.id;
+      this.$router.push({ path: `/event-detail/${post_id}` });
     },
   },
 };

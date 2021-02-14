@@ -67,12 +67,12 @@ const routes = [
   },
   {
     // path: '/event/:id',
-    path: '/event-detail',
+    path: '/event-detail/:id',
     name: 'EventDetail',
     component: () => import('@/views/event/EventDetailPage.vue'),
   },
   {
-    path: '/event-registration',
+    path: '/event-registration/:id?',
     name: 'EventRegistration',
     component: () => import('@/views/event/EventRegistrationPage.vue'),
   },
