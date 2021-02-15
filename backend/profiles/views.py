@@ -233,7 +233,6 @@ def profile_setting(request, profile_pk):
         tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
         user=User.objects.get(id=tok.user_id)
         request.user = user    
-
         if request.method == 'GET':
             serializer = ProfileListSerializer(profile)
 
@@ -283,9 +282,8 @@ def profile_setting(request, profile_pk):
 
                 serializer.save( validated_data=serializer.validated_data)
 
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response('토큰이 일치하지 않습니다.', status=status.HTTP_404_NOT_FOUND)
 
-
-
-    
