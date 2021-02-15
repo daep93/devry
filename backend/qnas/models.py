@@ -92,6 +92,7 @@ class Qna(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, related_name='qna_profile')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     user_info = models.ForeignKey(Profile, on_delete=models.CASCADE,null=True, related_name='qna_userinfo')
+    is_following = models.BooleanField(default="False")
 
     def __str__(self):
         return self.title

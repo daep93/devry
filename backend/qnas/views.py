@@ -3,7 +3,6 @@ import requests
 import urllib.request
 from django.http import HttpResponse, FileResponse
 from urllib.parse import urlparse
-
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.decorators import api_view, parser_classes
@@ -14,16 +13,16 @@ from .serializers import QnaListSerializer, QnasmalllistSerializer, Anssmalllist
     QnaListforamtSerializer, QnaSerializer, AnsSerializer, likeSerializer, bookmarkSerializer, solveSerializer, \
     like_ansSerializer, UserinfoSerializer, ProfileListSerializer, ProfileSerializer, QnasmallSerializer, \
     AnssmallSerializer, QnadetailSerializer, AnslistSerializer, AnsdetailSerializer,AnslistformatSerializer, pinnedSerializer, \
-    QnaImageSerializer, AnsImageSerializer, ImagePostSerializer
+    QnaImageSerializer, AnsImageSerializer, ImagePostSerializer, isfollowingSerializer
 
+from accounts.serializers import UserFollowingSerializer
 from wsgiref.util import FileWrapper
-
 from image_server.models import QnaValidate, AnsValidate
 from image_server.serializers import QnaImageValidationSerializer, AnsImageValidationSerializer
 from .models import Qna, Ans, Qnasmall, Anssmall, ImagePost
 from rest_framework import viewsets
 from profiles.models import Profile
-from accounts.models import User
+from accounts.models import User, UserFollowing
 from mysite.utils import jwt_encode
 from rest_auth.models import TokenModel
 from rest_framework.authtoken.models import Token
@@ -221,8 +220,13 @@ def qna_detail_update_delete(request, qna_pk):
     if qna.bookmark_users.filter(pk=request.user.pk).exists():
         qna.bookmarked="True"
     else:
-        qna.bookmarked="False"
-       
+        qna.bookmarked = "False"
+        
+    if UserFollowing.objects.filter(following_user= qna.user, user=request.user.pk).exists():
+        qna.is_following="True"
+    else:
+        qna.is_following = "False"
+        
     if request.method == 'GET':
         serializer = QnadetailSerializer(qna)
         return Response(serializer.data)
@@ -726,3 +730,48 @@ def qna_myans(request):
         serializer = AnslistformatSerializer(ans, many=True)
         return Response(serializer.data)
         
+
+@api_view(['GET','POST'])
+def is_following(request, qna_pk):
+    """
+    Qna(질문 글) 작성자 팔로잉 여부확인과 팔로잉 하기
+
+    ---
+    """
+    if request.META.get('HTTP_AUTHORIZATION'):
+        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user=User.objects.get(id=tok.user_id)
+        request.user=user
+    # user authentication process
+    qna = get_object_or_404(Qna, pk=qna_pk)
+    if request.method == 'GET':
+        if UserFollowing.objects.filter(following_user= qna.user, user=request.user.pk).exists():
+            qna.is_following="True"
+            serializer = isfollowingSerializer(qna)
+        else:
+            qna.is_following="False"
+            serializer = isfollowingSerializer(qna)
+        return Response(serializer.data)
+        
+    if request.method == 'POST':
+        if UserFollowing.objects.filter(following_user= qna.user, user=request.user.pk).exists():
+            # following canceled
+            UserFollowing.objects.filter(user_id= request.user.pk).delete()
+            return Response("following canceled")
+        else:
+            # following 
+            serializer = UserFollowingSerializer(data=request.data)
+            followee_people = User.objects.get(pk=request.user.pk)
+            following_people = User.objects.get(pk=qna.user_id)
+            user =request.user.pk
+            following_user = qna.user_id
+            a={"user":user,"following_user":following_user}
+            serializer = UserFollowingSerializer(data=a)  
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+
+            followee_people.follower_num += 1
+            following_people.followee_num += 1
+            followee_people.save()
+            following_people.save()
+            return Response("following ")
