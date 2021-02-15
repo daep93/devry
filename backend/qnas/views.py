@@ -746,8 +746,8 @@ def is_following(request, qna_pk):
             # following canceled
             followee_people = User.objects.get(pk=request.user.pk)
             following_people = User.objects.get(pk=qna.user_id)
-            followee_people.follower_num -= 1
-            following_people.followee_num -= 1
+            followee_people.followee_num -= 1
+            following_people.follower_num -= 1
             followee_people.save()
             following_people.save()
             UserFollowing.objects.filter(user_id=request.user.pk).delete()     
@@ -763,8 +763,8 @@ def is_following(request, qna_pk):
             serializer = UserFollowingSerializer(data=a)  
             if serializer.is_valid(raise_exception=True):
                 serializer.save()     
-            followee_people.follower_num += 1
-            following_people.followee_num += 1
+            followee_people.followee_num += 1
+            following_people.follower_num += 1
             followee_people.save()
             following_people.save()
             return Response("following ")
@@ -797,8 +797,8 @@ def is_following_ans(request, ans_pk):
             # following canceled
             followee_people = User.objects.get(pk=request.user.pk)
             following_people = User.objects.get(pk=ans.user_id)
-            followee_people.follower_num -= 1
-            following_people.followee_num -= 1
+            followee_people.followee_num -= 1
+            following_people.follower_num -= 1
             followee_people.save()
             following_people.save()
             UserFollowing.objects.filter(user_id=request.user.pk).delete()
@@ -814,8 +814,8 @@ def is_following_ans(request, ans_pk):
             serializer = UserFollowingSerializer(data=a)  
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
-            followee_people.follower_num += 1
-            following_people.followee_num += 1
+            followee_people.followee_num += 1 
+            following_people.follower_num += 1
             followee_people.save()
             following_people.save()
             return Response("following ")
