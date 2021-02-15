@@ -67,6 +67,7 @@ export default {
         content: this.contents.content,
         written_time: this.contents.written_time,
         post_id: this.contents.id,
+        user: this.contents.user,
       };
     },
     comments() {

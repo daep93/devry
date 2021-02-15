@@ -6,6 +6,11 @@ function loadForumItem(post_pk) {
   return instance.get(`forum/${post_pk}/`);
 }
 
+// QnA 글 등록하기
+function createForumItem(postData) {
+  return instance.post('forum/', postData);
+}
+
 // forum 글 좋아요 토글하기
 function toggleForumLike(post_pk) {
   return instance.post(`forum_like/${post_pk}/`);
@@ -33,6 +38,7 @@ function toggleForumCommentLike(comment_pk) {
 
 export {
   loadForumItem,
+  createForumItem,
   toggleForumLike,
   createForumComment,
   updateForumComment,

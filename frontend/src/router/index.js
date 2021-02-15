@@ -71,6 +71,18 @@ const routes = [
     },
   },
   {
+    path: '/forum/create',
+    name: 'ForumCreate',
+    component: () => import('@/views/common/PostCreatePage.vue'),
+    beforeEnter: (to, from, next) => {
+      if (!store.getters.isLogined) {
+        alert('로그인이 필요합니다');
+        return;
+      }
+      next();
+    },
+  },
+  {
     path: '/forum',
     name: 'Forum',
     component: () => import('@/views/forum/ForumPage.vue'),

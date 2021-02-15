@@ -13,7 +13,7 @@
         class="text-weight-bold q-px-xl q-py-sm"
         label="작성하기"
         size="md"
-        @click="scopeProps.createQna"
+        @click="scopeProps.createForum"
       />
     </template>
   </post-edit-form>
