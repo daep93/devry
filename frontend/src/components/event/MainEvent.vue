@@ -1,5 +1,12 @@
 <template>
   <div style="clear: both; " class="q-mb-xl">
+    <div>
+      <div v-for="(event, index) in main_events" :key="index">
+        <div>
+          {{ event.id }}
+        </div>
+      </div>
+    </div>
     <q-carousel
       animated
       v-model="slide"
@@ -13,30 +20,28 @@
       @mouseleave="autoplay = true"
       height="270px"
     >
+      <!-- v-for="event in main_events"
+      :key="event.eventId" -->
+      <!-- <main-entity :entity="event"></main-entity> -->
       <q-carousel-slide
         :name="1"
-        class="bg-black"
-        style="border-radius: 10px;"
+        style="background-color: #1E1B39; border-radius: 10px;"
+        class="overflow-hidden"
         @click="moveToDetailPage"
       >
-        <div class="q-mt-lg q-ml-lg">
-          <div class="text-h5 text-white">For Developer vol.1</div>
-          <div class="text-h4 text-teal-8 text-weight-bolder">
-            2021 Vue.js Online
-          </div>
+        <div class="row justify-center overflow-hidden">
+          <img
+            src="@/assets/game.png"
+            alt="game webinar"
+            style="height:230px; width:70%;"
+          />
         </div>
-        <q-btn
-          outline
-          class="absolute-bottom-right q-ma-xl"
-          color="white"
-          text-color="white"
-          label="바로가기"
-        />
       </q-carousel-slide>
       <q-carousel-slide
         :name="2"
         style="background-color: #213186; border-radius: 10px;"
         class="overflow-hidden"
+        @click="moveToDetailPage"
       >
         <div class="row justify-center overflow-hidden">
           <img
@@ -48,48 +53,71 @@
       </q-carousel-slide>
       <q-carousel-slide
         :name="3"
-        img-src="https://cdn.quasar.dev/img/parallax2.jpg"
-        style="border-radius: 10px;"
+        style="background-color: black; border-radius: 10px;"
+        class="overflow-hidden"
+        @click="moveToDetailPage"
       >
-        <q-btn
-          outline
-          class="absolute-bottom-right q-ma-xl"
-          color="white"
-          text-color="white"
-          label="바로가기"
-        />
+        <div class="row justify-center overflow-hidden">
+          <img
+            src="@/assets/ifkakao.jpg"
+            alt="if kakao"
+            style="height:250px;width:70%"
+          />
+        </div>
       </q-carousel-slide>
       <q-carousel-slide
         :name="4"
-        img-src="https://cdn.quasar.dev/img/quasar.jpg"
-        style="border-radius: 10px;"
+        style="background-color: #1A174F; border-radius: 10px;"
+        class="overflow-hidden"
+        @click="moveToDetailPage"
       >
-        <q-btn
-          outline
-          class="absolute-bottom-right q-ma-xl"
-          color="white"
-          text-color="white"
-          label="바로가기"
-        />
+        <div class="row justify-center overflow-hidden">
+          <img
+            src="@/assets/tensorFlow.jpg"
+            alt="tensorflow"
+            style="height:240px; width:100%;"
+          />
+        </div>
       </q-carousel-slide>
     </q-carousel>
   </div>
 </template>
 
 <script>
+// import MainEntity from '@/components/event/MainEntity.vue';
+import { getMainEventList } from '@/api/board';
+
 export default {
+  // components: {
+  //   MainEntity,
+  // },
   data() {
     return {
       autoplay: true,
       slide: 1,
+      main_events: [],
     };
   },
   methods: {
     moveToDetailPage: function() {
       const post_id = this.$route.params.id;
-      this.$router.push({ path: `/event-detail/${post_id}` });
+      this.$router.push({ path: `/event-detail/${this.name}` });
     },
   },
+  async created() {
+    try {
+      this.$q.loading.show();
+      // 가져올 데이터 목록
+      const { data } = await getMainEventList();
+      this.main_events = data;
+      return data;
+    } catch (error) {
+      console.log(error);
+      // alert('에러가 발생했습니다.)
+    } finally {
+      this.$q.loading.hide();
+    }
+  }
 };
 </script>
 
