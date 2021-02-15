@@ -8,7 +8,7 @@ class UserinfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ( 'id', 'username')
+        fields = ( 'id', 'username', 'follower_num', 'followee_num')
 
 #  추가했음
 class QnaImageSerializer(serializers.ModelSerializer):
@@ -54,7 +54,7 @@ class ProfileqnaSerializer(serializers.ModelSerializer):
       
     class Meta:
         model = Profile
-        fields = ('user', 'username', 'profile_img', 'bio', 'pinned_posts', 'follower_num', 'followee_num')
+        fields = ('user', 'username', 'profile_img', 'bio', 'pinned_posts')
 
 
 class QnasmallSerializer(serializers.ModelSerializer):
@@ -175,7 +175,6 @@ class AnslistSerializer(serializers.ModelSerializer):
 
 
 class AnsSerializer(serializers.ModelSerializer):
-
 
     anssmall_set = AnssmallSerializer(
         many=True,
@@ -308,6 +307,13 @@ class isfollowingSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Qna
+        fields = ('id', "is_following")
+
+
+class isfollowingansSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Ans
         fields = ('id', "is_following")
 
 

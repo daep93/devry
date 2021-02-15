@@ -25,6 +25,7 @@ urlpatterns = [
     path('qna/myqna/', views.qna_myqna),
     path('qna/myans/', views.qna_myans),
     path('qna/following/<int:qna_pk>', views.is_following),
+    path('ans/following/<int:ans_pk>', views.is_following_ans),
 
     path('ans/', views.ans_list),
     path('ans/<int:ans_pk>/', views.ans_detail_update_delete),
