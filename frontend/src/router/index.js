@@ -73,7 +73,19 @@ const routes = [
   {
     path: '/forum/create',
     name: 'ForumCreate',
-    component: () => import('@/views/common/PostCreatePage.vue'),
+    component: () => import('@/views/forum/ForumCreatePage.vue'),
+    beforeEnter: (to, from, next) => {
+      if (!store.getters.isLogined) {
+        alert('로그인이 필요합니다');
+        return;
+      }
+      next();
+    },
+  },
+  {
+    path: '/forum/:id',
+    name: 'ForumUpdate',
+    component: () => import('@/views/forum/ForumUpdatePage.vue'),
     beforeEnter: (to, from, next) => {
       if (!store.getters.isLogined) {
         alert('로그인이 필요합니다');

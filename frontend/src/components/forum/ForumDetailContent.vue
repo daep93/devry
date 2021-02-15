@@ -7,6 +7,7 @@
       style="min-height: 300px;"
     >
       <div class="row col-12 justify-end">
+        <!-- <span> -->
         <span v-if="info.user.id == $store.state.id">
           <q-btn flat round dense icon="more_vert" class="q-mt-md">
             <q-menu>
