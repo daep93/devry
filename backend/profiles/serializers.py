@@ -6,37 +6,12 @@ from django.shortcuts import get_object_or_404
 
 from accounts.serializers import UserSerializer, UserEmailSerializer, UserFollowerNumberSerializer, UserJoinedSerializer, UserFollowingNumberSerializer
 
-class Link1(serializers.ModelSerializer):
-
-    class Meta:
-        model = Link
-        fields = ('sns_name1', 'sns_url1','sns_name2', 'sns_url2')
-class Link2(serializers.ModelSerializer):
-
-    class Meta:
-        model = Profile
-        fields = ('sns_name2', 'sns_url2')
-class Link3(serializers.ModelSerializer):
-
-    class Meta:
-        model = Profile
-        fields = ('sns_name3', 'sns_url3')
-
-class Test1(serializers.ModelSerializer):
-
-    class Meta:
-        model = Profile
-        fields = ('links',)
-class Test2(serializers.ModelSerializer):
-
-    class Meta:
-        model = Profile
-        fields = ('projects',)
 
 class ProfileLinkSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
+        # fields = ( 'sns_url1', 'sns_url2', 'sns_url3')
         fields = ('sns_name1', 'sns_url1', 'sns_name2', 'sns_url2', 'sns_name3', 'sns_url3')
 
 
@@ -100,7 +75,7 @@ class ProfileShowSerializer(serializers.ModelSerializer):
     followee_num = serializers.IntegerField(read_only=True)
 
 
-    tags = ProfileTagSerializer(many=True, read_only=True)
+    tags = ProfileTagSerializer(read_only=True)
     posts = ProfilePostsSerializer(many=True, read_only=True)
     pinned_posts = ProfilePinnedPostsSerializer(many=True, read_only=True)
     comments = ProfileCommentsSerializer(many=True, read_only=True)
@@ -130,8 +105,9 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
     tech_stack = fields.MultipleChoiceField(choices=tech)
     tag = fields.MultipleChoiceField(choices=user_tag)
 
-    links = ProfileLinkSerializer(many=True, read_only=True)
-    projects = ProfileProjectSerializer(many=True, read_only=True)
+    # links = ProfileLinkSerializer(many=True, read_only=True)
+    links = fields.ListField()
+    projects = fields.ListField()
     class Meta:
         model = Profile
         fields = ( 'username', 'profile_img', 'region', 'group', 'bio', 'links', 'tech_stack', 'projects', 'tag',

@@ -131,7 +131,7 @@ class Profile(models.Model):
     projects = models.TextField()
 
     joined = models.DateTimeField(blank=True, null=True)
-    tags = models.ManyToManyField('self', default=0, related_name='project_tags', blank=True)
+    tags = models.TextField(blank=True)
 
 
 class Link(models.Model):

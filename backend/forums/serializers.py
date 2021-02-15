@@ -27,6 +27,13 @@ class ProfilepostSerializer(serializers.ModelSerializer):
 # 부족한 필드 추가해야함
 
 
+class WriterInfoSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Post
+        fields = ('user', )
+
+
 class ProfilePostSerializer(serializers.ModelSerializer):
     
     comment_count = serializers.IntegerField(
@@ -135,6 +142,7 @@ class PostdetailSerializer(serializers.ModelSerializer):
     # )
 
     writer_info = ProfilepostSerializer(
+        many=True,
         read_only=True,
     )
 
