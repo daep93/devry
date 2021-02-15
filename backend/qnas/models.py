@@ -5,7 +5,9 @@ from django.conf import settings
 from multiselectfield import MultiSelectField
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill
-
+from urllib.parse import urlparse
+from django.core.files import File
+from mysite.utils import download, get_buffer_ext 
 tech = (
     ('Python3', 'Python3'),
     ('Django', 'Django'),
@@ -126,3 +128,7 @@ class Anssmall(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     written_time = models.DateTimeField(auto_now_add=True)
     ans = models.ForeignKey(Ans, on_delete=models.CASCADE)
+
+class ImagePost(models.Model):
+    image = models.ImageField(upload_to="%Y/%m/%d")
+

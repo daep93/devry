@@ -1,5 +1,8 @@
 from django.shortcuts import get_object_or_404
-
+from mysite.utils import jwt_encode
+from rest_auth.models import TokenModel
+from rest_framework.authtoken.models import Token
+from mysite.app_settings import TokenSerializer
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response

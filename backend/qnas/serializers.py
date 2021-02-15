@@ -1,5 +1,5 @@
-from rest_framework import serializers, fields
-from .models import Qna, Ans, tech, Qnasmall, Anssmall
+from rest_framework import serializers, fields, renderers
+from .models import Qna, Ans, tech, Qnasmall, Anssmall, ImagePost
 from profiles.models import Profile
 from profiles.serializers import ProfileSerializer, ProfileListSerializer
 from accounts.models import User
@@ -21,6 +21,15 @@ class AnsImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ans
         fields = ('user', 'content',)
+
+
+# 이미지 업로드
+class ImagePostSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(use_url=True)
+    
+    class Meta:
+        model = ImagePost
+        fields = ('image',)
 
 
 class AnssmalllistSerializer(serializers.ModelSerializer):
