@@ -171,14 +171,16 @@ def profile_show(request, profile_pk):
             if ProfileSerializer(profile).data[sns_name] and ProfileSerializer(profile).data[sns_url]:
                 serializer.data['link'].append(
                     {
-                    ProfileSerializer(profile).data[sns_name]: ProfileSerializer(profile).data[sns_url]
+                    'sns_name' : ProfileSerializer(profile).data[sns_name],
+                    'sns_url' : ProfileSerializer(profile).data[sns_url]
                     }
                 )
 
             if ProfileSerializer(profile).data[project_name] and ProfileSerializer(profile).data[project_url]:
                 serializer.data['project'].append(
                     {
-                    ProfileSerializer(profile).data[project_name]: ProfileSerializer(profile).data[project_url]
+                    'project_name' : ProfileSerializer(profile).data[project_name],
+                    'project_url' : ProfileSerializer(profile).data[project_url]
                     }
                 )
         return Response(serializer.data)
@@ -201,25 +203,31 @@ def profile_setting(request, profile_pk):
 
     links_update = [
     {
-        request.POST.get('sns_name1', False) : request.POST.get('sns_url1', False)
+        'sns_name': request.POST.get('sns_name1', False),
+        'sns_url' : request.POST.get('sns_url1', False)
     },
     {
-        request.POST.get('sns_name2', False) : request.POST.get('sns_url2', False)
+        'sns_name': request.POST.get('sns_name2', False),
+        'sns_url' : request.POST.get('sns_url2', False)
     },
     {
-        request.POST.get('sns_name3', False) : request.POST.get('sns_url3', False)
+        'sns_name': request.POST.get('sns_name3', False),
+        'sns_url' : request.POST.get('sns_url3', False)
     }
     ]
 
     projects_update = [
     {
-        request.POST.get('project_name1', False) : request.POST.get('project_url1', False)
+        'project_name': request.POST.get('project_name1', False),
+        'project_url' : request.POST.get('project_url1', False)
     },
     {
-        request.POST.get('project_name2', False) : request.POST.get('project_url2', False)
+        'project_name': request.POST.get('project_name2', False),
+        'project_url' : request.POST.get('project_url2', False)
     },
     {
-        request.POST.get('project_name3', False) : request.POST.get('project_url3', False)
+        'project_name': request.POST.get('project_name3', False),
+        'project_url' : request.POST.get('project_url3', False)
     }
     ]
 
@@ -242,14 +250,16 @@ def profile_setting(request, profile_pk):
                 if ProfileSerializer(profile).data[sns_name] and ProfileSerializer(profile).data[sns_url]:
                     serializer.data['link'].append(
                         {
-                        ProfileSerializer(profile).data[sns_name]: ProfileSerializer(profile).data[sns_url]
+                        'sns_name' : ProfileSerializer(profile).data[sns_name],
+                        'sns_url' : ProfileSerializer(profile).data[sns_url]
                         }
                     )
 
                 if ProfileSerializer(profile).data[project_name] and ProfileSerializer(profile).data[project_url]:
                     serializer.data['project'].append(
                         {
-                        ProfileSerializer(profile).data[project_name]: ProfileSerializer(profile).data[project_url]
+                        'project_name' : ProfileSerializer(profile).data[project_name],
+                        'project_url' : ProfileSerializer(profile).data[project_url]
                         }
                     )
 
