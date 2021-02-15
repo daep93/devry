@@ -404,7 +404,7 @@ export default {
         await createEventItem({
           // 넘길 데이터 적어주기
           state: this.state,
-          thumnail: this.thumnail,
+          // thumnail: this.thumnail,
           title: this.title,
           category: this.category,
           place: this.place,
@@ -415,7 +415,7 @@ export default {
           introduction: this.introduction,
           schedule: this.schedule,
           host_name: this.host_name,
-          profile_img: this.profile_img,
+          // profile_img: this.profile_img,
           register_url: this.register_url,
           ref_tags: this.ref_tags,
           user: this.$store.state.id,
@@ -438,7 +438,7 @@ export default {
         await updateEventItem(post_id, {
           // 넘길 데이터 적어주기
           state: this.state,
-          thumnail: this.thumnail,
+          // thumnail: this.thumnail,
           title: this.title,
           category: this.category,
           place: this.place,
@@ -449,7 +449,7 @@ export default {
           introduction: this.introduction,
           schedule: this.schedule,
           host_name: this.host_name,
-          profile_img: this.profile_img,
+          // profile_img: this.profile_img,
           register_url: this.register_url,
           ref_tags: this.ref_tags,
           user: this.$store.state.id,
@@ -478,6 +478,7 @@ export default {
   },
   // Event 수정하기 (데이터 받아오기)
   async created() {
+    this.$store.commit('offLeft');
     // id 가져오기
     const post_id = this.$route.params.id;
     // post_id가 존재할 경우에 기존 정보 가져오기
@@ -501,6 +502,15 @@ export default {
         this.profile_img = data.profile_img;
         this.register_url = data.register_url;
         this.ref_tags = data.ref_tags;
+        // 날짜 시간 형식 변경
+        // const sArray = this.start.split('T')
+        // const stimes = sArray[1]
+        // const stime = stimes.split('+')
+        // this.start = sArray[0] + stime[0]
+        // const eArray = this.end.split('T')
+        // const etimes = eArray[1]
+        // const etime = etimes.split('+')
+        // this.end = eArray[0] + etime[0]
       } catch (error) {
         console.log(error);
         // alert('에러가 발생했습니다.)

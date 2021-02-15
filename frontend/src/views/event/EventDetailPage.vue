@@ -34,8 +34,8 @@
           <div class="row q-mb-md">
             <div class="col-2 text-h6 text-weight-bold">일시</div>
             <div class="col q-ml-xs">
-              <div class="text-h7 q-mb-sm">{{ start }} - {{ end }}</div>
-              <div class="text-h7">{{ start }} - {{ end }}</div>
+              <div class="text-h7 q-mb-sm">{{ start_date }}부터 {{ end_date }}까지</div>
+              <div class="text-h7">{{ start_time }} - {{ end_time }}</div>
             </div>
           </div>
           <div class="q-mb-md">
@@ -53,7 +53,7 @@
       <div class="row full-width q-pt-md q-my-lg q-ml-xl">
         <div class="col-6 q-ml-xl">
           <p><q-icon size="xs" name="bookmarks" /> {{ bookmark_num }}건의 북마크 </p>
-          <p><q-icon size="xs" name="calendar_today" /> 신청기간 : ~ {{ start }} 까지 </p>
+          <p><q-icon size="xs" name="calendar_today" /> 신청기간 : ~ {{ start_date }} 까지 </p>
         </div>
         <q-btn
           @click="register"
@@ -144,8 +144,12 @@ export default {
       title: 'Vue.js 컨퍼런스',
       place: 'Online',
       category: '컨퍼런스',
-      start: '2021/02/11',
-      end: '2021/02/13',
+      start: '',
+      end: '',
+      start_date: '2021/02/11',
+      end_date: '2021/02/13',
+      start_time: '18:00',
+      end_time: '19:30',
       cost: '무료',
       participation: '개발자 혹은 개발에 관심있는 누구나',
       introduction: '프론트엔드 개발을 위한 Vue.js 컨퍼런스입니다.',
@@ -217,6 +221,17 @@ export default {
       this.ref_tags = data.ref_tags;
       this.bookmarked = data.bookmarked;
       this.bookmark_num = data.bookmark_num;
+      // 날짜 시간 형식 변경
+      const sArray = this.start.split('T')
+      this.start_date = sArray[0]
+      const stimes = sArray[1].split('+')
+      const stime = stimes[0].split(':')
+      this.start_time = stime[0]+'시 '+stime[1]+'분'
+      const eArray = this.end.split('T')
+      this.end_date = eArray[0]
+      const etimes = eArray[1].split('+')
+      const etime = etimes[0].split(':')
+      this.end_time = etime[0]+'시 '+etime[1]+'분'
     } catch (error) {
       console.log(error);
       // alert('에러가 발생했습니다.)
