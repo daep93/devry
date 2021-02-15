@@ -93,12 +93,26 @@ const routes = [
     component: () => import('@/views/event/EventDetailPage.vue'),
   },
   {
-    path: '/event-registration/:id?',
+    path: '/event-update/:id',
+    name: 'EventUpdate',
+    component: () => import('@/views/event/EventUpdatePage.vue'),
+    beforeEnter: (to, from, next) => {
+      if (!store.getters.isLogined && Number(store.state.id) <= 5) {
+        alert('관리자만 가능합니다');
+        next('/main');
+        return;
+      }
+      next();
+    },
+  },
+  {
+    path: '/event-registration/',
     name: 'EventRegistration',
     component: () => import('@/views/event/EventRegistrationPage.vue'),
     beforeEnter: (to, from, next) => {
-      if (!store.getters.isLogined) {
-        alert('로그인이 필요합니다');
+      if (!store.getters.isLogined && Number(store.state.id) <= 5) {
+        alert('관리자만 가능합니다');
+        next('/main');
         return;
       }
       next();

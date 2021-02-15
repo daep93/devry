@@ -8,14 +8,20 @@
           :src="thumnail"
           spinner-color="white"
           style="max-width: 450px; height:330px;"
-          class="rounded-borders q-ml-xl col-6">
-          <q-badge v-if="bookmarked === false" @click="checkbookmarked" class="q-ma-xs" float-left>
+          class="rounded-borders q-ml-xl col-6"
+        >
+          <q-badge
+            v-if="bookmarked === false"
+            @click="checkbookmarked"
+            class="q-ma-xs"
+            float-left
+          >
             <q-icon size="sm" name="turned_in_not" />
           </q-badge>
           <q-badge v-else @click="checkbookmarked" class="q-ma-xs" float-left>
             <q-icon size="sm" name="turned_in" />
           </q-badge>
-        </q-img>    
+        </q-img>
         <!-- 이벤트 소개 -->
         <div class="col-4 q-ml-xl q-mb-lg">
           <div class="row q-my-md">
@@ -34,7 +40,9 @@
           <div class="row q-mb-md">
             <div class="col-2 text-h6 text-weight-bold">일시</div>
             <div class="col q-ml-xs">
-              <div class="text-h7 q-mb-sm">{{ start_date }}부터 {{ end_date }}까지</div>
+              <div class="text-h7 q-mb-sm">
+                {{ start_date }}부터 {{ end_date }}까지
+              </div>
               <div class="text-h7">{{ start_time }} - {{ end_time }}</div>
             </div>
           </div>
@@ -48,12 +56,17 @@
           </div>
         </div>
       </div>
-      <hr>
+      <hr />
       <!-- 이벤트 신청 -->
       <div class="row full-width q-pt-md q-my-lg q-ml-xl">
         <div class="col-6 q-ml-xl">
-          <p><q-icon size="xs" name="bookmarks" /> {{ bookmark_num }}건의 북마크 </p>
-          <p><q-icon size="xs" name="calendar_today" /> 신청기간 : ~ {{ start_date }} 까지 </p>
+          <p>
+            <q-icon size="xs" name="bookmarks" /> {{ bookmark_num }}건의 북마크
+          </p>
+          <p>
+            <q-icon size="xs" name="calendar_today" /> 신청기간 : ~
+            {{ start_date }} 까지
+          </p>
         </div>
         <q-btn
           @click="register"
@@ -63,7 +76,7 @@
           style="max-width:300px; height:50px;"
         />
       </div>
-      <hr>
+      <hr />
       <!-- 이벤트 상세 정보 -->
       <div class="full-width q-mt-lg q-ml-xl">
         <!-- 참가대상 -->
@@ -71,17 +84,17 @@
           <div class="text-h6 text-weight-bold q-mb-md">Event 참가대상</div>
           <div>{{ participation }}</div>
         </div>
-          <!-- 소개 -->
+        <!-- 소개 -->
         <div class="q-mt-lg q-ml-xl">
           <div class="text-h6 text-weight-bold q-mb-md">Event 소개</div>
           <div>{{ introduction }}</div>
         </div>
-          <!-- 스케쥴 -->
-          <div class="q-mt-lg q-ml-xl">
+        <!-- 스케쥴 -->
+        <div class="q-mt-lg q-ml-xl">
           <div class="text-h6 text-weight-bold q-mb-md">Event 스케쥴</div>
           <div>{{ schedule }}</div>
-          </div>
-          <!-- 주최자 정보 -->
+        </div>
+        <!-- 주최자 정보 -->
         <div class="q-my-lg q-ml-xl">
           <div class="text-h6 text-weight-bold q-mb-md">주최자 정보</div>
           <div class="row">
@@ -89,8 +102,10 @@
               :src="profile_img"
               class="col-6 float-left q-mr-md rounded-borders"
               style="width: 70px; height: 50px;"
-            >
-            <div class="col-6 q-pt-sm text-h6 text-weight-bold">{{ host_name }}</div>
+            />
+            <div class="col-6 q-pt-sm text-h6 text-weight-bold">
+              {{ host_name }}
+            </div>
           </div>
         </div>
         <!-- 관련 태그 -->
@@ -114,7 +129,10 @@
           </ul>
         </div>
         <!-- 수정하기 버튼 -->
-        <div class="row q-mb-md q-mt-md float-right" style="margin-bottom: 150px;">
+        <div
+          class="row q-mb-md q-mt-md float-right"
+          style="margin-bottom: 150px;"
+        >
           <q-btn
             outline
             color="blue-12"
@@ -126,7 +144,7 @@
         </div>
       </div>
     </div>
-  </div>  
+  </div>
 </template>
 
 <script>
@@ -153,44 +171,45 @@ export default {
       cost: '무료',
       participation: '개발자 혹은 개발에 관심있는 누구나',
       introduction: '프론트엔드 개발을 위한 Vue.js 컨퍼런스입니다.',
-      schedule: '1. 주최자 소개 | 2. 컨퍼런스 소개 | 3. 프론트엔드 프레임워크 소개',
+      schedule:
+        '1. 주최자 소개 | 2. 컨퍼런스 소개 | 3. 프론트엔드 프레임워크 소개',
       host_name: 'Eddie',
       profile_img: 'https://cdn.quasar.dev/img/parallax1.jpg',
       register_url: 'https://google.com',
       ref_tags: ['Vue.js', 'Python', 'JavaScript', 'React'],
       bookmarked: false,
       bookmark_num: 159,
-    }
+    };
   },
   methods: {
     updateEvent() {
       const post_id = this.$route.params.id;
       // 이벤트 등록 수정하기 페이지로 이동
-      this.$router.push({ path: `/event-registration/${post_id}` });
+      this.$router.push({ path: `/event-update/${post_id}` });
       // this.$router.push({ path: '/event-registration/:id' });
     },
     // 북마크 토글하기
     async checkbookmarked() {
       if (!this.$store.getters.isLogined) {
         alert('로그인이 필요합니다');
-        return
+        return;
       }
       const post_id = this.$route.params.id;
       try {
-        const { data } = await toggleEventBookmark(post_id); 
+        const { data } = await toggleEventBookmark(post_id);
         // 넘겨줄 데이터
-        this.bookmarked = !this.bookmarked
-        if(this.bookmarked) {
-          this.bookmark_num = this.bookmark_num + 1
-        }else {
-          this.bookmark_num = this.bookmark_num - 1
+        this.bookmarked = !this.bookmarked;
+        if (this.bookmarked) {
+          this.bookmark_num = this.bookmark_num + 1;
+        } else {
+          this.bookmark_num = this.bookmark_num - 1;
         }
       } catch (error) {
         console.log(error);
       }
     },
     register() {
-      window.open(this.register_url, "_blank");  
+      window.open(this.register_url, '_blank');
     },
     tagColor(tag) {
       return colorSoloMapper(tag, 0.5);
@@ -222,16 +241,16 @@ export default {
       this.bookmarked = data.bookmarked;
       this.bookmark_num = data.bookmark_num;
       // 날짜 시간 형식 변경
-      const sArray = this.start.split('T')
-      this.start_date = sArray[0]
-      const stimes = sArray[1].split('+')
-      const stime = stimes[0].split(':')
-      this.start_time = stime[0]+'시 '+stime[1]+'분'
-      const eArray = this.end.split('T')
-      this.end_date = eArray[0]
-      const etimes = eArray[1].split('+')
-      const etime = etimes[0].split(':')
-      this.end_time = etime[0]+'시 '+etime[1]+'분'
+      const sArray = this.start.split('T');
+      this.start_date = sArray[0];
+      const stimes = sArray[1].split('+');
+      const stime = stimes[0].split(':');
+      this.start_time = stime[0] + '시 ' + stime[1] + '분';
+      const eArray = this.end.split('T');
+      this.end_date = eArray[0];
+      const etimes = eArray[1].split('+');
+      const etime = etimes[0].split(':');
+      this.end_time = etime[0] + '시 ' + etime[1] + '분';
     } catch (error) {
       console.log(error);
       // alert('에러가 발생했습니다.)
@@ -239,7 +258,7 @@ export default {
       this.$q.loading.hide();
     }
   },
-}
+};
 </script>
 
 <style scoped>
