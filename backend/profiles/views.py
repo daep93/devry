@@ -113,6 +113,7 @@ def profile_show(request, profile_pk):
 
     if request.method == 'GET':
         serializer = ProfileShowSerializer(profile)
+        print(serializer.data)
 
         email = User.objects.filter(pk=ProfileSerializer(profile).data['user']).first()
         profile_user = User.objects.get(pk=ProfileSerializer(profile).data['user'])
@@ -120,7 +121,6 @@ def profile_show(request, profile_pk):
 
         serializer.data['followee_num'] = (UserSerializer(profile_user).data['followee_num'])
         serializer.data['follower_num'] = ((UserSerializer(profile_user).data['follower_num']))
-
 
 
 

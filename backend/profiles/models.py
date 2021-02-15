@@ -121,7 +121,7 @@ class Profile(models.Model):
     project_url1 = models.URLField(default="", max_length=100, blank=True)
     project_url2 = models.URLField(default="", max_length=100, blank=True)
     project_url3 = models.URLField(default="", max_length=100, blank=True)
-    tag = MultiSelectField(choices=user_tag)
+    my_tags = MultiSelectField(choices=user_tag)
     pinned_posts = models.TextField(blank=True)
     posts = models.TextField(blank=True)
     comments = models.TextField(blank=True)
