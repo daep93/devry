@@ -1,5 +1,5 @@
 <template>
-  <q-form @submit.prevent="submitForm" class="full-width">
+  <div class="full-width">
     <!-- 기본 정보 입력 part -->
     <div class="q-mb-md">
       <div class="text-h6 text-weight-bold q-mt-xl q-mb-sm">
@@ -157,7 +157,7 @@
             stack-label
             label-slot
             outlined
-            v-model="location"
+            v-model="place"
             placeholder="이벤트 장소를 입력해주세요"
           >
             <template v-slot:label>
@@ -311,24 +311,33 @@
     ></event-tag>  
     <!-- 버튼 -->
     <div class="row q-mb-md q-mt-xl float-right" style="margin-bottom: 150px;">
-      <q-btn
-          v-if="this.$route.params.id !== undefined"
+      <div v-if="this.$route.params.id !== undefined">
+        <q-btn
           outline
           color="red-12"
           class="text-weight-bold q-px-xl q-py-sm q-mr-md"
           label="삭제하기"
           size="md"
           @click="deleteEvent"
-      />
+        />
+        <q-btn
+          color="blue-12"
+          label="수정하기"
+          class="text-weight-bold q-px-xl q-py-sm"
+          size="md"
+          @click="updateEvent"
+        />
+      </div>
       <q-btn
+        v-else
         color="blue-12"
         label="등록하기"
         class="text-weight-bold q-px-xl q-py-sm"
         size="md"
-        type="submit"
+        @click="createEvent"
       />
     </div>
-  </q-form>
+  </div>
 </template>
 
 <script>
@@ -341,17 +350,17 @@ export default {
   },
   data() {
     return {
-      state: 'ready',
+      state: 'Ready',
       state_options: [
-        'ready', 'start', 'end'
+        'Ready', 'Start', 'End'
       ],
       thumnail: 'https://placeimg.com/500/300/nature',
       title: '',
-      category: '컨퍼런스',
+      category: 'Conference',
       category_options: [
-        '컨퍼런스', '워크샵', '해커톤', '경진대회', '모임'
+        'Conference', 'Workshop', 'Hackathon', 'competition', 'Meeting'
       ],
-      location: '',
+      place: '',
       start: '',
       end: '',
       cost: '',
@@ -379,7 +388,7 @@ export default {
     onChangeProfiles(e) {
       const file = e.target.files[0];
       console.log(file);
-      this.host_info.profile_img = URL.createObjectURL(file);
+      this.profile_img = URL.createObjectURL(file);
     },
     addOneTag(tagItem) {
       this.ref_tags.push(tagItem);
@@ -387,59 +396,64 @@ export default {
     removeOneTag(tag, index) {
       this.ref_tags.splice(index, 1);
     },
-    async submitForm() {
-      // 날짜 형식 변경
-      const sArray = this.sdata.split('/')
-      const start_date = sArray[0]+'-'+sArray[1]+'-'+sArray[2]
-      const eArray = this.edata.split('/')
-      const end_date = eArray[0]+'-'+eArray[1]+'-'+eArray[2]
-      // id 가져오기
-      const post_id = this.$route.params.id;
+    async createEvent() {
       try {
         this.$q.loading.show();
         // 이벤트 새로 생성하기
-        if (post_id === undefined) {
-          await createEventItem({
-            // 넘길 데이터 적어주기
-            state: this.state,
-            thumnail: this.thumnail,
-            title: this.title,
-            category: this.category,
-            location: this.location,
-            sdata: start_date,
-            edata: end_date,
-            stime: this.stime,
-            etime: this.etime,
-            cost: this.cost,
-            participation: this.participation,
-            introduction: this.introduction,
-            schedule: this.schedule,
-            host_info: this.host_info,
-            ref_tags: this.ref_tags,
-          })
-        }
-        // 이벤트 수정하기
-        else {
-          await updateEventItem(post_id, {
-            // 넘길 데이터 적어주기
-            state: this.state,
-            thumnail: this.thumnail,
-            title: this.title,
-            category: this.category,
-            location: this.location,
-            sdata: start_date,
-            edata: end_date,
-            stime: this.stime,
-            etime: this.etime,
-            cost: this.cost,
-            participation: this.participation,
-            introduction: this.introduction,
-            schedule: this.schedule,
-            host_info: this.host_info,
-            ref_tags: this.ref_tags,
-          })
-        }
-        console.log('데이터 넘어갔나?')
+        console.log('글 생성하기로 들어왔나?')
+        await createEventItem({
+          // 넘길 데이터 적어주기
+          state: this.state,
+          // thumnail: this.thumnail,
+          title: this.title,
+          category: this.category,
+          place: this.place,
+          start: this.start,
+          end: this.end,
+          cost: this.cost,
+          participation: this.participation,
+          introduction: this.introduction,
+          schedule: this.schedule,
+          host_name: this.host_name,
+          // profile_img: this.profile_img,
+          register_url: this.register_url,
+          ref_tags: this.ref_tags,
+          user: this.$store.state.id,
+        });
+        // 이동 시킬 페이지 적어주기(이벤트 게시판)
+        this.$router.push({ path: '/event' });
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.$q.loading.hide();
+      }
+    },
+    // 이벤트 수정하기
+    async updateEvent() {
+      // id 넘겨주기
+      const post_id = this.$route.params.id;
+      try {
+        console.log(post_id)
+        this.$q.loading.show();
+        await updateEventItem(post_id, {
+          // 넘길 데이터 적어주기
+          state: this.state,
+          // thumnail: this.thumnail,
+          title: this.title,
+          category: this.category,
+          place: this.place,
+          start: this.start,
+          end: this.end,
+          cost: this.cost,
+          participation: this.participation,
+          introduction: this.introduction,
+          schedule: this.schedule,
+          host_name: this.host_name,
+          // profile_img: this.profile_img,
+          register_url: this.register_url,
+          ref_tags: this.ref_tags,
+          user: this.$store.state.id,
+        });
         // 이동 시킬 페이지 적어주기(이벤트 게시판)
         this.$router.push({ path: '/event' });
       } catch (error) {
@@ -464,34 +478,39 @@ export default {
   },
   // Event 수정하기 (데이터 받아오기)
   async created() {
+    this.$store.commit('offLeft');
     // id 가져오기
     const post_id = this.$route.params.id;
     // post_id가 존재할 경우에 기존 정보 가져오기
-    if (post_id !== undefined) {
+    if (post_id) {
       try {
         this.$q.loading.show();
         const { data } = await loadEventItem(post_id);
-        // 날짜 형식 변환
-        const sArray = data.sdata.split('-')
-        const start_date = sArray[0]+'/'+sArray[1]+'/'+sArray[2]
-        const eArray = data.edata.split('-')
-        const end_date = eArray[0]+'/'+eArray[1]+'/'+eArray[2]
         // 가져올 데이터 목록
         this.state = data.state;
         this.thumnail = data.thumnail;
         this.title = data.title;
         this.category = data.category;
-        this.location = data.location;
-        this.sdata = start_date;
-        this.edata = end_date;
-        this.stime = data.stime;
-        this.etime = data.etime;
+        this.place = data.place;
+        this.start = data.start;
+        this.end = data.end;
         this.cost = data.cost;
         this.participation = data.participation;
         this.introduction = data.introduction;
         this.schedule = data.schedule;
-        this.host_info = data.host_info;
+        this.host_name = data.host_name;
+        this.profile_img = data.profile_img;
+        this.register_url = data.register_url;
         this.ref_tags = data.ref_tags;
+        // 날짜 시간 형식 변경
+        // const sArray = this.start.split('T')
+        // const stimes = sArray[1]
+        // const stime = stimes.split('+')
+        // this.start = sArray[0] + stime[0]
+        // const eArray = this.end.split('T')
+        // const etimes = eArray[1]
+        // const etime = etimes.split('+')
+        // this.end = eArray[0] + etime[0]
       } catch (error) {
         console.log(error);
         // alert('에러가 발생했습니다.)
