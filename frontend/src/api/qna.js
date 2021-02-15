@@ -101,6 +101,11 @@ function loadQnaImage() {
   return instance.get('qna/');
 }
 
+// QnA 글 작성자 팔로잉 여부 및 팔로잉하기
+function checkQnaFollowing(qna_pk) {
+  return instance.post(`qna/following/${qna_pk}`);
+}
+
 export {
   registerSmallComment,
   getSmallComments,
@@ -122,4 +127,5 @@ export {
   deleteRecomment,
   saveQnaImage,
   loadQnaImage,
+  checkQnaFollowing,
 };
