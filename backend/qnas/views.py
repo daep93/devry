@@ -14,13 +14,13 @@ from .serializers import QnaListSerializer, QnasmalllistSerializer, Anssmalllist
     QnaListforamtSerializer, QnaSerializer, AnsSerializer, likeSerializer, bookmarkSerializer, solveSerializer, \
     like_ansSerializer, UserinfoSerializer, ProfileListSerializer, ProfileSerializer, QnasmallSerializer, \
     AnssmallSerializer, QnadetailSerializer, AnslistSerializer, AnsdetailSerializer,AnslistformatSerializer, pinnedSerializer, \
-    QnaImageSerializer, AnsImageSerializer, QnaPictureSerializer, ImageFileSerializer, ImageShowSerializer
+    QnaImageSerializer, AnsImageSerializer, ImagePostSerializer
 
 from wsgiref.util import FileWrapper
 
 from image_server.models import QnaValidate, AnsValidate
 from image_server.serializers import QnaImageValidationSerializer, AnsImageValidationSerializer
-from .models import Qna, Ans, Qnasmall, Anssmall, QnaPicture, ImageFile
+from .models import Qna, Ans, Qnasmall, Anssmall, ImagePost
 from rest_framework import viewsets
 from profiles.models import Profile
 from accounts.models import User
@@ -32,27 +32,42 @@ import json
 import requests
 from urllib.parse import urlparse
 from django.core.files.base import ContentFile
-# from django.http.multipartparser import MultiPartParser
 from rest_framework.parsers import FileUploadParser, FormParser, MultiPartParser
 from PIL import Image
 from django.http import HttpResponse, JsonResponse
 from django.conf import settings
 
 
-class PostFileView(APIView):
+
+class ImagePostView(APIView):
     parser_classes = [MultiPartParser, FormParser]
+    serializer_class = ImagePostSerializer
+    
     def post(self, request, *args, **kwargs):
-        file_serializer = ImageFileSerializer(data=request.data)
-        if file_serializer.is_valid():
-            file_serializer.validated_data['img_url'] = ''
-            file_serializer.validated_data['img_url'] = 'http://127.0.0.1:8000/media/qna/' + str(file_serializer.validated_data['img_file'])
-            file_serializer.save()
-            return Response(file_serializer.data)
+        headers = {'Content-Type': 'multipart/form-data; charset=utf-8'}
+        user = request.user
+        print(user)
+        serializer = ImagePostSerializer(data=request.data)
+        if serializer.is_valid():
+            queryset = ImagePost.objects.all()
+            for i in queryset:
+                print(ImagePostSerializer(i).data['image'])
+                
+            print(serializer.validated_data['image'])
+            serializer.save()
+            print(serializer.data)
+            return Response(serializer.data)
         else:
-            return Response(file_serializer.errors)
+            return Response(serializer.errors)
 
-
-
+class ImagePostViewSet(viewsets.ModelViewSet):
+    '''
+    사진을 전송받으면 해당 사진을 서버에 저장하고, 해당 이미지의 URL을 돌려줍니다.
+    해당 URL을 클릭하면 이미지를 확인할 수 있습니다.
+    '''
+    queryset = ImagePost.objects.all()
+    serializer_class = ImagePostSerializer
+    parser_classes = [MultiPartParser, FormParser] 
     
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Qna.objects.all()
