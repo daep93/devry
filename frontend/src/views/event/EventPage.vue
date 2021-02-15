@@ -8,14 +8,18 @@
       </div> -->
       <main-event></main-event>
       <recommend-events></recommend-events>
-      <upcoming-events></upcoming-events>
+      <upcoming-events class="q-mb-lg"></upcoming-events>
       <!-- 이벤트 등록 신청 버튼 -->
-      <div class="q-mb-md q-mt-md float-right" style="margin-bottom: 30px;">
+      <div
+        class="q-mb-xl q-mt-md float-right"
+        v-if="Number($store.state.id) <= 5"
+      >
         <q-btn
           color="blue-12"
           class="text-weight-bold q-px-md q-py-sm"
           label="이벤트 등록 신청"
           size="md"
+          @click="$router.push('/event-registration/')"
         />
       </div>
     </div>
