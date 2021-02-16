@@ -47,10 +47,13 @@
 
 <script>
 export default {
-  props: ['propsTechStackData'],
+  props: {
+    propsTechStackData: Array,
+  },
   data() {
     return {
       techStack: '',
+      techStacks: [],
     };
   },
   methods: {
@@ -62,6 +65,12 @@ export default {
     },
     removeTechStack: function(skill, index) {
       this.$emit('removeTechStackItem', skill, index);
+    },
+  },
+  watch: {
+    propsTechStackData(newValue) {
+      console.log(newValue);
+      this.techStacks = newValue;
     },
   },
 };
