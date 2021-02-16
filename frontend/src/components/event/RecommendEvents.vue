@@ -127,7 +127,6 @@ export default {
       });
     },
     categorySortedList() {
-      // return testCase.filter(article => {
       return this.tagFilteredList.filter(article => {
         if (this.category === 'ALL') return true;
         if (article.category === this.category) return true;
