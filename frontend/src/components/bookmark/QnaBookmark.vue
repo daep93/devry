@@ -1,0 +1,101 @@
+<template>
+  <div class="row col-12">
+    <div
+      class="row col-12 q-mb-md text-h6 text-weight-bold"
+      style="color: #545454"
+    >
+      QnA bookmark
+    </div>
+    <div
+      v-for="(data, index) in QnaBookmarkList"
+      key="data"
+      class="row col-9 q-mb-sm"
+    >
+      <q-card class="row full-width q-pa-md" flat bordered>
+        <div class="row col-12">
+          <div class="row col-9">
+            <div class="row col-12 q-mb-sm">
+              <span class="text-body1">{{ data.title }}</span>
+            </div>
+            <div class="row col-12">
+              <span
+                v-for="tag in data.ref_tags"
+                :key="tag"
+                :style="{ 'background-color': tagColor(tag, 0.5) }"
+                style="font-size:0.8em; border-radius:3pt;"
+                class="q-px-xs q-mr-sm"
+                >#{{ tag.charAt(0).toUpperCase() + tag.slice(1) }}</span
+              >
+            </div>
+          </div>
+          <div class="row col-2">
+            <div class="row col-12">@{{ data.user.username }}</div>
+            <div class="row col-12 text-caption">
+              {{ data.written_time | moment('YYYY/MM/DD HH:mm') }}
+            </div>
+          </div>
+          <div class="row col-1 justify-end">
+            <q-icon
+              :name="$i.ionBookmark"
+              :style="{ color: '#598FFC' }"
+              size="xs"
+              class="cursor-pointer"
+              @click="cancelBookmark(index)"
+            ></q-icon>
+          </div>
+        </div>
+      </q-card>
+    </div>
+  </div>
+</template>
+
+<script>
+import { getQnaBookmarkList } from '@/api/bookmark';
+import { toggleQnaBookmark } from '@/api/qna';
+import { colorSoloMapper } from '@/utils/tagColorMapper';
+
+export default {
+  data() {
+    return {
+      QnaBookmarkList: [],
+    };
+  },
+  methods: {
+    tagColor(tag, alpha) {
+      return colorSoloMapper(tag, alpha);
+    },
+    async getQnaBookmark() {
+      try {
+        this.$q.loading.show();
+        const { data } = await getQnaBookmarkList();
+        this.QnaBookmarkList = data;
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.$q.loading.hide();
+      }
+    },
+    async cancelBookmark(index) {
+      try {
+        this.$q.loading.show();
+        const qnaId = this.QnaBookmarkList[index].id;
+        await toggleQnaBookmark(qnaId);
+        this.getQnaBookmark();
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.$q.loading.hide();
+      }
+    },
+  },
+  async created() {
+    try {
+      this.getQnaBookmark();
+    } catch (error) {
+      console.log(error);
+    }
+  },
+};
+</script>
+
+<style scoped></style>

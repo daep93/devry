@@ -159,20 +159,6 @@ export default {
         console.log(error);
       }
     },
-    // checkLiked(index) {
-    //   if (!this.$store.getters.isLogined) {
-    //     alert('로그인을 해주세요');
-    //     return;
-    //   }
-    //   const heart = this.comments[index];
-
-    //   heart.liked = !heart.liked;
-    //   if (heart.liked) {
-    //     heart.like_num = heart.like_num - 1;
-    //   } else {
-    //     heart.like_num = heart.like_num + 1;
-    //   }
-    // },
   },
 };
 </script>
