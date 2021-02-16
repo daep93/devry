@@ -313,11 +313,17 @@
       </div> 
     </div> 
     <!-- 이벤트 관련 태그 -->
-    <event-tag
+    <!-- <event-tag
       @addTagItem="addOneTag"
       @removeTagItem="removeOneTag"
       :propsTagData="ref_tags"
-    ></event-tag>  
+    ></event-tag>   -->
+    <event-registration-tag
+      @addTagItem="addOneTag"
+      @removeTagItem="removeOneTag"
+      :propsTagData="ref_tags"
+    >
+    </event-registration-tag>
     <!-- 버튼 -->
     <div class="row q-mb-md q-mt-xl float-right" style="margin-bottom: 150px;">
       <div v-if="this.$route.params.id !== undefined">
@@ -350,12 +356,14 @@
 </template>
 
 <script>
-import EventTag from '@/components/event/EventTag';
+// import EventTag from '@/components/event/EventTag';
+import EventRegistrationTag from '@/components/event/EventRegistrationTag';
 import { loadEventItem, createEventItem, updateEventItem, deleteEventItem } from '@/api/eventRegistration';
 
 export default {
   components: {
-    EventTag,
+    // EventTag,
+    EventRegistrationTag
   },
   data() {
     return {
@@ -367,7 +375,7 @@ export default {
       title: '',
       category: 'Conference',
       category_options: [
-        'Conference', 'Workshop', 'Hackathon', 'competition', 'Meeting'
+        'Conference', 'Workshop', 'Hackathon', 'Competition', 'Meeting'
       ],
       place: '',
       start: '',
