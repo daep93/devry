@@ -29,7 +29,7 @@
                   profile ? profile.username : info.user.username
                 }}</b>
                 <div class="text-caption row">
-                  글 ?? · 팔로워 {{ info.profile.follower_num }}
+                  글 ?? · 팔로워 {{ follower_num }}
                   <!-- 글 {{ info.profile ? profile.post_num : 0 }} · 팔로워
                   {{ profile ? profile.follow_num : 0 }} -->
                 </div>
@@ -113,6 +113,7 @@ export default {
       username: 'Test User',
       profile_img: 'https://cdn.quasar.dev/img/avatar.png',
       is_following: this.info.is_following,
+      follower_num: this.info.user.follower_num,
     };
   },
   methods: {
@@ -122,9 +123,13 @@ export default {
         return;
       }
       try {
-        console.log(this.info.post_id);
         await checkQnaFollowing(this.info.post_id);
         this.is_following = !this.is_following;
+        if (this.is_following) {
+          this.follower_num = this.follower_num + 1;
+        } else {
+          this.follower_num = this.follower_num - 1;
+        }
       } catch (error) {
         console.log(error);
       }

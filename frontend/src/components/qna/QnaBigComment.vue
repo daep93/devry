@@ -47,13 +47,6 @@
                         채택 하기
                       </q-badge>
                     </template>
-                    <!-- <q-icon
-                      :name="$i.ionCheckmarkCircleOutline"
-                      :style="{ color: data.assisted ? 'blue' : '#B7B7B7' }"
-                      class="cursor-pointer"
-                      size="sm"
-                      @click="chooseComment(index)"
-                    ></q-icon> -->
                   </span>
                   <span v-else-if="data.assisted" class="q-ml-sm">
                     <q-badge color="blue">
@@ -188,6 +181,7 @@ export default {
       modes: res,
       ans_pk: null,
       recomments: Array,
+      is_following: Boolean,
     };
   },
   methods: {
@@ -235,7 +229,6 @@ export default {
     },
     async chooseComment(index) {
       try {
-        // console.log(this.info);
         for (let check of this.info) {
           if (check.assisted == true && !this.info[index].assisted) {
             check.assisted = false;
