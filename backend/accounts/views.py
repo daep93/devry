@@ -176,13 +176,13 @@ class UserLoginView(GenericAPIView):
         profiles = Profile.objects.all()
         if profiles.filter(user_id=self.user.id).exists():
             profile = Profile.objects.get(username=self.user.username)
-            if ProfileSerializer(profile).data['tag']:
-                user_tag = ProfileSerializer(profile).data['tag']
+            if ProfileSerializer(profile).data['my_tags']:
+                user_tag = ProfileSerializer(profile).data['my_tags']
                 response = Response({
                     "user": {
                         "id": self.user.id,
                         "username": self.user.username,
-                        "tag": user_tag
+                        "my_tags": user_tag
                     },
                     "token": serializer.data['key']
                 })
@@ -278,12 +278,18 @@ def following(request):
 
     if request.method == 'POST':
         serializer = UserFollowingSerializer(data=request.data)
-
         followee_people = User.objects.get(pk=request.data['user'])
         following_people = User.objects.get(pk=request.data['following_user'])
 
         if serializer.is_valid(raise_exception=True):
+            print(serializer.validated_data)
             serializer.save()
+
+        followee_people.follower_num += 1
+        following_people.followee_num += 1
+        followee_people.save()
+        following_people.save()
+        
         return Response(serializer.data)
 
 

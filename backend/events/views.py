@@ -1,5 +1,8 @@
 from django.shortcuts import get_object_or_404
-
+from mysite.utils import jwt_encode
+from rest_auth.models import TokenModel
+from rest_framework.authtoken.models import Token
+from mysite.app_settings import TokenSerializer
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -32,7 +35,7 @@ def event_main_list(request):
         request.user = user
 
     if request.method == 'GET':
-        events = Event.objects.filter(start__lte=now_day, end__gt=now_day).order_by('start')
+        events = Event.objects.filter(start__lte=now_day, end__gt=now_day, king="True").order_by('start')
         serializer = EventMainSerializer(events, many=True)
         return Response(serializer.data)
 

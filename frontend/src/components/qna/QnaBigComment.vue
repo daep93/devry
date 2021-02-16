@@ -47,13 +47,6 @@
                         채택 하기
                       </q-badge>
                     </template>
-                    <!-- <q-icon
-                      :name="$i.ionCheckmarkCircleOutline"
-                      :style="{ color: data.assisted ? 'blue' : '#B7B7B7' }"
-                      class="cursor-pointer"
-                      size="sm"
-                      @click="chooseComment(index)"
-                    ></q-icon> -->
                   </span>
                   <span v-else-if="data.assisted" class="q-ml-sm">
                     <q-badge color="blue">
@@ -123,6 +116,14 @@
             <!-- 큰 댓글의 작은 댓글 -->
             <q-card-section class="row col-12">
               <template v-if="data.anssmall_set.length">
+                <div class="row full-width items-end q-mb-xs">
+                  <q-icon
+                    :name="$i.ionChatbubblesOutline"
+                    style="color:#727272"
+                    size="sm"
+                  ></q-icon>
+                  <span>댓글 {{ data.anssmall_set.length }}개</span>
+                </div>
                 <q-separator />
               </template>
               <qna-recomment
@@ -180,6 +181,7 @@ export default {
       modes: res,
       ans_pk: null,
       recomments: Array,
+      is_following: Boolean,
     };
   },
   methods: {
@@ -227,7 +229,6 @@ export default {
     },
     async chooseComment(index) {
       try {
-        // console.log(this.info);
         for (let check of this.info) {
           if (check.assisted == true && !this.info[index].assisted) {
             check.assisted = false;

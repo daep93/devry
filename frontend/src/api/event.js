@@ -2,7 +2,7 @@ import { instance } from '@/api';
 
 // Event 내용 불러오기
 function getEvent(postId) {
-  return instance.get(`event/${postid}/`);
+  return instance.get(`event/${postId}/`);
 }
 
 // Event 북마크 토글하기

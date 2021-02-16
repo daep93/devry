@@ -1,105 +1,188 @@
 <template>
-  <div>
-    <q-card flat bordered class="my-card" style="padding: 40px; width: 800px;">
-      <div class="q-pt-none row">
-        <div class="col-2" style="width: 50px; margin-right: 5px;">
-          <span style="cursor: pointer;">
-            <q-avatar @click="goToProfile" style="width: 35px; height: 35px;"
-              ><img src="https://cdn.quasar.dev/img/avatar.png" />
-            </q-avatar>
-          </span>
-        </div>
-        <div class="col-10">
-          <span>
-            <q-input
-              outlined
-              v-model="text"
-              :dense="dense"
-              style="width: 660px;"
-              placeholder="댓글을 입력해주세요"
-            />
-          </span>
-        </div>
-      </div>
-      <q-card-section style="margin-right: -12px;">
-        <div class="icon-position">
-          <q-btn
-            no-caps
-            color="grey"
-            id="follow-btn"
-            label="Cancel"
-            style="width:85px;"
-          />
-          <q-btn
-            no-caps
-            color="primary"
-            id="follow-btn"
-            label="Submit"
-            style="width:85px; margin-left: 10px;"
-          />
-        </div>
-      </q-card-section>
-      <div style="margin-top: 50px;">
-        <div class="q-pt-none row" v-for="n in 3" :key="n">
-          <div class="col-2" style="width: 50px; margin-right: 5px;">
-            <span style="cursor: pointer;">
-              <q-avatar @click="goToProfile" style="width: 35px; height: 35px;"
-                ><img :src="profile_img" />
-              </q-avatar>
-            </span>
+  <div class="row col-12">
+    <!-- 댓글 시작 -->
+    <div v-for="(data, index) in info" :key="index" class="row col-12">
+      <div class="row col-12">
+        <!-- <div class="row col-12" v-for="(data, index) in info" :key="index"> -->
+        <div class="row col-2">
+          <!-- 댓글 좋아요 수, 댓글 수, 북마크 수 -->
+          <div class="row col-9"></div>
+          <div class="row col-3 q-mt-lg">
+            <forum-comment-status :info="data"></forum-comment-status>
           </div>
-          <div class="col-10">
-            <!-- 댓글 -->
-            <span>
-              <q-card
-                flat
-                bordered
-                class="my-card"
-                style="width: 660px; height: 100px; padding: 18px;"
-              >
-                <span>{{ username }}</span>
-                <span style="margin-left: 10px; font-size: 5px;">7분 전</span>
-                <div class="icon-position">
-                  <q-icon
-                    :name="$i.ionHeartOutline"
-                    style="color:#727272"
-                    size="22px"
-                    class="q-mr-sm"
-                  ></q-icon>
-                  <span style="margin-right: 20px;">17 likes</span>
-                  <q-icon
-                    :name="$i.ionChatboxEllipsesOutline"
-                    style="color:#727272"
-                    size="22px"
-                    class="q-mr-sm"
-                  ></q-icon>
-                  <span style="margin-right: 20px;">Reply</span>
+        </div>
+        <div class="row col-10">
+          <div class="row col-9">
+            <q-card flat bordered class="my-card q-pa-lg q-mt-lg row col-12">
+              <div class="row col-11 q-mt-sm">
+                <div class="row col-12">
+                  <div class="col-1">
+                    <span class="cursor-pointer q-ml-sm">
+                      <q-avatar size="lg"
+                        ><img src="https://cdn.quasar.dev/img/avatar.png" />
+                      </q-avatar>
+                    </span>
+                  </div>
+                  <!-- <q-card flat bordered class="my-card col-11 q-pa-lg"> -->
+                  <span class="text-body1 text-weight-bold">{{
+                    data.user.username
+                  }}</span>
+                  <span class="q-ml-sm text-caption" style="color: gray">{{
+                    data.written_time | moment('YYYY/MM/DD HH:mm')
+                  }}</span>
+                  <!-- <div class="row col-12 q-mt-md q-ml-sm">
+                    {{ data.comment_content }}
+                  </div> -->
+                  <!-- </q-card> -->
                 </div>
-                <!-- 댓글 내용 -->
-                <div style="padding-top: 5px;">댓글 내용</div>
-              </q-card>
-              <br />
-            </span>
+              </div>
+
+              <div class="row col-1 justify-end">
+                <div v-if="data.user.id == $store.state.id">
+                  <div>
+                    <q-btn flat round dense icon="more_vert">
+                      <q-menu>
+                        <q-list style="min-width: 100px">
+                          <q-item
+                            clickable
+                            v-close-popup
+                            @click="editerOpen(index)"
+                          >
+                            <q-item-section>수정하기</q-item-section>
+                          </q-item>
+                          <q-item
+                            clickable
+                            v-close-popup
+                            @click="deleteComment(index)"
+                          >
+                            <q-item-section>삭제하기</q-item-section>
+                          </q-item>
+                        </q-list>
+                      </q-menu>
+                    </q-btn>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row col-12 justify-center">
+                <markdown-editor
+                  v-if="modes[index] == 'editable'"
+                  height="500px"
+                  :fetchData="data.comment_content"
+                  @input="getContents(data, $event)"
+                  class="q-mb-md q-px-md"
+                ></markdown-editor>
+                <v-md-editor
+                  v-else
+                  :value="liquidResolve(data.comment_content)"
+                  mode="preview"
+                  class="q-mb-md"
+                >
+                </v-md-editor>
+
+                <q-btn
+                  @click="updateComment(index)"
+                  color="primary"
+                  v-if="modes[index] === 'editable'"
+                  >수정 완료</q-btn
+                >
+              </div>
+
+              <div class="q-ml-md row col-12">
+                <q-card-section class="row col-12">
+                  <q-markdown :src="info.comment_content"> </q-markdown>
+                </q-card-section>
+              </div>
+            </q-card>
           </div>
         </div>
       </div>
-    </q-card>
+    </div>
   </div>
 </template>
 
 <script>
+import ForumCommentStatus from '@/components/forum/ForumCommentStatus';
+import {
+  loadForumItem,
+  updateForumComment,
+  deleteForumComment,
+} from '@/api/forum';
+import { liquidResolver } from '@/utils/liquidTag';
+import MarkdownEditor from '@/components/common/MarkdownEditor';
+
 export default {
+  props: {
+    info: Array,
+  },
+  components: {
+    ForumCommentStatus,
+    MarkdownEditor,
+  },
   data() {
+    const res = [];
+    for (const i in this.info) res.push('preview');
+    this.modes = res;
     return {
-      title: 'Add a YouTube stats widget to your iPhone with JavaScript',
-      username: 'test user',
-      profile_img: 'https://cdn.quasar.dev/img/mountains.jpg',
+      contents: '',
+      content: '',
+      modes: res,
     };
   },
   methods: {
-    goToProfile() {
-      this.$router.push({ name: 'Profile' });
+    liquidResolve(tag) {
+      return liquidResolver(tag);
     },
+    getContents(fetchData, data) {
+      fetchData.comment_content = data;
+    },
+    editerOpen(index) {
+      this.modes[index] = 'editable';
+      this.modes = [...this.modes];
+    },
+    async updateComment(index) {
+      if (this.contents === '') {
+        alert('내용은 필수 입력항목 입니다');
+      }
+      try {
+        const comment_pk = this.info[index].id;
+        const postId = this.info[index].post;
+        this.modes[index] = 'preview';
+        this.modes = [...this.modes];
+        this.$q.loading.show();
+        await updateForumComment(comment_pk, {
+          comment_content: this.info[index].comment_content,
+          post: postId,
+          user: this.author,
+        });
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.$q.loading.hide();
+      }
+    },
+    async deleteComment(index) {
+      try {
+        this.$q.loading.show();
+        const comment_pk = this.info[index].id;
+        await deleteForumComment(comment_pk);
+        location.reload();
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.$q.loading.hide();
+      }
+    },
+  },
+  async created() {
+    const index = this.$route.params.id;
+    try {
+      const { data } = await loadForumItem(index);
+      this.contents = data;
+      this.author = data.user.id;
+    } catch (error) {
+      console.log(error);
+    }
   },
 };
 </script>

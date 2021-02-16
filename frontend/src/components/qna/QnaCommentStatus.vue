@@ -1,7 +1,7 @@
 <template>
   <div class="q-pl-md row col-12">
     <div class="row col-12">
-      <q-card flat bordered style="width: 40px; height: 125px;">
+      <q-card flat bordered style="width: 50px; height: 65px;">
         <div style="margin:0 auto; text-align:center" class="q-pt-sm">
           <template v-if="info.liked_ans">
             <q-icon
@@ -24,17 +24,6 @@
 
           <br />
           <span>{{ info.like_ans_num }}</span>
-          <br />
-          <br />
-          <q-icon
-            :name="$i.ionChatboxEllipsesOutline"
-            style="color:#727272"
-            size="17px"
-          ></q-icon>
-          <br />
-          <span>{{ info.comment_anssmall_num }}</span>
-          <br />
-          <br />
         </div>
       </q-card>
     </div>

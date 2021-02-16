@@ -75,7 +75,7 @@ export default {
         bookmarked: this.contents.bookmarked,
         bookmark_num: this.contents.bookmark_num,
         viewed_num: this.contents.viewed_num,
-        comment: this.contents.qnasmall_set,
+        comment_num: this.contents.comment_num,
         post_id: this.contents.id,
       };
     },
@@ -96,6 +96,8 @@ export default {
       return {
         profile: this.contents.profile,
         user: this.contents.user,
+        post_id: this.contents.id,
+        is_following: this.contents.is_following,
       };
     },
     bigComments() {

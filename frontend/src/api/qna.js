@@ -101,6 +101,21 @@ function loadQnaImage() {
   return instance.get('qna/');
 }
 
+// QnA 글 작성자 팔로잉 여부 및 팔로잉하기
+function checkQnaFollowing(qna_pk) {
+  return instance.post(`qna/following/${qna_pk}`);
+}
+
+// QnA 큰 댓글 작성자 팔로잉하기
+function checkQnaSmallFollowStatus(ans_pk) {
+  return instance.get(`ans/following/${ans_pk}`);
+}
+
+// QnA 큰 댓글 작성자 팔로잉하기
+function checkQnaSmallFollowing(ans_pk) {
+  return instance.post(`ans/following/${ans_pk}`);
+}
+
 export {
   registerSmallComment,
   getSmallComments,
@@ -122,4 +137,7 @@ export {
   deleteRecomment,
   saveQnaImage,
   loadQnaImage,
+  checkQnaFollowing,
+  checkQnaSmallFollowStatus,
+  checkQnaSmallFollowing,
 };

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django_rest_passwordreset',
 
     'accounts',
+    'image_server',
 
     'events',
     'qnas',
@@ -68,6 +69,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.github',
     'drf_yasg',
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
