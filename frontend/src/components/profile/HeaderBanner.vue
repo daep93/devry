@@ -5,9 +5,10 @@
         <div class="col-3 row justify-center">
           <div class="col-9">
             <q-img
-              :src="info.profileImg ? img : require('@/assets/change_pwd.png')"
+              :src="info.profileImg ? img : require('@/assets/basic_image.png')"
               alt="change-password"
               class="profile-picture "
+              style="width:150px;height:150px"
             ></q-img>
           </div>
         </div>
@@ -119,7 +120,7 @@ export default {
 <style scoped>
 .profile-picture {
   width: 100%;
-  border: 5px solid #ece1e1;
+  border: 5px solid #d1d4f1;
   border-radius: 100px;
 }
 </style>

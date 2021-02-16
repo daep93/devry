@@ -58,11 +58,22 @@
       <div class="row col-6 items-center justify-center q-py-xs ">
         <div class="col-4 row justify-end">
           <q-avatar style="border: 1px solid #ECEFF1" size="2.8em">
-            <q-img :src="require('@/assets/keyboard.png')" />
+            <q-img
+              :src="
+                entity.profile.profile_img
+                  ? img_url
+                  : require('@/assets/basic_image.png')
+              "
+              @click="goToProfile"
+              class="cursor-pointer"
+            />
           </q-avatar>
         </div>
         <div class="q-pl-sm col-8">
-          <div class="text-weight-regular col-12 text-primary">
+          <div
+            class="text-weight-regular col-12 text-primary cursor-pointer"
+            @click="goToProfile"
+          >
             {{ entity.user.username }}
           </div>
           <div class="text-weight-thin col-12" style="font-size:8pt">
@@ -80,6 +91,11 @@ export default {
   props: {
     entity: Object,
   },
+  data() {
+    return {
+      img_url: `${process.env.VUE_APP_SERVER_API_URL}${this.entity.profile.profile_img}`,
+    };
+  },
   methods: {
     tagColor(tag, alpha) {
       return colorSoloMapper(tag, alpha);
@@ -87,6 +103,9 @@ export default {
     // TODO: 추후 연결 페이지 수정 필요
     goToDetail() {
       this.$router.push(`/qna-detail/${this.entity.id}`);
+    },
+    goToProfile() {
+      this.$router.push(`/profile/${this.entity.user.id}`);
     },
   },
 };
