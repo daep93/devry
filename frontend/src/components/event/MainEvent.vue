@@ -14,82 +14,48 @@
       height="270px"
     >
       <q-carousel-slide
-        :name="1"
-        class="bg-black"
-        style="border-radius: 10px;"
-        @click="moveToDetailPage"
-      >
-        <div class="q-mt-lg q-ml-lg">
-          <div class="text-h5 text-white">For Developer vol.1</div>
-          <div class="text-h4 text-teal-8 text-weight-bolder">
-            2021 Vue.js Online
-          </div>
-        </div>
-        <q-btn
-          outline
-          class="absolute-bottom-right q-ma-xl"
-          color="white"
-          text-color="white"
-          label="바로가기"
-        />
-      </q-carousel-slide>
-      <q-carousel-slide
-        :name="2"
-        style="background-color: #213186; border-radius: 10px;"
+        :name="index"
+        v-for="(event, index) in this.main_events"
+        :key="event.eventId"
+        style="background-color: pink; border-radius: 10px;"
         class="overflow-hidden"
       >
-        <div class="row justify-center overflow-hidden">
-          <img
-            src="@/assets/hackathon.png"
-            alt="AI hackathon"
-            style="height:250px;width:40%"
-          />
-        </div>
-      </q-carousel-slide>
-      <q-carousel-slide
-        :name="3"
-        img-src="https://cdn.quasar.dev/img/parallax2.jpg"
-        style="border-radius: 10px;"
-      >
-        <q-btn
-          outline
-          class="absolute-bottom-right q-ma-xl"
-          color="white"
-          text-color="white"
-          label="바로가기"
-        />
-      </q-carousel-slide>
-      <q-carousel-slide
-        :name="4"
-        img-src="https://cdn.quasar.dev/img/quasar.jpg"
-        style="border-radius: 10px;"
-      >
-        <q-btn
-          outline
-          class="absolute-bottom-right q-ma-xl"
-          color="white"
-          text-color="white"
-          label="바로가기"
-        />
+        <main-entity :entity="event"></main-entity>
       </q-carousel-slide>
     </q-carousel>
   </div>
 </template>
 
 <script>
+import MainEntity from '@/components/event/MainEntity.vue';
+import { getMainEventList } from '@/api/board';
+
 export default {
+  components: {
+    MainEntity,
+  },
   data() {
     return {
       autoplay: true,
       slide: 1,
+      main_events: [],
+      num : 1
     };
   },
-  methods: {
-    moveToDetailPage: function() {
-      const post_id = this.$route.params.id;
-      this.$router.push({ path: `/event-detail/${post_id}` });
-    },
-  },
+  async created() {
+    try {
+      this.$q.loading.show();
+      // 가져올 데이터 목록
+      const { data } = await getMainEventList();
+      this.main_events = data;
+      return data;
+    } catch (error) {
+      console.log(error);
+      // alert('에러가 발생했습니다.)
+    } finally {
+      this.$q.loading.hide();
+    }
+  }
 };
 </script>
 
