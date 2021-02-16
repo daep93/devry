@@ -64,6 +64,11 @@ class QnasmallSerializer(serializers.ModelSerializer):
         fields = ('id', "qna", "content", "user", "written_time")
 
 
+class AnsQnaTitleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Qna
+        fields = ('title',)
+
 class QnasmalllistSerializer(serializers.ModelSerializer):
     
     user = UserinfoSerializer(
@@ -175,7 +180,8 @@ class AnslistSerializer(serializers.ModelSerializer):
 
 
 class AnsSerializer(serializers.ModelSerializer):
-
+    title = serializers.CharField(read_only=True)
+    username = serializers.CharField(read_only=True)
     anssmall_set = AnssmallSerializer(
         many=True,
         read_only=True,
@@ -183,7 +189,7 @@ class AnsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ans
-        fields = ('id', 'assisted', 'like_ans_num','user', 'content', 'qna', 'written_time', 'liked_ans', 'anssmall_set', 'profile')
+        fields = ('id', 'assisted', 'like_ans_num','user', 'content', 'qna', 'written_time', 'liked_ans', 'anssmall_set', 'profile', 'title', 'username')
 
 
 class AnsinfoSerializer(serializers.ModelSerializer):

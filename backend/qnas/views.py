@@ -151,26 +151,33 @@ def qna_list_create(request):
 
         if serializer.is_valid(raise_exception=True):
             serializer.save()    
-            post_qna = Qna.objects.all()
-            qna = Qna.objects.get(id=QnaSerializer(post_qna[len(post_qna) - 1]).data['id'])
-            image_list = []
-            post_content = QnaImageSerializer(qna).data['content']
-            for word in range(1, len(post_content)):
-                if post_content[word - 1: word + 1] == '(h':
-                    start_idx = word
-                if post_content[word] == ')':
-                    if start_idx:
-                        if post_content[start_idx: word][-3:] in ['jpg', 'png', 'jpeg', 'gif', 'svg']:
-                            image_list.append(post_content[start_idx: word])
-            qnavalidate = QnaValidate()
-            print(image_list)
-            for url in image_list:
-                image_url = url
-                name = urlparse(image_url).path.split('/')[-1]
-                response = requests.get(image_url) 
-                print(name)
-                if response.status_code == 200:
-                    qnavalidate.qna_image.save(name, ContentFile(response.content), save=True)
+            # 글 저장시 첨부되었던 사진을 서버에 저장하는 코드
+            # 잠시 가려두었습니다
+            # post_qna = Qna.objects.all()
+            # qna = Qna.objects.get(id=QnaSerializer(post_qna[len(post_qna) - 1]).data['id'])
+            # image_list = []
+            # post_content = QnaImageSerializer(qna).data['content']
+            # for word in range(1, len(post_content)):
+            #     if post_content[word - 1: word + 1] == '(h':
+            #         start_idx = word
+            #     if post_content[word] == ')':
+            #         if start_idx:
+            #             if post_content[start_idx: word][-3:] in ['jpg', 'png', 'jpeg', 'gif', 'svg']:
+            #                 image_list.append(post_content[start_idx: word])
+            
+            # qnavalidate = QnaValidate()
+            # print(image_list)
+            # for url in image_list:
+            #     image_url = url
+            #     name = urlparse(image_url).path.split('/')[-1]
+            #     response = requests.get(image_url) 
+            #     print(name)
+            #     if response.status_code == 200:
+            #         qnavalidate.qna_image.save(name, ContentFile(response.content), save=True)
+
+
+
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
         
 
@@ -228,8 +235,10 @@ def qna_detail_update_delete(request, qna_pk):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
     else:
-        qnavalidate = QnaValidate.objects.get(id=qna_pk)
-        qnavalidate.qna_image.delete(save=True)
+        # 글 삭제시 첨부되었던 사진을 서버에서 삭제하는 코드
+        # 잠시 가려두었습니다
+        # qnavalidate = QnaValidate.objects.get(id=qna_pk)
+        # qnavalidate.qna_image.delete(save=True)
         qna.delete()
         return Response({ 'id': qna_pk }, status=status.HTTP_204_NO_CONTENT)
 
@@ -277,27 +286,38 @@ def ans_list(request):
             request.data['profile'] = pro.id
         serializer = AnsSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
+
+            commented_qna = Qna.objects.get(id=request.data['qna'])
+            
+            serializer.validated_data['title'] = commented_qna
+            serializer.validated_data['username'] = User.objects.get(id=QnaSerializer(commented_qna).data['user'])
             serializer.save()     
-            post_ans = Ans.objects.all()
-            ans = Ans.objects.get(id=AnsSerializer(post_ans[len(post_ans) - 1]).data['id'])
-            image_list = []
-            post_content = AnsImageSerializer(ans).data['content']
-            for word in range(1, len(post_content)):
-                if post_content[word - 1: word + 1] == '(h':
-                    start_idx = word
-                if post_content[word] == ')':
-                    if start_idx:
-                        if post_content[start_idx: word][-3:] in ['jpg', 'png', 'jpeg', 'gif', 'svg']:
-                            image_list.append(post_content[start_idx: word])
-            ansvalidate = AnsValidate()
-            print(image_list)
-            for url in image_list:
-                image_url = url
-                name = urlparse(image_url).path.split('/')[-1]
-                response = requests.get(image_url) 
-                print(name)
-                if response.status_code == 200:
-                    ansvalidate.ans_image.save(name, ContentFile(response.content), save=True)
+
+
+            # 답변 작성시 첨부한 이미지를 서버에 자동으로 저장하는 코드
+            # 잠시 가려두었습니다
+            # post_ans = Ans.objects.all()
+
+            # ans = Ans.objects.get(id=AnsSerializer(post_ans[len(post_ans) - 1]).data['id'])
+            # image_list = []
+            # post_content = AnsImageSerializer(ans).data['content']
+            # for word in range(1, len(post_content)):
+            #     if post_content[word - 1: word + 1] == '(h':
+            #         start_idx = word
+            #     if post_content[word] == ')':
+            #         if start_idx:
+            #             if post_content[start_idx: word][-3:] in ['jpg', 'png', 'jpeg', 'gif', 'svg']:
+            #                 image_list.append(post_content[start_idx: word])
+            
+            # ansvalidate = AnsValidate()
+            # print(image_list)
+            # for url in image_list:
+            #     image_url = url
+            #     name = urlparse(image_url).path.split('/')[-1]
+            #     response = requests.get(image_url) 
+            #     print(name)
+            #     if response.status_code == 200:
+            #         ansvalidate.ans_image.save(name, ContentFile(response.content), save=True)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -322,8 +342,10 @@ def ans_detail_update_delete(request, ans_pk):
             serializer.save()
             return Response(serializer.data)
     else:
-        ansvalidate = AnsValidate.objects.get(id=ans_pk)
-        ansvalidate.ans_image.delete(save=True)
+        # 답변 삭제시 첨부되었던 이미지를 서버에서 삭제하는 코드
+        # 잠시 가려두었습니다
+        # ansvalidate = AnsValidate.objects.get(id=ans_pk)
+        # ansvalidate.ans_image.delete(save=True)
         ans.delete()
         return Response({ 'id': ans_pk }, status=status.HTTP_204_NO_CONTENT)
 

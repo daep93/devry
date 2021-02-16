@@ -113,7 +113,7 @@ def profile_show(request, profile_pk):
 
     if request.method == 'GET':
         serializer = ProfileShowSerializer(profile)
-        print(serializer.data)
+        # print(serializer.data)
 
         email = User.objects.filter(pk=ProfileSerializer(profile).data['user']).first()
         profile_user = User.objects.get(pk=ProfileSerializer(profile).data['user'])
@@ -145,6 +145,7 @@ def profile_show(request, profile_pk):
         # 사용자가 작성한 qna, ans, pinned한 글들만 filter해줌
         qnas = Qna.objects.filter(user=ProfileSerializer(profile).data['user'])
         comments = Ans.objects.filter(user=ProfileSerializer(profile).data['user'])
+        print(comments)
         pinned_posts = Qna.objects.filter(user=pinnedSerializer(profile).data['id'])  
         # print(qnas)  
         # print(pinned_posts)
@@ -153,12 +154,19 @@ def profile_show(request, profile_pk):
             serializer.data['posts'].append(QnaSerializer(qna).data)
         for comment in comments:
             serializer.data['comments'].append(AnsSerializer(comment).data)
+            print(AnsSerializer(comment).data)
+            commented_post = Qna.objects.filter(id=AnsSerializer(comment).data['qna'])
+            print(commented_post)
+            print(serializer.data)
+            print(AnsSerializer(comment).data['title'])
+            # serializer.data['title'] += 'asdasd'
+            
         for pinned_post in pinned_posts:
             serializer.data['pinned_posts'].append(QnaSerializer(pinned_post).data)
 
         serializer.data['tags'].update(real_tags)
-
-        print(serializer.data['tags'])
+        # serializer.data['title'].update()
+        # print(serializer.data['tags'])
 
         # 저장된 sns_name, sns_url, project_name, project_url들을 각각 link와 project에 추가해 보여주는 과정
         for number in range(1, 4):
