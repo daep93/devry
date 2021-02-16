@@ -49,7 +49,11 @@
         </div>
         <div>
           <img
-            :src="entity.profile_img"
+            :src="
+              entity.profile_img
+                ? profile_img
+                : require('@/assets/basic_image.png')
+            "
             style="width: 50px; height: 40px;  border-radius: 10px;"
           />
         </div>
@@ -59,7 +63,7 @@
 </template>
 
 <script>
-import { 
+import {
   colorSoloMapper,
   // matchingColorSoloMapper,
 } from '@/utils/tagColorMapper';
@@ -68,15 +72,20 @@ export default {
   props: {
     entity: Object,
   },
+  data() {
+    return {
+      profile_img: `${process.env.VUE_APP_SERVER_API_URL}${this.entity.profile_img}`,
+    };
+  },
   methods: {
     tagColor(tag) {
       return colorSoloMapper(tag, 0.5);
     },
     goToDetail() {
       this.$router.push(`/event-detail/${this.entity.id}`);
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>
