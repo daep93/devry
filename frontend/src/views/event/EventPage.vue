@@ -20,7 +20,6 @@
           label="이벤트 등록 신청"
           @click="goToEventRegister"
           size="md"
-          @click="$router.push('/event-registration/')"
         />
       </div>
     </div>
