@@ -8,7 +8,6 @@
       color="primary"
       label="메인 이벤트 설정"
       unchecked-icon="clear"
-      @click="checkMain"
     />
     <!-- 기본 정보 입력 part -->
     <div class="q-mb-md">
@@ -406,10 +405,6 @@ export default {
     },
     removeOneTag(tag, index) {
       this.ref_tags.splice(index, 1);
-    },
-    checkMain() {
-      this.king = !this.king;
-      console.log(this.king)
     },
     async createEvent() {
       try {
