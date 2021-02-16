@@ -23,8 +23,6 @@
     </div>
     <div class="row col-12 " style="height:30vh">
       <div class="col-12 row">
-        aaaa
-        {{ tagFilteredList }}
         <q-intersection transition="scale" class="col-12">
           <q-tabs
             inline-label
@@ -36,7 +34,6 @@
               :key="index"
               class="col-4 q-pa-xs"
             >
-              test
               <q-card style="border-radius: 20px;">
                 <q-card-section class="q-px-md q-pt-lg q-pb-none">
                   <div class="q-pa-xs row justify-between">
@@ -130,7 +127,6 @@ export default {
       });
     },
     categorySortedList() {
-      // return testCase.filter(article => {
       return this.tagFilteredList.filter(article => {
         if (this.category === 'ALL') return true;
         if (article.category === this.category) return true;
