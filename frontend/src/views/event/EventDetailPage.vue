@@ -206,8 +206,7 @@ export default {
     updateEvent() {
       const post_id = this.$route.params.id;
       // 이벤트 등록 수정하기 페이지로 이동
-      this.$router.push({ path: `/event-update/${this.post_id}` });
-      // this.$router.push({ path: '/event-registration/:id' });
+      this.$router.push({ path: `/event-update/${post_id}`});
     },
     // 북마크 토글하기
     async checkbookmarked() {
