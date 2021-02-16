@@ -274,7 +274,7 @@ export default {
     onChangeImages(e) {
       const file = e.target.files[0];
       console.log(file);
-      this.profile_info.profile_img = URL.createObjectURL(file);
+      this.img = URL.createObjectURL(file);
       // const file = this.$refs.imageInput.files[0];
     },
 
