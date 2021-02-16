@@ -18,8 +18,8 @@
           color="blue-12"
           class="text-weight-bold q-px-md q-py-sm"
           label="이벤트 등록 신청"
+          @click="goToEventRegister"
           size="md"
-          @click="$router.push('/event-registration/')"
         />
       </div>
     </div>
@@ -36,6 +36,11 @@ export default {
     MainEvent,
     RecommendEvents,
     UpcomingEvents,
+  },
+  methods: {
+    goToEventRegister() {
+      this.$router.push({ path: '/event-registration' });
+    }
   },
   created() {
     // 왼쪽 사이드 바 열림
