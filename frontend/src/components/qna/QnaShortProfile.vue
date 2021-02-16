@@ -135,7 +135,7 @@ export default {
       }
     },
     goToProfile() {
-      this.$router.push({ name: 'Profile' });
+      this.$router.push(`/profile/${this.info.profile.user}`);
     },
   },
   computed: {

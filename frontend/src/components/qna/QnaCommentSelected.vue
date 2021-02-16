@@ -13,7 +13,9 @@
             <div class="row col-12">
               <div class="row col-2">
                 <span style="cursor:pointer;" class="q-mt-xs">
-                  <q-avatar style="width: 35px; height: 35px;"
+                  <q-avatar
+                    style="width: 35px; height: 35px;"
+                    @click="goToProfile"
                     ><img :src="profile_img" />
                   </q-avatar>
                 </span>
@@ -23,6 +25,7 @@
                   <div
                     class="q-pl-lg"
                     style="font-size: 15px; cursor:pointer; color: #464646"
+                    @click="goToProfile"
                   >
                     <b>{{ info.user.username }}</b>
                     <div class="text-caption">
@@ -92,6 +95,9 @@ export default {
     },
   },
   methods: {
+    goToProfile() {
+      this.$router.push(`/profile/${this.info.user.id}`);
+    },
     async checkFollow() {
       if (!this.$store.getters.isLogined) {
         alert('로그인을 해주세요');
