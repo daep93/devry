@@ -10,12 +10,23 @@
         <div class="row col-12">
           <div class="row col-2">
             <span class="q-mt-xs">
-              <q-avatar
+              <q-avatar style="border: 1px solid #ECEFF1" size="2.8em">
+                <q-img
+                  :src="
+                    info.profile.profile_img
+                      ? img_url
+                      : require('@/assets/basic_image.png')
+                  "
+                  @click="goToProfile"
+                  class="cursor-pointer"
+                />
+              </q-avatar>
+              <!-- <q-avatar
                 @click="goToProfile"
                 style="width: 35px; height: 35px;"
                 class="cursor-pointer"
                 ><img :src="profile_img" />
-              </q-avatar>
+              </q-avatar> -->
             </span>
           </div>
           <div class="row col-10">
@@ -109,11 +120,9 @@ export default {
   },
   data() {
     return {
-      title: 'Add a YouTube stats widget to your iPhone with JavaScript',
-      username: 'Test User',
-      profile_img: 'https://cdn.quasar.dev/img/avatar.png',
       is_following: this.info.is_following,
       follower_num: this.info.user.follower_num,
+      img_url: `${process.env.VUE_APP_SERVER_API_URL}${this.info.profile.profile_img}`,
     };
   },
   methods: {

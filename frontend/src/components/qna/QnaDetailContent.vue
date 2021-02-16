@@ -1,26 +1,7 @@
 <template>
   <div class="row full-width">
     <q-card flat bordered class="my-card q-px-lg q-pt-xs row col-12">
-      <div class="row col-11 q-mt-xl">
-        <!-- <q-card-section class="row full-width q-pb-sm q-px-none justify-end">
-          <div class="row col-2 justify-end">
-            <div
-              class="row col-12 shadow-1 overflow-hidden"
-              style="border-radius:5px; height:25px; max-width:100px;"
-            >
-              <div
-                class="col-2"
-                :style="{
-                  'background-color': info.solved ? '#1976D2' : '#C8DAFE',
-                }"
-              ></div>
-              <div class="col-10 text-center row items-center justify-center">
-                {{ info.solved ? '답변 완료' : '답변 대기' }}
-              </div>
-            </div>
-          </div>
-        </q-card-section> -->
-      </div>
+      <div class="row col-11 q-mt-xl"></div>
       <div v-if="info.user_id == $store.state.id" class="row col-1 justify-end">
         <q-btn flat round dense icon="more_vert" class="q-mt-md">
           <q-menu>
@@ -39,17 +20,7 @@
 
       <q-card-section class="row col-12 q-py-none q-mb-sm">
         <div class="row col-12 text-h4 text-weight-bold q-mb-sm">
-          <span
-            >{{ info.title }}
-            <!-- <span v-if="info.solved" class="q-ml-xs">
-              <q-icon
-                :name="$i.ionCheckmarkCircleOutline"
-                style="color: #35D24F"
-                size="lg"
-                class="q-pb-sm"
-              ></q-icon>
-              </span> -->
-          </span>
+          <span>{{ info.title }} </span>
           <div v-if="info.solved" class="q-ml-lg">
             <q-badge color="blue" align="middle">
               답변 완료 ✔
