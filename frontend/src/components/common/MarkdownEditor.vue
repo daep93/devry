@@ -134,11 +134,11 @@ export default {
     // TODO: img 폼데이터로 연결해서 전송
     async handleUploadImage(event, insertImage) {
       const frm = new FormData();
-      frm.append('img', event.target.files[0]);
+      frm.append('image', event.target.files[0]);
       try {
         // 이미지 url 받아오기
         const { data } = await saveQnaImage(frm);
-        this.imgUrl = this.imgUrl + data.imgUrl;
+        this.imgUrl = data.image;
       } catch (error) {
         console.log(error);
       }
