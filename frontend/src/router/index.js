@@ -32,11 +32,6 @@ const routes = [
     },
   },
   {
-    path: '/twit',
-    name: 'Twit',
-    component: () => import('@/views/TwitPage.vue'),
-  },
-  {
     path: '/qna',
     name: 'QnA',
     component: () => import('@/views/qna/QnaPage.vue'),
@@ -141,11 +136,6 @@ const routes = [
       }
       next();
     },
-  },
-  {
-    path: '/jobs',
-    name: 'Jobs',
-    component: () => import('@/views/JobsPage.vue'),
   },
   {
     path: '*',
