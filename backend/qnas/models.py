@@ -116,8 +116,9 @@ class Ans(models.Model):
     qna = models.ForeignKey(Qna, on_delete=models.CASCADE)
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, related_name='ans_profile')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-
     user_info = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, related_name='ans_userinfo')
+    title = models.TextField(blank=True)
+    username = models.TextField(blank=True)
 
     def __str__(self):
         return self.content
