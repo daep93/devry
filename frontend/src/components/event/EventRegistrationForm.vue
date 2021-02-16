@@ -2,6 +2,7 @@
   <div class="full-width">
     <!-- 메인 이미지 설정 -->
     <q-toggle
+      class="float-right"
       v-model="king"
       checked-icon="check"
       color="primary"
