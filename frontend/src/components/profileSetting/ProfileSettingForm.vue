@@ -8,7 +8,7 @@
         <div class="row col-6">
           <!-- 프로필 이미지 -->
           <q-img
-            :src="img"
+            :src="img ? img : require('@/assets/basic_image.png')"
             spinner-color="white"
             style="height: 140px; max-width: 150px; position: relative; "
             class="rounded-borders q-mb-lg"
