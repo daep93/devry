@@ -15,8 +15,9 @@
             <div class="row col-10">
               <div class="q-ml-md row col-12 q-mt-sm">
                 <span
-                  class="text-body1 text-weight-bold"
+                  class="text-body1 text-weight-bold cursor-pointer"
                   style="color: #585858"
+                  @click="goToProfile(index)"
                 >
                   @{{ data.user.username }}
                 </span>
@@ -47,13 +48,6 @@
                         채택 하기
                       </q-badge>
                     </template>
-                    <!-- <q-icon
-                      :name="$i.ionCheckmarkCircleOutline"
-                      :style="{ color: data.assisted ? 'blue' : '#B7B7B7' }"
-                      class="cursor-pointer"
-                      size="sm"
-                      @click="chooseComment(index)"
-                    ></q-icon> -->
                   </span>
                   <span v-else-if="data.assisted" class="q-ml-sm">
                     <q-badge color="blue">
@@ -112,12 +106,6 @@
                 v-if="modes[index] === 'editable'"
                 >수정 완료</q-btn
               >
-            </div>
-
-            <div class="q-ml-md row col-12">
-              <q-card-section class="row col-12">
-                <q-markdown :src="info.contents"> </q-markdown>
-              </q-card-section>
             </div>
 
             <!-- 큰 댓글의 작은 댓글 -->
@@ -188,9 +176,13 @@ export default {
       modes: res,
       ans_pk: null,
       recomments: Array,
+      is_following: Boolean,
     };
   },
   methods: {
+    goToProfile(index) {
+      this.$router.push(`/profile/${this.info[index].user.id}`);
+    },
     liquidResolve(tag) {
       return liquidResolver(tag);
     },
@@ -235,7 +227,6 @@ export default {
     },
     async chooseComment(index) {
       try {
-        // console.log(this.info);
         for (let check of this.info) {
           if (check.assisted == true && !this.info[index].assisted) {
             check.assisted = false;

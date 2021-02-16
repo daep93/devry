@@ -3,23 +3,26 @@ import requests
 import urllib.request
 from django.http import HttpResponse, FileResponse
 from urllib.parse import urlparse
-
 from django.shortcuts import get_object_or_404
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, parser_classes
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .serializers import QnaListSerializer, QnasmalllistSerializer, AnssmalllistSerializer, ProfileqnaSerializer, \
     QnaListforamtSerializer, QnaSerializer, AnsSerializer, likeSerializer, bookmarkSerializer, solveSerializer, \
     like_ansSerializer, UserinfoSerializer, ProfileListSerializer, ProfileSerializer, QnasmallSerializer, \
-    AnssmallSerializer, QnadetailSerializer, AnslistSerializer, AnsdetailSerializer,AnslistformatSerializer, pinnedSerializer, QnaImageSerializer, AnsImageSerializer
+    AnssmallSerializer, QnadetailSerializer, AnslistSerializer, AnsdetailSerializer,AnslistformatSerializer, pinnedSerializer, \
+    QnaImageSerializer, AnsImageSerializer, ImagePostSerializer, isfollowingSerializer,isfollowingansSerializer
 
+from accounts.serializers import UserFollowingSerializer
+from wsgiref.util import FileWrapper
 from image_server.models import QnaValidate, AnsValidate
 from image_server.serializers import QnaImageValidationSerializer, AnsImageValidationSerializer
-from .models import Qna, Ans, Qnasmall, Anssmall
+from .models import Qna, Ans, Qnasmall, Anssmall, ImagePost
 from rest_framework import viewsets
 from profiles.models import Profile
-from accounts.models import User
+from accounts.models import User, UserFollowing
 from mysite.utils import jwt_encode
 from rest_auth.models import TokenModel
 from rest_framework.authtoken.models import Token
@@ -28,8 +31,43 @@ import json
 import requests
 from urllib.parse import urlparse
 from django.core.files.base import ContentFile
-
+from rest_framework.parsers import FileUploadParser, FormParser, MultiPartParser
+from PIL import Image
 from django.http import HttpResponse, JsonResponse
+from django.conf import settings
+
+
+class ImagePostView(APIView):
+    parser_classes = [MultiPartParser, FormParser]
+    serializer_class = ImagePostSerializer
+    
+    def post(self, request, *args, **kwargs):
+        headers = {'Content-Type': 'multipart/form-data; charset=utf-8'}
+        user = request.user
+        print(user)
+        serializer = ImagePostSerializer(data=request.data)
+        if serializer.is_valid():
+            queryset = ImagePost.objects.all()
+            for i in queryset:
+                print(ImagePostSerializer(i).data['image'])
+                
+            print(serializer.validated_data['image'])
+            serializer.save()
+            print(serializer.data)
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors)
+
+
+class ImagePostViewSet(viewsets.ModelViewSet):
+    '''
+    사진을 전송받으면 해당 사진을 서버에 저장하고, 해당 이미지의 URL을 돌려줍니다.
+    해당 URL을 클릭하면 이미지를 확인할 수 있습니다.
+    '''
+    queryset = ImagePost.objects.all()
+    serializer_class = ImagePostSerializer
+    parser_classes = [MultiPartParser, FormParser] 
+    
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Qna.objects.all()
@@ -49,8 +87,6 @@ class QnasmallViewSet(viewsets.ModelViewSet):
 class AnssmallViewSet(viewsets.ModelViewSet):
     queryset = Anssmall.objects.all()
     serializer_class = AnssmallSerializer
-
-    
 
 
 @api_view(['GET'])
@@ -104,39 +140,41 @@ def qna_list_create(request):
             qna.save()
             # qna number in user_id -> It will be "True"
         serializer = QnaListSerializer(qnas, many=True)
-
-
         return Response(serializer.data) 
     else:
+        # print(request.FILES)
         profiles = Profile.objects.all()
         if profiles.filter(user_id=request.user.id).exists():
             pro=profiles.get(user_id=request.user.id)
             request.data['profile'] = pro.id
         serializer = QnaSerializer(data=request.data)
+
         if serializer.is_valid(raise_exception=True):
             serializer.save()    
+            # 글 저장시 첨부되었던 사진을 서버에 저장하는 코드
+            # 잠시 가려두었습니다
+            # post_qna = Qna.objects.all()
+            # qna = Qna.objects.get(id=QnaSerializer(post_qna[len(post_qna) - 1]).data['id'])
+            # image_list = []
+            # post_content = QnaImageSerializer(qna).data['content']
+            # for word in range(1, len(post_content)):
+            #     if post_content[word - 1: word + 1] == '(h':
+            #         start_idx = word
+            #     if post_content[word] == ')':
+            #         if start_idx:
+            #             if post_content[start_idx: word][-3:] in ['jpg', 'png', 'jpeg', 'gif', 'svg']:
+            #                 image_list.append(post_content[start_idx: word])
+            
+            # qnavalidate = QnaValidate()
+            # print(image_list)
+            # for url in image_list:
+            #     image_url = url
+            #     name = urlparse(image_url).path.split('/')[-1]
+            #     response = requests.get(image_url) 
+            #     print(name)
+            #     if response.status_code == 200:
+            #         qnavalidate.qna_image.save(name, ContentFile(response.content), save=True)
 
-        post_qna = Qna.objects.all()
-        qna = Qna.objects.get(id=QnaSerializer(post_qna[len(post_qna) - 1]).data['id'])
-        image_list = []
-        post_content = QnaImageSerializer(qna).data['content']
-        for word in range(1, len(post_content)):
-            if post_content[word - 1: word + 1] == '(h':
-                start_idx = word
-            if post_content[word] == ')':
-                if start_idx:
-                    if post_content[start_idx: word][-3:] in ['jpg', 'png', 'jpeg', 'gif', 'svg']:
-                        image_list.append(post_content[start_idx: word])
-        
-        qnavalidate = QnaValidate()
-        print(image_list)
-        for url in image_list:
-            image_url = url
-            name = urlparse(image_url).path.split('/')[-1]
-            response = requests.get(image_url) 
-            print(name)
-            if response.status_code == 200:
-                qnavalidate.qna_image.save(name, ContentFile(response.content), save=True)
 
 
 
@@ -180,8 +218,13 @@ def qna_detail_update_delete(request, qna_pk):
     if qna.bookmark_users.filter(pk=request.user.pk).exists():
         qna.bookmarked="True"
     else:
-        qna.bookmarked="False"
-       
+        qna.bookmarked = "False"
+        
+    if UserFollowing.objects.filter(following_user= qna.user, user=request.user.pk).exists():
+        qna.is_following="True"
+    else:
+        qna.is_following = "False"
+        
     if request.method == 'GET':
         serializer = QnadetailSerializer(qna)
         return Response(serializer.data)
@@ -192,8 +235,10 @@ def qna_detail_update_delete(request, qna_pk):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
     else:
-        qnavalidate = QnaValidate.objects.get(id=qna_pk)
-        qnavalidate.qna_image.delete(save=True)
+        # 글 삭제시 첨부되었던 사진을 서버에서 삭제하는 코드
+        # 잠시 가려두었습니다
+        # qnavalidate = QnaValidate.objects.get(id=qna_pk)
+        # qnavalidate.qna_image.delete(save=True)
         qna.delete()
         return Response({ 'id': qna_pk }, status=status.HTTP_204_NO_CONTENT)
 
@@ -241,30 +286,38 @@ def ans_list(request):
             request.data['profile'] = pro.id
         serializer = AnsSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
+
+            commented_qna = Qna.objects.get(id=request.data['qna'])
+            
+            serializer.validated_data['title'] = commented_qna
+            serializer.validated_data['username'] = User.objects.get(id=QnaSerializer(commented_qna).data['user'])
             serializer.save()     
 
-            post_ans = Ans.objects.all()
 
-            ans = Ans.objects.get(id=AnsSerializer(post_ans[len(post_ans) - 1]).data['id'])
-            image_list = []
-            post_content = AnsImageSerializer(ans).data['content']
-            for word in range(1, len(post_content)):
-                if post_content[word - 1: word + 1] == '(h':
-                    start_idx = word
-                if post_content[word] == ')':
-                    if start_idx:
-                        if post_content[start_idx: word][-3:] in ['jpg', 'png', 'jpeg', 'gif', 'svg']:
-                            image_list.append(post_content[start_idx: word])
+            # 답변 작성시 첨부한 이미지를 서버에 자동으로 저장하는 코드
+            # 잠시 가려두었습니다
+            # post_ans = Ans.objects.all()
+
+            # ans = Ans.objects.get(id=AnsSerializer(post_ans[len(post_ans) - 1]).data['id'])
+            # image_list = []
+            # post_content = AnsImageSerializer(ans).data['content']
+            # for word in range(1, len(post_content)):
+            #     if post_content[word - 1: word + 1] == '(h':
+            #         start_idx = word
+            #     if post_content[word] == ')':
+            #         if start_idx:
+            #             if post_content[start_idx: word][-3:] in ['jpg', 'png', 'jpeg', 'gif', 'svg']:
+            #                 image_list.append(post_content[start_idx: word])
             
-            ansvalidate = AnsValidate()
-            print(image_list)
-            for url in image_list:
-                image_url = url
-                name = urlparse(image_url).path.split('/')[-1]
-                response = requests.get(image_url) 
-                print(name)
-                if response.status_code == 200:
-                    ansvalidate.ans_image.save(name, ContentFile(response.content), save=True)
+            # ansvalidate = AnsValidate()
+            # print(image_list)
+            # for url in image_list:
+            #     image_url = url
+            #     name = urlparse(image_url).path.split('/')[-1]
+            #     response = requests.get(image_url) 
+            #     print(name)
+            #     if response.status_code == 200:
+            #         ansvalidate.ans_image.save(name, ContentFile(response.content), save=True)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -289,8 +342,10 @@ def ans_detail_update_delete(request, ans_pk):
             serializer.save()
             return Response(serializer.data)
     else:
-        ansvalidate = AnsValidate.objects.get(id=ans_pk)
-        ansvalidate.ans_image.delete(save=True)
+        # 답변 삭제시 첨부되었던 이미지를 서버에서 삭제하는 코드
+        # 잠시 가려두었습니다
+        # ansvalidate = AnsValidate.objects.get(id=ans_pk)
+        # ansvalidate.ans_image.delete(save=True)
         ans.delete()
         return Response({ 'id': ans_pk }, status=status.HTTP_204_NO_CONTENT)
 
@@ -327,6 +382,7 @@ def like(request, qna_pk):
             # like 
             qna.like_users.add(request.user)
             return Response("like !!!!!!")
+
 
 @api_view(['GET','POST'])
 def pinned(request, qna_pk):
@@ -645,7 +701,6 @@ def qna_mybookmark(request):
         for qna in qnas:
             if qna.bookmark_users.filter(id=request.user.pk).exists():
                 mark.append(qna)
-        
         serializer = QnaListforamtSerializer(mark, many=True)
         return Response(serializer.data)
 
@@ -685,3 +740,104 @@ def qna_myans(request):
         serializer = AnslistformatSerializer(ans, many=True)
         return Response(serializer.data)
         
+
+@api_view(['GET','POST'])
+def is_following(request, qna_pk):
+    """
+    Qna(질문 글) 작성자 팔로잉 여부확인과 팔로잉 하기
+
+    ---
+    """
+    if request.META.get('HTTP_AUTHORIZATION'):
+        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user=User.objects.get(id=tok.user_id)
+        request.user=user
+    # user authentication process
+    qna = get_object_or_404(Qna, pk=qna_pk)
+    if request.method == 'GET':
+        if UserFollowing.objects.filter(following_user= qna.user, user=request.user.pk).exists():
+            qna.is_following="True"
+            serializer = isfollowingSerializer(qna)
+        else:
+            qna.is_following="False"
+            serializer = isfollowingSerializer(qna)
+        return Response(serializer.data)
+        
+    if request.method == 'POST':
+        if UserFollowing.objects.filter(following_user= qna.user, user=request.user.pk).exists():
+            # following canceled
+            followee_people = User.objects.get(pk=request.user.pk)
+            following_people = User.objects.get(pk=qna.user_id)
+            followee_people.followee_num -= 1
+            following_people.follower_num -= 1
+            followee_people.save()
+            following_people.save()
+            UserFollowing.objects.filter(user_id=request.user.pk).delete()     
+            return Response("following canceled")
+        else:
+            # following 
+            serializer = UserFollowingSerializer(data=request.data)
+            followee_people = User.objects.get(pk=request.user.pk)
+            following_people = User.objects.get(pk=qna.user_id)
+            user =request.user.pk
+            following_user = qna.user_id
+            a={"user":user,"following_user":following_user}
+            serializer = UserFollowingSerializer(data=a)  
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()     
+            followee_people.followee_num += 1
+            following_people.follower_num += 1
+            followee_people.save()
+            following_people.save()
+            return Response("following ")
+
+
+@api_view(['GET','POST'])
+def is_following_ans(request, ans_pk):
+    """
+    Ans(큰 댓글) 작성자 팔로잉 여부확인과 팔로잉 하기
+
+    ---
+    """
+    if request.META.get('HTTP_AUTHORIZATION'):
+        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user=User.objects.get(id=tok.user_id)
+        request.user=user
+     # user authentication process
+    ans = get_object_or_404(Ans, pk=ans_pk)
+    if request.method == 'GET':
+        if UserFollowing.objects.filter(following_user= ans.user, user=request.user.pk).exists():
+            ans.is_following="True"
+            serializer = isfollowingansSerializer(ans)
+        else:
+            ans.is_following="False"
+            serializer = isfollowingansSerializer(ans)
+        return Response(serializer.data)
+        
+    if request.method == 'POST':
+        if UserFollowing.objects.filter(following_user= ans.user, user=request.user.pk).exists():
+            # following canceled
+            followee_people = User.objects.get(pk=request.user.pk)
+            following_people = User.objects.get(pk=ans.user_id)
+            followee_people.followee_num -= 1
+            following_people.follower_num -= 1
+            followee_people.save()
+            following_people.save()
+            UserFollowing.objects.filter(user_id=request.user.pk).delete()
+            return Response("following canceled")
+        else:
+            # following 
+            serializer = UserFollowingSerializer(data=request.data)
+            followee_people = User.objects.get(pk=request.user.pk)
+            following_people = User.objects.get(pk=ans.user_id)
+            user =request.user.pk
+            following_user = ans.user_id
+            a={"user":user,"following_user":following_user}
+            serializer = UserFollowingSerializer(data=a)  
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+            followee_people.followee_num += 1 
+            following_people.follower_num += 1
+            followee_people.save()
+            following_people.save()
+            return Response("following ")

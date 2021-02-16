@@ -30,6 +30,25 @@
         />
       </div>
     </div>
+    <!-- 자동 완성 -->
+    <div class="row col-12">
+      <div
+        class="row col-3 bg-light-blue-1"
+        style="position: absolute; z-index:999; border-radius: 5px;"
+      >
+        <div
+          v-for="tag in suggests"
+          class="col-12 q-py-md q-px-md"
+          :class="{ 'bg-blue-3': tags[tag] }"
+          :key="tag"
+          @click="checkDuplicateTag(tag)"
+          @mouseover="tags[tag] = true"
+          @mouseout="tags[tag] = false"
+        >
+          {{ tag }}
+        </div>
+      </div>
+    </div>
     <div>
       <ul class="row q-gutter-sm">
         <li
@@ -53,30 +72,44 @@
 </template>
 
 <script>
-import {
-  colorSoloMapper,
-  matchingColorSoloMapper,
-} from '@/utils/tagColorMapper';
-
+import { colorSoloMapper } from '@/utils/tagColorMapper';
+import { filtered_tags, first_matched_tag } from '@/utils/autoComplete';
 export default {
   props: ['propsTagData'],
   data() {
     return {
       tagItem: '',
+      tags: { ...this.$store.state.tags_selected },
+      ref_tags: [],
     };
   },
   methods: {
     createTag: function() {
       if (this.tagItem !== '') {
-        this.$emit('addTagItem', this.tagItem);
-        this.tagItem = '';
+        const str = first_matched_tag(this.tagItem);
+        this.checkDuplicateTag(str);
       }
     },
     removeTag: function(tag, index) {
+      this.ref_tags.splice(index, 1);
       this.$emit('removeTagItem', tag, index);
     },
     tagColor(tag) {
       return colorSoloMapper(tag, 0.5);
+    },
+    // 태그 중복 확인
+    checkDuplicateTag(tag) {
+      if (tag && this.ref_tags.indexOf(tag) < 0) {
+        this.ref_tags.push(tag);
+        this.$emit('addTagItem', tag);
+        this.tagItem = '';
+      }
+    },
+  },
+  computed: {
+    // 일부 문자열을 받고 정규 표현식을 활용하여 비슷한 형태의 문자열 목록을 반환
+    suggests() {
+      return filtered_tags(this.tagItem);
     },
   },
 };

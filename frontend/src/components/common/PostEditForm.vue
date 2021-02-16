@@ -62,6 +62,7 @@
           :createQna="createQna"
           :updateQna="updateQna"
           :deleteQna="deleteQna"
+          :createForum="createForum"
         ></slot>
       </div>
     </div>
@@ -77,6 +78,7 @@ import {
   deleteQnaItem,
   loadQnaItem,
 } from '@/api/qna';
+import { createForumItem, loadForumItem } from '@/api/forum';
 export default {
   components: {
     MarkdownEditor,
@@ -177,6 +179,41 @@ export default {
         const post_id = this.$route.params.id;
         this.$q.loading.show();
         await deleteQnaItem(post_id);
+        // 이전 페이지로 이동
+        this.$router.go(-1);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.$q.loading.hide();
+      }
+    },
+
+    // Forum post 생성
+    async createForum() {
+      if (this.title === '') {
+        alert('제목은 필수 입력 항목입니다');
+        return;
+      }
+      if (this.ref_tags.length < 2) {
+        alert('태그를 둘 이상 입력해주세요');
+        return;
+      }
+      if (this.ref_tags.length > 4) {
+        alert('태그를 넷 이하로 입력해주세요');
+        return;
+      }
+      if (this.content === '') {
+        alert('내용은 필수 입력항목 입니다');
+        return;
+      }
+      try {
+        this.$q.loading.show();
+        await createForumItem({
+          title: this.title,
+          user: this.$store.state.id,
+          content: this.content,
+          ref_tags: this.ref_tags,
+        });
         // 이전 페이지로 이동
         this.$router.go(-1);
       } catch (error) {

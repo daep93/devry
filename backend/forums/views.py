@@ -126,6 +126,7 @@ def post_detail_update_delete(request, post_pk):
        
     if request.method == 'GET':
         serializer = PostdetailSerializer(post)
+        print(serializer.data)
         return Response(serializer.data)
 
     elif request.method == 'PUT':

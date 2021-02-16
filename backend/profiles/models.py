@@ -71,6 +71,8 @@ user_tag = (
 )
 
 # Create your models here.
+
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     username = models.CharField(max_length=20)
@@ -119,14 +121,37 @@ class Profile(models.Model):
     project_url1 = models.URLField(default="", max_length=100, blank=True)
     project_url2 = models.URLField(default="", max_length=100, blank=True)
     project_url3 = models.URLField(default="", max_length=100, blank=True)
-    tag = MultiSelectField(choices=user_tag)
+    my_tags = MultiSelectField(choices=user_tag)
     pinned_posts = models.TextField(blank=True)
     posts = models.TextField(blank=True)
     comments = models.TextField(blank=True)
-    links = models.ManyToManyField('self', related_name='project_link', blank=True)
-    projects = models.ManyToManyField('self', related_name='project_project', blank=True)
+    link = models.ManyToManyField('self', default = 0, related_name='project_link', blank=True)
+    links = models.TextField()
+    project = models.ManyToManyField('self', default = 0, related_name='project_project', blank=True)
+    projects = models.TextField()
+
     joined = models.DateTimeField(blank=True, null=True)
-    tags = models.ManyToManyField('self', default=0, related_name='project_tags', blank=True)
+    tags = models.TextField(blank=True)
+
+
+class Link(models.Model):
+    
+    sns_name1 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='pro_sns_name1')
+    sns_name2 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='pro_sns_name2')
+    sns_name3 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='pro_sns_name3')
+    sns_url1 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='pro_sns_url1')
+    sns_url2 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='pro_sns_url2')
+    sns_url3 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='pro_sns_url3')
+
+
+class Projects(models.Model):
+    project_name1 = models.TextField(default="", blank=True)
+    project_name2 = models.TextField(default="", blank=True)
+    project_name3 = models.TextField(default="", blank=True)
+    project_url1 = models.URLField(default="", max_length=100, blank=True)
+    project_url2 = models.URLField(default="", max_length=100, blank=True)
+    project_url3 = models.URLField(default="", max_length=100, blank=True)
+
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

@@ -96,6 +96,8 @@ export default {
       return {
         profile: this.contents.profile,
         user: this.contents.user,
+        post_id: this.contents.id,
+        is_following: this.contents.is_following,
       };
     },
     bigComments() {

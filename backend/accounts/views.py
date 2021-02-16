@@ -176,13 +176,13 @@ class UserLoginView(GenericAPIView):
         profiles = Profile.objects.all()
         if profiles.filter(user_id=self.user.id).exists():
             profile = Profile.objects.get(username=self.user.username)
-            if ProfileSerializer(profile).data['tag']:
-                user_tag = ProfileSerializer(profile).data['tag']
+            if ProfileSerializer(profile).data['my_tags']:
+                user_tag = ProfileSerializer(profile).data['my_tags']
                 response = Response({
                     "user": {
                         "id": self.user.id,
                         "username": self.user.username,
-                        "tag": user_tag
+                        "my_tags": user_tag
                     },
                     "token": serializer.data['key']
                 })

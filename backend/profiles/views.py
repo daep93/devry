@@ -1,5 +1,4 @@
 from django.shortcuts import get_object_or_404
-from django.db.models import F
 
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -10,6 +9,11 @@ from accounts.models import User
 from .serializers import ProfileSerializer, ProfileListSerializer, ProfileLinkSerializer, ProfileProjectSerializer, ProfileUpdateSerializer, ProfileShowSerializer
 from .models import Profile
 from rest_framework import viewsets
+
+from mysite.utils import jwt_encode
+from rest_auth.models import TokenModel
+from rest_framework.authtoken.models import Token
+from mysite.app_settings import TokenSerializer
 
 from qnas.serializers import QnaSerializer, AnsSerializer, pinnedSerializer
 from qnas.models import Qna, Ans
@@ -43,7 +47,7 @@ def profile_list_create(request):
         profiles = Profile.objects.all()
         serializer = ProfileListSerializer(profiles, many=True)
 
-        # 프로필에서 저장한 sns_name, sns_url, project_name, project_url들을 각각 links, projects에 담아주는 과정입니다.
+        # 프로필에서 저장한 sns_name, sns_url, project_name, project_url들을 각각 link, project에 담아주는 과정입니다.
         profile_number = 0
         for profile in profiles:
             for number in range(1, 4):
@@ -55,32 +59,16 @@ def profile_list_create(request):
 
                 # sns_name(1 ~ 3), sns_url(1 ~ 3)이 존재하는 경우 -- 하나만 존재하는 경우 추가하지 않음
                 if ProfileSerializer(profile).data[sns_name] and ProfileSerializer(profile).data[sns_url]:
-                    serializer.data[profile_number]['links'].append({ProfileSerializer(profile).data[sns_name]: ProfileSerializer(profile).data[sns_url]})
+                    serializer.data[profile_number]['link'].append({ProfileSerializer(profile).data[sns_name]: ProfileSerializer(profile).data[sns_url]})
 
                 # project_name(1 ~ 3), project_url(1 ~ 3)이 존재하는 경우 -- 하나만 존재하는 경우 추가하지 않음
                 if ProfileSerializer(profile).data[project_name] and ProfileSerializer(profile).data[project_url]:
-                    serializer.data[profile_number]['projects'].append({ProfileSerializer(profile).data[project_name]: ProfileSerializer(profile).data[project_url]})
+                    serializer.data[profile_number]['project'].append({ProfileSerializer(profile).data[project_name]: ProfileSerializer(profile).data[project_url]})
             # 1, 2, 3처럼 순서대로 가는 것이 아니라 1, 2, 4번 유저의 프로필이 있고 3번 유저의 프로필이 없는 경우 serializer.data의 인덱스에 연속적인 숫자를 사용하면 인덱스 에러 발생
             profile_number += 1  
 
         return Response(serializer.data)
         
-    # else:
-    #     serializer = ProfileSerializer(data=request.data)
-    #     target_user = User.objects.get(pk=request.data['user'])
-    #     target_user_joined = UserJoinedSerializer(target_user).data['date_joined']        # 프로필을 만드려는 사용자가 회원가입한 시점
-
-    #     if serializer.is_valid(raise_exception=True):
-
-    #         serializer.validated_data['email'] = UserSerializer(target_user).data['email']
-    #         serializer.validated_data['username'] = UserSerializer(target_user).data['username']
-    #         serializer.validated_data['joined'] = target_user_joined
-    #         # followers, following은 UserSerializer 내부에서 OrderedDict 형태로 확인이 가능합니다. 각각 id, user, following_user, created(팔로잉한 시간)으로 구성되어 있습니다.(accounts.models.py 참고)
-    #         serializer.validated_data['followee_num'] = len(UserSerializer(target_user).data['followers'])   # 사용자를 팔로우하고 있는 사용자들의 수
-    #         serializer.validated_data['follower_num'] = len(UserSerializer(target_user).data['following'])   # 사용자가 팔로우하고 있는 사용자들의 수
-        
-    #         serializer.save()
-    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 @api_view(['GET'])
@@ -90,7 +78,7 @@ def profile_show(request, profile_pk):
     '''
     profile = get_object_or_404(Profile, pk=profile_pk) 
     
-    real_tags = []
+    real_tags = {}
     tags_list = {
         'Python3': 0,
         'Django': 0,
@@ -125,6 +113,7 @@ def profile_show(request, profile_pk):
 
     if request.method == 'GET':
         serializer = ProfileShowSerializer(profile)
+        # print(serializer.data)
 
         email = User.objects.filter(pk=ProfileSerializer(profile).data['user']).first()
         profile_user = User.objects.get(pk=ProfileSerializer(profile).data['user'])
@@ -135,7 +124,6 @@ def profile_show(request, profile_pk):
 
 
 
-
         # 모든 qna에서의 글 중 사용자가 쓴 글만 불러오고, 해당 글에서 참조된 태그들을 추가하는 과정
         all_qnas = Qna.objects.filter(user=UserJoinedSerializer(profile).data['id'])
         for some_qna in all_qnas:
@@ -143,9 +131,11 @@ def profile_show(request, profile_pk):
                 tags_list[ref] += 1
 
         # 한 번 이상 추가된 태그들만 남겨놓는 작업
+
         for single_tag in tags_list:
             if tags_list[single_tag] > 0:
-                real_tags.append({single_tag: tags_list[single_tag]})
+                real_tags[single_tag] = tags_list[single_tag]
+
 
         # User정보 안에 저장된 follow 내역들을 profile에 저장하는 과정
         profile.follower_num = profile_user.follower_num
@@ -155,22 +145,30 @@ def profile_show(request, profile_pk):
         # 사용자가 작성한 qna, ans, pinned한 글들만 filter해줌
         qnas = Qna.objects.filter(user=ProfileSerializer(profile).data['user'])
         comments = Ans.objects.filter(user=ProfileSerializer(profile).data['user'])
+        print(comments)
         pinned_posts = Qna.objects.filter(user=pinnedSerializer(profile).data['id'])  
-        print(qnas)  
-        print(pinned_posts)
+        # print(qnas)  
+        # print(pinned_posts)
         # 사용자 프로필의 각 필드에 해당 정보들을 추가해서 보여주는 과정
         for qna in qnas:
             serializer.data['posts'].append(QnaSerializer(qna).data)
         for comment in comments:
             serializer.data['comments'].append(AnsSerializer(comment).data)
+            print(AnsSerializer(comment).data)
+            commented_post = Qna.objects.filter(id=AnsSerializer(comment).data['qna'])
+            print(commented_post)
+            print(serializer.data)
+            print(AnsSerializer(comment).data['title'])
+            # serializer.data['title'] += 'asdasd'
+            
         for pinned_post in pinned_posts:
             serializer.data['pinned_posts'].append(QnaSerializer(pinned_post).data)
 
-        print(real_tags)
-        for real in real_tags:
-            serializer.data['tags'].append(real)
+        serializer.data['tags'].update(real_tags)
+        # serializer.data['title'].update()
+        # print(serializer.data['tags'])
 
-        # 저장된 sns_name, sns_url, project_name, project_url들을 각각 links와 projects에 추가해 보여주는 과정
+        # 저장된 sns_name, sns_url, project_name, project_url들을 각각 link와 project에 추가해 보여주는 과정
         for number in range(1, 4):
             sns_name = 'sns_name' + str(number)
             sns_url = 'sns_url' + str(number)
@@ -179,68 +177,104 @@ def profile_show(request, profile_pk):
             project_url = 'project_url' + str(number)
 
             if ProfileSerializer(profile).data[sns_name] and ProfileSerializer(profile).data[sns_url]:
-                serializer.data['links'].append({ProfileSerializer(profile).data[sns_name]: ProfileSerializer(profile).data[sns_url]})
+                serializer.data['link'].append(
+                    {
+                    'sns_name' : ProfileSerializer(profile).data[sns_name],
+                    'sns_url' : ProfileSerializer(profile).data[sns_url]
+                    }
+                )
 
             if ProfileSerializer(profile).data[project_name] and ProfileSerializer(profile).data[project_url]:
-                serializer.data['projects'].append({ProfileSerializer(profile).data[project_name]: ProfileSerializer(profile).data[project_url]})
-
+                serializer.data['project'].append(
+                    {
+                    'project_name' : ProfileSerializer(profile).data[project_name],
+                    'project_url' : ProfileSerializer(profile).data[project_url]
+                    }
+                )
         return Response(serializer.data)
 
  
 
 @api_view(['GET', 'PUT'])
 def profile_setting(request, profile_pk):  
+
     '''
-    사용자로부터 넘어오는 토큰 값(request.META['HTTP_AUTHORIZATION'])이 서버에 저장된 사용자의 토큰(TokenSerializer(user.auth_token).data['key'])과 일치하면
+    사용자로부터 넘어오는 토큰 값(request.META['HTTP_AUTHORIZATION'])이 서버에 저장된 사용자의 토큰과 일치하면
     프로필 정보를 보여주거나, 수정할 수 있습니다.
     '''
 
+    # if request.META['HTTP_AUTHORIZATION'] == TokenSerializer(user.auth_token).data['key']:
+
     profile = get_object_or_404(Profile, pk=profile_pk)
     new_profile = Profile.objects.filter(pk=profile_pk).first()
-    print(new_profile)
-    user = User.objects.filter(pk=ProfileSerializer(profile).data['user']).first()
-    
 
 
-    profile_links = [
+    links_update = [
     {
-        'sns_name1': request.POST.get('sns_name1', False),
-        'sns_url1': request.POST.get('sns_url1', False)
+        'sns_name': request.POST.get('sns_name1', False),
+        'sns_url' : request.POST.get('sns_url1', False)
     },
     {
-        'sns_name2': request.POST.get('sns_name2', False),
-        'sns_url2': request.POST.get('sns_url2', False)
+        'sns_name': request.POST.get('sns_name2', False),
+        'sns_url' : request.POST.get('sns_url2', False)
     },
     {
-        'sns_name3': request.POST.get('sns_name3', False),
-        'sns_url3': request.POST.get('sns_url3', False)
+        'sns_name': request.POST.get('sns_name3', False),
+        'sns_url' : request.POST.get('sns_url3', False)
     }
     ]
 
-    profile_projects = [
+    projects_update = [
     {
-        'project_name1': request.POST.get('project_name1', False),
-        'project_url1': request.POST.get('project_url1', False)
+        'project_name': request.POST.get('project_name1', False),
+        'project_url' : request.POST.get('project_url1', False)
     },
     {
-        'project_name2': request.POST.get('project_name2', False),
-        'project_url2': request.POST.get('project_url2', False)
+        'project_name': request.POST.get('project_name2', False),
+        'project_url' : request.POST.get('project_url2', False)
     },
     {
-        'project_name3': request.POST.get('project_name3', False),
-        'project_url3': request.POST.get('project_url3', False)
+        'project_name': request.POST.get('project_name3', False),
+        'project_url' : request.POST.get('project_url3', False)
     }
     ]
 
-    if request.META['HTTP_AUTHORIZATION'] == TokenSerializer(user.auth_token).data['key']:
+
+
+    if request.META.get('HTTP_AUTHORIZATION'):         
+        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user=User.objects.get(id=tok.user_id)
+        request.user = user    
         if request.method == 'GET':
             serializer = ProfileListSerializer(profile)
-            print(serializer.data)
+
+            for number in range(1, 4):
+                sns_name = 'sns_name' + str(number)
+                sns_url = 'sns_url' + str(number)
+
+                project_name = 'project_name' + str(number)
+                project_url = 'project_url' + str(number)
+
+                if ProfileSerializer(profile).data[sns_name] and ProfileSerializer(profile).data[sns_url]:
+                    serializer.data['link'].append(
+                        {
+                        'sns_name' : ProfileSerializer(profile).data[sns_name],
+                        'sns_url' : ProfileSerializer(profile).data[sns_url]
+                        }
+                    )
+
+                if ProfileSerializer(profile).data[project_name] and ProfileSerializer(profile).data[project_url]:
+                    serializer.data['project'].append(
+                        {
+                        'project_name' : ProfileSerializer(profile).data[project_name],
+                        'project_url' : ProfileSerializer(profile).data[project_url]
+                        }
+                    )
 
             return Response(serializer.data)
 
         if request.method == 'PUT':
-            serializer = ProfileUpdateSerializer(instance=profile, data=request.data, partial=True)
+            serializer = ProfileUpdateSerializer(instance=profile, data=request.POST, partial=True)
             if serializer.is_valid(raise_exception=True):
 
                 # 이미지 받아오기
@@ -252,15 +286,20 @@ def profile_setting(request, profile_pk):
                 # 이미지 주소
                 # print(image_field)
 
-                serializer.validated_data['projects'] = []
-                serializer.validated_data['links'] = []
-                serializer.validated_data['links'] = profile_links
-                serializer.validated_data['projects'] = profile_projects
-                print(serializer.validated_data)
-                print(serializer.validated_data['links'])
-                serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+                serializer.validated_data['links'] = []
+                serializer.validated_data['projects'] = []
+                
+                for link in links_update:
+                    serializer.validated_data['links'].append(link)
+                for project in projects_update:
+                    serializer.validated_data['projects'].append(project)
+
+
+                serializer.save(instance=profile, validated_data=serializer.validated_data)
+
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
-        return Response('잘못된 요청입니다.', status=status.HTTP_400_BAD_REQUEST)
-    
+        return Response('토큰이 일치하지 않습니다.', status=status.HTTP_404_NOT_FOUND)
+

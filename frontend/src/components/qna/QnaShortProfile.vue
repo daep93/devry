@@ -29,8 +29,9 @@
                   profile ? profile.username : info.user.username
                 }}</b>
                 <div class="text-caption row">
-                  글 {{ profile ? profile.post_num : 0 }} · 팔로워
-                  {{ profile ? profile.follow_num : 0 }}
+                  글 ?? · 팔로워 {{ follower_num }}
+                  <!-- 글 {{ info.profile ? profile.post_num : 0 }} · 팔로워
+                  {{ profile ? profile.follow_num : 0 }} -->
                 </div>
               </div>
             </div>
@@ -39,30 +40,31 @@
       </q-card-section>
       <div class="q-px-md q-pb-md" v-if="profile">
         <div style="font-size: 13px;">
-          {{ profile.bio }}
+          {{ info.profile.bio }}
         </div>
       </div>
-      <div style="margin:0 auto;">
-        <template v-if="follow">
-          <q-btn
-            no-caps
-            color="primary"
-            id="follow-btn"
-            label="Follow"
-            @click="checkFollow"
-            style="width: 200px"
-            class="q-mb-sm"
-          />
-        </template>
-        <template v-else>
+      <div
+        class="row col-12 justify-center"
+        v-if="info.profile.user != $store.state.id"
+      >
+        <template v-if="is_following">
           <q-btn
             no-caps
             outline
             color="primary"
             label="Following"
             @click="checkFollow"
-            style="width: 200px"
-            class="q-mb-sm"
+            class="q-mb-sm row col-10"
+          />
+        </template>
+        <template v-else>
+          <q-btn
+            no-caps
+            color="primary"
+            id="follow-btn"
+            label="Follow"
+            @click="checkFollow"
+            class="q-mb-sm row col-10"
           />
         </template>
       </div>
@@ -72,7 +74,7 @@
       bordered
       class="my-card row col-12 q-px-sm q-pt-md"
       style="max-width: 250px; max-height: 280px;"
-      v-if="profile"
+      v-if="info.profile.pinned_posts"
     >
       <div class="q-px-md q-pb-sm">
         <div style="font-size: 13px;">
@@ -80,14 +82,14 @@
             <span
               class="text-weight-bold cursor-pointer"
               style="color: #598FFC"
-              >{{ profile.username }}</span
+              >{{ info.profile.username }}</span
             >
             <span>님의 글 더보기</span>
           </div>
-          <template v-for="post in profile.pinned">
-            <q-separator :key="post.title" />
-            <div class="q-my-sm" :key="post.title">
-              {{ post.title }}
+          <template v-for="post in info.profile">
+            <q-separator :key="post.pinned_posts" />
+            <div class="q-my-sm" :key="post.pinned_posts">
+              {{ post.pinned_posts }}
             </div>
           </template>
 
@@ -99,6 +101,8 @@
 </template>
 
 <script>
+import { checkQnaFollowing } from '@/api/qna';
+
 export default {
   props: {
     info: Object,
@@ -108,20 +112,30 @@ export default {
       title: 'Add a YouTube stats widget to your iPhone with JavaScript',
       username: 'Test User',
       profile_img: 'https://cdn.quasar.dev/img/avatar.png',
-      follow: false,
+      is_following: this.info.is_following,
+      follower_num: this.info.user.follower_num,
     };
   },
   methods: {
-    checkFollow() {
-      if (!this.$store.getters.isLogined) alert('로그인이 필요합니다!');
-      else {
-        // TODO : follow API 연결 필요
-        this.follow = !this.follow;
+    async checkFollow() {
+      if (!this.$store.getters.isLogined) {
+        alert('로그인을 해주세요');
+        return;
+      }
+      try {
+        await checkQnaFollowing(this.info.post_id);
+        this.is_following = !this.is_following;
+        if (this.is_following) {
+          this.follower_num = this.follower_num + 1;
+        } else {
+          this.follower_num = this.follower_num - 1;
+        }
+      } catch (error) {
+        console.log(error);
       }
     },
     goToProfile() {
-      console.log('click!');
-      this.$router.push({ name: 'Profile' });
+      this.$router.push(`/profile/${this.info.profile.user}`);
     },
   },
   computed: {

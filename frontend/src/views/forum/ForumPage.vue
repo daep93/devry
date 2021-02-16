@@ -1,8 +1,11 @@
 <template>
   <div class="row justify-center q-pt-lg ">
     <div class="row col-8 justify-center q-pl-lg">
-      <div class="row q-mb-sm col-12 text-h5 text-weight-bold">
-        Forum 게시판
+      <div class="row q-mb-sm q-mb-lg col-12 text-h5 text-weight-bold">
+        <div class="row col-9">Forum 게시판</div>
+        <div class="col-3 row justify-end">
+          <q-btn color="blue-7" @click="goToDetail">글쓰기</q-btn>
+        </div>
       </div>
       <!-- <forum-board></forum-board> -->
       <bulletin-board :origin_board="board">
@@ -28,7 +31,9 @@
 // import ForumBoard from '@/components/forum/ForumBoard';
 import BulletinBoard from '@/components/common/BulletinBoard';
 import ForumEntity from '@/components/forum/ForumEntity';
-import { testCase } from '@/dummy/Forum';
+import { getForumList } from '@/api/board';
+// import { testCase } from '@/dummy/Forum';
+
 export default {
   components: {
     // ForumBoard,
@@ -41,13 +46,21 @@ export default {
     };
   },
   methods: {
+    goToDetail() {
+      if (this.$store.getters.isLogined) this.$router.push('/forum/create');
+      else {
+        this.$store.commit('setAccountModalType', 'login');
+        this.$store.commit('onAccountModal');
+      }
+    },
     // 게시판의 정보를 서버로부터 받아옴
     async loadBoard() {
       try {
         this.$q.loading.show();
-        // const { data } = await getQnaList();
+        const { data } = await getForumList();
         // this.origin_board = data;
-        this.board = testCase;
+        this.board = data;
+        // this.board = testCase;
       } catch (error) {
         console.log(error);
       } finally {

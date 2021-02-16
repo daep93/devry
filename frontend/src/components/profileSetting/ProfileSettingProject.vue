@@ -33,6 +33,7 @@
         v-model="pjtUrl"
         placeholder="프로젝트 URL을 입력해주세요"
         class="col-8"
+        @keypress.enter="addProject"
       >
         <template v-slot:label>
           <span class="text-primary">

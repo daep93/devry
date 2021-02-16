@@ -13,7 +13,9 @@
             <div class="row col-12">
               <div class="row col-2">
                 <span style="cursor:pointer;" class="q-mt-xs">
-                  <q-avatar style="width: 35px; height: 35px;"
+                  <q-avatar
+                    style="width: 35px; height: 35px;"
+                    @click="goToProfile"
                     ><img :src="profile_img" />
                   </q-avatar>
                 </span>
@@ -23,10 +25,11 @@
                   <div
                     class="q-pl-lg"
                     style="font-size: 15px; cursor:pointer; color: #464646"
+                    @click="goToProfile"
                   >
                     <b>{{ info.user.username }}</b>
                     <div class="text-caption">
-                      글 27 · 팔로워 57
+                      글 ?? · 팔로워 {{ follower_num }}
                     </div>
                   </div>
                 </div>
@@ -35,32 +38,33 @@
           </q-card-section>
           <div class="q-px-md q-pb-md">
             <div style="font-size: 13px;">
-              프로필 정보 필요
+              {{ info.profile.bio }}
             </div>
           </div>
-          <div style="margin:0 auto;">
-            <div v-if="follow">
-              <q-btn
-                no-caps
-                color="primary"
-                id="follow-btn"
-                label="Follow"
-                @click="checkFollow(index)"
-                style="width: 200px"
-                class="q-mb-sm"
-              />
-            </div>
-            <div v-else>
+          <div
+            class="row col-12 justify-center"
+            v-if="info.user.id != $store.state.id"
+          >
+            <template v-if="is_following">
               <q-btn
                 no-caps
                 outline
                 color="primary"
                 label="Following"
-                @click="checkFollow(index)"
-                style="width: 220px"
-                class="q-mb-sm"
+                @click="checkFollow"
+                class="q-mb-sm row col-10"
               />
-            </div>
+            </template>
+            <template v-else>
+              <q-btn
+                no-caps
+                color="primary"
+                id="follow-btn"
+                label="Follow"
+                @click="checkFollow"
+                class="q-mb-sm row col-10"
+              />
+            </template>
           </div>
         </q-card>
       </div>
@@ -69,19 +73,58 @@
 </template>
 
 <script>
+import { checkQnaSmallFollowStatus, checkQnaSmallFollowing } from '@/api/qna';
+
 export default {
   props: {
     info: Object,
+    getFollowingStatus: Boolean,
   },
   data() {
     return {
       title: 'Add a YouTube stats widget to your iPhone with JavaScript',
       profile_img: 'https://cdn.quasar.dev/img/avatar.png',
-      follow: true,
+      is_following: Boolean,
+      follower_num: this.info.user.follower_num,
     };
   },
+  watch: {
+    info(newValue) {
+      (this.is_following = newValue.is_following),
+        (this.follower_num = newValue.follower_num);
+    },
+  },
   methods: {
-    checkFollow() {},
+    goToProfile() {
+      this.$router.push(`/profile/${this.info.user.id}`);
+    },
+    async checkFollow() {
+      if (!this.$store.getters.isLogined) {
+        alert('로그인을 해주세요');
+        return;
+      }
+      try {
+        await checkQnaSmallFollowing(this.info.id);
+        this.is_following = !this.is_following;
+        if (this.is_following) {
+          this.follower_num = this.follower_num + 1;
+        } else {
+          this.follower_num = this.follower_num - 1;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
+  async created() {
+    const ansId = this.info.id;
+    try {
+      const { data } = await checkQnaSmallFollowStatus(ansId);
+      this.is_following = data.is_following;
+    } catch (error) {
+      console.log(error);
+    }
+    this.$store.commit('offLeft');
   },
 };
 </script>

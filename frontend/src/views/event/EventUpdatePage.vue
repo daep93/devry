@@ -7,7 +7,7 @@
           >Event 등록 관리자 페이지
         </span>
         <p class="text-subtitle2 q-mt-sm">
-          관리자 전용 Event 등록 페이지입니다 :)
+          관리자 전용 Event 수정 페이지입니다 :)
         </p>
       </div>
       <!-- 이벤트 입력폼 -->

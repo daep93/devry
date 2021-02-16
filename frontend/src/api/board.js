@@ -11,4 +11,9 @@ function getMainEventList() {
   return board.get(`event/main`);
 }
 
-export { getQnaList, getEventList, getMainEventList };
+// forum list 불러오기
+function getForumList() {
+  return board.get(`forum/`);
+}
+
+export { getQnaList, getForumList, getEventList, getMainEventList };
