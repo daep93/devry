@@ -15,8 +15,9 @@
             <div class="row col-10">
               <div class="q-ml-md row col-12 q-mt-sm">
                 <span
-                  class="text-body1 text-weight-bold"
+                  class="text-body1 text-weight-bold cursor-pointer"
                   style="color: #585858"
+                  @click="goToProfile(index)"
                 >
                   @{{ data.user.username }}
                 </span>
@@ -107,12 +108,6 @@
               >
             </div>
 
-            <div class="q-ml-md row col-12">
-              <q-card-section class="row col-12">
-                <q-markdown :src="info.contents"> </q-markdown>
-              </q-card-section>
-            </div>
-
             <!-- 큰 댓글의 작은 댓글 -->
             <q-card-section class="row col-12">
               <template v-if="data.anssmall_set.length">
@@ -185,6 +180,9 @@ export default {
     };
   },
   methods: {
+    goToProfile(index) {
+      this.$router.push(`/profile/${this.info[index].user.id}`);
+    },
     liquidResolve(tag) {
       return liquidResolver(tag);
     },

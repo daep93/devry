@@ -1,16 +1,16 @@
 <template>
-  <div style="width:100%">
+  <div class="row ">
     <!-- 백그라운드 파란색 헤더(장식) -->
-    <div class="row back-header justify-center"></div>
+    <div class="row  justify-center full-width"></div>
     <!-- 개인 정보가 담긴 배너 -->
-    <div class="row justify-center ">
-      <header-banner :info="headerInfo"></header-banner>
+    <div class="row justify-center full-width q-my-md">
+      <header-banner :info="headerInfo" v-if="loaded"></header-banner>
     </div>
-    <div class="row justify-center">
+    <div class="row justify-center full-width q-my-md">
       <!-- 커뮤니티 활동 성향 관련 정보가 담긴 배너 -->
-      <side-banner :info="sideInfo"></side-banner>
+      <side-banner :info="sideInfo" v-if="loaded"></side-banner>
       <!-- 글과 댓글 정보가 담긴 배너 -->
-      <post-banner :info="postInfo"></post-banner>
+      <post-banner :info="postInfo" v-if="loaded"></post-banner>
     </div>
   </div>
 </template>
@@ -22,67 +22,59 @@ import PostBanner from '@/components/profile/PostBanner';
 import { getProfile } from '@/api/profile.js';
 // import { testCase } from '@/dummy/Profile';
 export default {
-  components: {
-    HeaderBanner,
-    SideBanner,
-    PostBanner,
-  },
   // 가짜 데이터
   data() {
     return {
-      profile: {},
+      headerInfo: {},
+      sideInfo: {},
+      postInfo: {},
+      loaded: false,
     };
   },
-  computed: {
-    headerInfo() {
-      return {
-        username: this.profile.username,
-        region: this.profile.region,
-        group: this.profile.group,
-        email: this.profile.email,
-        links: this.profile.links,
-        joined: this.profile.joined,
-        followerNum: this.profile.follower_num,
-        followeeNum: this.profile.followee_num,
-        bio: this.profile.bio,
-      };
-    },
-    sideInfo() {
-      return {
-        // TODO : post의 갯수와 comment의 갯수 넘겨줘야함.
-        tags: this.profile.tags,
-        skills: this.profile.tech_stacks,
-        projects: this.profile.projects,
-        postNum: this.profile.posts.length,
-        commentNum: this.profile.comments.length,
-      };
-    },
-    postInfo() {
-      return {
-        posts: this.profile.posts,
-        comments: this.profile.comments,
-        pinned: this.profile.pinned_posts,
-      };
-    },
-  },
+  computed: {},
   async created() {
     const id = this.$route.params.id;
     try {
       this.$q.loading.show();
       const { data } = await getProfile(id);
-      this.profile = data;
+      this.headerInfo = {
+        username: data.username,
+        region: data.region,
+        group: data.group,
+        email: data.email,
+        links: data.links,
+        joined: data.joined,
+        followerNum: data.follower_num,
+        followeeNum: data.followee_num,
+        bio: data.bio,
+        profileImg: data.profile_img,
+      };
+      this.sideInfo = {
+        tags: data.tags,
+        skills: data.tech_stack,
+        projects: data.project,
+        postNum: data.posts.length,
+        commentNum: data.comments.length,
+        myTags: data.tags,
+      };
+      this.postInfo = {
+        posts: data.posts,
+        comments: data.comments,
+        pinned: data.pinned_posts,
+      };
+      this.loaded = true;
     } catch (error) {
       console.log(error);
     } finally {
       this.$q.loading.hide();
     }
   },
+  components: {
+    HeaderBanner,
+    SideBanner,
+    PostBanner,
+  },
 };
 </script>
 
-<style scoped>
-.back-header {
-  height: 15vh;
-  background-color: #1595dc;
-}
-</style>
+<style scoped></style>

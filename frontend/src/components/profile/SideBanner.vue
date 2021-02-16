@@ -1,9 +1,10 @@
 <template>
-  <q-card class="side-banner">
-    <div class="row">
+  <q-card class="col-7">
+    <div class="row full-width">
       <div class="row col-6 items-center">
         <q-card-section>
           <pie-chart
+            v-if="loaded"
             :data="chartData"
             :options="chartOptions"
             style="width:25vw"
@@ -19,7 +20,7 @@
               </div>
               <div class="row q-mb-xl ">
                 <span
-                  v-for="(tag, index) in tagNames"
+                  v-for="(tag, index) in info.myTags"
                   :key="tag"
                   class="q-mb-sm q-mr-xs q-pa-sm"
                   :style="{ 'background-color': tagColors[index] }"
@@ -52,56 +53,23 @@
               <div class="text-bold text-center q-mb-md">
                 My Projects
               </div>
-              <div class="row" style="width:100%">
-                <q-list separator style="width:100%">
+              <div class="row full-width">
+                <q-list separator class="full-width">
                   <q-item
                     clickable
                     v-ripple
                     style="background-color:#F0ECEC; border-radius:6px; "
                     class="q-mb-sm q-pl-lg"
-                    v-if="info.projects[0]['project_name1']"
+                    v-for="project in info.projects"
+                    :key="project.project_name"
                   >
                     <q-item-section>
                       <div
                         style="color: #08458C"
                         class="text-center"
-                        @click="window.open(info.projects[0]['project_url1'])"
+                        @click="window.open(info.project.project_url)"
                       >
-                        {{ info.projects[0]['project_name1'] }}
-                      </div>
-                    </q-item-section>
-                  </q-item>
-                  <q-item
-                    clickable
-                    v-ripple
-                    style="background-color:#F0ECEC; border-radius:6px; "
-                    class="q-mb-sm q-pl-lg"
-                    v-if="info.projects[0]['project_name2']"
-                  >
-                    <q-item-section>
-                      <div
-                        style="color: #08458C"
-                        class="text-center"
-                        @click="window.open(info.projects[0]['project_url2'])"
-                      >
-                        {{ info.projects[0]['project_name2'] }}
-                      </div>
-                    </q-item-section>
-                  </q-item>
-                  <q-item
-                    clickable
-                    v-ripple
-                    style="background-color:#F0ECEC; border-radius:6px; "
-                    class="q-mb-sm q-pl-lg"
-                    v-if="info.projects[0]['project_name3']"
-                  >
-                    <q-item-section>
-                      <div
-                        style="color: #08458C"
-                        class="text-center"
-                        @click="window.open(info.projects[0]['project_url3'])"
-                      >
-                        {{ info.projects[0]['project_name3'] }}
+                        {{ info.project.project_name }}
                       </div>
                     </q-item-section>
                   </q-item>
@@ -182,11 +150,6 @@
           </div>
         </div>
       </div>
-
-      <!-- <div class="col-3">
-        
-        
-      </div> -->
     </div>
   </q-card>
 </template>
@@ -231,47 +194,48 @@ export default {
       chartData: {
         hoverBackgroundColor: 'red',
         hoverBorderWidth: 10,
-        labels: [],
+        labels: '',
         datasets: [
           {
             label: 'Data One',
-            backgroundColor: [],
-            data: [],
+            backgroundColor: '',
+            data: '',
           },
         ],
       },
+      tagNames: [],
+      tagColors: [],
+      tagBoldColors: [],
+      tagLength: 0,
+      tagCounts: [],
+      loaded: false,
     };
   },
-  computed: {
-    tagColors() {
-      return colorListMapper(this.tagNames, 0.5);
-    },
-    tagBoldColors() {
-      return colorListMapper(this.tagNames, 1);
-    },
-    tagNames() {
-      return Object.keys(this.info.tags);
-    },
-    tagLength() {
-      return this.tagNames.length;
-    },
-    tagCounts() {
-      return Object.values(this.info.tags);
-    },
-  },
+  // watch: {
+  //   info() {
+  //     this.tagNames = Object.keys(this.info.tags);
+  //     this.tagColors = colorListMapper(this.tagNames, 0.5);
+  //     this.tagBoldColors = colorListMapper(this.tagNames, 1);
+  //     this.tagLength = this.tagNames.length;
+  //     this.tagCounts = Object.values(this.info.tags);
+  //     this.chartData.labels = this.tagNames;
+  //     this.chartData.datasets[0].backgroundColor = this.tagBoldColors;
+  //     this.chartData.datasets[0].data = this.tagCounts;
+  //     this.loaded = true;
+  //   },
+  // },
   created() {
+    this.tagNames = Object.keys(this.info.tags);
+    this.tagColors = colorListMapper(this.tagNames, 0.5);
+    this.tagBoldColors = colorListMapper(this.tagNames, 1);
+    this.tagLength = this.tagNames.length;
+    this.tagCounts = Object.values(this.info.tags);
     this.chartData.labels = this.tagNames;
     this.chartData.datasets[0].backgroundColor = this.tagBoldColors;
     this.chartData.datasets[0].data = this.tagCounts;
+    this.loaded = true;
   },
 };
 </script>
 
-<style scoped>
-.side-banner {
-  width: 60%;
-  position: relative;
-  top: -5vh;
-  z-index: 1;
-}
-</style>
+<style scoped></style>

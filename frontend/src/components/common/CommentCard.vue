@@ -4,20 +4,18 @@
     style="width:100%; border: 1px solid #C1B9B9; border-radius: 8px"
   >
     <div class="row justify-between q-pt-xs q-mb-xs">
-      <div class="row items-baseline">
-        <div class="q-mr-sm text-weight-regular">@{{ detail.username }}</div>
-        <div class="text-weight-thin" style="font-size:8pt">
-          {{ detail.writtenAt | moment('YYYY/MM/DD') }}
-        </div>
+      <div class="row items-center">
+        <div class="q-mr-sm">@a{{ detail.username }},</div>
+        <div>{{ detail.written_time | moment('YYYY/MM/DD') }}</div>
       </div>
     </div>
-    <div class="row text-bold q-mb-sm" style="font-size:14pt;">
+    <div class="row text-bold q-mb-sm full-width" style="font-size:14pt;">
       {{ detail.title }}
     </div>
     <div
       class="row text-weight-thin q-mb-sm text-grey-8 q-pr-lg comment-content"
     >
-      {{ detail.comment }}
+      {{ detail.content }}
     </div>
   </div>
 </template>
