@@ -50,7 +50,7 @@
         <!-- 로그인 이후 보여지는 버튼 구현 -->
         <q-btn color="primary" round flat v-if="$store.getters.isLogined">
           <q-avatar style="border: 1px solid #ECEFF1">
-            <q-img :src="require('@/assets/keyboard.png')" />
+            <q-img :src="require('@/assets/basic_image.png')" />
           </q-avatar>
           <q-menu style="width:30%">
             <q-item @click="moveToProfilePage" clickable>
