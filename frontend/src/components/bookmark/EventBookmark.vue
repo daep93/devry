@@ -15,7 +15,11 @@
         <div class="row col-12">
           <div class="row col-9">
             <div class="row col-12 q-mb-sm">
-              <span class="text-body1">{{ data.title }}</span>
+              <span
+                class="text-body1 cursor-pointer"
+                @click="goToDetail(index)"
+                >{{ data.title }}</span
+              >
             </div>
             <div class="row col-12">
               <span
@@ -29,7 +33,12 @@
             </div>
           </div>
           <div class="row col-2">
-            <div class="row col-12">@{{ data.user.username }}</div>
+            <div
+              class="row col-12 cursor-pointer text-primary"
+              @click="goToProfile(index)"
+            >
+              @{{ data.user.username }}
+            </div>
             <div class="row col-12 text-caption">
               {{ data.start | moment('YYYY/MM/DD') }}
             </div>
@@ -61,6 +70,12 @@ export default {
     };
   },
   methods: {
+    goToDetail(index) {
+      this.$router.push(`/event-detail/${this.EventBookmarkList[index].id}`);
+    },
+    goToProfile(index) {
+      this.$router.push(`/profile/${this.EventBookmarkList[index].user.id}`);
+    },
     tagColor(tag, alpha) {
       return colorSoloMapper(tag, alpha);
     },

@@ -15,7 +15,11 @@
         <div class="row col-12">
           <div class="row col-9">
             <div class="row col-12 q-mb-sm">
-              <span class="text-body1">{{ data.title }}</span>
+              <span
+                class="text-body1 cursor-pointer"
+                @click="goToDetail(index)"
+                >{{ data.title }}</span
+              >
             </div>
             <div class="row col-12">
               <span
@@ -29,7 +33,12 @@
             </div>
           </div>
           <div class="row col-2">
-            <div class="row col-12">@{{ data.user.username }}</div>
+            <div
+              class="row col-12 cursor-pointer text-primary"
+              @click="goToProfile(index)"
+            >
+              @{{ data.user.username }}
+            </div>
             <div class="row col-12 text-caption">
               {{ data.written_time | moment('YYYY/MM/DD HH:mm') }}
             </div>
@@ -63,6 +72,12 @@ export default {
   methods: {
     tagColor(tag, alpha) {
       return colorSoloMapper(tag, alpha);
+    },
+    goToDetail(index) {
+      this.$router.push(`/qna-detail/${this.QnaBookmarkList[index].id}`);
+    },
+    goToProfile(index) {
+      this.$router.push(`/profile/${this.QnaBookmarkList[index].user.id}`);
     },
     async getQnaBookmark() {
       try {
