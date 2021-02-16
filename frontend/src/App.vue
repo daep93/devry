@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh lpR fFf" style="width:100vw">
+  <q-layout view="hHh lpR fFf" style="width:100vw" id="app">
     <main-header />
     <liquid-tag-guide-modal></liquid-tag-guide-modal>
     <account-modal></account-modal>
@@ -32,6 +32,10 @@ export default {
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+#app {
+  font-family: 'Noto Sans KR', sans-serif;
+}
 a {
   text-decoration: none;
 }
