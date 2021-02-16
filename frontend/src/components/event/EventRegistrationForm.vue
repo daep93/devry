@@ -1,5 +1,14 @@
 <template>
   <div class="full-width">
+    <!-- 메인 이미지 설정 -->
+    <q-toggle
+      v-model="king"
+      checked-icon="check"
+      color="primary"
+      label="메인 이벤트 설정"
+      unchecked-icon="clear"
+      @click="checkMain"
+    />
     <!-- 기본 정보 입력 part -->
     <div class="q-mb-md">
       <div class="text-h6 text-weight-bold q-mt-xl q-mb-sm">
@@ -371,6 +380,7 @@ export default {
       profile_img: 'https://placeimg.com/500/300/nature',
       register_url: '',
       ref_tags: [],
+      king: false,
     }
   },
   methods: {
@@ -396,6 +406,10 @@ export default {
     removeOneTag(tag, index) {
       this.ref_tags.splice(index, 1);
     },
+    checkMain() {
+      this.king = !this.king;
+      console.log(this.king)
+    },
     async createEvent() {
       try {
         this.$q.loading.show();
@@ -419,6 +433,7 @@ export default {
           register_url: this.register_url,
           ref_tags: this.ref_tags,
           user: this.$store.state.id,
+          king: this.king,
         });
         // 이동 시킬 페이지 적어주기(이벤트 게시판)
         this.$router.push({ path: '/event' });
@@ -453,6 +468,7 @@ export default {
           register_url: this.register_url,
           ref_tags: this.ref_tags,
           user: this.$store.state.id,
+          king: this.king,
         });
         // 이동 시킬 페이지 적어주기(이벤트 게시판)
         this.$router.push({ path: '/event' });
@@ -486,6 +502,7 @@ export default {
       try {
         this.$q.loading.show();
         const { data } = await loadEventItem(post_id);
+        console.log(post_id)
         // 가져올 데이터 목록
         this.state = data.state;
         this.thumnail = data.thumnail;
@@ -502,6 +519,7 @@ export default {
         this.profile_img = data.profile_img;
         this.register_url = data.register_url;
         this.ref_tags = data.ref_tags;
+        this.king = data.king;
         // 날짜 시간 형식 변경
         // const sArray = this.start.split('T')
         // const stimes = sArray[1]
