@@ -78,7 +78,7 @@ def profile_show(request, profile_pk):
     '''
     profile = get_object_or_404(Profile, pk=profile_pk) 
     
-    real_tags = []
+    real_tags = {}
     tags_list = {
         'Python3': 0,
         'Django': 0,
@@ -113,6 +113,7 @@ def profile_show(request, profile_pk):
 
     if request.method == 'GET':
         serializer = ProfileShowSerializer(profile)
+        # print(serializer.data)
 
         email = User.objects.filter(pk=ProfileSerializer(profile).data['user']).first()
         profile_user = User.objects.get(pk=ProfileSerializer(profile).data['user'])
@@ -123,7 +124,6 @@ def profile_show(request, profile_pk):
 
 
 
-
         # 모든 qna에서의 글 중 사용자가 쓴 글만 불러오고, 해당 글에서 참조된 태그들을 추가하는 과정
         all_qnas = Qna.objects.filter(user=UserJoinedSerializer(profile).data['id'])
         for some_qna in all_qnas:
@@ -131,9 +131,11 @@ def profile_show(request, profile_pk):
                 tags_list[ref] += 1
 
         # 한 번 이상 추가된 태그들만 남겨놓는 작업
+
         for single_tag in tags_list:
             if tags_list[single_tag] > 0:
-                real_tags.append({single_tag: tags_list[single_tag]})
+                real_tags[single_tag] = tags_list[single_tag]
+
 
         # User정보 안에 저장된 follow 내역들을 profile에 저장하는 과정
         profile.follower_num = profile_user.follower_num
@@ -143,6 +145,7 @@ def profile_show(request, profile_pk):
         # 사용자가 작성한 qna, ans, pinned한 글들만 filter해줌
         qnas = Qna.objects.filter(user=ProfileSerializer(profile).data['user'])
         comments = Ans.objects.filter(user=ProfileSerializer(profile).data['user'])
+        print(comments)
         pinned_posts = Qna.objects.filter(user=pinnedSerializer(profile).data['id'])  
         # print(qnas)  
         # print(pinned_posts)
@@ -151,12 +154,19 @@ def profile_show(request, profile_pk):
             serializer.data['posts'].append(QnaSerializer(qna).data)
         for comment in comments:
             serializer.data['comments'].append(AnsSerializer(comment).data)
+            print(AnsSerializer(comment).data)
+            commented_post = Qna.objects.filter(id=AnsSerializer(comment).data['qna'])
+            print(commented_post)
+            print(serializer.data)
+            print(AnsSerializer(comment).data['title'])
+            # serializer.data['title'] += 'asdasd'
+            
         for pinned_post in pinned_posts:
             serializer.data['pinned_posts'].append(QnaSerializer(pinned_post).data)
 
-        # print(real_tags)
-        for real in real_tags:
-            serializer.data['tags'].append(real)
+        serializer.data['tags'].update(real_tags)
+        # serializer.data['title'].update()
+        # print(serializer.data['tags'])
 
         # 저장된 sns_name, sns_url, project_name, project_url들을 각각 link와 project에 추가해 보여주는 과정
         for number in range(1, 4):
@@ -169,16 +179,16 @@ def profile_show(request, profile_pk):
             if ProfileSerializer(profile).data[sns_name] and ProfileSerializer(profile).data[sns_url]:
                 serializer.data['link'].append(
                     {
-                    sns_name: ProfileSerializer(profile).data[sns_name],
-                    sns_url: ProfileSerializer(profile).data[sns_url]
+                    'sns_name' : ProfileSerializer(profile).data[sns_name],
+                    'sns_url' : ProfileSerializer(profile).data[sns_url]
                     }
                 )
 
             if ProfileSerializer(profile).data[project_name] and ProfileSerializer(profile).data[project_url]:
                 serializer.data['project'].append(
                     {
-                    project_name: ProfileSerializer(profile).data[project_name],
-                    project_url: ProfileSerializer(profile).data[project_url]
+                    'project_name' : ProfileSerializer(profile).data[project_name],
+                    'project_url' : ProfileSerializer(profile).data[project_url]
                     }
                 )
         return Response(serializer.data)
@@ -198,42 +208,43 @@ def profile_setting(request, profile_pk):
     profile = get_object_or_404(Profile, pk=profile_pk)
     new_profile = Profile.objects.filter(pk=profile_pk).first()
 
-    profile_links = [
+
+    links_update = [
     {
-        'sns_name1': request.POST.get('sns_name1', False),
-        'sns_url1': request.POST.get('sns_url1', False)
+        'sns_name': request.POST.get('sns_name1', False),
+        'sns_url' : request.POST.get('sns_url1', False)
     },
     {
-        'sns_name2': request.POST.get('sns_name2', False),
-        'sns_url2': request.POST.get('sns_url2', False)
+        'sns_name': request.POST.get('sns_name2', False),
+        'sns_url' : request.POST.get('sns_url2', False)
     },
     {
-        'sns_name3': request.POST.get('sns_name3', False),
-        'sns_url3': request.POST.get('sns_url3', False)
+        'sns_name': request.POST.get('sns_name3', False),
+        'sns_url' : request.POST.get('sns_url3', False)
     }
     ]
 
-    profile_projects = [
+    projects_update = [
     {
-        'project_name1': request.POST.get('project_name1', False),
-        'project_url1': request.POST.get('project_url1', False)
+        'project_name': request.POST.get('project_name1', False),
+        'project_url' : request.POST.get('project_url1', False)
     },
     {
-        'project_name2': request.POST.get('project_name2', False),
-        'project_url2': request.POST.get('project_url2', False)
+        'project_name': request.POST.get('project_name2', False),
+        'project_url' : request.POST.get('project_url2', False)
     },
     {
-        'project_name3': request.POST.get('project_name3', False),
-        'project_url3': request.POST.get('project_url3', False)
+        'project_name': request.POST.get('project_name3', False),
+        'project_url' : request.POST.get('project_url3', False)
     }
     ]
+
 
 
     if request.META.get('HTTP_AUTHORIZATION'):         
         tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
         user=User.objects.get(id=tok.user_id)
         request.user = user    
-
         if request.method == 'GET':
             serializer = ProfileListSerializer(profile)
 
@@ -247,16 +258,16 @@ def profile_setting(request, profile_pk):
                 if ProfileSerializer(profile).data[sns_name] and ProfileSerializer(profile).data[sns_url]:
                     serializer.data['link'].append(
                         {
-                        sns_name: ProfileSerializer(profile).data[sns_name],
-                        sns_url: ProfileSerializer(profile).data[sns_url]
+                        'sns_name' : ProfileSerializer(profile).data[sns_name],
+                        'sns_url' : ProfileSerializer(profile).data[sns_url]
                         }
                     )
 
                 if ProfileSerializer(profile).data[project_name] and ProfileSerializer(profile).data[project_url]:
                     serializer.data['project'].append(
                         {
-                        project_name: ProfileSerializer(profile).data[project_name],
-                        project_url: ProfileSerializer(profile).data[project_url]
+                        'project_name' : ProfileSerializer(profile).data[project_name],
+                        'project_url' : ProfileSerializer(profile).data[project_url]
                         }
                     )
 
@@ -275,17 +286,20 @@ def profile_setting(request, profile_pk):
                 # 이미지 주소
                 # print(image_field)
 
+
                 serializer.validated_data['links'] = []
                 serializer.validated_data['projects'] = []
-                serializer.validated_data['links'] = profile_links
-                serializer.validated_data['projects'] = profile_projects
+                
+                for link in links_update:
+                    serializer.validated_data['links'].append(link)
+                for project in projects_update:
+                    serializer.validated_data['projects'].append(project)
 
 
-                serializer.save( validated_data=serializer.validated_data)
+                serializer.save(instance=profile, validated_data=serializer.validated_data)
 
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response('토큰이 일치하지 않습니다.', status=status.HTTP_404_NOT_FOUND)
 
-
-
-    

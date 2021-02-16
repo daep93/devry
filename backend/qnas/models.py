@@ -7,7 +7,9 @@ from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill
 from urllib.parse import urlparse
 from django.core.files import File
-from mysite.utils import download, get_buffer_ext 
+from mysite.utils import download, get_buffer_ext
+
+
 tech = (
     ('Python3', 'Python3'),
     ('Django', 'Django'),
@@ -72,6 +74,7 @@ tags = (
     ('Virtual Reality', 'Virtual Reality'),
 )
     
+
 class Qna(models.Model): 
     title = models.CharField(max_length=70)
     # img=models.ImageField(upload_to="%Y/%m/%d", default="", null=True)
@@ -92,6 +95,7 @@ class Qna(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, related_name='qna_profile')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     user_info = models.ForeignKey(Profile, on_delete=models.CASCADE,null=True, related_name='qna_userinfo')
+    is_following = models.BooleanField(default="False")
 
     def __str__(self):
         return self.title
@@ -116,8 +120,10 @@ class Ans(models.Model):
     qna = models.ForeignKey(Qna, on_delete=models.CASCADE)
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, related_name='ans_profile')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-
+    is_following = models.BooleanField(default="False")
     user_info = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, related_name='ans_userinfo')
+    title = models.TextField(blank=True)
+    username = models.TextField(blank=True)
 
     def __str__(self):
         return self.content

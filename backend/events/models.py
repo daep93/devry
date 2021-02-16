@@ -65,7 +65,7 @@ class Event(models.Model):
     participation = models.CharField(max_length=50, default="")
     introduction = models.TextField(default="")
     schedule = models.TextField(default="")
-
+    king= models.BooleanField(default="False")
     host_name=models.CharField(max_length=70)
     profile_img=models.ImageField(upload_to="%Y/%m/%d", default="")
     register_url=models.URLField(default="")

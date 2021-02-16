@@ -121,7 +121,7 @@ class Profile(models.Model):
     project_url1 = models.URLField(default="", max_length=100, blank=True)
     project_url2 = models.URLField(default="", max_length=100, blank=True)
     project_url3 = models.URLField(default="", max_length=100, blank=True)
-    tag = MultiSelectField(choices=user_tag)
+    my_tags = MultiSelectField(choices=user_tag)
     pinned_posts = models.TextField(blank=True)
     posts = models.TextField(blank=True)
     comments = models.TextField(blank=True)
@@ -131,7 +131,7 @@ class Profile(models.Model):
     projects = models.TextField()
 
     joined = models.DateTimeField(blank=True, null=True)
-    tags = models.ManyToManyField('self', default=0, related_name='project_tags', blank=True)
+    tags = models.TextField(blank=True)
 
 
 class Link(models.Model):

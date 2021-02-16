@@ -35,7 +35,7 @@ def event_main_list(request):
         request.user = user
 
     if request.method == 'GET':
-        events = Event.objects.filter(start__lte=now_day, end__gt=now_day).order_by('start')
+        events = Event.objects.filter(start__lte=now_day, end__gt=now_day, king="True").order_by('start')
         serializer = EventMainSerializer(events, many=True)
         return Response(serializer.data)
 

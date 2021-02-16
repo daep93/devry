@@ -40,7 +40,7 @@ class EventdetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = ('id', 'state', 'thumnail', 'title', 'category', 'place', 'start', 'end', 'start', 'end', 'cost', 'participation', 'introduction', 'schedule',
-        'host_name', 'profile_img', 'register_url', 'ref_tags', 'bookmarked', 'bookmark_num', 'viewed_num', 'user')
+        'host_name', 'profile_img', 'register_url', 'ref_tags', 'bookmarked', 'bookmark_num', 'viewed_num', 'user', 'king')
 
 
 class EventSerializer(serializers.ModelSerializer):
@@ -50,7 +50,7 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = ('id', 'state', 'thumnail', 'title', 'category', 'place', 'start', 'end', 'cost', 'participation', 'introduction', 'schedule',
-       'host_name', 'profile_img', 'register_url', 'ref_tags', 'bookmarked', 'bookmark_num', 'viewed_num', 'user')
+       'host_name', 'profile_img', 'register_url', 'ref_tags', 'bookmarked', 'bookmark_num', 'viewed_num', 'user', 'king')
 
 
 class bookmarkSerializer(serializers.ModelSerializer):

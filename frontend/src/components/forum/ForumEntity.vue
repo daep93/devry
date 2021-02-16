@@ -76,7 +76,7 @@
                 size="22px"
               ></q-icon>
             </div>
-            <span style="font-size: 13pt;">{{ entity.comment_num }}</span>
+            <span style="font-size: 13pt;">{{ entity.comment_count }}</span>
           </div>
         </div>
       </div>

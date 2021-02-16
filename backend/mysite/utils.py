@@ -2,7 +2,6 @@ from six import string_types
 from importlib import import_module
 from io import BytesIO
 
-import magic
 import requests
 
 def import_callable(path_or_callable):
