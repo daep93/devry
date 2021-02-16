@@ -28,20 +28,21 @@
         <br />
         <br />
         <q-icon
-          :name="$i.ionBookmarkOutline"
-          color="grey-6"
+          :name="bookmarked ? $i.ionBookmark : $i.ionBookmarkOutline"
+          :style="{ color: bookmarked ? '#598FFC' : '#727272' }"
           size="17px"
           class="cursor-pointer"
+          @click="checkBookmark"
         ></q-icon>
         <br />
-        <span>{{ info.bookmark_num }}</span>
+        <span>{{ bookmark_num }}</span>
       </div>
     </q-card>
   </div>
 </template>
 
 <script>
-import { toggleQnaLike } from '@/api/qna';
+import { toggleQnaLike, toggleQnaBookmark } from '@/api/qna';
 export default {
   props: {
     info: Object,
@@ -50,6 +51,8 @@ export default {
     return {
       liked: this.info.liked,
       like_num: this.info.like_num,
+      bookmarked: this.info.bookmarked,
+      bookmark_num: this.info.bookmark_num,
     };
   },
   methods: {
@@ -65,6 +68,23 @@ export default {
           this.like_num = this.like_num + 1;
         } else {
           this.like_num = this.like_num - 1;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async checkBookmark() {
+      if (!this.$store.getters.isLogined) {
+        alert('로그인을 해주세요');
+        return;
+      }
+      try {
+        const { data } = await toggleQnaBookmark(this.info.post_id);
+        this.bookmarked = !this.bookmarked;
+        if (this.bookmarked) {
+          this.bookmark_num = this.bookmark_num + 1;
+        } else {
+          this.bookmark_num = this.bookmark_num - 1;
         }
       } catch (error) {
         console.log(error);
