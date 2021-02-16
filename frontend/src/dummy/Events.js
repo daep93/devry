@@ -12,6 +12,7 @@ const testCase = [
         'https://img1.daumcdn.net/thumb/R720x0.q80/?scode=mtistory2&fname=http%3A%2F%2Fcfile28.uf.tistory.com%2Fimage%2F99E375455D5E2D6A1960E9', // 이벤트 주최자 프로필 이미지
     },
     bookmark: false, // 북마크 여부
+    bookmarked_num: 12
   },
   {
     event_id: 2,
@@ -25,6 +26,7 @@ const testCase = [
         'https://img.etoday.co.kr/pto_db/2019/10/600/20191008190706_1374482_584_432.jpg',
     },
     bookmark: false,
+    bookmarked_num: 13
   },
   {
     event_id: 3,
@@ -37,6 +39,7 @@ const testCase = [
       profile_img: 'https://cdn.quasar.dev/img/mountains.jpg',
     },
     bookmark: false,
+    bookmarked_num: 14
   },
   {
     event_id: 4,
@@ -49,6 +52,7 @@ const testCase = [
       profile_img: 'https://cdn.quasar.dev/img/chicken-salad.jpg',
     },
     bookmark: false,
+    bookmarked_num: 16
   },
   {
     event_id: 5,
@@ -61,6 +65,7 @@ const testCase = [
       profile_img: 'https://cdn.quasar.dev/img/parallax2.jpg',
     },
     bookmark: false,
+    bookmarked_num: 15
   },
   {
     event_id: 6,
@@ -73,6 +78,7 @@ const testCase = [
       profile_img: 'https://cdn.quasar.dev/img/donuts.png',
     },
     bookmark: false,
+    bookmarked_num: 20
   },
   {
     event_id: 7,
@@ -85,6 +91,7 @@ const testCase = [
       profile_img: 'https://cdn.quasar.dev/img/linux-avatar.png',
     },
     bookmark: false,
+    bookmarked_num: 19
   },
   {
     event_id: 8,
@@ -97,6 +104,7 @@ const testCase = [
       profile_img: 'https://cdn.quasar.dev/img/cat.jpg',
     },
     bookmark: false,
+    bookmarked_num: 18
   },
   {
     event_id: 9,
@@ -109,6 +117,7 @@ const testCase = [
       profile_img: 'https://cdn.quasar.dev/img/material.png',
     },
     bookmark: false,
+    bookmarked_num: 16
   },
   {
     event_id: 10,
@@ -121,6 +130,7 @@ const testCase = [
       profile_img: 'https://cdn.quasar.dev/img/mountains.jpg',
     },
     bookmark: false,
+    bookmarked_num: 23
   },
   {
     event_id: 11,
@@ -133,6 +143,7 @@ const testCase = [
       profile_img: 'https://cdn.quasar.dev/img/parallax2.jpg',
     },
     bookmark: false,
+    bookmarked_num: 11
   },
   {
     event_id: 12,
@@ -145,6 +156,7 @@ const testCase = [
       profile_img: 'https://cdn.quasar.dev/img/parallax1.jpg',
     },
     bookmark: false,
+    bookmarked_num: 20
   },
 ];
 export { testCase };

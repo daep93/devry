@@ -17,7 +17,7 @@
       <q-select
         outlined
         v-model="category"
-        :options="['ALL', 'conference', 'workshop', 'hackathon']"
+        :options="['ALL', 'Conference', 'Workshop', 'Hackathon', 'Competition', 'Meeting']"
         style="width:140px;"
       />
     </div>
@@ -30,104 +30,82 @@
             indicator-color="white"
           >
             <div
-              v-for="(event, index) in categorySortedList"
-              :key="index"
+              v-for="event in categorySortedList"
+              :key="event.eventId"
               class="col-4 q-pa-xs"
             >
-              <q-card style="border-radius: 20px;">
-                <q-card-section class="q-px-md q-pt-lg q-pb-none">
-                  <div class="q-pa-xs row justify-between">
-                    <div
-                      class="text-weight-bold text-weight-bold col-10"
-                      style="font-size:1.1em"
-                    >
-                      {{ event.title }}
-                    </div>
-                    <div class="col-2 row justify-end">
-                      <q-btn
-                        padding="0"
-                        @click="checkBookMark(index)"
-                        flat
-                        round
-                        color="primary"
-                        :icon="event.bookmark ? 'bookmark' : 'bookmark_border'"
-                        style="margin-left: 40px;"
-                      />
-                    </div>
-                  </div>
-                </q-card-section>
-                <q-card-section class="q-px-lg q-pt-sm q-pb-xs">
-                  <div class="row q-gutter-sm">
-                    <div
-                      v-for="(tag, index) in event.tags"
-                      :key="index"
-                      style="font-size:0.9em"
-                    >
-                      #{{ tag }}
-                    </div>
-                  </div>
-                </q-card-section>
-                <q-card-section class="q-px-lg q-pt-sm q-pb-lg">
-                  <div class="row justify-between items-end">
-                    <div class="text-subtitle2 text-weight-bold text-primary">
-                      {{ event.date }}
-                    </div>
-                    <div>
-                      <img
-                        :src="event.host_info.profile_img"
-                        style="width: 50px; height: 40px;  border-radius: 10px;"
-                      />
-                    </div>
-                  </div>
-                </q-card-section>
-              </q-card>
+              <recommend-entity 
+                :entity="event"
+              ></recommend-entity>
             </div>
           </q-tabs>
         </q-intersection>
-        <!-- <q-intersection
-          v-for="(event, index) in events"
-          :key="index"
-          once
-          transition="scale"
-          class=" row"
-        >
-         
-        </q-intersection> -->
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { testCase } from '@/dummy/Events.js';
+// import { testCase } from '@/dummy/Events.js';
+import RecommendEntity from '@/components/event/RecommendEntity.vue';
+import { getEventList } from '@/api/board';
+
 export default {
+  components: {
+    RecommendEntity,
+  },
   data() {
     return {
       category: 'ALL',
+      recommend_events: [],
+      origin_event: [],
     };
   },
-  methods: {
-    checkBookMark: function(index) {
-      this.categorySortedList[index].bookmark = !this.categorySortedList[index]
-        .bookmark;
-    },
-  },
-  created() {
+  async created() {
+    // myTags로부터 selectedTags를 받아옴
     this.$store.commit('initSelectedTags');
+    this.loadBoard();
   },
-  computed: {
-    tagFilteredList() {
-      return testCase.filter(article => {
-        for (const tag of article.tags) {
-          for (const selected of this.$store.getters.getSelectedTags) {
-            if (tag.toLowerCase() === selected) return true;
-          }
+  watch: {
+    selectedTags(newValue) {
+      // store의 selectedTags가 바뀌면 새로운 게시판의 정보를 서버로부터 받아옴
+      this.recommend_events = this.origin_event.filter(post => {
+        for (const tag of post.ref_tags) {
+          if (newValue.indexOf(tag) >= 0) return true;
         }
         return false;
       });
     },
+  },
+  methods: {
+    async loadBoard() {
+      try {
+        this.$q.loading.show();
+        // 가져올 데이터 목록
+        const { data } = await getEventList();
+        this.origin_event = data;
+        this.recommend_events = this.origin_event.filter(post => {
+          for (const tag of post.ref_tags) {
+            if (this.selectedTags.indexOf(tag) >= 0) {
+              return true;
+            }
+          }
+          return false;
+        });
+      } catch (error) {
+      console.log(error);
+      // alert('에러가 발생했습니다.)
+      } finally {
+        this.$q.loading.hide();
+      }
+    }
+  },
+  computed: {
+    selectedTags() {
+      return this.$store.getters.getSelectedTags;
+    },
     categorySortedList() {
-      return this.tagFilteredList.filter(article => {
+      return this.recommend_events.filter(article => {
         if (this.category === 'ALL') return true;
         if (article.category === this.category) return true;
         return false;
