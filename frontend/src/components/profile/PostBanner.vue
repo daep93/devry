@@ -1,5 +1,5 @@
 <template>
-  <div class="post-banner q-mb-lg">
+  <div class="col-7 q-my-lg ">
     <div class="q-mb-sm row items-center">
       <q-icon
         :name="$i.ionAttachOutline"
@@ -99,10 +99,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.post-banner {
-  width: 60%;
-  position: relative;
-  z-index: 1;
-}
-</style>
+<style scoped></style>

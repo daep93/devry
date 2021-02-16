@@ -114,12 +114,6 @@
               >
             </div>
 
-            <div class="q-ml-md row col-12">
-              <q-card-section class="row col-12">
-                <q-markdown :src="info.contents"> </q-markdown>
-              </q-card-section>
-            </div>
-
             <!-- 큰 댓글의 작은 댓글 -->
             <q-card-section class="row col-12">
               <template v-if="data.anssmall_set.length">
