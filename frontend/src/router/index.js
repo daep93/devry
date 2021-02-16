@@ -49,7 +49,7 @@ const routes = [
   {
     path: '/qna/create',
     name: 'QnACreate',
-    component: () => import('@/views/common/PostCreatePage.vue'),
+    component: () => import('@/views/common/QnaCreatePage.vue'),
     beforeEnter: (to, from, next) => {
       if (!store.getters.isLogined) {
         alert('로그인이 필요합니다');
@@ -61,7 +61,7 @@ const routes = [
   {
     path: '/qna/:id',
     name: 'QnAUpdate',
-    component: () => import('@/views/common/PostUpdatePage.vue'),
+    component: () => import('@/views/common/QnaUpdatePage.vue'),
     beforeEnter: (to, from, next) => {
       if (!store.getters.isLogined) {
         alert('로그인이 필요합니다');
