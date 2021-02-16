@@ -89,16 +89,11 @@ function deleteRecomment(anssmall_pk) {
 
 // QnA 이미지 임시저장 하기
 function saveQnaImage(postData) {
-  return instance.post('qna_image/', postData, {
+  return instance.post('qnatest/image/', postData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
   });
-}
-
-// QnA 이미지 임시저장한 내용 불러오기
-function loadQnaImage() {
-  return instance.get('qna/');
 }
 
 // QnA 글 작성자 팔로잉 여부 및 팔로잉하기
@@ -136,7 +131,6 @@ export {
   updateRecomment,
   deleteRecomment,
   saveQnaImage,
-  loadQnaImage,
   checkQnaFollowing,
   checkQnaSmallFollowStatus,
   checkQnaSmallFollowing,
