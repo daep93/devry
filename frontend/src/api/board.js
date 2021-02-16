@@ -3,4 +3,9 @@ function getQnaList() {
   return board.get(`qna`);
 }
 
-export { getQnaList };
+// forum list 불러오기
+function getForumList() {
+  return board.get(`forum/`);
+}
+
+export { getQnaList, getForumList };
