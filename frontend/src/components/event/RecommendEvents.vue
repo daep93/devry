@@ -64,7 +64,6 @@ export default {
   async created() {
     // myTags로부터 selectedTags를 받아옴
     this.$store.commit('initSelectedTags');
-    // QnA 게시판의 정보를 서버로부터 받아옴
     this.loadBoard();
   },
   watch: {
@@ -79,17 +78,12 @@ export default {
     },
   },
   methods: {
-    // checkBookMark: function(index) {
-    //   this.categorySortedList[index].bookmark = !this.categorySortedList[index]
-    //     .bookmark;
-    // },
     async loadBoard() {
       try {
         this.$q.loading.show();
         // 가져올 데이터 목록
         const { data } = await getEventList();
         this.origin_event = data;
-        // this.recommend_events = data;
         this.recommend_events = this.origin_event.filter(post => {
           for (const tag of post.ref_tags) {
             if (this.selectedTags.indexOf(tag) >= 0) {
@@ -106,57 +100,18 @@ export default {
       }
     }
   },
-  // created() {
-  //   this.$store.commit('initSelectedTags');
-  // },
   computed: {
     selectedTags() {
       return this.$store.getters.getSelectedTags;
     },
-    // tagFilteredList() {
-    //   return this.recommend_events.filter(article => {
-    //     for (const tag of article.tags) {
-    //       for (const selected of this.$store.getters.getSelectedTags) {
-    //         if (tag.toLowerCase() === selected) return true;
-    //       }
-    //     }
-    //     return false;
-    //   });
-    // },
     categorySortedList() {
       return this.recommend_events.filter(article => {
-      // return this.tagFilteredList.filter(article => {
         if (this.category === 'ALL') return true;
         if (article.category === this.category) return true;
         return false;
       });
     },
   },
-  // async created() {
-  //   try {
-  //     this.$q.loading.show();
-  //     // myTags로 부터 태그 정보 가져오기
-  //     this.$store.commit('initSelectedTags');
-  //     // 가져올 데이터 목록
-  //     const { data } = await getEventList();
-  //     this.recommend_events = data;
-  //     // this.origin_event = data;
-  //     // this.recommend_events = this.origin_event.filter(post => {
-  //     //   for (const tag of post.ref_tags) {
-  //     //     if (this.selectedTags.indexOf(tag) >= 0) {
-  //     //       return true;
-  //     //     }
-  //     //   }
-  //     //   return false;
-  //     // });
-  //     return data;
-  //   } catch (error) {
-  //     console.log(error);
-  //     // alert('에러가 발생했습니다.)
-  //   } finally {
-  //     this.$q.loading.hide();
-  //   }
-  // }
 };
 </script>
 

@@ -1,17 +1,18 @@
 <template>
-  <q-carousel-slide
-    :name="this.num"
-    style="background-color: #1E1B39; border-radius: 10px;"
-    class="overflow-hidden"
-    @click="goToDetail"
-  >
-    <div class="row justify-center overflow-hidden">
-      <img
-        :src="entity.thumnail"
-        style="height:230px; width:70%;"
-      />
-    </div>
-  </q-carousel-slide>
+  <div class="row justify-center overflow-hidden" @click="goToDetail">
+    <img
+      src="@/assets/tensorFlow.jpg"
+      alt="tensorflow"
+      style="height:240px; width:100%;"
+      
+    />
+    <!-- {{ entity.thumnail }} -->
+    <!-- {{ this.address }}
+    <img
+      src="address"
+      style="height:240px; width:100%;"
+    /> -->
+  </div>
 </template>
 
 <script>
@@ -21,7 +22,8 @@ export default {
   },
   data() {
     return {
-      num: 1,
+      num: '',
+      address: `https://devry.kr${this.entity.thumnail}`
     }
   },
   methods: {

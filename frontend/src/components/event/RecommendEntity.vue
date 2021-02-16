@@ -3,7 +3,7 @@
     <q-card-section class="q-px-md q-pt-lg q-pb-none">
       <div class="q-pa-xs row justify-between">
         <div
-          class="text-weight-bold text-weight-bold col-10"
+          class="text-weight-bold text-weight-bold col-10 cursor-pointer"
           style="font-size:1.1em"
           @click="goToDetail"
         >
