@@ -20,7 +20,10 @@
 
       <q-card-section class="row col-12 q-py-none q-mb-sm">
         <div class="row col-12 text-h4 text-weight-bold q-mb-sm">
-          <span>{{ info.title }} </span>
+          <span>
+            {{ info.title }}
+          </span>
+
           <div v-if="info.solved" class="q-ml-lg">
             <q-badge color="blue" align="middle">
               답변 완료 ✔

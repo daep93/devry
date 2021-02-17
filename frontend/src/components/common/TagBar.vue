@@ -60,6 +60,7 @@
       <q-card class="row full-width justify-center" flat>
         <q-card-actions align="center" class="">
           <q-input
+            style="height:40px"
             v-model="searched_tag"
             type="text"
             @keypress.enter="handleScroll(searched_tag)"
@@ -74,6 +75,18 @@
       <q-card class="row full-width justify-center" flat>
         <q-card-actions align="center">
           <div class="bg-white">
+            <q-btn flat color="black" @click="toggleAllTags">
+              전체 선택
+              <q-icon
+                size="xs"
+                :name="$i.ionCheckmarkOutline"
+                v-if="all_flag"
+                :style="{
+                  'transition-duration': '0.5s',
+                  'transition-timing-function': 'ease-in-out',
+                }"
+              ></q-icon>
+            </q-btn>
             <q-btn
               flat
               label="취소"
@@ -82,7 +95,7 @@
             />
             <q-btn
               flat
-              label="선택 적용"
+              label="적용"
               color="primary"
               @click="updateSelectedTags"
             />
@@ -106,9 +119,19 @@ export default {
       searched_tag: '',
       scrollInfo: {},
       tags: { ...this.$store.state.tags_selected },
+      all_flag: false,
     };
   },
   methods: {
+    // 모든 토글을 선택하거나 해제할 수 있다.
+    toggleAllTags() {
+      this.all_flag = !this.all_flag;
+      for (const tag in this.tags) {
+        this.tags[tag] = this.all_flag;
+      }
+    },
+
+    // 태그를 적을 때 자동으로 부분일치하는 태그를 제시해준다.
     tagAutoComplete(str) {
       const reg = new RegExp(`^${str}`, 'i');
       for (const tag of this.$store.state.all_tag_list) {
@@ -116,6 +139,7 @@ export default {
       }
       return '';
     },
+    // 주어진 태그를 찾아서 이동한다.
     handleScroll(str) {
       let tag;
       if (!(tag = this.tagAutoComplete(str))) return;
