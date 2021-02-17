@@ -1,57 +1,46 @@
 <template>
   <div>
     <div v-for="(data, index) in followerData" :key="index" class="q-pa-xs">
-      <!-- <div v-for="n in 10" :key="n" class="q-pa-xs"> -->
       <div class="q-pa-md row col-align" style="height:80px;">
-        <!-- follow 유저 정보 -->
         <div class="col-8 row" style="height:100%">
           <q-list style="min-width:300px; margin-left: 30px;">
-            <!-- <q-list bordered style="min-width:300px; margin-left: 30px;"> -->
             <q-item>
               <q-item-section avatar>
-                <a href="javascript:;" @click="goToProfile">
-                  <q-avatar><img :src="data.profile_img" /> </q-avatar
-                ></a>
+                <q-avatar @click="goToProfile(index)" class="cursor-pointer"
+                  ><img :src="data.profile_img" />
+                </q-avatar>
               </q-item-section>
               <q-item-section>
-                <span>
-                  <a
-                    href="javascript:;"
-                    @click="goToProfile"
-                    class="change-tag-color"
-                  >
-                    <b style="font-size: 15px;">{{ data.id }}</b></a
-                  ></span
-                >
                 <span
-                  >글 {{ data.post_num }} · 팔로워 {{ data.follower_num }}</span
+                  class="change-tag-color cursor-pointer"
+                  @click="goToProfile(index)"
                 >
-                <!-- {{ index }} -->
+                  <b style="font-size: 15px;">{{ data.user.username }}</b>
+                </span>
+                <span>글 ?? · 팔로워 {{ data.user.follower_num }}</span>
               </q-item-section>
             </q-item>
           </q-list>
         </div>
-        <!-- follow 버튼 -->
-        <!-- <div class="col-4 row justify-center items-center" style="height:100%"> -->
         <div class="col-4 row justify-center items-center" style="height:100%">
-          <div v-if="data.follow">
-            <q-btn
-              no-caps
-              color="primary"
-              id="follow-btn"
-              label="Follow"
-              style="width:90px;"
-              @click="checkFollow(index)"
-            />
-          </div>
-          <div v-else>
+          <div v-if="data.is_following">
             <q-btn
               no-caps
               outline
               color="primary"
               label="Following"
               style="width:90px;"
-              @click="checkFollow(index)"
+              @click="toggleFollow(index)"
+            />
+          </div>
+          <div v-else>
+            <q-btn
+              no-caps
+              color="primary"
+              id="follow-btn"
+              label="Follow"
+              style="width:90px;"
+              @click="toggleFollow(index)"
             />
           </div>
         </div>
@@ -61,107 +50,46 @@
 </template>
 
 <script>
-import { getFollower, followFollower, unfollowFollower } from '@/api/follow';
+import { getFollowerList, followOtherUser } from '@/api/follow';
 
 export default {
   data() {
     return {
-      // 가짜 데이터
-      followerData: [
-        {
-          id: '유저',
-          profile_img: 'https://cdn.quasar.dev/img/avatar.png',
-          follower_num: 50,
-          post_num: 10,
-          is_following: 30,
-          follow: true,
-        },
-        {
-          id: '유저2',
-          profile_img: 'https://cdn.quasar.dev/img/boy-avatar.png',
-          follower_num: 22,
-          post_num: 6,
-          is_following: 60,
-          follow: false,
-        },
-        {
-          id: '유저3',
-          profile_img: 'https://cdn.quasar.dev/img/avatar.png',
-          follower_num: 22,
-          post_num: 6,
-          is_following: 60,
-          follow: true,
-        },
-        {
-          id: '유저4',
-          profile_img: 'https://cdn.quasar.dev/img/boy-avatar.png',
-          follower_num: 22,
-          post_num: 6,
-          is_following: 60,
-          follow: true,
-        },
-        {
-          id: '유저5',
-          profile_img: 'https://cdn.quasar.dev/img/avatar.png',
-          follower_num: 2,
-          post_num: 6,
-          is_following: 6,
-          follow: true,
-        },
-        {
-          id: '유저6',
-          profile_img: 'https://cdn.quasar.dev/img/avatar.png',
-          follower_num: 2,
-          post_num: 6,
-          is_following: 6,
-          follow: true,
-        },
-        {
-          id: '유저7',
-          profile_img: 'https://cdn.quasar.dev/img/avatar.png',
-          follower_num: 2,
-          post_num: 6,
-          is_following: 6,
-          follow: true,
-        },
-      ],
+      followerData: [],
     };
   },
   methods: {
-    checkFollow(index) {
-      for (const btn of this.followerData) {
-        if (this.followerData.indexOf(btn) === index) {
-          btn.follow = !btn.follow;
-        }
-      }
+    goToProfile(index) {
+      this.$router.push(`/profile/${this.followerData[index].user.id}`);
+      location.reload();
     },
-    goToProfile() {
-      console.log('click!');
-      this.$router.push({ name: 'Profile' });
-    },
-    async followMyFollower() {
+    async toggleFollow(index) {
       try {
-        await followFollower();
+        this.$q.loading.show();
+        const want_pk = this.followerData[index].user.id;
+        await followOtherUser(want_pk);
+        this.getFollower();
       } catch (error) {
         console.log(error);
+      } finally {
+        this.$q.loading.hide();
       }
     },
-    async unfollowMyFollower() {
+    async getFollower() {
       try {
-        await unfollowFollower();
+        this.$q.loading.show();
+        const { data } = await getFollowerList();
+        this.followerData = data;
       } catch (error) {
         console.log(error);
+      } finally {
+        this.$q.loading.hide();
       }
     },
   },
   async created() {
-    const unit = 10;
-    // 단위 시작 위치
-    const unit_index = 1;
-    const unitData = { unit, unit_index };
     try {
-      const { data } = await getFollower(unitData);
-      this.followerData.push(data);
+      this.getFollower();
     } catch (error) {
       console.log(error);
     }
