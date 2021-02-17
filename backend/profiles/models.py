@@ -71,7 +71,8 @@ user_tag = (
 )
 
 # Create your models here.
-
+class ForumImagePost(models.Model):
+    thumbnail = models.ImageField(upload_to="%Y/%m/%d") 
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -82,6 +83,7 @@ class Profile(models.Model):
     profile_img = ProcessedImageField(
         default="",
         blank = True,
+        null=True,
         upload_to = 'accounts/images',
         processors= [ResizeToFill(200, 200)],
         format='JPEG',
@@ -114,7 +116,9 @@ class Profile(models.Model):
     sns_url1 = models.URLField(default="", max_length=100, blank=True)
     sns_url2 = models.URLField(default="", max_length=100, blank=True)
     sns_url3 = models.URLField(default="", max_length=100, blank=True)
-    tech_stack = MultiSelectField(choices=tech)
+    # tech_stack = MultiSelectField(choices=tech)
+    tech_stack = models.CharField(max_length=200)
+    # tech_stack = models.ForeignKey('self', on_delete=models.CASCADE, blank=True,  related_name='project_stack')
     project_name1 = models.CharField(default="", max_length=100, blank=True)
     project_name2 = models.CharField(default="", max_length=100, blank=True)
     project_name3 = models.CharField(default="", max_length=100, blank=True)
@@ -129,10 +133,14 @@ class Profile(models.Model):
     links = models.TextField()
     project = models.ManyToManyField('self', default = 0, related_name='project_project', blank=True)
     projects = models.TextField()
+    thumbnail = models.OneToOneField(ForumImagePost, on_delete=models.CASCADE, blank=True, null=True, related_name='forum_image')
 
     joined = models.DateTimeField(blank=True, null=True)
     tags = models.TextField(blank=True)
 
+
+class Stack(models.Model):
+    tech_stack = models.ManyToManyField('self', default = 0, related_name='profile_stack', blank=True)
 
 class Link(models.Model):
     
@@ -162,3 +170,4 @@ def create_user_profile(sender, instance, created, **kwargs):
     instance.profile.email = UserSerializer(instance).data['email']
     instance.profile.joined = UserSerializer(instance).data['date_joined']
     instance.profile.save()
+

@@ -162,7 +162,7 @@ class UserLoginView(GenericAPIView):
         user_token = Token.objects.get(user_id = self.user.id)
 
         response = Response(serializer.data, status=status.HTTP_200_OK)
-
+        print(token)
         response = Response({
                 "user": {
                     "id": self.user.id,
@@ -178,11 +178,13 @@ class UserLoginView(GenericAPIView):
             profile = Profile.objects.get(username=self.user.username)
             if ProfileSerializer(profile).data['my_tags']:
                 user_tag = ProfileSerializer(profile).data['my_tags']
+                user_profile_img = ProfileSerializer(profile).data['profile_img']
                 response = Response({
                     "user": {
                         "id": self.user.id,
                         "username": self.user.username,
-                        "my_tags": user_tag
+                        "my_tags": user_tag,
+                        "profile_img": user_profile_img
                     },
                     "token": serializer.data['key']
                 })

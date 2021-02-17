@@ -104,7 +104,7 @@ class QnaListforamtSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Qna
-        fields = ('id', 'title','user', 'written_time', 'ref_tags', 'like_num', 'comment_num', 'viewed_num', 'solved', 'liked', 'profile')
+        fields = ('qna_id', 'title','user', 'written_time', 'ref_tags', 'like_num', 'comment_num', 'viewed_num', 'solved', 'liked', 'profile')
 
 
 class QnaListSerializer(serializers.ModelSerializer):
@@ -120,7 +120,7 @@ class QnaListSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Qna
-        fields = ('id', 'title', 'written_time', 'ref_tags', 'like_num', 'comment_num', 'viewed_num', 'solved', 'liked', 'profile')
+        fields = ('qna_id', 'title', 'written_time', 'ref_tags', 'like_num', 'comment_num', 'viewed_num', 'solved', 'liked', 'profile')
 
 
 class AnsdetailSerializer(serializers.ModelSerializer):
@@ -246,7 +246,7 @@ class QnadetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Qna
-        fields = ('id','profile', 'title','written_time', 'ref_tags', 'solved', 'like_num', 'comment_num',
+        fields = ('qna_id','profile', 'title','written_time', 'ref_tags', 'solved', 'like_num', 'comment_num',
         'viewed_num', 'bookmark_num','content', 'qnasmall_set', 'ans_set', 'liked', 'bookmarked', 'is_following', 'user' )
 
 
@@ -271,7 +271,7 @@ class QnaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Qna
-        fields = ('id','title','user','profile','content','ref_tags', 'liked', 'like_num', 'bookmarked', 'pinned', 'pinned_num',
+        fields = ('qna_id','title','user','profile','content','ref_tags', 'liked', 'like_num', 'bookmarked', 'pinned', 'pinned_num',
         'solved','bookmark_num', 'viewed_num', 'written_time','ans_set', 'comment_num','qnasmall_set')
 
 
@@ -279,7 +279,7 @@ class likeSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Qna
-        fields = ('id', "liked")
+        fields = ('qna_id', "liked", "like_num", "like_users")
 
 
 class like_ansSerializer(serializers.ModelSerializer):
@@ -293,14 +293,20 @@ class bookmarkSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Qna
-        fields = ('id', "bookmarked")
+        fields = ('qna_id', "bookmarked", "bookmark_num", "bookmark_users")
 
-class pinnedSerializer(serializers.ModelSerializer):
+class QnapinnedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Qna
-        fields = ('id', 'pinned',)
+        fields = ('qna_id', 'pinned', 'pinned_users', 'pinned_num')
 
+
+class QnaDetailPinnedSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Qna
+        fields = ('qna_id', 'title',)
 
 class solveSerializer(serializers.ModelSerializer):
     
@@ -313,7 +319,7 @@ class isfollowingSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Qna
-        fields = ('id', "is_following")
+        fields = ('qna_id', "is_following")
 
 
 class isfollowingansSerializer(serializers.ModelSerializer):
@@ -340,4 +346,4 @@ class mybookmarkSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Qna
-        fields = ('id', 'title','user', 'written_time', 'ref_tags', 'like_num', 'comment_num', 'viewed_num', 'solved', 'liked', 'profile')
+        fields = ('qna_id', 'title','user', 'written_time', 'ref_tags', 'like_num', 'comment_num', 'viewed_num', 'solved', 'liked', 'profile')
