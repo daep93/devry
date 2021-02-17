@@ -134,7 +134,6 @@ export default {
       }
     },
     goToProfile() {
-      console.log('click!');
       this.$router.push({ name: 'Profile' });
     },
     async unfollowMyFollowee() {
