@@ -111,6 +111,16 @@ function checkQnaSmallFollowing(ans_pk) {
   return instance.post(`ans/following/${ans_pk}`);
 }
 
+// QnA 게시물 북마크하기
+function toggleQnaBookmark(qna_pk) {
+  return instance.post(`qna_bookmark/${qna_pk}/`);
+}
+
+// QnA 게시물 북마크 상태 가져오기
+function getQnaBookmarkStatus(qna_pk) {
+  return instance.get(`qna_bookmark/${qna_pk}/`);
+}
+
 export {
   registerSmallComment,
   getSmallComments,
@@ -134,4 +144,6 @@ export {
   checkQnaFollowing,
   checkQnaSmallFollowStatus,
   checkQnaSmallFollowing,
+  toggleQnaBookmark,
+  getQnaBookmarkStatus,
 };

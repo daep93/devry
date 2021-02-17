@@ -69,6 +69,15 @@
                 프로필 설정
               </q-item-section>
             </q-item>
+            <q-item @click="moveToBookmarkPage" clickable>
+              <q-item-section avatar>
+                <q-icon :name="$i.ionBookmarkOutline"></q-icon>
+              </q-item-section>
+              <q-item-section>
+                북마크
+              </q-item-section>
+            </q-item>
+
             <q-item @click="logout" clickable>
               <q-item-section avatar>
                 <q-icon :name="$i.ionLogOutOutline"></q-icon>
@@ -118,6 +127,9 @@ export default {
     },
     moveToProfileSettingPage() {
       this.$router.push(`/profile-setting/`);
+    },
+    moveToBookmarkPage() {
+      this.$router.push(`/bookmark/`);
     },
     toggleLeft() {
       this.$store.commit('toggleLeft');

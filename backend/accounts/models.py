@@ -22,6 +22,7 @@ from multiselectfield import MultiSelectField
 
 from rest_framework.authtoken.models import Token as DefaultTokenModel
 from mysite.utils import import_callable
+
 # Create your models here.
 
 class UserManager(BaseUserManager):
@@ -62,6 +63,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField('date_joined', default=timezone.now)
     follower_num = models.PositiveIntegerField(default=0)
     followee_num = models.PositiveIntegerField(default=0)
+    mentioned = models.BooleanField(default="False")
+    mentioned_comment = models.ManyToManyField('forums.Comment', blank=True, related_name='like_comments')
 
     objects = UserManager()
 
@@ -129,3 +132,9 @@ class UserFollowing(models.Model):
     # def __str__(self):
     #     return f"user_id = {self.user_id} follows user_id = {self.following_user_id}"
 
+class Mentioned(models.Model):
+
+    user = models.ForeignKey(User, related_name="mention_user", on_delete=models.CASCADE)
+    mentioned_user = models.ForeignKey(User, related_name="mentioned_user", on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+    comment = models.ManyToManyField('forums.Comment', blank=True, related_name='mentioned_comment')

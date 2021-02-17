@@ -15,7 +15,7 @@ from rest_auth.models import TokenModel
 from rest_framework.authtoken.models import Token
 from mysite.app_settings import TokenSerializer
 
-from qnas.serializers import QnaSerializer, AnsSerializer, pinnedSerializer
+from qnas.serializers import QnaSerializer, AnsSerializer, QnapinnedSerializer
 from qnas.models import Qna, Ans
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
@@ -145,10 +145,17 @@ def profile_show(request, profile_pk):
         # 사용자가 작성한 qna, ans, pinned한 글들만 filter해줌
         qnas = Qna.objects.filter(user=ProfileSerializer(profile).data['user'])
         comments = Ans.objects.filter(user=ProfileSerializer(profile).data['user'])
-        print(comments)
-        pinned_posts = Qna.objects.filter(user=pinnedSerializer(profile).data['id'])  
-        # print(qnas)  
-        # print(pinned_posts)
+    
+        user_for_pinned = ProfileSerializer(profile).data['user']
+        user_pinned_posts = []
+        qnas_for_pinned = Qna.objects.all()
+        for single_pinned_post in qnas_for_pinned:
+            if user_for_pinned in QnapinnedSerializer(single_pinned_post).data['pinned_users']:
+                user_pinned_posts.append(QnaSerializer(single_pinned_post).data)
+        
+        print(user_pinned_posts)
+
+
         # 사용자 프로필의 각 필드에 해당 정보들을 추가해서 보여주는 과정
         for qna in qnas:
             serializer.data['posts'].append(QnaSerializer(qna).data)
@@ -161,8 +168,8 @@ def profile_show(request, profile_pk):
             print(AnsSerializer(comment).data['title'])
             # serializer.data['title'] += 'asdasd'
             
-        for pinned_post in pinned_posts:
-            serializer.data['pinned_posts'].append(QnaSerializer(pinned_post).data)
+        for pinned_post in user_pinned_posts:
+            serializer.data['pinned_posts'].append(pinned_post)
 
         serializer.data['tags'].update(real_tags)
         # serializer.data['title'].update()
@@ -207,99 +214,118 @@ def profile_setting(request, profile_pk):
 
     profile = get_object_or_404(Profile, pk=profile_pk)
     new_profile = Profile.objects.filter(pk=profile_pk).first()
-
+    if request.META.get('HTTP_AUTHORIZATION'):           
+            tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+            user=User.objects.get(id=tok.user_id)
+            request.user = user
 
     links_update = [
     {
-        'sns_name': request.POST.get('sns_name1', False),
-        'sns_url' : request.POST.get('sns_url1', False)
+        'sns_name': request.data.get('sns_name1', False),
+        'sns_url' : request.data.get('sns_url1', False)
     },
     {
-        'sns_name': request.POST.get('sns_name2', False),
-        'sns_url' : request.POST.get('sns_url2', False)
+        'sns_name': request.data.get('sns_name2', False),
+        'sns_url' : request.data.get('sns_url2', False)
     },
     {
-        'sns_name': request.POST.get('sns_name3', False),
-        'sns_url' : request.POST.get('sns_url3', False)
+        'sns_name': request.data.get('sns_name3', False),
+        'sns_url' : request.data.get('sns_url3', False)
     }
     ]
 
     projects_update = [
     {
-        'project_name': request.POST.get('project_name1', False),
-        'project_url' : request.POST.get('project_url1', False)
+        'project_name': request.data.get('project_name1', False),
+        'project_url' : request.data.get('project_url1', False)
     },
     {
-        'project_name': request.POST.get('project_name2', False),
-        'project_url' : request.POST.get('project_url2', False)
+        'project_name': request.data.get('project_name2', False),
+        'project_url' : request.data.get('project_url2', False)
     },
     {
-        'project_name': request.POST.get('project_name3', False),
-        'project_url' : request.POST.get('project_url3', False)
+        'project_name': request.data.get('project_name3', False),
+        'project_url' : request.data.get('project_url3', False)
     }
     ]
 
+  
+    if request.method == 'GET':
+        serializer = ProfileListSerializer(profile)
+        
+       
+        for number in range(1, 4):
+            sns_name = 'sns_name' + str(number)
+            sns_url = 'sns_url' + str(number)
+
+            project_name = 'project_name' + str(number)
+            project_url = 'project_url' + str(number)
+
+            if ProfileSerializer(profile).data[sns_name] and ProfileSerializer(profile).data[sns_url]:
+                serializer.data['link'].append(
+                    {
+                    'sns_name' : ProfileSerializer(profile).data[sns_name],
+                    'sns_url' : ProfileSerializer(profile).data[sns_url]
+                    }
+                )
+
+            if ProfileSerializer(profile).data[project_name] and ProfileSerializer(profile).data[project_url]:
+                serializer.data['project'].append(
+                    {
+                    'project_name' : ProfileSerializer(profile).data[project_name],
+                    'project_url' : ProfileSerializer(profile).data[project_url]
+                    }
+                )
+
+        return Response(serializer.data)
+
+    if request.method == 'PUT':
+        tags_for_user = ['Python3', 'Django', 'Java','Spring','HTML5','CSS3', 'JavaScript', 'TypeScript','Vue.js','React', 'Angular','Node.js', 'Swift','Ruby','Ruby on Rails', 'MySQL',
+        'MariaDB','MongoDB','Docker','Kubernetes','Frontend','Backend','DevOps','Artificial Intelligence','BigData', 'Blockchain','Internet of Things', 'Augmented Reality','Virtual Reality']
+
+        serializer = ProfileUpdateSerializer(instance=profile, data=request.POST, partial=True)
+        if serializer.is_valid(raise_exception=True):
+            
+            
+            print(request.data.getlist('tech_stack'))
+            # serializer.validated_data['tech_stack'] = []
+            # for tec in request.data.getlist('tech_stack'):
+                # serializer.validated_data['tech_stack'].append(tec)
+            serializer.validated_data['tech_stack'] = request.data.getlist('tech_stack')
+
+            # tech_list = []
+            # all_techs = request.data.getlist('tech_stack')
+
+            # for single_tech in all_techs:
+            #     tech_list.append(single_tech)
+
+            # print(tech_list)
+
+            for single_tag in serializer.validated_data['my_tags']:
+                if single_tag not in tags_for_user:
+                    return Response(serializer.errors)
 
 
-    if request.META.get('HTTP_AUTHORIZATION'):         
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        user=User.objects.get(id=tok.user_id)
-        request.user = user    
-        if request.method == 'GET':
-            serializer = ProfileListSerializer(profile)
-
-            for number in range(1, 4):
-                sns_name = 'sns_name' + str(number)
-                sns_url = 'sns_url' + str(number)
-
-                project_name = 'project_name' + str(number)
-                project_url = 'project_url' + str(number)
-
-                if ProfileSerializer(profile).data[sns_name] and ProfileSerializer(profile).data[sns_url]:
-                    serializer.data['link'].append(
-                        {
-                        'sns_name' : ProfileSerializer(profile).data[sns_name],
-                        'sns_url' : ProfileSerializer(profile).data[sns_url]
-                        }
-                    )
-
-                if ProfileSerializer(profile).data[project_name] and ProfileSerializer(profile).data[project_url]:
-                    serializer.data['project'].append(
-                        {
-                        'project_name' : ProfileSerializer(profile).data[project_name],
-                        'project_url' : ProfileSerializer(profile).data[project_url]
-                        }
-                    )
-
-            return Response(serializer.data)
-
-        if request.method == 'PUT':
-            serializer = ProfileUpdateSerializer(instance=profile, data=request.POST, partial=True)
-            if serializer.is_valid(raise_exception=True):
-
-                # 이미지 받아오기
+            # 이미지 받아오기
+            print(request.FILES)
+            if 'profile_img' in request.FILES:
                 serializer.validated_data['profile_img'] = request.FILES['profile_img']
-
-
-                image_field = profile.profile_img
+                image_field = profile.profile_img  # 이미지 주소
                 img_name = serializer.validated_data['profile_img']
-                # 이미지 주소
-                # print(image_field)
+            # image_update = request.FILES.get('profile_img', None)
 
 
-                serializer.validated_data['links'] = []
-                serializer.validated_data['projects'] = []
-                
-                for link in links_update:
-                    serializer.validated_data['links'].append(link)
-                for project in projects_update:
-                    serializer.validated_data['projects'].append(project)
+            serializer.validated_data['links'] = []
+            serializer.validated_data['projects'] = []
+            
+            for link in links_update:
+                serializer.validated_data['links'].append(link)
+            for project in projects_update:
+                serializer.validated_data['projects'].append(project)
 
 
-                serializer.save(instance=profile, validated_data=serializer.validated_data)
+            serializer.save(instance=profile, validated_data=serializer.validated_data)
 
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    else:
-        return Response('토큰이 일치하지 않습니다.', status=status.HTTP_404_NOT_FOUND)
-
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+  

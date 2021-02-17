@@ -1,5 +1,5 @@
 from rest_framework import serializers, fields
-from .models import Profile, Link, Projects
+from .models import Profile, Link, Projects, Stack
 from .models import tech, user_tag
 from accounts.models import User
 from django.shortcuts import get_object_or_404
@@ -44,6 +44,12 @@ class ProfilePinnedPostsSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ('pinned_posts', )
 
+class ProfileImageSerializer(serializers.ModelSerializer):
+    profile_img = serializers.ImageField()
+    class Meta:
+        model = Profile
+        fields = ('profile_img',)
+
 class ProfileCommentsSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -51,7 +57,19 @@ class ProfileCommentsSerializer(serializers.ModelSerializer):
         fields = ('comments', )
 
 
+class ProfileStack2Serializer(serializers.ModelSerializer):
+    tech_stack = serializers.SerializerMethodField()
 
+    class Meta:
+        model = Profile
+        fields = ('tech_stack',)
+    def get_tech_stack(self, obj):
+        return obj.tech_stack[:200]
+
+class ProfileTechStackSerializer(serializers.ListField):
+
+    # tech_stack = serializers.ListField(child=serializers.CharField())
+    tech_stack = serializers.ListField()
 
 class ProfileSerializer(serializers.ModelSerializer):
     tech_stack = fields.MultipleChoiceField(choices=tech)
@@ -90,9 +108,7 @@ class ProfileShowSerializer(serializers.ModelSerializer):
         'tech_stack', 'my_tags', 'project', 'tags', 'pinned_posts', 'posts', 'comments',  )
 
 
-class ProfileListSerializer(serializers.ModelSerializer):
-    tech_stack = fields.MultipleChoiceField(choices=tech)
-    my_tags = fields.MultipleChoiceField(choices=user_tag)      
+class ProfileListSerializer(serializers.ModelSerializer):    
 
     link = ProfileLinkSerializer(many=True, read_only=True)
 
@@ -105,14 +121,12 @@ class ProfileListSerializer(serializers.ModelSerializer):
         read_only_fields = ('profile_img', 'link', 'project')
  
 
-
 class ProfileUpdateSerializer(serializers.ModelSerializer):
-    tech_stack = fields.MultipleChoiceField(choices=tech)
+    tech_stack = serializers.CharField()
     my_tags = fields.MultipleChoiceField(choices=user_tag)
-
-    # links = ProfileLinkSerializer(many=True, read_only=True)
-    links = fields.ListField()
-    projects = fields.ListField()
+    profile_img = fields.ImageField(allow_null=True)
+    links = fields.ListField(blank=True)
+    projects = fields.ListField(blank=True)
     class Meta:
         model = Profile
         fields = ( 'username', 'profile_img', 'region', 'group', 'bio', 'links', 'tech_stack', 'projects', 'my_tags',
@@ -142,6 +156,7 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
         instance.bio = validated_data.get('bio', instance.bio)
         instance.links = validated_data.get('links', instance.links)
         instance.tech_stack = validated_data.get('tech_stack', instance.tech_stack)
+        # setattr(instance, 'tech_stack', validated_data['tech_stack'])
         instance.projects = validated_data.get('projects', instance.projects)
         instance.my_tags = validated_data.get('my_tags', instance.my_tags)
         instance.sns_name1 = validated_data.get('sns_name1', instance.sns_name1)
@@ -159,8 +174,3 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-class ProfileImageSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Profile
-        fields = ('user', 'profile_img')

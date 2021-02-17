@@ -15,6 +15,11 @@ const routes = [
     // component: () => import('@/views/MainPage.vue'),
   },
   {
+    path: '/bookmark',
+    name: 'Bookmark',
+    component: () => import('@/views/bookmark/BookmarkPage.vue'),
+  },
+  {
     path: '/profile/:id',
     name: 'Profile',
     component: () => import('@/views/profile/ProfilePage.vue'),
@@ -95,7 +100,6 @@ const routes = [
     component: () => import('@/views/forum/ForumPage.vue'),
   },
   {
-    // 추후 id값으로 수정 필요
     path: '/forum-detail/:id',
     name: 'ForumDetail',
     component: () => import('@/views/forum/ForumDetailPage.vue'),
@@ -106,7 +110,6 @@ const routes = [
     component: () => import('@/views/event/EventPage.vue'),
   },
   {
-    // path: '/event/:id',
     path: '/event-detail/:id',
     name: 'EventDetail',
     component: () => import('@/views/event/EventDetailPage.vue'),
