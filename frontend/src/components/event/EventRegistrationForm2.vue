@@ -25,20 +25,18 @@
           />
           <div class="q-ml-lg col-3">
             <!-- 이미지 등록 버튼 -->
-            <input
-              ref="thumnailInput"
-              type="file"
-              hidden
-              @change="onChangeThumnails"
-            />
-            <q-btn
-              @click="onClickThumnailUpload"
+            <q-file
+              v-model="file"
+              label="썸네일 등록"
+              standout="bg-indigo-3 text-white "
               color="primary"
-              label="이미지 등록"
-              class="float-right"
-              style="width: 150px; height: 40px; border-radius:5px; position:absolute; bottom:0px;"
+              style="max-width:300px"
+              class="q-mt-none q-mx-none q-mb-lg"
             >
-            </q-btn>
+              <template v-slot:prepend>
+                <q-icon name="attach_file" />
+              </template>
+            </q-file>
           </div>
         </div>
         <!-- 이벤트 상태 및 카테고리 -->
@@ -372,8 +370,7 @@ export default {
       state_options: [
         'Ready', 'Start', 'End'
       ],
-      // thumnail: 'https://placeimg.com/500/300/nature',
-      thumnail: '',
+      thumnail: 'https://placeimg.com/500/300/nature',
       title: '',
       category: 'Conference',
       category_options: [
@@ -395,24 +392,22 @@ export default {
     }
   },
   methods: {
-    onClickThumnailUpload() {
-      this.$refs.thumnailInput.click();
-    },
-    onChangeThumnails(e) {
-      const file = e.target.files[0];
-      console.log(file);
-      // this.thumnail = URL.createObjectURL(file)
-      // this.thumnail = file
-      // console.log(this.thumnail)
-    },
-    onClickProfileUpload() {
-      this.$refs.profileInput.click();
-    },
-    onChangeProfiles(e) {
-      const file = e.target.files[0];
-      console.log(file);
-      this.profile_img = URL.createObjectURL(file);
-    },
+    // onClickThumnailUpload() {
+    //   this.$refs.thumnailInput.click();
+    // },
+    // onChangeThumnails(e) {
+    //   const file = e.target.files[0];
+    //   console.log(file);
+    //   this.thumnail = URL.createObjectURL(file);
+    // },
+    // onClickProfileUpload() {
+    //   this.$refs.profileInput.click();
+    // },
+    // onChangeProfiles(e) {
+    //   const file = e.target.files[0];
+    //   console.log(file);
+    //   this.profile_img = URL.createObjectURL(file);
+    // },
     addOneTag(tagItem) {
       this.ref_tags.push(tagItem);
     },
@@ -420,21 +415,19 @@ export default {
       this.ref_tags.splice(index, 1);
     },
     async createEvent() {
-      console.log('찍히나요?')
-      console.log(this.file)
       try {
         this.$q.loading.show();
-        if (this.file) {
+
+        if (!this.file) {
           const frm = new FormData();
           frm.append('image', this.file);
-          // console.log('여기')
-          // console.log(this.file)
           const { data } = await saveQnaImage(frm);
-          console.log(data.image)
-          this.thumnail = data.image;
+          this.thumbnail = data.image;
         }
+
         // 이벤트 새로 생성하기
         console.log('글 생성하기로 들어왔나?')
+        console.log(this.thumnail)
         await createEventItem({
           // 넘길 데이터 적어주기
           state: this.state,
@@ -470,10 +463,18 @@ export default {
       try {
         console.log(post_id)
         this.$q.loading.show();
+
+        if (!this.file) {
+          const frm = new FormData();
+          frm.append('image', this.file);
+          const { data } = await saveQnaImage(frm);
+          this.thumbnail = data.image;
+        }
+
         await updateEventItem(post_id, {
           // 넘길 데이터 적어주기
           state: this.state,
-          // thumnail: this.thumnail,
+          thumnail: this.thumnail,
           title: this.title,
           category: this.category,
           place: this.place,

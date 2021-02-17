@@ -263,14 +263,13 @@ export default {
       try {
         this.$q.loading.show();
         // 썸네일을 우선 서버에 저장한다.
-
         if (!this.file) {
           const frm = new FormData();
           frm.append('image', this.file);
           const { data } = await saveQnaImage(frm);
           this.thumbnail = data.image;
         }
-
+      
         // 돌려받은 썸네일 url을 thumbnail 항목에 넣어서 저장한다.
         await createForumItem({
           title: this.title,
