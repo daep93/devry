@@ -375,7 +375,7 @@ export default {
       title: '',
       category: 'Conference',
       category_options: [
-        'Conference', 'Workshop', 'Hackathon', 'Competition', 'Meeting'
+        'Conference', 'Workshop', 'Hackathon', 'Competition', 'Meeting', 'Recruting'
       ],
       place: '',
       start: '',

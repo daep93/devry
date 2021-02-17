@@ -17,7 +17,7 @@
       <q-select
         outlined
         v-model="category"
-        :options="['ALL', 'Conference', 'Workshop', 'Hackathon', 'Competition', 'Meeting']"
+        :options="['ALL', 'Conference', 'Workshop', 'Hackathon', 'Competition', 'Meeting', 'Recruting']"
         style="width:140px;"
       />
     </div>
