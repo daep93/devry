@@ -1,7 +1,7 @@
 <template>
   <div class="row q-mb-xl">
     <!-- 소제목 타이틀 -->
-    <div class="row col-12 text-h6 text-weight-bold ">Events for You</div>
+    <div class="row col-12 text-h6 text-weight-bold ">당신을 위한 추천 이벤트</div>
 
     <div class=" row q-mb-sm justify-end col-12">
       <!-- 태그 필터링 -->
