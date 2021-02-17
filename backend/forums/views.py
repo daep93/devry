@@ -1,14 +1,23 @@
+import requests
+import json
+
 from django.shortcuts import get_object_or_404
 
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from .serializers import PostListSerializer, ProfilepostSerializer, PostListforamtSerializer, PostSerializer,CommentSerializer, likeSerializer, bookmarkSerializer, like_commentSerializer, UserinfoSerializer,ProfileListSerializer ,PostdetailSerializer,CommentlistSerializer,CommentdetailSerializer
+from .serializers import PostListSerializer, ProfilepostSerializer, PostListforamtSerializer, PostSerializer,CommentSerializer, likeSerializer, bookmarkSerializer, like_commentSerializer, \
+    UserinfoSerializer,ProfileListSerializer ,PostdetailSerializer,CommentlistSerializer,CommentdetailSerializer, PostDetailCommentSerializer, DetailCommentSerializer, pinnedSerializer,  \
+        ProfilepostSerializer, ForumPostSerializer, pinnedDetailSerializer, PostMentionedCommentSerializer, DetailCommentMentionedSerializer, MentionedCommentSerializer, MentionedUserInfoSerializer
 from .models import Post, Comment
 from rest_framework import viewsets
 from profiles.models import Profile
-from accounts.models import User
+from profiles.serializers import ProfileSerializer
+from accounts.models import User, Mentioned
+from accounts.serializers import UserSerializer
+from qnas.models import Qna
+from qnas.serializers import QnapinnedSerializer, QnaDetailPinnedSerializer
 
 from mysite.utils import jwt_encode
 from rest_auth.models import TokenModel
@@ -126,7 +135,58 @@ def post_detail_update_delete(request, post_pk):
        
     if request.method == 'GET':
         serializer = PostdetailSerializer(post)
-        print(serializer.data)
+        comment_for_post = Comment.objects.filter(post=PostSerializer(post).data['forum_id'])
+        post.comment_num = len(comment_for_post)
+        post.save()
+
+        post_user = PostSerializer(post).data['user']
+        post_username = User.objects.get(id=post_user)
+        post_user_profile = Profile.objects.get(username=post_username)
+
+        serializer.data['writer_info'].append(ProfilepostSerializer(post_user_profile).data)
+
+        print(request.FILES)
+        if 'thumbnail' in request.FILES:
+            image_url = "http://127.0.0.1:8000/qnatest/image/"
+            response = requests.post(url=image_url)
+            print(response)
+            print(response.json())
+
+        user_pinned_posts = []
+        forum_for_pinned = Post.objects.all()
+        for single_pinned_post in forum_for_pinned:
+            if post_user in pinnedSerializer(single_pinned_post).data['pinned_users']:
+                user_pinned_posts.append(pinnedDetailSerializer(single_pinned_post).data)
+        
+        qna_for_pinned = Qna.objects.all()
+        for single_pinned_post in qna_for_pinned:
+            if post_user in QnapinnedSerializer(single_pinned_post).data['pinned_users']:
+                user_pinned_posts.append(QnaDetailPinnedSerializer(single_pinned_post).data)
+
+        for user_pinned_post in range(len(user_pinned_posts)):
+            serializer.data['writer_info'][0]['pinned_posts'].append(user_pinned_posts[user_pinned_post])
+
+        serializer.data['forum_post'].append(ForumPostSerializer(post).data)
+
+
+        
+        for single_comment in range(len(comment_for_post)):
+            comment_username = User.objects.get(id=DetailCommentSerializer(comment_for_post[single_comment]).data['user'])
+
+            serializer.data['comments'].append(DetailCommentSerializer(comment_for_post[single_comment]).data)
+
+            comment_user_profile = Profile.objects.get(user=DetailCommentSerializer(comment_for_post[single_comment]).data['user'])
+            comment_user_img = ProfileSerializer(comment_user_profile).data['profile_img']
+
+            serializer.data['comments'][single_comment]['username'] = str(comment_username)
+            serializer.data['comments'][single_comment]['profile_img'] = comment_user_img
+
+            mentioned_comments = Mentioned.objects.filter(comment= serializer.data['comments'][single_comment]['comment_id'])
+
+        for single_mention in range(len(mentioned_comments)):
+            mentioned_user = Profile.objects.get(user=MentionedCommentSerializer(mentioned_comments[single_mention]).data['mentioned_user'])
+            serializer.data['comments'][0]['mentioned'].append(MentionedUserInfoSerializer(mentioned_user).data)
+
         return Response(serializer.data)
 
     elif request.method == 'PUT':
@@ -218,6 +278,32 @@ def comment_detail_update_delete(request, comment_pk):
 
 
 @api_view(['GET','POST'])
+def comment_mentioned(request, comment_pk):
+    if request.META.get('HTTP_AUTHORIZATION'):
+        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user=User.objects.get(id=tok.user_id)
+        request.user=user
+    comment = get_object_or_404(Comment, pk=comment_pk)
+    if request.method == 'GET':
+        mentions = Mentioned.objects.all()
+        serializer = MentionedCommentSerializer(mentions, many=True)
+        return Response(serializer.data)
+
+    else:
+        serializer = MentionedCommentSerializer(data=request.data)
+        mention_people = User.objects.get(pk=request.data['user'])
+        mentioned_people = User.objects.get(pk=request.data['mentioned_user'])
+
+        if serializer.is_valid(raise_exception=True):
+            print(serializer.validated_data)
+            serializer.save()
+        
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+@api_view(['GET','POST'])
 def like(request, post_pk):
     """
     Post 글 좋아요
@@ -231,12 +317,13 @@ def like(request, post_pk):
     # user authentication process
     post = get_object_or_404(Post, pk=post_pk)
     if request.method == 'GET':
+        serializer = likeSerializer(post)
         if post.like_users.filter(pk=request.user.pk).exists():
             post.liked="True"
-            serializer = likeSerializer(post)
+            post.save()
         else:
             post.liked="False"
-            serializer = likeSerializer(post)
+            post.save()
         return Response(serializer.data)
 
         # user가 post 좋아요 누른 전체유저에 존재하는지.
@@ -244,10 +331,14 @@ def like(request, post_pk):
         if post.like_users.filter(pk=request.user.pk).exists():
             # like canceled
             post.like_users.remove(request.user)
+            post.like_num -= 1
+            post.save()
             return Response("like canceled")
         else:
             # like 
             post.like_users.add(request.user)
+            post.like_num += 1
+            post.save()
             return Response("like !!!!!!")
 
 
@@ -266,12 +357,13 @@ def like_comment(request, comment_pk):
     # if request.user.is_authenticated:
     comment = get_object_or_404(Comment, pk=comment_pk)
     if request.method == 'GET':
+        serializer = like_commentSerializer(comment)
         if comment.like_comment_users.filter(pk=request.user.pk).exists():
             comment.liked_comment="True"
-            serializer = like_commentSerializer(comment)
+            comment.save()
         else:
             comment.liked_comment="False"
-            serializer = like_commentSerializer(comment)
+            comment.save()
         return Response(serializer.data)
 
         # user가 comment 좋아요 누른 전체유저에 존재하는지.
@@ -279,10 +371,14 @@ def like_comment(request, comment_pk):
         if comment.like_comment_users.filter(pk=request.user.pk).exists():
             # like canceled
             comment.like_comment_users.remove(request.user)
+            comment.like_comment_num -= 1
+            comment.save()
             return Response("comment_like canceled")
         else:
             # like 
             comment.like_comment_users.add(request.user)
+            comment.like_comment_num += 1
+            comment.save()
             return Response("comment_like !!!!!!")
 
 
@@ -299,12 +395,13 @@ def bookmark(request, post_pk):
         request.user=user
     post = get_object_or_404(Post, pk=post_pk)
     if request.method == 'GET':
+        serializer = bookmarkSerializer(post)
         if post.bookmark_users.filter(pk=request.user.pk).exists():
             post.bookmarked="True"
-            serializer = bookmarkSerializer(post)
+            post.save()
         else:
             post.bookmarked="False"
-            serializer = bookmarkSerializer(post)
+            post.save()
         return Response(serializer.data)
 
         # user가 post을 북마크 누른 전체유저에 존재하는지.
@@ -312,11 +409,52 @@ def bookmark(request, post_pk):
         if post.bookmark_users.filter(pk=request.user.pk).exists():
             # bookmark cancled
             post.bookmark_users.remove(request.user)
+            post.bookmark_num -= 1
+            post.save()
             return Response("bookmark cancled")
         else:
             # bookmark
             post.bookmark_users.add(request.user)
+            post.bookmark_num += 1
+            post.save()
             return Response("bookmark")
+
+@api_view(['GET','POST'])
+def pinned(request, post_pk):
+    """
+    post pinned 기능
+
+    ---
+    """
+    if request.META.get('HTTP_AUTHORIZATION'):
+        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user=User.objects.get(id=tok.user_id)
+        request.user=user
+    post = get_object_or_404(Post, pk=post_pk)
+    if request.method == 'GET':
+        serializer = pinnedSerializer(post)
+        if post.pinned_users.filter(pk=request.user.pk).exists():
+            post.pinneded="True"
+            post.save()
+        else:
+            post.pinneded="False"
+            post.save()
+        return Response(serializer.data)
+
+        # user가 post을 pinned한 전체유저에 존재하는지.
+    if request.method == 'POST':
+        if post.pinned_users.filter(pk=request.user.pk).exists():
+            # pinned cancled
+            post.pinned_users.remove(request.user)
+            post.pinned_num -= 1
+            post.save()
+            return Response("pinned cancled")
+        else:
+            # pinned
+            post.pinned_users.add(request.user)
+            post.pinned_num += 1
+            post.save()
+            return Response("pinned")
 
 
 @api_view(['GET'])
