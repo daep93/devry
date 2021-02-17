@@ -1,8 +1,23 @@
 <template>
   <div class="row justify-center q-pt-lg ">
     <div class="row col-8 justify-center q-pl-lg">
-      <div class="row q-mb-sm col-12 text-h5 text-weight-bold">
-        QnA 게시판
+      <div class="row q-mb-lg col-12 justify-between">
+        <div class="row col-10">
+          <div class="row col-2">
+            <span class="text-h5  text-weight-bold">QnA 게시판</span>
+          </div>
+        </div>
+        <span class="q-ml-lg">
+          <q-btn
+            color="blue-7"
+            @click="goToDetail"
+            class="cursor-pointer glossy font-weight-bold"
+            size="12px"
+          >
+            <q-icon :name="$i.ionHelpCircleOutline" class="q-mr-sm"></q-icon>
+            질문하기
+          </q-btn>
+        </span>
       </div>
 
       <!-- 게시판 보드 -->
@@ -24,7 +39,7 @@
           ></qna-entity>
         </template>
       </bulletin-board>
-      <div class="row q-mt-md col-12 q-mb-xl justify-between">
+      <div class="row q-mt-md col-12 q-mb-xl">
         <!-- 답변 완료 표기 -->
         <div class="col-3 row q-py-xs">
           <div
@@ -53,9 +68,6 @@
             :boundary-links="true"
           >
           </q-pagination>
-        </div>
-        <div class="col-3 row justify-end">
-          <q-btn color="blue-7" @click="goToDetail">질문하기</q-btn>
         </div>
       </div>
     </div>
