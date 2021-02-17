@@ -6,27 +6,34 @@
       :src="require('@/assets/keyboard.png')"
       style="height:50%"
     /> -->
-    <img :src="entity.thumnail" style="height: 50%;" />
+    <q-img
+      :src="
+        entity.thumnail
+          ? thumbnail_url
+          : require('@/assets/basic_thumbnail.png')
+      "
+      style="height: 50%;"
+    />
     <!-- 타이틀 -->
     <div
-      class="row full-width q-pa-md cursor-pointer text-weight-bold forum-title"
+      class="row full-width q-py-sm q-px-md cursor-pointer text-weight-bold forum-title"
       style="font-size: 1.1em; height:19%"
       @click="goToDetail"
     >
       {{ entity.title }}
     </div>
     <!-- 태그 -->
-    <div class="row q-mr-xs q-gutter-sm q-mb-sm q-ml-sm col-12">
+    <div class="row full-width q-px-md ">
       <span
         v-for="(tag, index) in entity.ref_tags"
         :key="index"
         :style="{ 'background-color': tagColor(tag, 0.3) }"
-        style="font-size:0.8em; border-radius:3pt;"
-        class="q-px-xs"
+        style="font-size:0.8em; border-radius:3pt; height:20px"
+        class="q-px-xs q-mr-xs"
         >#{{ tag.charAt(0).toUpperCase() + tag.slice(1) }}</span
       >
     </div>
-    <div class="row full-width  q-pa-md q-py-sm ">
+    <div class="row full-width  q-px-md q-py-sm ">
       <div class="row col-12">
         <div class="row col-8 items-center q-gutter-sm">
           <div class="row col-12">
@@ -96,6 +103,7 @@ export default {
   data() {
     return {
       img_url: `${process.env.VUE_APP_SERVER_API_URL}${this.entity.profile.profile_img}`,
+      thumbnail_url: `${process.env.VUE_APP_SERVER_API_URL}${this.entity.thumbnail}`,
     };
   },
   methods: {
@@ -114,7 +122,7 @@ export default {
 
 <style scoped>
 .forum-title {
-  line-height: 1.6;
+  line-height: 1.5;
   max-height: 3.2em;
   overflow: hidden;
   display: -webkit-box;
