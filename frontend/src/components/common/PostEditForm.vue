@@ -261,6 +261,7 @@ export default {
     async createForum() {
       if (this.checkForm()) return;
       try {
+        console.log(this.file)
         this.$q.loading.show();
         // 썸네일을 우선 서버에 저장한다.
         if (!this.file) {

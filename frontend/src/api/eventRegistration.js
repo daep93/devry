@@ -15,6 +15,7 @@ function loadEventItem(postId) {
 //   return instance.put(`event/${postId}/`, postData);
 // }
 
+
 function createEventItem(postData) {
   return instance.post('event/', postData, {
     headers: {
