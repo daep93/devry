@@ -10,7 +10,7 @@
           <q-img
             :src="img ? img : require('@/assets/basic_image.png')"
             spinner-color="white"
-            style="height: 140px; max-width: 150px; position: relative; "
+            style="height: 140px; max-width: 150px; position: relative; border: 1px solid #cccccc "
             class="rounded-borders q-mb-lg"
           />
           <div class="q-ml-sm">
@@ -28,7 +28,7 @@
               @click="onClickImageUpload"
               round
               color="primary"
-              style="position: relative; left: -40px; top: 60px;"
+              style="position: relative; left: -35px; top: 60px;"
             >
               <q-icon :name="$i.ionCamera"></q-icon>
             </q-btn>
