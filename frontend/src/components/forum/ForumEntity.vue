@@ -1,63 +1,73 @@
 <template>
-  <q-card class="row full-width" style="height:300px">
+  <q-card class="row full-width" style="min-height:300px">
     <!-- 썸네일 -->
     <!-- <q-img
       class="row full-width"
       :src="require('@/assets/keyboard.png')"
       style="height:50%"
     /> -->
-    <img :src="entity.thumnail" style="height: 50%;" />
+    <q-img
+      :src="
+        entity.thumnail
+          ? thumbnail_url
+          : require('@/assets/basic_thumbnail.png')
+      "
+      style="height: 50%;"
+    />
     <!-- 타이틀 -->
     <div
-      class="row full-width q-px-sm q-py-sm cursor-pointer text-weight-bold forum-title"
-      style="font-size: 1.1em;height:19%"
+      class="row full-width q-py-sm q-px-md cursor-pointer text-weight-bold forum-title"
+      style="font-size: 1.1em; height:19%"
       @click="goToDetail"
     >
       {{ entity.title }}
     </div>
     <!-- 태그 -->
-    <div
-      class="row full-width q-px-sm  q-py-sm cursor-pointer"
-      style="height:10%"
-    >
-      <div
+    <div class="row full-width q-px-md ">
+      <span
         v-for="(tag, index) in entity.ref_tags"
         :key="index"
         :style="{ 'background-color': tagColor(tag, 0.3) }"
-        style="font-size:0.8em; border-radius:3pt ;"
-        class="q-pa-xs q-mr-xs  "
+        style="font-size:0.8em; border-radius:3pt; height:20px"
+        class="q-px-xs q-mr-xs"
+        >#{{ tag.charAt(0).toUpperCase() + tag.slice(1) }}</span
       >
-        # {{ tag }}
-      </div>
     </div>
-    <div class="row full-width  q-px-sm q-py-sm " style="height:20%">
+    <div class="row full-width  q-px-md q-py-sm ">
       <div class="row col-12">
-        <div class="row col-7 items-center q-gutter-sm">
-          <div class="row justify-center items-center">
-            <q-avatar
-              class="cursor-pointer"
-              @click="goToProfile"
-              style="width: 35px; height: 35px;"
-            >
-              <q-img :src="require('@/assets/keyboard.png')" />
-              <!-- <img :src="data.user_info.profile_img" /> -->
-            </q-avatar>
-          </div>
-          <div class="row items-center">
-            <div
-              class="cursor-pointer"
-              style="color: #464646"
-              @click="goToProfile"
-            >
-              <b>{{ entity.user.username }}</b>
+        <div class="row col-8 items-center q-gutter-sm">
+          <div class="row col-12">
+            <div class="row col-2">
+              <span class="q-mt-xs">
+                <q-avatar style="border: 1px solid #ECEFF1" size="2.8em">
+                  <!-- <q-img
+                    :src="
+                      entity.profile.profile_img
+                        ? img_url
+                        : require('@/assets/basic_image.png')
+                    "
+                    @click="goToProfile"
+                    class="cursor-pointer"
+                  /> -->
+                </q-avatar>
+              </span>
             </div>
-            <div style="font-size: 5pt; color: #464646">
-              {{ entity.written_time | moment('YYYY/MM/DD hh:mm') }}
+            <div class="row col-10">
+              <div class="q-pl-lg">
+                <span
+                  style="font-size: 15px; color: #464646"
+                  @click="goToProfile"
+                  class="cursor-pointer"
+                  ><b>{{ entity.user.username }}</b></span
+                >
+                <div class="text-caption row">
+                  {{ entity.written_time | moment('YYYY/MM/DD hh:mm') }}
+                </div>
+              </div>
             </div>
           </div>
         </div>
-
-        <div class="col-5 row items-end justify-end items-md-baseline">
+        <div class="col-4 row items-end justify-end items-md-baseline">
           <div class="icon-position q-mb-xs row items-center">
             <div class="q-mr-xs">
               <q-icon
@@ -90,16 +100,21 @@ export default {
   props: {
     entity: Object,
   },
+  data() {
+    return {
+      img_url: `${process.env.VUE_APP_SERVER_API_URL}${this.entity.profile.profile_img}`,
+      thumbnail_url: `${process.env.VUE_APP_SERVER_API_URL}${this.entity.thumbnail}`,
+    };
+  },
   methods: {
     tagColor(tag, alpha) {
       return colorSoloMapper(tag, alpha);
     },
-    // TODO: 추후 연결 페이지 수정 필요
     goToDetail() {
       this.$router.push(`/forum-detail/${this.entity.id}`);
     },
     goToProfile() {
-      this.$router.push({ name: 'Profile' });
+      this.$router.push(`/profile/${this.entity.user.id}`);
     },
   },
 };
@@ -107,7 +122,7 @@ export default {
 
 <style scoped>
 .forum-title {
-  line-height: 1.6;
+  line-height: 1.5;
   max-height: 3.2em;
   overflow: hidden;
   display: -webkit-box;
