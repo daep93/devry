@@ -12,7 +12,13 @@
       </q-tabs>
       <!-- 검색창 및 태그 필터 선택 -->
       <div class="row justify-end q-gutter-lg">
-        <q-input v-model="search" type="search" class="q-mb-sm" outlined>
+        <q-input
+          v-model="search"
+          type="search"
+          class="q-mb-sm"
+          outlined
+          @keypress.enter="searchTitle"
+        >
           <template v-slot:append>
             <q-icon :name="$i.ionSearchOutline" />
           </template>
@@ -62,7 +68,11 @@ export default {
     sort(newValue) {
       // sort값이 바뀌면 board의 정렬 순서를 바꾼다.
       if (newValue === 'time') {
-        this.board = [...this.origin_board].reverse();
+        this.board.sort((item1, item2) => {
+          const date1 = new Date(item2.written_time);
+          const date2 = new Date(item1.written_time);
+          return date1 - date2;
+        });
       } else if (newValue === 'comment') {
         this.board.sort(
           (item1, item2) => item2.comment_num - item1.comment_num,
@@ -90,6 +100,9 @@ export default {
     selectedTags() {
       return this.$store.getters.getSelectedTags;
     },
+  },
+  methods: {
+    searchTitle() {},
   },
 };
 </script>
