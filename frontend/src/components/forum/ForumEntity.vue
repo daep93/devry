@@ -1,11 +1,6 @@
 <template>
   <q-card class="row full-width" style="min-height:300px">
     <!-- 썸네일 -->
-    <!-- <q-img
-      class="row full-width"
-      :src="require('@/assets/keyboard.png')"
-      style="height:50%"
-    /> -->
     <q-img
       :src="
         entity.thumnail
@@ -13,14 +8,15 @@
           : require('@/assets/basic_thumbnail.png')
       "
       style="height: 50%;"
+      class="cursor-pointer"
+      @click="goToDetail"
     />
     <!-- 타이틀 -->
     <div
-      class="row full-width q-py-sm q-px-md cursor-pointer text-weight-bold forum-title"
+      class="row full-width q-pt-sm q-px-md q-mb-xs text-weight-bold forum-title"
       style="font-size: 1.1em; height:19%"
-      @click="goToDetail"
     >
-      {{ entity.title }}
+      <span class="cursor-pointer" @click="goToDetail">{{ entity.title }}</span>
     </div>
     <!-- 태그 -->
     <div class="row full-width q-px-md ">
@@ -30,7 +26,7 @@
         :style="{ 'background-color': tagColor(tag, 0.3) }"
         style="font-size:0.8em; border-radius:3pt; height:20px"
         class="q-px-xs q-mr-xs"
-        >#{{ tag.charAt(0).toUpperCase() + tag.slice(1) }}</span
+        ># {{ tag.charAt(0).toUpperCase() + tag.slice(1) }}</span
       >
     </div>
     <div class="row full-width  q-px-md q-py-sm ">
@@ -55,10 +51,10 @@
             <div class="row col-10">
               <div class="q-pl-lg">
                 <span
-                  style="font-size: 15px; color: #464646"
+                  style="font-size: 14px; color: #464646"
                   @click="goToProfile"
                   class="cursor-pointer"
-                  ><b>{{ entity.user.username }}</b></span
+                  ><b>유저이름</b></span
                 >
                 <div class="text-caption row">
                   {{ entity.written_time | moment('YYYY/MM/DD hh:mm') }}
