@@ -100,7 +100,7 @@
               <span class="text-primary">시작일정</span>
               <br />
             </template>
-            <template v-slot:prepend>
+            <template slot="append">
               <q-icon name="event" class="cursor-pointer">
                 <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
                   <q-date v-model="start" mask="YYYY-MM-DD HH:mm">
@@ -111,7 +111,7 @@
                 </q-popup-proxy>
               </q-icon>
             </template>
-            <template v-slot:append>
+            <template slot="append">
               <q-icon name="access_time" class="cursor-pointer">
                 <q-popup-proxy transition-show="scale" transition-hide="scale">
                   <q-time v-model="start" mask="YYYY-MM-DD HH:mm" format24h>
@@ -135,7 +135,7 @@
               <span class="text-primary">종료일정</span>
               <br />
             </template>
-            <template v-slot:prepend>
+            <template slot="append">
               <q-icon name="event" class="cursor-pointer">
                 <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
                   <q-date v-model="end" mask="YYYY-MM-DD HH:mm">
@@ -146,7 +146,7 @@
                 </q-popup-proxy>
               </q-icon>
             </template>
-            <template v-slot:append>
+            <template slot="append">
               <q-icon name="access_time" class="cursor-pointer">
                 <q-popup-proxy transition-show="scale" transition-hide="scale">
                   <q-time v-model="end" mask="YYYY-MM-DD HH:mm" format24h>
