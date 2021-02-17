@@ -17,7 +17,7 @@
           type="search"
           class="q-mb-sm"
           outlined
-          @keypress.enter="searchTitle"
+          @keypress.enter="seachPost"
         >
           <template v-slot:append>
             <q-icon :name="$i.ionSearchOutline" />
@@ -105,7 +105,7 @@ export default {
     },
   },
   methods: {
-    searchTitle() {
+    seachPost() {
       const searchReg = new RegExp(this.search, 'i');
       this.board = this.prep_board.filter(item => {
         if (searchReg.test(item.title)) return true;
