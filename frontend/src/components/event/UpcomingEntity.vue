@@ -12,10 +12,11 @@
           </div>
           <div class="col-2 row justify-end">
             <q-icon
-              class="col"
+              class="col cursor-pointer"
               :name="entity.bookmarked ? 'bookmark' : 'bookmark_border'"
               size="sm"
               :color="entity.bookmarked ? 'blue-12' : 'grey-6'"
+              @click="checkbookmarked"
             ></q-icon>
             <span class="col q-pl-xs text-grey-8" style="font-size:1.2em;">
               {{ entity.bookmark_num }}
@@ -63,6 +64,8 @@
 </template>
 
 <script>
+import { toggleEventBookmark } from '@/api/event';
+// import { getEventList } from '@/api/board';
 import {
   colorSoloMapper,
   // matchingColorSoloMapper,
@@ -84,7 +87,44 @@ export default {
     goToDetail() {
       this.$router.push(`/event-detail/${this.entity.id}`);
     },
+    // 북마크 토글하기
+    async checkbookmarked() {
+      // 로그인 확인
+      if (!this.$store.getters.isLogined) {
+        alert('로그인이 필요합니다');
+        return;
+      }
+      try {
+        await toggleEventBookmark(this.entity.id);
+        // 넘겨줄 데이터
+        this.entity.bookmarked = !this.entity.bookmarked;
+        if (this.entity.bookmarked) {
+          this.entity.bookmark_num = this.entity.bookmark_num + 1;
+        } else {
+          this.entity.bookmark_num = this.entity.bookmark_num - 1;
+        }
+        // getEventList()
+        window.location.reload();
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
+  watch: {
+    entity() {
+      console.log('변화가 있나?')
+    }
+  }
+  // watch: {
+  //   entity() {
+  //     this.entity.bookmarked = !this.entity.bookmarked;
+  //     if (this.entity.bookmarked) {
+  //       this.entity.bookmark_num = this.entity.bookmark_num + 1;
+  //     } else {
+  //       this.entity.bookmark_num = this.entity.bookmark_num - 1;
+  //     }
+  //   }
+  // }
 };
 </script>
 

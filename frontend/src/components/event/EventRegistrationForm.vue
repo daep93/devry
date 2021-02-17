@@ -417,6 +417,7 @@ export default {
     async createEvent() {
       try {
         this.$q.loading.show();
+
         // 이벤트 새로 생성하기
         console.log('글 생성하기로 들어왔나?')
         await createEventItem({
