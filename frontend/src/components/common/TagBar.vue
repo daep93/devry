@@ -57,9 +57,10 @@
     </q-card>
     <!-- 태그 검색 -->
     <q-page-sticky position="top" :offset="[0, -51]" expand class="q-pr-md">
-      <q-card class="row full-width justify-center" flat>
+      <q-card class="row full-width justify-center" flat></q-card>
         <q-card-actions align="center" class="">
           <q-input
+            style="height:45px"
             v-model="searched_tag"
             type="text"
             @keypress.enter="handleScroll(searched_tag)"
