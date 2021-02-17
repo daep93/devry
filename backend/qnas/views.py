@@ -569,7 +569,7 @@ def qna_list_small_q(request, qna_pk):
         request.user=user
     if request.method == 'GET':
         anss = Qnasmall.objects.all()
-        an=anss.filter(id=qna_pk)
+        an=anss.filter(qna=qna_pk)
         serializer = QnasmalllistSerializer(an, many=True)
         return Response(serializer.data)
 

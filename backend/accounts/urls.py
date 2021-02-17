@@ -18,6 +18,10 @@ urlpatterns = [
     path('following_list/', views.following_list),
     path('followee_list/', views.followee_list),
     path('delete/', views.delete),
+    
+    path('following/<int:want_pk>/', views.toggle_following),
+    path('myfollower/', views.myfollower_list),
+    path('myfollow/', views.myfollow_list),
 
     path('password_reset/', views.UserPasswordResetView.as_view(), name="password_reset"),
     path('password_reset_done/', views.UserPasswordResetDoneView.as_view(), name="password_reset_done"),
