@@ -49,6 +49,7 @@ export default {
       sort: 'time',
       search: '',
       board: this.origin_board,
+      prep_board: this.origin_board,
     };
   },
   watch: {
@@ -64,6 +65,7 @@ export default {
       });
       // 최신순 정렬
       this.board.reverse();
+      this.prep_board = this.board;
     },
     sort(newValue) {
       // sort값이 바뀌면 board의 정렬 순서를 바꾼다.
@@ -93,6 +95,7 @@ export default {
           return false;
         })
         .reverse();
+      this.prep_board = this.board;
     },
   },
   computed: {
@@ -102,7 +105,14 @@ export default {
     },
   },
   methods: {
-    searchTitle() {},
+    searchTitle() {
+      const searchReg = new RegExp(this.search, 'i');
+      this.board = this.prep_board.filter(item => {
+        if (searchReg.test(item.title)) return true;
+        if (searchReg.test(item.user.username)) return true;
+        return false;
+      });
+    },
   },
 };
 </script>
