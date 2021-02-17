@@ -295,8 +295,6 @@ def following(request):
         return Response(serializer.data)
 
 
-
-
 @api_view(['GET', 'POST'])
 def follow_list(request):
     if request.method == 'GET':
@@ -304,6 +302,48 @@ def follow_list(request):
 
         serializer = UserFollowingSerializer(follows, many=True)
 
+        return Response(serializer.data)
+
+
+@api_view(['GET', 'POST'])
+def following_list(request):
+    if request.method == 'GET':
+        pass
+    else:
+        serializer = UserFollowingSerializer(data=request.data)
+        followee_people = User.objects.get(pk=request.data['user'])
+        following_people = User.objects.get(pk=request.data['following_user'])
+
+        if serializer.is_valid(raise_exception=True):
+            print(serializer.validated_data)
+            serializer.save()
+
+        followee_people.follower_num += 1
+        following_people.followee_num += 1
+        followee_people.save()
+        following_people.save()
+        
+        return Response(serializer.data)
+
+
+@api_view(['GET', 'POST'])
+def followee_list(request):
+    if request.method == 'GET':
+        pass
+    else:
+        serializer = UserFollowingSerializer(data=request.data)
+        followee_people = User.objects.get(pk=request.data['user'])
+        following_people = User.objects.get(pk=request.data['following_user'])
+
+        if serializer.is_valid(raise_exception=True):
+            print(serializer.validated_data)
+            serializer.save()
+
+        followee_people.follower_num += 1
+        following_people.followee_num += 1
+        followee_people.save()
+        following_people.save()
+        
         return Response(serializer.data)
 
 

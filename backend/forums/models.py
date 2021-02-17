@@ -95,8 +95,10 @@ class Post(models.Model):
     comments = models.TextField(blank=True)
     comment_num = models.PositiveIntegerField(default=0)
     # thumbnail = models.ForeignKey(ForumImagePost, on_delete=models.CASCADE, blank=True, null=True, related_name='forum_image')
-    # user_info = models.ForeignKey(Profile, on_delete=models.CASCADE,null=True, related_name='post_userinfo')
-
+    # user_info = models.OneToOneField(Profile, on_delete=models.CASCADE,blank=True, related_name='post_userinfo')
+    user_info = models.ManyToManyField(Profile, blank=True, related_name='post_userinfo')
+    feed_list = models.ManyToManyField('self', blank=True, related_name='post_feed_list')
+    recommend_list = models.ManyToManyField('self', blank=True, related_name='post_recommend_list')
     def __str__(self):
         return self.title
 

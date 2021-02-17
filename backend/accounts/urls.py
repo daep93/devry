@@ -15,7 +15,8 @@ urlpatterns = [
     path('followtest/', include(router.urls)),
     path('follow/', views.following),
     path('follows/', views.follow_list),
-
+    path('following_list/', views.following_list),
+    path('followee_list/', views.followee_list),
     path('delete/', views.delete),
 
     path('password_reset/', views.UserPasswordResetView.as_view(), name="password_reset"),

@@ -198,6 +198,9 @@ def profile_show(request, profile_pk):
                     'project_url' : ProfileSerializer(profile).data[project_url]
                     }
                 )
+        profile.ref_tags = list(serializer.data['my_tags'])
+        profile.save()
+        print(serializer.data)
         return Response(serializer.data)
 
  
@@ -252,7 +255,6 @@ def profile_setting(request, profile_pk):
   
     if request.method == 'GET':
         serializer = ProfileListSerializer(profile)
-        
        
         for number in range(1, 4):
             sns_name = 'sns_name' + str(number)
@@ -276,7 +278,10 @@ def profile_setting(request, profile_pk):
                     'project_url' : ProfileSerializer(profile).data[project_url]
                     }
                 )
-
+        print(serializer.data)
+        # print(serializer.data['my_tags'])
+        profile.ref_tags = list(serializer.data['my_tags'])
+        profile.save()
         return Response(serializer.data)
 
     if request.method == 'PUT':
@@ -287,11 +292,11 @@ def profile_setting(request, profile_pk):
         if serializer.is_valid(raise_exception=True):
             
             
-            print(request.data.getlist('tech_stack'))
+            # print(request.data.getlist('tech_stack'))
             # serializer.validated_data['tech_stack'] = []
             # for tec in request.data.getlist('tech_stack'):
                 # serializer.validated_data['tech_stack'].append(tec)
-            serializer.validated_data['tech_stack'] = request.data.getlist('tech_stack')
+            # serializer.validated_data['tech_stack'] = request.data.getlist('tech_stack')
 
             # tech_list = []
             # all_techs = request.data.getlist('tech_stack')
@@ -300,10 +305,13 @@ def profile_setting(request, profile_pk):
             #     tech_list.append(single_tech)
 
             # print(tech_list)
+            # serializer.validated_data['my_tags'].append(serializer.validated_data['my_tags'])
 
-            for single_tag in serializer.validated_data['my_tags']:
-                if single_tag not in tags_for_user:
-                    return Response(serializer.errors)
+            # print(serializer.validated_data['my_tags'])
+            # for single_tag in serializer.validated_data['my_tags']:
+            #     print(single_tag)
+            #     if single_tag not in tags_for_user:
+            #         return Response(serializer.errors)
 
 
             # 이미지 받아오기
@@ -314,6 +322,13 @@ def profile_setting(request, profile_pk):
                 img_name = serializer.validated_data['profile_img']
             # image_update = request.FILES.get('profile_img', None)
 
+            # serializer.validated_data['tech_stack'] = ''
+            # print(serializer.validated_data['tech_stack'])
+            # serializer.validated_data['tech_stack'] = (request.data['tech_stack'])
+            serializer.validated_data['tech_stack'] = list(request.data['tech_stack'])
+            
+            serializer.validated_data['my_tags'] = list()
+            serializer.validated_data['my_tags'] = (request.data['my_tags'])
 
             serializer.validated_data['links'] = []
             serializer.validated_data['projects'] = []

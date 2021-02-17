@@ -137,4 +137,7 @@ class Mentioned(models.Model):
     user = models.ForeignKey(User, related_name="mention_user", on_delete=models.CASCADE)
     mentioned_user = models.ForeignKey(User, related_name="mentioned_user", on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
-    comment = models.ManyToManyField('forums.Comment', blank=True, related_name='mentioned_comment')
+    # comment = models.ManyToManyField('forums.Comment', blank=True, related_name='mentioned_comment')
+    comment = models.ForeignKey('forums.Comment', blank=True, on_delete=models.CASCADE, related_name='mentioned_comment')
+
+
