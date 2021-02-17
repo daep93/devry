@@ -116,9 +116,9 @@ class Profile(models.Model):
     sns_url1 = models.URLField(default="", max_length=100, blank=True)
     sns_url2 = models.URLField(default="", max_length=100, blank=True)
     sns_url3 = models.URLField(default="", max_length=100, blank=True)
-    # tech_stack = MultiSelectField(choices=tech)
-    tech_stack = models.CharField(max_length=200)
-    # tech_stack = models.ForeignKey('self', on_delete=models.CASCADE, blank=True,  related_name='project_stack')
+    tech_stack = models.CharField(max_length=200, null=True)
+    # tech_stack = models.ManyToManyField('self', max_length=200, blank=True, null=True)
+    # tech_stack = models.ForeignKey('self', on_delete=models.CASCADE,blank=True)
     project_name1 = models.CharField(default="", max_length=100, blank=True)
     project_name2 = models.CharField(default="", max_length=100, blank=True)
     project_name3 = models.CharField(default="", max_length=100, blank=True)
@@ -134,31 +134,13 @@ class Profile(models.Model):
     project = models.ManyToManyField('self', default = 0, related_name='project_project', blank=True)
     projects = models.TextField()
     thumbnail = models.OneToOneField(ForumImagePost, on_delete=models.CASCADE, blank=True, null=True, related_name='forum_image')
-
+    is_following = models.BooleanField(default=False)
     joined = models.DateTimeField(blank=True, null=True)
     tags = models.TextField(blank=True)
 
 
 class Stack(models.Model):
     tech_stack = models.ManyToManyField('self', default = 0, related_name='profile_stack', blank=True)
-
-class Link(models.Model):
-    
-    sns_name1 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='pro_sns_name1')
-    sns_name2 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='pro_sns_name2')
-    sns_name3 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='pro_sns_name3')
-    sns_url1 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='pro_sns_url1')
-    sns_url2 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='pro_sns_url2')
-    sns_url3 = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='pro_sns_url3')
-
-
-class Projects(models.Model):
-    project_name1 = models.TextField(default="", blank=True)
-    project_name2 = models.TextField(default="", blank=True)
-    project_name3 = models.TextField(default="", blank=True)
-    project_url1 = models.URLField(default="", max_length=100, blank=True)
-    project_url2 = models.URLField(default="", max_length=100, blank=True)
-    project_url3 = models.URLField(default="", max_length=100, blank=True)
 
 
 @receiver(post_save, sender=User)

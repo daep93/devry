@@ -1,5 +1,5 @@
 from rest_framework import serializers, fields
-from .models import Profile, Link, Projects, Stack
+from .models import Profile, Stack
 from .models import tech, user_tag
 from accounts.models import User
 from django.shortcuts import get_object_or_404
@@ -68,7 +68,6 @@ class ProfileStack2Serializer(serializers.ModelSerializer):
 
 class ProfileTechStackSerializer(serializers.ListField):
 
-    # tech_stack = serializers.ListField(child=serializers.CharField())
     tech_stack = serializers.ListField()
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -90,7 +89,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class ProfileShowSerializer(serializers.ModelSerializer):
-    tech_stack = fields.MultipleChoiceField(choices=tech)
+    # tech_stack = fields.MultipleChoiceField(choices=tech)
 
     link = ProfileLinkSerializer(many=True, read_only=True)
     project = ProfileProjectSerializer(many=True, read_only=True)
@@ -122,11 +121,11 @@ class ProfileListSerializer(serializers.ModelSerializer):
  
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
-    tech_stack = serializers.CharField()
+    tech_stack = fields.ListField()
     my_tags = fields.MultipleChoiceField(choices=user_tag)
     profile_img = fields.ImageField(allow_null=True)
-    links = fields.ListField(blank=True)
-    projects = fields.ListField(blank=True)
+    links = fields.ListField()
+    projects = fields.ListField()
     class Meta:
         model = Profile
         fields = ( 'username', 'profile_img', 'region', 'group', 'bio', 'links', 'tech_stack', 'projects', 'my_tags',
