@@ -44,7 +44,8 @@ type = (
     ('Workshop', 'Workshop'),
     ('Hackathon', 'Hackathon'),
     ('competition', 'competition'),
-    ('Meeting','Meeting'),
+    ('Meeting', 'Meeting'),
+    ('Recruting', 'Recruting'),
 )
 
 ch = (
