@@ -72,7 +72,6 @@ tags = (
 
 
 class Post(models.Model): 
-    forum_id = models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     title = models.CharField(max_length=80)
     ref_tags = MultiSelectField(choices=tech)
     like_num = models.PositiveIntegerField(default=0)
@@ -104,7 +103,6 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
-    comment_id = models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     comment_content = models.TextField()
     assisted = models.BooleanField(default="False")
     like_comment_num = models.PositiveIntegerField(default=0)

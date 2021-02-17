@@ -135,7 +135,7 @@ def post_detail_update_delete(request, post_pk):
        
     if request.method == 'GET':
         serializer = PostdetailSerializer(post)
-        comment_for_post = Comment.objects.filter(post=PostSerializer(post).data['forum_id'])
+        comment_for_post = Comment.objects.filter(post=PostSerializer(post).data['id'])
         post.comment_num = len(comment_for_post)
         post.save()
 
@@ -181,7 +181,7 @@ def post_detail_update_delete(request, post_pk):
             serializer.data['comments'][single_comment]['username'] = str(comment_username)
             serializer.data['comments'][single_comment]['profile_img'] = comment_user_img
 
-            mentioned_comments = Mentioned.objects.filter(comment= serializer.data['comments'][single_comment]['comment_id'])
+        mentioned_comments = Mentioned.objects.filter(comment= serializer.data['comments'][single_comment]['id'])
 
         for single_mention in range(len(mentioned_comments)):
             mentioned_user = Profile.objects.get(user=MentionedCommentSerializer(mentioned_comments[single_mention]).data['mentioned_user'])

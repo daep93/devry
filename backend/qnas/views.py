@@ -516,13 +516,13 @@ def solve(request, ans_pk):
         request.user=user
  
     ans = get_object_or_404(Ans, pk=ans_pk)
-    qna = get_object_or_404(Qna, pk=ans.qna_id)
+    qna = get_object_or_404(Qna, pk=ans.id)
     if request.method == 'GET':
         serializer = solveSerializer(ans)
         return Response(serializer.data)
     if request.method == 'POST':
         ans = get_object_or_404(Ans, pk=ans_pk)
-        qna = get_object_or_404(Qna, pk=ans.qna_id)   
+        qna = get_object_or_404(Qna, pk=ans.id)   
         if ans.assisted == 1:
             ans.assisted = "False"
             qna.solved = "False"
@@ -569,7 +569,7 @@ def qna_list_small_q(request, qna_pk):
         request.user=user
     if request.method == 'GET':
         anss = Qnasmall.objects.all()
-        an=anss.filter(qna_id=qna_pk)
+        an=anss.filter(id=qna_pk)
         serializer = QnasmalllistSerializer(an, many=True)
         return Response(serializer.data)
 

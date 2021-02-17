@@ -150,7 +150,7 @@ def profile_show(request, profile_pk):
         user_pinned_posts = []
         qnas_for_pinned = Qna.objects.all()
         for single_pinned_post in qnas_for_pinned:
-            if user_for_pinned in pinnedSerializer(single_pinned_post).data['pinned_users']:
+            if user_for_pinned in QnapinnedSerializer(single_pinned_post).data['pinned_users']:
                 user_pinned_posts.append(QnaSerializer(single_pinned_post).data)
         
         print(user_pinned_posts)

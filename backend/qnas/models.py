@@ -76,7 +76,6 @@ tags = (
     
 
 class Qna(models.Model): 
-    qna_id = models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     title = models.CharField(max_length=70)
     # img=models.ImageField(upload_to="%Y/%m/%d", default="", null=True)
     ref_tags = MultiSelectField(choices=tech)
