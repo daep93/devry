@@ -56,7 +56,7 @@ export default {
       this.profile_info.profile_img = data.profile_img;
       this.profile_info.project = data.project;
       this.profile_info.region = data.region;
-      this.profile_info.tech_stack = data.tech_stack;
+      this.profile_info.tech_stack = data.tech_stack ? data.tech_stack : [];
       this.profile_info.username = username;
     } catch (error) {
       console.log(error);

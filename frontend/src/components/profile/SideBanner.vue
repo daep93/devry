@@ -18,7 +18,7 @@
               <div class="text-bold q-mb-md  text-center">
                 My Tags
               </div>
-              <div class="row q-mb-xl ">
+              <div class="row q-mb-xl items-center justify-center">
                 <span
                   v-for="(tag, index) in info.myTags"
                   :key="tag"
@@ -27,6 +27,9 @@
                   style="font-size:10pt; border-radius:5pt;"
                   >#{{ tag }}</span
                 >
+                <span v-if="info.myTags.length == 0" class="text-grey-5">
+                  없음
+                </span>
               </div>
             </q-card-section>
           </div>
@@ -35,7 +38,7 @@
               <div class=" text-bold q-mb-md text-center">
                 My Skills/languages
               </div>
-              <div class="row">
+              <div class="row items-center justify-center">
                 <span
                   v-for="skill in info.skills"
                   :key="skill"
@@ -43,6 +46,9 @@
                   style="background-color: #F0ECEC; font-size:10pt; border-radius:5pt "
                   >{{ skill }}</span
                 >
+                <span v-if="info.skills.length == 0" class="text-grey-5">
+                  없음
+                </span>
               </div>
             </q-card-section>
           </div>
@@ -53,8 +59,11 @@
               <div class="text-bold text-center q-mb-md">
                 My Projects
               </div>
-              <div class="row full-width">
-                <q-list separator class="full-width">
+              <div class="row full-width ">
+                <q-list
+                  separator
+                  class="full-width items-center justify-center row"
+                >
                   <q-item
                     clickable
                     v-ripple
@@ -73,6 +82,9 @@
                       </div>
                     </q-item-section>
                   </q-item>
+                  <span v-if="info.projects.length == 0" class="text-grey-5">
+                    없음
+                  </span>
                 </q-list>
               </div>
             </q-card-section>

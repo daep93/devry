@@ -53,12 +53,7 @@
             <q-icon
               v-for="link in info.links"
               :key="link.sns_name"
-              :name="
-                $i[
-                  `ionLogo${link.sns_name.charAt(0).toUpperCase() +
-                    link.sns_name.slice(1)}`
-                ]
-              "
+              :name="$i[`ionLogo${link.sns_name}`]"
               size="sm"
               color="grey-8"
               class="q-mr-xs cursor-pointer"

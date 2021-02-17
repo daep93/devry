@@ -51,12 +51,24 @@
       </div>
       <div>
         <q-tabs v-model="post" style="color:#259EC5">
-          <q-tab name="posts" label="posts" class="qtab" />
-          <q-tab name="comments" label="comments" />
+          <q-tab name="qna" label="QnA" class="qtab" />
+          <q-tab name="forum" label="포럼" class="qtab" />
+          <q-tab name="comments" label="댓글" />
         </q-tabs>
       </div>
     </div>
-    <q-card v-if="post == 'posts'">
+    <q-card v-if="post == 'forum'">
+      <q-card-section
+        style="width:100%;border: 2px solid #2F95B4; border-raidus:5px; "
+      >
+        <post-card
+          v-for="post in info.posts"
+          :detail="post"
+          :key="post.id"
+        ></post-card>
+      </q-card-section>
+    </q-card>
+    <q-card v-if="post == 'qna'">
       <q-card-section
         style="width:100%;border: 2px solid #2F95B4; border-raidus:5px; "
       >
@@ -93,7 +105,7 @@ export default {
     return {
       autoplay: true,
       slide: 1,
-      post: 'posts',
+      post: 'qna',
     };
   },
 };

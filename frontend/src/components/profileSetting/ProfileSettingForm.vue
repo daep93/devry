@@ -138,7 +138,7 @@
           </template>
         </q-input>
       </div>
-      <div class="row items-center q-mb-sm">
+      <!-- <div class="row items-center q-mb-sm">
         <div class="col-1 row justify-center">
           <q-icon :name="$i.ionLogoGitlab" size="lg" />
         </div>
@@ -158,7 +158,7 @@
             <br />
           </template>
         </q-input>
-      </div>
+      </div> -->
       <div class="row items-center q-mb-sm">
         <div class="col-1 row justify-center">
           <q-icon :name="$i.ionLogoFacebook" size="lg" />
@@ -235,6 +235,7 @@ import ProfileSettingProject from '@/components/profileSetting/ProfileSettingPro
 import ProfileSettingTag from '@/components/profileSetting/ProfileSettingTag';
 import { updateProfile } from '@/api/profileSetting';
 import { saveUserNicknameToCookie, deleteCookie } from '@/utils/cookies';
+import { saveQnaImage } from '@/api/qna';
 // import { getProfile } from '@/api/profile';
 export default {
   components: {
@@ -245,6 +246,7 @@ export default {
   props: {
     info: Object,
   },
+
   data() {
     return {
       email: '',
@@ -252,9 +254,10 @@ export default {
       img: `${process.env.VUE_APP_SERVER_API_URL}${this.info.profile_img}`,
       chageImg: false,
       github: '',
-      gitlab: '',
+      // gitlab: '',
       facebook: '',
       linkedin: '',
+      file: '',
     };
   },
 
@@ -272,9 +275,8 @@ export default {
       this.$refs.imageInput.click();
     },
     onChangeImages(e) {
-      const file = e.target.files[0];
-      console.log(file);
-      this.img = URL.createObjectURL(file);
+      this.file = e.target.files[0];
+      this.img = URL.createObjectURL(this.file);
       // const file = this.$refs.imageInput.files[0];
     },
 
@@ -302,28 +304,81 @@ export default {
     },
     // 새로운 데이터 보내기
     async submitForm() {
-      console.log('submitForm');
-      const frm = new FormData();
-      frm.append('username', this.profile_info.username);
-      frm.append(
-        'profile_img',
-        this.$refs.imageInput.files[0] ? this.$refs.imageInput.files[0] : null,
-      );
-      frm.append('region', this.profile_info.region);
-      frm.append('group', this.profile_info.group);
-      frm.append('bio', this.profile_info.bio);
-      frm.append('links', [
-        { sns_name: 'github', sns_url: this.github },
-        { sns_name: 'gitlab', sns_url: this.gitlab },
-        { sns_name: 'facebook', sns_url: this.facebook },
-        { sns_name: 'linkedin', sns_url: this.linkedin },
-      ]);
-      frm.append('tech_stack', this.profile_info.tech_stack);
-      frm.append('project', this.profile_info.project);
-      frm.append('my_tags', this.profile_info.my_tags);
+      // const frm = new FormData();
+      // frm.append('username', this.profile_info.username);
+      // frm.append(
+      //   'profile_img',
+      //   this.$refs.imageInput.files[0] ? this.$refs.imageInput.files[0] : null,
+      // );
+      // frm.append('region', this.profile_info.region);
+      // frm.append('group', this.profile_info.group);
+      // frm.append('bio', this.profile_info.bio);
+      // frm.append('links', [
+      //   { sns_name: 'github', sns_url: this.github },
+      //   { sns_name: 'facebook', sns_url: this.facebook },
+      //   { sns_name: 'linkedin', sns_url: this.linkedin },
+      // ]);
+      // frm.append('sns_name1', 'github');
+      // frm.append('sns_url1', this.github);
+      // frm.append('sns_name2', 'github');
+      // frm.append('sns_url2', this.facebook);
+      // frm.append('sns_name3', 'github');
+      // frm.append('sns_url3', this.linkedin);
+      // frm.append('tech_stack', this.profile_info.tech_stack);
+      // frm.append('project', this.profile_info.project);
+      // for (const index in this.profile_info.project) {
+      //   frm.append(
+      //     `project_name${index + 1}`,
+      //     this.profile_info.profile[index].project_name,
+      //   );
+      //   frm.append(
+      //     `project_url${index + 1}`,
+      //     this.profile_info.profile[index].project_url,
+      //   );
+      // }
+      // frm.append('my_tags', this.profile_info.my_tags);
       try {
+        if (!this.file) {
+          const frm = new FormData();
+          frm.append('image', this.file);
+          const { data } = await saveQnaImage(frm);
+          this.profile_info.profile_img = data.image;
+        }
+
         this.$q.loading.show();
-        await updateProfile(this.$store.state.id, frm);
+        await updateProfile(this.$store.state.id, {
+          username: this.profile_info.username,
+          profile_img: this.profile_info.profile_img,
+          region: this.profile_info.region,
+          group: this.profile_info.group,
+          bio: this.profile_info.bio,
+          sns_name1: 'Github',
+          sns_url1: this.github,
+          sns_name2: 'Facebook',
+          sns_url2: this.facebook,
+          sns_name3: 'Linkedin',
+          sns_url3: this.linkedin,
+          tech_stack: this.profile_info.tech_stack,
+          project_name1: this.profile_info.profile[0]
+            ? this.profile_info.profile[0].project_name
+            : '',
+          project_url1: this.profile_info.profile[0]
+            ? this.profile_info.profile[0].project_url
+            : '',
+          project_name2: this.profile_info.profile[1]
+            ? this.profile_info.profile[1].project_name
+            : '',
+          project_url2: this.profile_info.profile[1]
+            ? this.profile_info.profile[1].project_url
+            : '',
+          project_name3: this.profile_info.profile[2]
+            ? this.profile_info.profile[2].project_name
+            : '',
+          project_url3: this.profile_info.profile[2]
+            ? this.profile_info.profile[2].project_url
+            : '',
+          my_tags: this.profile_info.my_tags,
+        });
         deleteCookie('login_nickname');
         saveUserNicknameToCookie(this.profile_info.username);
         this.$router.go(-1);
