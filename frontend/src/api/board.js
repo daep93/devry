@@ -18,8 +18,12 @@ function getMainEventList() {
 
 // forum board - 최신순 리스트 불러오기
 function loadForumNew() {
-  return board.get(`forum/new`);
+  return board.get(`forumno`);
 }
+// // forum board - 최신순 리스트 불러오기
+// function loadForumNew() {
+//   return board.get(`forum/new`);
+// }
 // forum board - 좋아요 높은순 리스트 불러오기
 function loadForumLike() {
   return board.get(`forum/new`);

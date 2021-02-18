@@ -145,7 +145,7 @@ export default {
       }
     },
     goToProfile() {
-      this.$router.push({ name: 'Profile' });
+      this.$router.push(`/profile/${this.info.user}`);
     },
     goToDetail() {
       this.$router.push({ name: 'ForumDetail' });
