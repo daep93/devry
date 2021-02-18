@@ -289,8 +289,8 @@ DEVRY는 **개발자 특화 커뮤니티** 서비스와 **포트폴리오** 서�
 
 ![liquid](img/README/Liquid 태그 가이드.PNG)
 
-![liquid1](img/README/sub2/Liquid_1.PNG)
-![liquid2](img/README/sub2/Liquid_2.PNG)
+![liquid1](img/README/Liquid_1.PNG)
+![liquid2](img/README/Liquid_2.PNG)
 
 
 
