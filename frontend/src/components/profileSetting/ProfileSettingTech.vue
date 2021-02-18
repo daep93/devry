@@ -30,6 +30,24 @@
         />
       </div>
     </div>
+    <div class="row col-12">
+      <div
+        class="row col-3 bg-light-blue-1"
+        style="position: absolute; z-index:999; border-radius: 5px;"
+      >
+        <div
+          v-for="tag in suggests"
+          class="col-12 q-py-md q-px-md"
+          :class="{ 'bg-blue-3': tags[tag] }"
+          :key="tag"
+          @click="checkDuplicateTag(tag)"
+          @mouseover="tags[tag] = true"
+          @mouseout="tags[tag] = false"
+        >
+          {{ tag }}
+        </div>
+      </div>
+    </div>
     <ul class="row q-gutter-sm">
       <li
         v-for="(skill, index) in propsTechStackData"
@@ -46,6 +64,7 @@
 </template>
 
 <script>
+import { filtered_tags, first_matched_tag } from '@/utils/autoComplete';
 export default {
   props: {
     propsTechStackData: Array,
@@ -54,23 +73,38 @@ export default {
     return {
       techStack: '',
       techStacks: [],
+      tags: { ...this.$store.state.tags_selected },
     };
   },
   methods: {
     addTechStack: function() {
       if (this.techStack !== '') {
-        this.$emit('addTechStackItem', this.techStack);
-        this.techStack = '';
+        const str = first_matched_tag(this.techStack);
+        this.checkDuplicateTag(str);
       }
     },
     removeTechStack: function(skill, index) {
+      this.techStacks.splice(index, 1);
       this.$emit('removeTechStackItem', skill, index);
+    },
+    checkDuplicateTag(stack) {
+      if (stack && this.techStacks.indexOf(stack) < 0) {
+        this.techStacks.push(stack);
+        this.$emit('addTechStackItem', stack);
+        this.techStack = '';
+      }
     },
   },
   watch: {
     propsTechStackData(newValue) {
       console.log(newValue);
       this.techStacks = newValue;
+    },
+  },
+  computed: {
+    // 일부 문자열을 받고 정규 표현식을 활용하여 비슷한 형태의 문자열 목록을 반환
+    suggests() {
+      return filtered_tags(this.techStack);
     },
   },
 };

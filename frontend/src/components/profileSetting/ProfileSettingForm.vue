@@ -54,7 +54,7 @@
               stack-label
               label-slot
               outlined
-              v-model="profile_info.username"
+              v-model="username"
               placeholder="닉네임을 입력해주세요"
             >
               <template v-slot:label>
@@ -254,6 +254,7 @@ export default {
   data() {
     return {
       email: '',
+      username: this.$store.state.nickname,
       profile_info: this.info,
       chageImg: false,
       github: this.info.link[0].sns_url,
@@ -317,7 +318,7 @@ export default {
 
         this.$q.loading.show();
         await updateProfile(this.$store.state.id, {
-          username: this.profile_info.username,
+          username: this.username,
           profile_img: this.profile_info.profile_img,
           region: this.profile_info.region,
           group: this.profile_info.group,
@@ -355,9 +356,11 @@ export default {
               : '',
           my_tags: this.profile_info.my_tags,
         });
+        console.log(this.username);
         deleteCookie('login_nickname');
-        saveUserNicknameToCookie(this.profile_info.username);
-        this.$store.commit('setUsername', this.profile_info.username);
+        saveUserNicknameToCookie(this.username);
+        this.$store.commit('setUsername', this.username);
+        alert('성공적으로 프로필을 변경하였습니다!');
         // this.$router.go(-1);
       } catch (error) {
         console.log(error);
