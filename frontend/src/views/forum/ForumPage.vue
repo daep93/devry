@@ -14,7 +14,6 @@
             class="cursor-pointer glossy font-weight-bold"
             size="12px"
           >
-            <ion-icon name="document-text-outline"></ion-icon>
             <q-icon
               :name="$i.ionDocumentTextOutline"
               class="q-mr-sm"
@@ -24,7 +23,8 @@
           </q-btn>
         </span>
       </div>
-      <bulletin-board :origin_board="board">
+      <!-- <forum-board></forum-board> -->
+      <bulletin-board :origin_board="board" v-if="loaded">
         <template slot="tab">
           <q-tab name="feed" label="피드" />
           <q-tab name="time" label="최신글" />
@@ -57,6 +57,7 @@ export default {
   data() {
     return {
       board: [],
+      loaded: false,
     };
   },
   methods: {
@@ -74,6 +75,7 @@ export default {
         const { data } = await getForumList();
         // this.origin_board = data;
         this.board = data;
+        this.loaded = true;
         // this.board = testCase;
       } catch (error) {
         console.log(error);
