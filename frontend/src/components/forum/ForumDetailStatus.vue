@@ -1,6 +1,6 @@
 <template>
   <div class="q-pl-md">
-    <!-- <q-card flat bordered style="width: 50px; height: 245px;">
+    <q-card flat bordered style="width: 50px; height: 245px;">
       <div style="margin:0 auto; text-align:center" class="q-pt-sm">
         <template v-if="liked">
           <q-icon
@@ -47,7 +47,7 @@
         <br />
         <span>{{ info.bookmark_num }}</span>
       </div>
-    </q-card> -->
+    </q-card>
   </div>
 </template>
 
