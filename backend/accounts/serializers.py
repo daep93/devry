@@ -24,6 +24,11 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from .models import User, UserManager, TokenModel, UserFollowing
 from mysite.utils import import_callable
+import os
+# import sys
+# sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'profiles'))
+# from profiles.models import Profile
+# from profiles.models import Profile
 
 User = get_user_model()
 
@@ -223,6 +228,7 @@ class UserFollowingSerializer(serializers.ModelSerializer):
 
 
 class UserFollowersSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = UserFollowing
         fields = ("id", "user", "created")
@@ -291,6 +297,6 @@ class ProfileEmailSerializer(serializers.ModelSerializer):
 
 
 class deleteSerializer(serializers.ModelSerializer):
-    email = serializers.CharField(max_length=80)
+
     class Meta:
        model = User
