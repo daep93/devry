@@ -31,6 +31,7 @@ const routes = [
     beforeEnter: (to, from, next) => {
       if (!store.getters.isLogined) {
         alert('로그인이 필요합니다');
+        next('/main');
         return;
       }
       next();
@@ -53,6 +54,7 @@ const routes = [
     beforeEnter: (to, from, next) => {
       if (!store.getters.isLogined) {
         alert('로그인이 필요합니다');
+        next('/main');
         return;
       }
       next();
@@ -65,6 +67,7 @@ const routes = [
     beforeEnter: (to, from, next) => {
       if (!store.getters.isLogined) {
         alert('로그인이 필요합니다');
+        next('/main');
         return;
       }
       next();
@@ -77,6 +80,7 @@ const routes = [
     beforeEnter: (to, from, next) => {
       if (!store.getters.isLogined) {
         alert('로그인이 필요합니다');
+        next('/main');
         return;
       }
       next();
@@ -89,6 +93,7 @@ const routes = [
     beforeEnter: (to, from, next) => {
       if (!store.getters.isLogined) {
         alert('로그인이 필요합니다');
+        next('/main');
         return;
       }
       next();
