@@ -3,6 +3,7 @@ import {
   saveAuthToCookie,
   saveUserIdToCookie,
   saveUserNicknameToCookie,
+  saveUserMyTagsToCookie,
 } from '@/utils/cookies';
 
 export default {
@@ -16,11 +17,12 @@ export default {
     commit('setToken', data.token);
     commit('setUserid', data.user.id);
     commit('setUsername', data.user.username);
-
+    commit('setMyTags', data.user.my_tags ? data.user.my_tags : []);
     // 쿠키에 저장
     saveAuthToCookie(data.token);
     saveUserIdToCookie(data.user.id);
     saveUserNicknameToCookie(data.user.username);
+    saveUserMyTagsToCookie(data.user.my_tags ? data.user.my_tags : []);
     return data;
   },
   async LOGOUT({ commit }) {
@@ -28,9 +30,11 @@ export default {
     commit('setToken', '');
     commit('setUserid', '');
     commit('setUsername', '');
+    commit('setMyTags', '');
     saveAuthToCookie('');
     saveUserIdToCookie('');
     saveUserNicknameToCookie('');
+    saveUserMyTagsToCookie([]);
     return data;
   },
 };

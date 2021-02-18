@@ -4,7 +4,7 @@
       <!-- 타이틀 -->
       <div class="row q-mb-sm q-mb-lg col-12 text-h5 text-weight-bold">
         <div class="row col-9">Event 게시판</div>
-      </div>  
+      </div>
       <main-event></main-event>
       <recommend-events></recommend-events>
       <upcoming-events class="q-mb-lg"></upcoming-events>
@@ -39,7 +39,7 @@ export default {
   methods: {
     goToEventRegister() {
       this.$router.push({ path: '/event-registration' });
-    }
+    },
   },
   created() {
     // 왼쪽 사이드 바 열림
