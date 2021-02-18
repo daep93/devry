@@ -1,13 +1,13 @@
 <template>
   <div class="row">
     <!-- 소제목 타이틀 -->
-    <div class="row col-12 text-h6 text-weight-bold">Upcoming Events</div>
+    <div class="row col-12 text-h6 text-weight-bold">개최 이벤트 목록</div>
     <!-- 이벤트 카테고리 -->
     <div class="row col-12 justify-end q-mb-sm">
       <q-select
         outlined
         v-model="category"
-        :options="['ALL', 'Conference', 'Workshop', 'Hackathon', 'Competition', 'Meeting']"
+        :options="['ALL', 'Conference', 'Workshop', 'Hackathon', 'Competition', 'Meeting', 'Recruting']"
         style="width:140px;"
       />
     </div>

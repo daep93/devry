@@ -18,27 +18,26 @@
         <div class="row q-mb-xl relative-position">
           <!-- 이미지 등록 -->
           <q-img
-            :src="thumnail"
+            :src="thumnail ? thumnail : require('@/assets/basic_image.png')"
             spinner-color="white"
             style="height: 215px;"
             class="rounded-borders col-8"
-          />
+          /> 
           <div class="q-ml-lg col-3">
             <!-- 이미지 등록 버튼 -->
-            <input
-              ref="thumnailInput"
-              type="file"
-              hidden
-              @change="onChangeThumnails"
-            />
-            <q-btn
-              @click="onClickThumnailUpload"
-              color="primary"
-              label="이미지 등록"
-              class="float-right"
-              style="width: 150px; height: 40px; border-radius:5px; position:absolute; bottom:0px;"
+            <q-file
+              v-model="file"
+              label="대표 이미지 등록"
+              standout="bg-indigo-3 text-white "
+              color="blue-12" 
+              bg-color="blue-12"
+              label-color="white"
+              style="max-width: 200px; position:absolute; bottom:0px;"
             >
-            </q-btn>
+              <template v-slot:append>
+                <q-icon name="attachment" class="text-white" />
+              </template>
+            </q-file>
           </div>
         </div>
         <!-- 이벤트 상태 및 카테고리 -->
@@ -100,7 +99,7 @@
               <span class="text-primary">시작일정</span>
               <br />
             </template>
-            <template v-slot:prepend>
+            <template slot="append">
               <q-icon name="event" class="cursor-pointer">
                 <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
                   <q-date v-model="start" mask="YYYY-MM-DD HH:mm">
@@ -111,10 +110,10 @@
                 </q-popup-proxy>
               </q-icon>
             </template>
-            <template v-slot:append>
+            <template slot="append">
               <q-icon name="access_time" class="cursor-pointer">
                 <q-popup-proxy transition-show="scale" transition-hide="scale">
-                  <q-time v-model="start" mask="YYYY-MM-DD HH:mm" format24h>
+                  <q-time v-model="start" mask="YYYY-MM-DD HH:mm">
                     <div class="row items-center justify-end">
                       <q-btn v-close-popup label="Close" color="primary" flat />
                     </div>
@@ -135,7 +134,7 @@
               <span class="text-primary">종료일정</span>
               <br />
             </template>
-            <template v-slot:prepend>
+            <template slot="append">
               <q-icon name="event" class="cursor-pointer">
                 <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
                   <q-date v-model="end" mask="YYYY-MM-DD HH:mm">
@@ -146,10 +145,10 @@
                 </q-popup-proxy>
               </q-icon>
             </template>
-            <template v-slot:append>
+            <template slot="append">
               <q-icon name="access_time" class="cursor-pointer">
                 <q-popup-proxy transition-show="scale" transition-hide="scale">
-                  <q-time v-model="end" mask="YYYY-MM-DD HH:mm" format24h>
+                  <q-time v-model="end" mask="YYYY-MM-DD HH:mm">
                     <div class="row items-center justify-end">
                       <q-btn v-close-popup label="Close" color="primary" flat />
                     </div>
@@ -256,26 +255,26 @@
         <div class="row q-mb-xl relative-position">
           <!-- 프로필 이미지 등록 -->
           <q-img
-            :src="profile_img"
+            :src="profile_img ? profile_img : require('@/assets/basic_image.png')"
             spinner-color="white"
             style="height: 127px; max-width: 250px; "
             class="rounded-borders col-3"
           />
           <div class="q-ml-lg col-3">
             <!-- 프로필 이미지 등록 버튼 -->
-            <input
-              ref="profileInput"
-              type="file"
-              hidden
-              @change="onChangeProfiles"
-            />
-            <q-btn
-              @click="onClickProfileUpload"
-              color="primary"
-              label="프로필 등록"
-              style="width: 150px; height: 40px; border-radius:5px; position:absolute; bottom:0px;"
+            <q-file
+              v-model="second_file"
+              label="프로필 이미지 등록"
+              standout="bg-indigo-3 text-white "
+              color="blue-12" 
+              bg-color="blue-12"
+              label-color="white"
+              style="max-width: 200px; border-radius:5px; position:absolute; bottom:0px; "
             >
-            </q-btn>
+              <template v-slot:append>
+                <q-icon name="attachment" class="text-white" />
+              </template>
+            </q-file>
           </div>
         </div>
         <!-- 호스트 이름 -->
@@ -313,11 +312,6 @@
       </div> 
     </div> 
     <!-- 이벤트 관련 태그 -->
-    <!-- <event-tag
-      @addTagItem="addOneTag"
-      @removeTagItem="removeOneTag"
-      :propsTagData="ref_tags"
-    ></event-tag>   -->
     <event-registration-tag
       @addTagItem="addOneTag"
       @removeTagItem="removeOneTag"
@@ -356,13 +350,12 @@
 </template>
 
 <script>
-// import EventTag from '@/components/event/EventTag';
 import EventRegistrationTag from '@/components/event/EventRegistrationTag';
 import { loadEventItem, createEventItem, updateEventItem, deleteEventItem } from '@/api/eventRegistration';
+import { saveQnaImage } from '@/api/qna';
 
 export default {
   components: {
-    // EventTag,
     EventRegistrationTag
   },
   data() {
@@ -371,11 +364,11 @@ export default {
       state_options: [
         'Ready', 'Start', 'End'
       ],
-      thumnail: 'https://placeimg.com/500/300/nature',
+      thumnail: require('@/assets/basic_image.png'),
       title: '',
       category: 'Conference',
       category_options: [
-        'Conference', 'Workshop', 'Hackathon', 'Competition', 'Meeting'
+        'Conference', 'Workshop', 'Hackathon', 'Competition', 'Meeting', 'Recruting'
       ],
       place: '',
       start: '',
@@ -385,29 +378,15 @@ export default {
       introduction: '',
       schedule: '',
       host_name: '',
-      profile_img: 'https://placeimg.com/500/300/nature',
+      profile_img: require('@/assets/basic_image.png'),
       register_url: '',
       ref_tags: [],
       king: false,
+      file: '',
+      second_file: '',
     }
   },
   methods: {
-    onClickThumnailUpload() {
-      this.$refs.thumnailInput.click();
-    },
-    onChangeThumnails(e) {
-      const file = e.target.files[0];
-      console.log(file);
-      this.thumnail = URL.createObjectURL(file);
-    },
-    onClickProfileUpload() {
-      this.$refs.profileInput.click();
-    },
-    onChangeProfiles(e) {
-      const file = e.target.files[0];
-      console.log(file);
-      this.profile_img = URL.createObjectURL(file);
-    },
     addOneTag(tagItem) {
       this.ref_tags.push(tagItem);
     },
@@ -417,12 +396,28 @@ export default {
     async createEvent() {
       try {
         this.$q.loading.show();
+        // 메인 이미지 서버에 저장하기
+        if (this.file) {
+          const frm = new FormData();
+          frm.append('image', this.file);
+          const { data } = await saveQnaImage(frm);
+          this.thumnail = data.image;
+          console.log(this.thumnail)
+        }
+        // 호스트 프로필 서버에 저장하기
+        if (this.second_file) {
+          const frm = new FormData();
+          frm.append('image', this.second_file);
+          const { data } = await saveQnaImage(frm);
+          this.profile_img = data.image;
+          console.log(this.profile_img)
+        }
         // 이벤트 새로 생성하기
         console.log('글 생성하기로 들어왔나?')
         await createEventItem({
           // 넘길 데이터 적어주기
           state: this.state,
-          // thumnail: this.thumnail,
+          thumnail: this.thumnail,
           title: this.title,
           category: this.category,
           place: this.place,
@@ -433,7 +428,7 @@ export default {
           introduction: this.introduction,
           schedule: this.schedule,
           host_name: this.host_name,
-          // profile_img: this.profile_img,
+          profile_img: this.profile_img,
           register_url: this.register_url,
           ref_tags: this.ref_tags,
           user: this.$store.state.id,
@@ -452,12 +447,25 @@ export default {
       // id 넘겨주기
       const post_id = this.$route.params.id;
       try {
-        console.log(post_id)
         this.$q.loading.show();
+        // 메인 이미지 서버에 저장하기
+        if (this.file) {
+          const frm = new FormData();
+          frm.append('image', this.file);
+          const { data } = await saveQnaImage(frm);
+          this.thumnail = data.image;
+        }
+        // 호스트 프로필 서버에 저장하기
+        if (this.second_file) {
+          const frm = new FormData();
+          frm.append('image', this.second_file);
+          const { data } = await saveQnaImage(frm);
+          this.profile_img = data.image;
+        }
         await updateEventItem(post_id, {
           // 넘길 데이터 적어주기
           state: this.state,
-          // thumnail: this.thumnail,
+          thumnail: this.thumnail,
           title: this.title,
           category: this.category,
           place: this.place,
@@ -468,7 +476,7 @@ export default {
           introduction: this.introduction,
           schedule: this.schedule,
           host_name: this.host_name,
-          // profile_img: this.profile_img,
+          profile_img: this.profile_img,
           register_url: this.register_url,
           ref_tags: this.ref_tags,
           user: this.$store.state.id,

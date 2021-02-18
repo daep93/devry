@@ -1,22 +1,33 @@
 from rest_framework import serializers, fields
 from .models import Post, Comment, tech
 from profiles.models import Profile, ForumImagePost
-from profiles.serializers import ProfileSerializer, ProfileListSerializer, ProfilePinnedPostsSerializer
+from profiles.serializers import ProfileSerializer, ProfileListSerializer, ProfilePinnedPostsSerializer, ProfileImageSerializer
 from accounts.models import User, Mentioned
 
 
+# class ImgPost(object):
+#     def __init__(self, files, thumbnail):
+#         self.files = files 
+#         self.thumbnail = thumbnail 
+
+
+# class ImagePostSerializer(serializers.Serializer):
+#     files = serializers.FileField()
+#     thumbnail = serializers.ImageField()
 class ImagePostSerializer(serializers.ModelSerializer):
-    thumbnail = serializers.ImageField(use_url=True)
+    thumbnail = serializers.ImageField(use_url=True, allow_empty_file = True)
     
     class Meta:
         model = ForumImagePost
         fields = ('thumbnail',)
 
-class UserinfoSerializer(serializers.ModelSerializer):
 
+
+class UserinfoSerializer(serializers.ModelSerializer):
+    profile_img = ProfileImageSerializer(read_only=True)
     class Meta:
         model = User
-        fields = ( 'id', 'username')
+        fields = ( 'id', 'username', 'profile_img')
 
 
 class ProfilepostListSerializer(serializers.ModelSerializer):
@@ -26,12 +37,19 @@ class ProfilepostListSerializer(serializers.ModelSerializer):
         fields = ('user', 'username', 'profile_img', )
 
 
+class ProfileImagePostListSerializer(serializers.ModelSerializer):
+      
+    class Meta:
+        model = Profile
+        fields = ('id', )
+
+
 class ProfilepostSerializer(serializers.ModelSerializer):
     pinned_posts = ProfilePinnedPostsSerializer(many=True, read_only=True)
     thumbnail = ImagePostSerializer(many=True, read_only=True)
     class Meta:
         model = Profile
-        fields = ('user', 'username', 'profile_img', 'follower_num', 'bio', 'pinned_posts', 'thumbnail',)
+        fields = ('user', 'username', 'profile_img', 'follower_num', 'bio', 'pinned_posts', 'thumbnail', 'is_following')
 # 부족한 필드 추가해야함
 
 
@@ -60,7 +78,7 @@ class PostListforamtSerializer(serializers.ModelSerializer):
         read_only=True,
     )
 
-    profile = ProfilepostListSerializer(
+    user_info = ProfileImagePostListSerializer(
         read_only=True,
     )
     
@@ -71,13 +89,14 @@ class PostListforamtSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ('id', 'title','user', 'written_time', 'ref_tags', 'like_num', 'comment_count', 'viewed_num', 'liked', 'profile')
+        fields = ('id', 'title', 'written_time', 'ref_tags', 'liked', 'comment_count', 'like_num', 'viewed_num',  'user', 'user_info')
 
 
 class PostListSerializer(serializers.ModelSerializer):
     
-    profile = ProfilepostListSerializer(
+    user_info = ProfilepostListSerializer(
         read_only=True,
+        many=True
     )
     
     comment_count = serializers.IntegerField(
@@ -87,7 +106,15 @@ class PostListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ('id', 'title', 'written_time', 'ref_tags', 'like_num', 'comment_count', 'viewed_num', 'liked', 'profile')
+        fields = ('id', 'title', 'written_time', 'ref_tags', 'liked', 'comment_count', 'viewed_num', 'like_num', 'user_info',)
+
+
+class AuthenticatedFeedSerializer(serializers.ModelSerializer):
+    feed_list = PostListSerializer(many=True, read_only=True)
+    recommend_list = PostListforamtSerializer(many=True, read_only=True)
+    class Meta:
+        model = Post
+        fields = ('feed_list', 'recommend_list',)
 
 
 class CommentdetailSerializer(serializers.ModelSerializer):

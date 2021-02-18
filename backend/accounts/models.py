@@ -23,7 +23,6 @@ from multiselectfield import MultiSelectField
 from rest_framework.authtoken.models import Token as DefaultTokenModel
 from mysite.utils import import_callable
 
-# Create your models here.
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
@@ -121,14 +120,13 @@ class UserFollowing(models.Model):
     user = models.ForeignKey(User, related_name="following", on_delete=models.CASCADE)
     following_user = models.ForeignKey(User, related_name="followers", on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
-
+    is_following = models.BooleanField(default="False", null=True)
 
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['user','following_user'],  name="unique_followers")
         ]
         
-
     # def __str__(self):
     #     return f"user_id = {self.user_id} follows user_id = {self.following_user_id}"
 
@@ -137,4 +135,6 @@ class Mentioned(models.Model):
     user = models.ForeignKey(User, related_name="mention_user", on_delete=models.CASCADE)
     mentioned_user = models.ForeignKey(User, related_name="mentioned_user", on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
-    comment = models.ManyToManyField('forums.Comment', blank=True, related_name='mentioned_comment')
+    comment = models.ForeignKey('forums.Comment', blank=True, on_delete=models.CASCADE, related_name='mentioned_comment')
+
+
