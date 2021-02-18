@@ -96,6 +96,8 @@ class Qna(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     user_info = models.ForeignKey(Profile, on_delete=models.CASCADE,null=True, related_name='qna_userinfo')
     is_following = models.BooleanField(default="False")
+    post_num = models.PositiveIntegerField(default=0)
+
 
     def __str__(self):
         return self.title

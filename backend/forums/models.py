@@ -70,6 +70,9 @@ tags = (
     ('Virtual Reality', 'Virtual Reality'),
 )
 
+class ImagePost(models.Model):
+    image = models.ImageField(upload_to="%Y/%m/%d")
+
 
 class Post(models.Model): 
     title = models.CharField(max_length=80)
@@ -84,6 +87,7 @@ class Post(models.Model):
     pinned_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='pinned_posts')
     pinned = models.BooleanField(default="False")
     viewed_num = models.PositiveIntegerField(default=0)
+    post_num = models.PositiveIntegerField(default=0)
     written_time = models.DateTimeField(auto_now_add=True)
     content = models.TextField()
     # writer_info = models.OneToOneField(Profile, on_delete=models.CASCADE, blank=True, related_name='post_profile')
@@ -94,11 +98,14 @@ class Post(models.Model):
     forum_post = models.ManyToManyField('self', blank=True, related_name='post_forum_post')
     comments = models.TextField(blank=True)
     comment_num = models.PositiveIntegerField(default=0)
-    # thumbnail = models.ForeignKey(ForumImagePost, on_delete=models.CASCADE, blank=True, null=True, related_name='forum_image')
+    thumbnail = models.URLField(default="", max_length=100, blank=True, null=False)
     # user_info = models.OneToOneField(Profile, on_delete=models.CASCADE,blank=True, related_name='post_userinfo')
     user_info = models.ManyToManyField(Profile, blank=True, related_name='post_userinfo')
     feed_list = models.ManyToManyField('self', blank=True, related_name='post_feed_list')
     recommend_list = models.ManyToManyField('self', blank=True, related_name='post_recommend_list')
+    is_following = models.BooleanField(default=False)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, blank=True, null=True, related_name='post_profiles')
+
     def __str__(self):
         return self.title
 

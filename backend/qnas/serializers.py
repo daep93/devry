@@ -54,7 +54,7 @@ class ProfileqnaSerializer(serializers.ModelSerializer):
       
     class Meta:
         model = Profile
-        fields = ('user', 'username', 'profile_img', 'bio', 'pinned_posts')
+        fields = ('user', 'username', 'profile_img', 'bio', 'pinned_qnas')
 
 
 class QnasmallSerializer(serializers.ModelSerializer):
@@ -313,6 +313,13 @@ class solveSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ans
         fields = ('id', "assisted")
+
+
+class QnanumberSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Qna
+        fields = ("post_num")
 
 
 class isfollowingSerializer(serializers.ModelSerializer):

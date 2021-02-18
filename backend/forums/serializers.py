@@ -1,7 +1,7 @@
 from rest_framework import serializers, fields
 from .models import Post, Comment, tech
 from profiles.models import Profile, ForumImagePost
-from profiles.serializers import ProfileSerializer, ProfileListSerializer, ProfilePinnedQnaSerializer, ProfileImageSerializer
+from profiles.serializers import ProfileSerializer, ProfileListSerializer, ProfilePinnedQnaSerializer, ProfileImageSerializer, ProfilePinnedForumSerializer
 from accounts.models import User, Mentioned
 
 
@@ -44,12 +44,21 @@ class ProfileImagePostListSerializer(serializers.ModelSerializer):
         fields = ('id', )
 
 
+class PostnumberSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Post
+        fields = ('post_num',)
+
+
+
 class ProfilepostSerializer(serializers.ModelSerializer):
     pinned_qnas = ProfilePinnedQnaSerializer(many=True, read_only=True)
+    pinned_forums = ProfilePinnedForumSerializer(many=True, read_only=True)
     thumbnail = ImagePostSerializer(many=True, read_only=True)
     class Meta:
         model = Profile
-        fields = ('user', 'username', 'profile_img', 'follower_num', 'bio', 'pinned_qnas', 'thumbnail', 'is_following')
+        fields = ('user', 'username', 'profile_img', 'post_num', 'follower_num', 'bio', 'thumbnail', 'is_following', 'pinned_qnas', 'pinned_forums', )
 # 부족한 필드 추가해야함
 
 
@@ -105,12 +114,35 @@ class PostListSerializer(serializers.ModelSerializer):
         fields = ('id', 'title', 'written_time', 'ref_tags', 'liked', 'comment_count', 'viewed_num', 'like_num', 'user_info',)
 
 
-class AuthenticatedFeedSerializer(serializers.ModelSerializer):
-    feed_list = PostListSerializer(many=True, read_only=True)
-    recommend_list = PostListforamtSerializer(many=True, read_only=True)
+class PostListDetailSerializer(serializers.ModelSerializer):
+    thumbnail = serializers.ImageField(use_url=True)
+
+    user_info = ProfilepostListSerializer(
+        many=True
+    )
+
+    comment_count = serializers.IntegerField(
+        source='comment_set.count',
+        read_only=True,
+    )
     class Meta:
         model = Post
-        fields = ('feed_list', 'recommend_list',)
+        fields = ('id', 'title', 'written_time', 'ref_tags', 'liked', 'bookmarked', 'comment_count', 'thumbnail', 'viewed_num', 'like_num', 'bookmark_num', 'user_info')
+
+
+
+class AuthenticatedFeedSerializer(serializers.ModelSerializer):
+    # feed_list = PostListSerializer(many=True, read_only=True)
+    class Meta:
+        model = Post
+        fields = ('feed_list', )
+
+
+class UnauthorizedFeedSerializer(serializers.ModelSerializer):
+    # recommend_list = PostListforamtSerializer()
+    class Meta:
+        model = Post
+        fields = ('recommend_list',)
 
 
 class CommentdetailSerializer(serializers.ModelSerializer):
@@ -204,7 +236,7 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ('id','user', 'title','content','ref_tags', 'bookmark_num', 'bookmarked', 'like_num', 'liked',
+        fields = ('id','user', 'title','content','ref_tags', 'bookmark_num', 'bookmarked', 'like_num', 'liked', 'thumbnail',
         'viewed_num', 'comment_num', 'written_time','comment_set', )
 
 
