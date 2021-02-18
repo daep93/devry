@@ -46,10 +46,10 @@
 
 <script>
 import { createForumComment } from '@/api/forum';
-import MarkdownEditor from '@/components/common/MarkdownEditor';
+// import MarkdownEditor from '@/components/common/MarkdownEditor';
 
 export default {
-  components: { MarkdownEditor },
+  // components: { MarkdownEditor },
   props: {
     info: Object,
   },
@@ -77,7 +77,7 @@ export default {
           // 넘길 데이터
           user: this.$store.state.id,
           comment_content: this.content,
-          post: this.info.post_id,
+          post: this.info,
         });
         location.reload();
       } catch (error) {
