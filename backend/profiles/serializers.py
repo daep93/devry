@@ -42,18 +42,31 @@ class ProfileMyTechSerialier(serializers.ModelSerializer):
         fields = ('tech_stack',)
 
 
-class ProfilePostsSerializer(serializers.ModelSerializer):
+class ProfileQnaPostsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ('posts',)
+        fields = ('qnas',)
 
-
-class ProfilePinnedPostsSerializer(serializers.ModelSerializer):
+class ProfileForumPostsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ('pinned_posts', )
+        fields = ('forums',)
+
+
+class ProfilePinnedQnaSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Profile
+        fields = ('pinned_qnas', )
+
+
+class ProfilePinnedForumSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Profile
+        fields = ('pinned_forums', )
 
 
 class ProfileImageSerializer(serializers.ModelSerializer):
@@ -63,11 +76,18 @@ class ProfileImageSerializer(serializers.ModelSerializer):
         fields = ('profile_img',)
 
 
-class ProfileCommentsSerializer(serializers.ModelSerializer):
+class ProfileQnaCommentsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ('comments', )
+        fields = ('qnas_comments', )
+
+
+class ProfileForumCommentsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Profile
+        fields = ('forums_comments', )
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -84,7 +104,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ('user', 'email', 'username', 'joined', 'follower_num', 'followee_num', 'profile_img', 'region', 'group', 'bio', 'links', 'sns_name1', 'sns_name2', 'sns_name3', 'sns_url1', 'sns_url2', 'sns_url3',
-        'tech_stack', 'projects', 'project_name1', 'project_name2', 'project_name3', 'project_url1', 'project_url2', 'project_url3', 'my_tags', 'pinned_posts', 'posts', 'comments',  )
+        'tech_stack', 'projects', 'project_name1', 'project_name2', 'project_name3', 'project_url1', 'project_url2', 'project_url3', 'my_tags', 'pinned_qnas', 'qnas',  )
 
 
 
@@ -98,13 +118,17 @@ class ProfileShowSerializer(serializers.ModelSerializer):
     followee_num = serializers.IntegerField(read_only=True)
 
     tags = ProfileTagSerializer(read_only=True)
-    posts = ProfilePostsSerializer(many=True, read_only=True)
-    pinned_posts = ProfilePinnedPostsSerializer(many=True, read_only=True)
-    comments = ProfileCommentsSerializer(many=True, read_only=True)
+    qnas = ProfileQnaPostsSerializer(many=True, read_only=True)
+    forums = ProfileForumPostsSerializer(many=True, read_only=True)
+    
+    pinned_qnas = ProfilePinnedQnaSerializer(many=True, read_only=True)
+    pinned_forums = ProfilePinnedQnaSerializer(many=True, read_only=True)
+    qnas_comments = ProfileQnaCommentsSerializer(many=True, read_only=True)
+    forums_comments = ProfileForumCommentsSerializer(many=True, read_only=True)
     class Meta:
         model = Profile
         fields = ('user', 'email', 'username', 'joined', 'follower_num', 'followee_num', 'profile_img', 'region', 'group', 'bio', 'link', 
-        'tech_stack', 'my_tags', 'project', 'tags', 'pinned_posts', 'posts', 'comments',  )
+        'tech_stack', 'my_tags', 'project', 'tags', 'pinned_qnas', 'pinned_forums', 'qnas',  'forums','qnas_comments', 'forums_comments')
 
 
 class ProfileListSerializer(serializers.ModelSerializer):    
