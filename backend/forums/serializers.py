@@ -1,7 +1,7 @@
 from rest_framework import serializers, fields
 from .models import Post, Comment, tech
 from profiles.models import Profile, ForumImagePost
-from profiles.serializers import ProfileSerializer, ProfileListSerializer, ProfilePinnedPostsSerializer
+from profiles.serializers import ProfileSerializer, ProfileListSerializer, ProfilePinnedPostsSerializer, ProfileImageSerializer
 from accounts.models import User, Mentioned
 
 
@@ -24,10 +24,10 @@ class ImagePostSerializer(serializers.ModelSerializer):
 
 
 class UserinfoSerializer(serializers.ModelSerializer):
-
+    profile_img = ProfileImageSerializer(read_only=True)
     class Meta:
         model = User
-        fields = ( 'id', 'username')
+        fields = ( 'id', 'username', 'profile_img')
 
 
 class ProfilepostListSerializer(serializers.ModelSerializer):
@@ -35,6 +35,13 @@ class ProfilepostListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ('user', 'username', 'profile_img', )
+
+
+class ProfileImagePostListSerializer(serializers.ModelSerializer):
+      
+    class Meta:
+        model = Profile
+        fields = ('id', )
 
 
 class ProfilepostSerializer(serializers.ModelSerializer):
@@ -71,7 +78,7 @@ class PostListforamtSerializer(serializers.ModelSerializer):
         read_only=True,
     )
 
-    profile = ProfilepostListSerializer(
+    user_info = ProfileImagePostListSerializer(
         read_only=True,
     )
     
@@ -82,14 +89,15 @@ class PostListforamtSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ('id', 'title','user', 'written_time', 'ref_tags', 'like_num', 'comment_count', 'viewed_num', 'liked', 'profile')
+        fields = ('id', 'title', 'written_time', 'ref_tags', 'liked', 'comment_count', 'like_num', 'viewed_num',  'user', 'user_info')
 
 
 class PostListSerializer(serializers.ModelSerializer):
     
-    # user_info = ProfilepostListSerializer(
-    #     read_only=True,
-    # )
+    user_info = ProfilepostListSerializer(
+        read_only=True,
+        many=True
+    )
     
     comment_count = serializers.IntegerField(
         source='comment_set.count',
@@ -103,10 +111,10 @@ class PostListSerializer(serializers.ModelSerializer):
 
 class AuthenticatedFeedSerializer(serializers.ModelSerializer):
     feed_list = PostListSerializer(many=True, read_only=True)
-    # recommended_list = PostListforamtSerializer(many=True, read_only=True)
+    recommend_list = PostListforamtSerializer(many=True, read_only=True)
     class Meta:
         model = Post
-        fields = ('feed_list',)
+        fields = ('feed_list', 'recommend_list',)
 
 
 class CommentdetailSerializer(serializers.ModelSerializer):
