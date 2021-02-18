@@ -1,14 +1,20 @@
 <template>
   <q-card class="col-7">
     <div class="row full-width">
-      <div class="row col-6 items-center">
-        <q-card-section>
+      <div class="row col-6  ">
+        <q-card-section class="row justify-center full-width">
+          <div class=" text-bold q-mb-md text-center full-width">
+            태그로 보는 포스팅 횟수
+          </div>
           <pie-chart
-            v-if="loaded"
+            v-if="loaded && tagCounts.length"
             :data="chartData"
             :options="chartOptions"
             style="width:25vw"
           ></pie-chart>
+          <span v-else class="text-grey-5 full-width text-center">
+            없음
+          </span>
         </q-card-section>
       </div>
       <div class="row col-6 items-start">
@@ -190,14 +196,6 @@ export default {
             boxWidth: 10,
             fontSize: 14,
           },
-        },
-        title: {
-          text: '태그로 보는 포스팅 횟수',
-          fontSize: 15,
-          fontFamily: "'roboto'",
-          fontColor: '#000000',
-          display: true,
-          padding: 10,
         },
         animation: {
           animateScale: true,
