@@ -1,7 +1,7 @@
 from rest_framework import serializers, fields
 from .models import Post, Comment, tech
 from profiles.models import Profile, ForumImagePost
-from profiles.serializers import ProfileSerializer, ProfileListSerializer, ProfilePinnedPostsSerializer, ProfileImageSerializer
+from profiles.serializers import ProfileSerializer, ProfileListSerializer, ProfilePinnedQnaSerializer, ProfileImageSerializer
 from accounts.models import User, Mentioned
 
 
@@ -45,11 +45,11 @@ class ProfileImagePostListSerializer(serializers.ModelSerializer):
 
 
 class ProfilepostSerializer(serializers.ModelSerializer):
-    pinned_posts = ProfilePinnedPostsSerializer(many=True, read_only=True)
+    pinned_qnas = ProfilePinnedQnaSerializer(many=True, read_only=True)
     thumbnail = ImagePostSerializer(many=True, read_only=True)
     class Meta:
         model = Profile
-        fields = ('user', 'username', 'profile_img', 'follower_num', 'bio', 'pinned_posts', 'thumbnail', 'is_following')
+        fields = ('user', 'username', 'profile_img', 'follower_num', 'bio', 'pinned_qnas', 'thumbnail', 'is_following')
 # 부족한 필드 추가해야함
 
 
@@ -77,10 +77,6 @@ class PostListforamtSerializer(serializers.ModelSerializer):
     user = UserinfoSerializer(
         read_only=True,
     )
-
-    user_info = ProfileImagePostListSerializer(
-        read_only=True,
-    )
     
     comment_count = serializers.IntegerField(
         source='comment_set.count',
@@ -89,7 +85,7 @@ class PostListforamtSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ('id', 'title', 'written_time', 'ref_tags', 'liked', 'comment_count', 'like_num', 'viewed_num',  'user', 'user_info')
+        fields = ('id', 'title', 'written_time', 'ref_tags', 'liked', 'comment_count', 'like_num', 'viewed_num',  'user')
 
 
 class PostListSerializer(serializers.ModelSerializer):
@@ -276,3 +272,10 @@ class pinnedDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ('id', 'title',)
+
+
+class ForumpinnedSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Post
+        fields = ('id', 'pinned', 'pinned_users', 'pinned_num')

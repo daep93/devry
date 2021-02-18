@@ -69,10 +69,10 @@ def post_list(request):
                 for i in range(len(real_posts)):
                     post_user = User.objects.get(id=PostSerializer(posts[i]).data['user'])
                     post_user_profile = Profile.objects.get(username=post_user)
-
                     serializer.data[i]['feed_list'].append(PostListSerializer(posts[i]).data)
                     serializer.data[i]['feed_list'][0]['user_info'].append(ProfilepostListSerializer(post_user_profile).data)
                     serializer.data[i]['recommend_list'].append(PostListforamtSerializer(posts_for_unauthorized_user[i]).data)
+                    # serializer.data[i]['recommend_list'][0]['user'] = (PostListforamtSerializer(posts_for_unauthorized_user[i]).data['profile_img'])
                 # 토큰을 이용한 사용자 획인 코드
                 # post number in user_id -> It will be "True"       
 
