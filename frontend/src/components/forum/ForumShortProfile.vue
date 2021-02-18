@@ -9,12 +9,17 @@
       <q-card-section>
         <div class="row col-12">
           <div class="row col-2">
-            <span class="q-mt-xs">
-              <q-avatar
-                @click="goToProfile"
-                style="width: 35px; height: 35px;"
-                class="cursor-pointer"
-                ><img :src="profile_img" />
+            <span style="cursor:pointer;" class="q-mt-xs">
+              <q-avatar style="border: 1px solid #ECEFF1" size="2.8em">
+                <q-img
+                  :src="
+                    info.profile_img
+                      ? img_url
+                      : require('@/assets/basic_image.png')
+                  "
+                  @click="goToProfile"
+                  class="cursor-pointer"
+                />
               </q-avatar>
             </span>
           </div>
@@ -22,15 +27,12 @@
             <div class="row col-12">
               <div
                 class="q-pl-lg"
-                style="font-size: 15px; color: #464646"
+                style="font-size: 15px; cursor:pointer; color: #464646"
                 @click="goToProfile"
               >
-                <b class="cursor-pointer">{{
-                  profile ? profile.username : info.user.username
-                }}</b>
-                <div class="text-caption row">
-                  글 {{ profile ? profile.post_num : 0 }} · 팔로워
-                  {{ profile ? profile.follow_num : 0 }}
+                <b>{{ info.username }}</b>
+                <div class="text-caption">
+                  글 {{ info.post_num }} · 팔로워 {{ follower_num }}
                 </div>
               </div>
             </div>
@@ -39,17 +41,20 @@
       </q-card-section>
       <div class="q-px-md q-pb-md" v-if="profile">
         <div style="font-size: 13px;">
-          {{ profile.bio }}
+          {{ info.bio }}
         </div>
       </div>
-      <div class="row col-12 justify-center">
-        <template v-if="follow">
+      <div
+        class="row col-12 justify-center"
+        v-if="info.user != $store.state.id"
+      >
+        <template v-if="is_following == false">
           <q-btn
             no-caps
             color="primary"
             id="follow-btn"
             label="Follow"
-            @click="checkFollow"
+            @click="toggleFollow"
             style="width: 200px"
             class="q-mb-sm row col-10"
           />
@@ -60,7 +65,7 @@
             outline
             color="primary"
             label="Following"
-            @click="checkFollow"
+            @click="toggleFollow"
             style="width: 200px"
             class="q-mb-sm row col-10"
           />
@@ -80,7 +85,7 @@
             <span
               class="text-weight-bold cursor-pointer"
               style="color: #598FFC"
-              >{{ profile.username }}</span
+              >{{ info.username }}</span
             >
             <span>님의 글 더보기</span>
           </div>
@@ -99,24 +104,44 @@
 </template>
 
 <script>
+import { followOtherUser } from '@/api/follow';
+
 export default {
   props: {
     info: Object,
   },
   data() {
     return {
-      title: 'Add a YouTube stats widget to your iPhone with JavaScript',
-      username: 'Test User',
-      profile_img: 'https://cdn.quasar.dev/img/avatar.png',
-      follow: true,
+      img_url: `${this.info.profile_img}`,
+      is_following: this.info.is_following,
+      follower_num: this.info.follower_num,
     };
   },
+  watch: {
+    info(newValue) {
+      (this.is_following = newValue.is_following),
+        (this.follower_num = newValue.follower_num);
+    },
+  },
   methods: {
-    checkFollow() {
+    async toggleFollow() {
       if (!this.$store.getters.isLogined) alert('로그인이 필요합니다!');
       else {
-        // TODO : follow API 연결 필요
-        this.follow = !this.follow;
+        try {
+          this.$q.loading.show();
+          const want_pk = this.info.user;
+          await followOtherUser(want_pk);
+          this.is_following = !this.is_following;
+          if (this.is_following) {
+            this.follower_num = this.follower_num + 1;
+          } else {
+            this.follower_num = this.follower_num - 1;
+          }
+        } catch (error) {
+          console.log(error);
+        } finally {
+          this.$q.loading.hide();
+        }
       }
     },
     goToProfile() {
@@ -124,9 +149,6 @@ export default {
     },
     goToDetail() {
       this.$router.push({ name: 'ForumDetail' });
-    },
-    checkFollow() {
-      this.follow = !this.follow;
     },
   },
   computed: {

@@ -1,6 +1,6 @@
 <template>
   <div class="q-pl-md">
-    <q-card flat bordered style="width: 50px; height: 245px;">
+    <q-card flat bordered style="width: 45px; height: 245px;">
       <div style="margin:0 auto; text-align:center" class="q-pt-sm">
         <template v-if="liked">
           <q-icon
@@ -30,7 +30,7 @@
           size="17px"
         ></q-icon>
         <br />
-        <span>{{ info.comment_count }}</span>
+        <span>{{ info.comment_num }}</span>
         <br />
         <br />
         <q-icon :name="$i.ionEyeOutline" color="grey-6" size="17px"></q-icon>
@@ -39,20 +39,21 @@
         <br />
         <br />
         <q-icon
-          :name="$i.ionBookmarkOutline"
-          color="grey-6"
+          :name="bookmarked ? $i.ionBookmark : $i.ionBookmarkOutline"
+          :style="{ color: bookmarked ? '#598FFC' : '#727272' }"
           size="17px"
           class="cursor-pointer"
+          @click="checkBookmark"
         ></q-icon>
         <br />
-        <span>{{ info.bookmark_num }}</span>
+        <span>{{ bookmark_num }}</span>
       </div>
     </q-card>
   </div>
 </template>
 
 <script>
-import { toggleForumLike } from '@/api/forum';
+import { toggleForumLike, toggleforumBookmark } from '@/api/forum';
 export default {
   props: {
     info: Object,
@@ -61,11 +62,16 @@ export default {
     return {
       liked: this.info.liked,
       like_num: this.info.like_num,
+      bookmarked: this.info.bookmarked,
+      bookmark_num: this.info.bookmark_num,
     };
   },
   watch: {
     info(newValue) {
-      (this.liked = newValue.liked), (this.like_num = newValue.like_num);
+      (this.liked = newValue.liked),
+        (this.like_num = newValue.like_num),
+        (this.bookmarked = newValue.bookmarked),
+        (this.bookmark_num = newValue.bookmark_num);
     },
   },
   methods: {
@@ -75,17 +81,30 @@ export default {
         return;
       }
       try {
-        await toggleForumLike(this.info.post_id);
+        await toggleForumLike(this.info.id);
         this.liked = !this.liked;
         if (this.liked) {
           this.like_num = this.like_num + 1;
         } else {
           this.like_num = this.like_num - 1;
         }
-        // console.log(this.liked);
-        // console.log(this.like_num);
-        // console.log(this.info.liked);
-        console.log(this.info);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async checkBookmark() {
+      if (!this.$store.getters.isLogined) {
+        alert('로그인을 해주세요');
+        return;
+      }
+      try {
+        const { data } = await toggleforumBookmark(this.info.id);
+        this.bookmarked = !this.bookmarked;
+        if (this.bookmarked) {
+          this.bookmark_num = this.bookmark_num + 1;
+        } else {
+          this.bookmark_num = this.bookmark_num - 1;
+        }
       } catch (error) {
         console.log(error);
       }

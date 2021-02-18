@@ -50,6 +50,7 @@ export default {
       status: '',
       forumBody: '',
       comments: '',
+      shortProfile: '',
     };
   },
   // computed: {
@@ -98,6 +99,7 @@ export default {
       this.contents = data;
       this.status = this.contents.forum_post[0];
       this.forumBody = this.contents.forum_post[0];
+      this.shortProfile = this.contents.writer_info[0];
     } catch (error) {
       console.log(error);
     }
