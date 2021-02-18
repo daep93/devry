@@ -145,12 +145,35 @@ def profile_show(request, profile_pk):
             if tags_list[single_tag] > 0:
                 real_tags[single_tag] = tags_list[single_tag]
 
+        # 팔로잉
+
+        profile_user = User.objects.get(username=ProfileSerializer(profile).data['username'])
+        profile_user_id = (ProfileSerializer(profile).data['user'])
+        request.user_id = UserSerializer(request.user).data['id']
+
+        # print(request.user_id)
+        if request.user != profile.user:
+            # if 
+            for single_user in UserSerializer(profile.user).data['followers']:
+                if request.user_id == single_user['user']:
+                    profile.is_following = True
+                else:
+                    profile.is_following = False
+
+
+
+        # user가 쓴 글들의 수
+        user_posts = Post.objects.filter(user=UserSerializer(request.user).data['id'])
+        user_qnas = Qna.objects.filter(user=UserSerializer(request.user).data['id'])
+        profile.post_num = (len(user_posts) + len(user_qnas))
+        # print(profile.post_num)
 
         # User정보 안에 저장된 follow 내역들을 profile에 저장하는 과정
         profile.follower_num = profile_user.follower_num
         profile.followee_num = profile_user.followee_num
         profile.save()
 
+        
         # 사용자가 작성한 qna, ans, pinned한 글들만 filter해줌
         qnas = Qna.objects.filter(user=ProfileSerializer(profile).data['user'])
         forums = Post.objects.filter(user=ProfileSerializer(profile).data['user'])

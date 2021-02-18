@@ -55,6 +55,13 @@ class ProfileForumPostsSerializer(serializers.ModelSerializer):
         fields = ('forums',)
 
 
+class ProfilePostNumberSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Profile
+        fields = ('post_num', )
+
+
 class ProfilePinnedQnaSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -127,7 +134,7 @@ class ProfileShowSerializer(serializers.ModelSerializer):
     forums_comments = ProfileForumCommentsSerializer(many=True, read_only=True)
     class Meta:
         model = Profile
-        fields = ('user', 'email', 'username', 'joined', 'follower_num', 'followee_num', 'profile_img', 'region', 'group', 'bio', 'link', 
+        fields = ('user', 'email', 'username', 'joined', 'follower_num', 'followee_num', 'profile_img', 'region', 'group', 'bio', 'link', 'is_following',
         'tech_stack', 'my_tags', 'project', 'tags', 'pinned_qnas', 'pinned_forums', 'qnas',  'forums','qnas_comments', 'forums_comments')
 
 
