@@ -280,7 +280,7 @@ export default {
     },
     onChangeImages(e) {
       this.file = e.target.files[0];
-      this.img = URL.createObjectURL(this.file);
+      this.profile_info.profile_img = URL.createObjectURL(this.file);
       // const file = this.$refs.imageInput.files[0];
     },
 

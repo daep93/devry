@@ -10,7 +10,7 @@ routerq.register('comment', CommentViewSet)
 
 urlpatterns = [
     path('forumtest/', include(routerq.urls)),
-    path('board/forum/feed', views.post_list),
+    path('board/forum/', views.post_list),
     path('board/forum/new', views.post_list_new),
     path('board/forum/like', views.post_list_like),
     path('board/forum/recommend', views.post_list_recommend),

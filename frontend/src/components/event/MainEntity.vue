@@ -21,7 +21,7 @@ export default {
   data() {
     return {
       num: '',
-      img_url: `${process.env.VUE_APP_SERVER_API_URL}${this.entity.thumnail}`,
+      img_url: this.entity.thumnail
     }
   },
   methods: {

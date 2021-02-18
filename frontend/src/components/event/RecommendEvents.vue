@@ -54,7 +54,6 @@
 </template>
 
 <script>
-// import { testCase } from '@/dummy/Events.js';
 import UpcomingEntity from '@/components/event/UpcomingEntity.vue';
 import { getEventList } from '@/api/board';
 
