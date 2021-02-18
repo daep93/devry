@@ -1,16 +1,15 @@
 <template>
   <div>
-    {{ userId }} aaaa
     <div v-for="(data, index) in followeeData" :key="index" class="q-pa-xs">
       <div class="q-pa-md row col-align" style="height:80px;">
         <div class="col-8 row" style="height:100%">
           <q-list style="min-width:300px; margin-left: 30px;">
             <q-item>
-              <q-item-section avatar>
+              <!-- <q-item-section avatar>
                 <q-avatar @click="goToProfile(index)" class="cursor-pointer"
                   ><img :src="data.profile_img" />
                 </q-avatar>
-              </q-item-section>
+              </q-item-section> -->
               <q-item-section>
                 <span
                   class="change-tag-color cursor-pointer"
@@ -110,11 +109,6 @@ export default {
   },
   async created() {
     try {
-      console.log('test');
-      // console.log(this.userId);
-      // console.log(this.$store.state.follow.tab);
-      // console.log(this.$store.state.follow.id);
-      // console.log(this.followId);
       this.getFollowee();
     } catch (error) {
       console.log(error);

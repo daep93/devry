@@ -29,6 +29,7 @@ export default {
       sideInfo: {},
       postInfo: {},
       loaded: false,
+      followerData: [],
     };
   },
   computed: {},

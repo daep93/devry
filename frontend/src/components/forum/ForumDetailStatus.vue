@@ -82,10 +82,6 @@ export default {
         } else {
           this.like_num = this.like_num - 1;
         }
-        // console.log(this.liked);
-        // console.log(this.like_num);
-        // console.log(this.info.liked);
-        console.log(this.info);
       } catch (error) {
         console.log(error);
       }

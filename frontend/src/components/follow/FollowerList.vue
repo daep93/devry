@@ -5,11 +5,11 @@
         <div class="col-8 row" style="height:100%">
           <q-list style="min-width:300px; margin-left: 30px;">
             <q-item>
-              <q-item-section avatar>
+              <!-- <q-item-section avatar>
                 <q-avatar @click="goToProfile(index)" class="cursor-pointer"
                   ><img :src="data.profile_img" />
                 </q-avatar>
-              </q-item-section>
+              </q-item-section> -->
               <q-item-section>
                 <span
                   class="change-tag-color cursor-pointer"

@@ -19,11 +19,35 @@
         <div class="col-9 q-pr-xl">
           <div class="row q-mb-sm justify-between">
             <span class="text-h5  text-indigo-14"> @{{ info.username }}</span>
-            <q-btn
+            <!-- <q-btn
               style="background-color:#1595DC;"
               class="text-white text-bold"
               >follow</q-btn
-            >
+            > -->
+            <template v-if="$store.state.id != info.userId">
+              <template v-if="!info.followStatus">
+                <q-btn
+                  no-caps
+                  color="primary"
+                  id="follow-btn"
+                  label="Follow"
+                  @click="toggleFollow"
+                  style="width: 200px"
+                  class="q-mb-sm row col-10"
+                />
+              </template>
+              <template v-else>
+                <q-btn
+                  no-caps
+                  outline
+                  color="primary"
+                  label="Following"
+                  @click="toggleFollow"
+                  style="width: 200px"
+                  class="q-mb-sm row col-10"
+                />
+              </template>
+            </template>
           </div>
           <!-- 사는 곳, 소속, 이메일 정보를 받는 행 -->
           <div class="row q-mb-md full-width">
@@ -79,9 +103,7 @@
               <span class="q-mr-md cursor-pointer" @click="onFollow('follow')"
                 >팔로워: <b>{{ info.followerNum }}</b></span
               >
-              <span
-                class="cursor-pointer"
-                @click="onFollow('following', info.userId)"
+              <span class="cursor-pointer" @click="onFollow('following')"
                 >팔로우: <b>{{ info.followeeNum }}</b></span
               >
             </div>
@@ -90,6 +112,11 @@
       </div>
       <div class="row q-px-xl q-my-md full-width">
         <div class="full-width">
+          <q-icon
+            :name="$i.ionChatboxEllipsesOutline"
+            style="color:#727272"
+            size="17px"
+          ></q-icon>
           {{ info.bio }}
         </div>
       </div>
@@ -98,19 +125,69 @@
 </template>
 
 <script>
+import { getOtherFollowerList, followOtherUser } from '@/api/follow';
+
 export default {
   props: {
     info: Object,
+  },
+  data() {
+    return {
+      followerData: [],
+    };
+  },
+  watch: {
+    info(newValue) {
+      this.followStatus = newValue.followStatus;
+    },
   },
   methods: {
     linkRedirect(url) {
       window.open(url);
     },
     onFollow(tab) {
-      // console.log(tab, id);
-      // this.$store.state.follow.id = this.info.userId;
       this.$store.commit('onFollowModal', [tab, this.$route.params.id]);
     },
+    async getFollower() {
+      try {
+        this.$q.loading.show();
+        const { data } = await getOtherFollowerList(this.info.userId);
+        this.followerData = data;
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.$q.loading.hide();
+      }
+    },
+    checkFollow() {
+      for (let data of this.followerData) {
+        if (data.user.id === this.$store.state.id) {
+          this.followStatus = true;
+        } else {
+          this.followStatus = false;
+        }
+      }
+    },
+    async toggleFollow() {
+      try {
+        this.$q.loading.show();
+        const want_pk = this.info.userId;
+        await followOtherUser(want_pk);
+        this.followStatus = !this.followStatus;
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.$q.loading.hide();
+      }
+    },
+  },
+  async created() {
+    try {
+      this.getFollower();
+      this.checkFollow();
+    } catch (error) {
+      console.log(error);
+    }
   },
 };
 </script>
