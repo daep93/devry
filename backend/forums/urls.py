@@ -15,7 +15,7 @@ urlpatterns = [
     path('forum/<int:post_pk>/', views.post_detail_update_delete),
     path('forum_like/<int:post_pk>/', views.like),
     path('forum_bookmark/<int:post_pk>/', views.bookmark),
-    path('forum_pinned/<int:user_pk>/', views.pinned),
+    path('forum_pinned/<int:post_pk>/', views.pinned),
     path('forum/mybookmark/', views.forum_mybookmark),
     path('forum/myforum/', views.forum_mypost),
     path('forum/mycomment/', views.forum_mycomment),

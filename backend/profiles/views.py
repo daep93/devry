@@ -22,6 +22,9 @@ from mysite.app_settings import TokenSerializer
 from qnas.serializers import QnaSerializer, AnsSerializer, QnapinnedSerializer
 from qnas.models import Qna, Ans
 
+from forums.serializers import PostSerializer, CommentSerializer, ForumpinnedSerializer
+from forums.models import Post, Comment
+
 from PIL import Image
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
@@ -121,7 +124,7 @@ def profile_show(request, profile_pk):
         serializer = ProfileShowSerializer(profile)
         # print(serializer.data)
 
-        email = User.objects.filter(pk=ProfileSerializer(profile).data['user']).first()
+        # email = User.objects.filter(pk=ProfileSerializer(profile).data['user']).first()
         profile_user = User.objects.get(pk=ProfileSerializer(profile).data['user'])
 
 
@@ -150,32 +153,45 @@ def profile_show(request, profile_pk):
 
         # 사용자가 작성한 qna, ans, pinned한 글들만 filter해줌
         qnas = Qna.objects.filter(user=ProfileSerializer(profile).data['user'])
-        comments = Ans.objects.filter(user=ProfileSerializer(profile).data['user'])
+        forums = Post.objects.filter(user=ProfileSerializer(profile).data['user'])
+        qna_comments = Ans.objects.filter(user=ProfileSerializer(profile).data['user'])
+        forum_comments = Comment.objects.filter(user=ProfileSerializer(profile).data['user'])
     
         user_for_pinned = ProfileSerializer(profile).data['user']
-        user_pinned_posts = []
+        user_pinned_qnas = []
         qnas_for_pinned = Qna.objects.all()
-        for single_pinned_post in qnas_for_pinned:
-            if user_for_pinned in QnapinnedSerializer(single_pinned_post).data['pinned_users']:
-                user_pinned_posts.append(QnaSerializer(single_pinned_post).data)
+        for single_pinned_qna in qnas_for_pinned:
+            if user_for_pinned in QnapinnedSerializer(single_pinned_qna).data['pinned_users']:
+                user_pinned_qnas.append(QnaSerializer(single_pinned_qna).data)
         
-        print(user_pinned_posts)
+        user_pinned_forums = []
+        forums_for_pinned = Post.objects.all()
+        for single_pinned_forum in forums_for_pinned:
+            if user_for_pinned in ForumpinnedSerializer(single_pinned_forum).data['pinned_users']:
+                user_pinned_forums.append(PostSerializer(single_pinned_forum).data)
+
 
 
         # 사용자 프로필의 각 필드에 해당 정보들을 추가해서 보여주는 과정
         for qna in qnas:
-            serializer.data['posts'].append(QnaSerializer(qna).data)
-        for comment in comments:
-            serializer.data['comments'].append(AnsSerializer(comment).data)
-            print(AnsSerializer(comment).data)
-            commented_post = Qna.objects.filter(id=AnsSerializer(comment).data['qna'])
-            print(commented_post)
+            serializer.data['qnas'].append(QnaSerializer(qna).data)
+        for forum in forums:
+            serializer.data['forums'].append(PostSerializer(forum).data)
+        for qna_comment in qna_comments:
+            serializer.data['qnas_comments'].append(AnsSerializer(qna_comment).data)
+        for forum_comment in forum_comments:
+            serializer.data['forums_comments'].append(CommentSerializer(forum_comment).data)
+
+            # commented_post = Qna.objects.filter(id=AnsSerializer(comment).data['qna'])
+            # print(commented_post)
             print(serializer.data)
-            print(AnsSerializer(comment).data['title'])
             # serializer.data['title'] += 'asdasd'
             
-        for pinned_post in user_pinned_posts:
-            serializer.data['pinned_posts'].append(pinned_post)
+        for pinned_qna in user_pinned_qnas:
+            serializer.data['pinned_qnas'].append(pinned_qna)
+
+        for pinned_forum in user_pinned_forums:
+            serializer.data['pinned_forums'].append(pinned_forum)
 
         serializer.data['tags'].update(real_tags)
         # serializer.data['title'].update()
@@ -303,16 +319,16 @@ def profile_setting(request, profile_pk):
 
             # 이미지 받아오기
             # serializer.validated_data['profile_img'] = ''
-            print(request.data)
-            print(serializer.validated_data)
-            # serializer.validated_data['profile_img'] = request.data['profile_img']
+            # print(request.data)
+            # print(serializer.validated_data)
+            serializer.validated_data['profile_img'] = request.data['profile_img']
 
 
-            # serializer.validated_data['bio'] = request.data['bio']
-            # serializer.validated_data['region'] = request.data['region']
-            # serializer.validated_data['group'] = request.data['group']
-            # serializer.validated_data['tech_stack'] = request.data['tech_stack']
-            # serializer.validated_data['my_tags'] = request.data['my_tags']
+            serializer.validated_data['bio'] = request.data['bio']
+            serializer.validated_data['region'] = request.data['region']
+            serializer.validated_data['group'] = request.data['group']
+            serializer.validated_data['tech_stack'] = request.data['tech_stack']
+            serializer.validated_data['my_tags'] = request.data['my_tags']
 
 
             serializer.validated_data['links'] = []
