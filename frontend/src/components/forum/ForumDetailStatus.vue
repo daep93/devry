@@ -88,6 +88,7 @@ export default {
         } else {
           this.like_num = this.like_num - 1;
         }
+<<<<<<< HEAD
       } catch (error) {
         console.log(error);
       }
@@ -105,6 +106,8 @@ export default {
         } else {
           this.bookmark_num = this.bookmark_num - 1;
         }
+=======
+>>>>>>> 70cd75a56cf70b42dc0f23ef2b006ea2ba213a59
       } catch (error) {
         console.log(error);
       }
