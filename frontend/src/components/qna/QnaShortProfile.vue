@@ -40,9 +40,8 @@
                   profile ? profile.username : info.user.username
                 }}</b>
                 <div class="text-caption row">
-                  글 ?? · 팔로워 {{ follower_num }}
-                  <!-- 글 {{ info.profile ? profile.post_num : 0 }} · 팔로워
-                  {{ profile ? profile.follow_num : 0 }} -->
+                  팔로잉 {{ info.user.followee_num }} · 팔로워
+                  {{ follower_num }}
                 </div>
               </div>
             </div>
@@ -122,7 +121,7 @@ export default {
     return {
       is_following: this.info.is_following,
       follower_num: this.info.user.follower_num,
-      img_url: `${process.env.VUE_APP_SERVER_API_URL}${this.info.profile.profile_img}`,
+      img_url: `${this.info.profile.profile_img}`,
     };
   },
   methods: {
