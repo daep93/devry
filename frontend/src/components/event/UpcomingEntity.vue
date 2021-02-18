@@ -65,10 +65,8 @@
 
 <script>
 import { toggleEventBookmark } from '@/api/event';
-// import { getEventList } from '@/api/board';
 import {
   colorSoloMapper,
-  // matchingColorSoloMapper,
 } from '@/utils/tagColorMapper';
 
 export default {
@@ -77,7 +75,6 @@ export default {
   },
   data() {
     return {
-      // profile_img: `${process.env.VUE_APP_SERVER_API_URL}${this.entity.profile_img}`,
       profile_img: this.entity.profile_img
     };
   },
@@ -111,11 +108,6 @@ export default {
       }
     },
   },
-  // computed: {
-  //   bookmark_data() {
-  //     console.log('변화가 있나?')
-  //   }
-  // }
 };
 </script>
 
