@@ -265,7 +265,7 @@ export default {
         console.log(this.file);
         this.$q.loading.show();
         // 썸네일을 우선 서버에 저장한다.
-        if (!this.file) {
+        if (this.file) {
           const frm = new FormData();
           frm.append('image', this.file);
           const { data } = await saveQnaImage(frm);
