@@ -24,9 +24,15 @@
         </span>
       </div>
       <!-- <forum-board></forum-board> -->
-      <bulletin-board :origin_board="board" v-if="loaded">
+      <bulletin-board
+        :origin_board="new_board"
+        :feed_board="feed_board"
+        v-if="loaded"
+        sorting="feed"
+      >
         <template slot="tab">
-          <q-tab name="time" label="최신글" />
+          <q-tab name="feed" label="피드" />
+          <q-tab name="latest" label="최신글" />
         </template>
         <template slot="entities" slot-scope="scopeProps">
           <div
@@ -46,7 +52,7 @@
 // import ForumBoard from '@/components/forum/ForumBoard';
 import BulletinBoard from '@/components/common/BulletinBoard';
 import ForumEntity from '@/components/forum/ForumEntity';
-import { getForumFeedList } from '@/api/board';
+import { loadForumNew, loadForumFeed } from '@/api/board';
 
 export default {
   components: {
@@ -55,7 +61,8 @@ export default {
   },
   data() {
     return {
-      board: [],
+      new_board: [],
+      feed_board: [],
       loaded: false,
     };
   },
@@ -71,9 +78,13 @@ export default {
     async loadBoard() {
       try {
         this.$q.loading.show();
-        const { data } = await getForumFeedList();
+        let { data } = await loadForumNew();
         // this.origin_board = data;
-        this.board = data;
+        this.new_board = data;
+        if (this.$store.getters.isLogined) {
+          let res = await loadForumFeed();
+          this.feed_board = res.data;
+        }
         this.loaded = true;
       } catch (error) {
         console.log(error);
