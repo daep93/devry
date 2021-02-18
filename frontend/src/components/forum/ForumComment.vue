@@ -25,7 +25,7 @@
                   </div>
                   <!-- <q-card flat bordered class="my-card col-11 q-pa-lg"> -->
                   <span class="text-body1 text-weight-bold">{{
-                    data.user.username
+                    data.username
                   }}</span>
                   <span class="q-ml-sm text-caption" style="color: gray">{{
                     data.written_time | moment('YYYY/MM/DD HH:mm')
@@ -38,7 +38,7 @@
               </div>
 
               <div class="row col-1 justify-end">
-                <div v-if="data.user.id == $store.state.id">
+                <div v-if="data.user == $store.state.id">
                   <div>
                     <q-btn flat round dense icon="more_vert">
                       <q-menu>

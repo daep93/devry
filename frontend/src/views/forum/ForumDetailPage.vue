@@ -92,6 +92,14 @@ export default {
   //     };
   //   },
   // },
+
+  //   shortProfile() {
+  //     return {
+  //       profile: this.contents.profile,
+  //       user: this.contents.user,
+  //     };
+  //   },
+
   async created() {
     const index = this.$route.params.id;
     try {
@@ -100,6 +108,7 @@ export default {
       this.status = this.contents.forum_post[0];
       this.forumBody = this.contents.forum_post[0];
       this.shortProfile = this.contents.writer_info[0];
+      this.comments = this.contents.comments;
     } catch (error) {
       console.log(error);
     }
