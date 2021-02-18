@@ -132,7 +132,7 @@ class PostListDetailSerializer(serializers.ModelSerializer):
 
 
 class AuthenticatedFeedSerializer(serializers.ModelSerializer):
-    # feed_list = PostListSerializer(many=True, read_only=True)
+    # feed_list = PostListSerializer(read_only=True, many=True)
     class Meta:
         model = Post
         fields = ('feed_list', )

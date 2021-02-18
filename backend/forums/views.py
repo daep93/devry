@@ -49,14 +49,14 @@ class CommentViewSet(viewsets.ModelViewSet):
 def post_list(request):
     """
     Post 글 목록 보기
-    피드를 통해 사용자가 팔로잉하고 있는 사용자의 일주일 이내 정보만 받는다
+    피드를 통해 사용자가 팔로잉하고 있는 사용자의 일주일 이내 정보를 제공합니다.
 
     ---
     """
     if request.META.get('HTTP_AUTHORIZATION'):       
         tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
         user=User.objects.get(id=tok.user_id)
-        request.user = user
+        # request.user = user
     if request.method == 'GET':
         print(request.user)
         posts = Post.objects.all().order_by('-written_time')   # 최신 순으로 정렬
@@ -71,11 +71,11 @@ def post_list(request):
 
 # 팔로우한 유저이면서 7일 이내의 게시글만 불러오기
     real_posts = Post.objects.filter(user__in=following_users, written_time__gte=datetime.now()-timedelta(days=7))  
-    serializer = AuthenticatedFeedSerializer(read_only=True)
+    serializer = AuthenticatedFeedSerializer()
 
     print(real_posts)
     for i in range(len(real_posts)):
-        post_user = User.objects.get(id=PostSerializer(posts[i]).data['user'])
+        post_user = User.objects.get(id=PostSerializer(real_posts[i]).data['user'])
         post_user_profile = Profile.objects.get(username=post_user)
 
         serializer.data['feed_list'].append(PostListSerializer(real_posts[i]).data)
@@ -122,7 +122,7 @@ def post_list_new(request):
         post_user_profile = Profile.objects.get(username=post_user)
 
         serializer.data['feed_list'].append(PostListDetailSerializer(posts[i]).data)
-        serializer.data['feed_list'][0]['user_info'].append(ProfilepostListSerializer(post_user_profile).data)
+        serializer.data['feed_list'][i]['user_info'].append(ProfilepostListSerializer(post_user_profile).data)
 
 
         posts[i].like_num = posts[i].like_users.count() 
@@ -199,17 +199,17 @@ def post_list_recommend(request):
         post_user = User.objects.get(username=request.user)
         post_user_profile = Profile.objects.get(username=post_user)
         
-
+        print(posts_for_unauthorized_user)
 
         # post_user = User.objects.get(id=PostSerializer(posts_for_unauthorized_user).data)
         # post_user_profile = Profile.objects.get(username=post_user)
         for i in posts_for_unauthorized_user:
-            # print(ProfilepostListSerializer.data)
-            # serializer.data['recommend_list'].append('sads')
+            # print(i)
+            # print(ProfilepostListSerializer(i).data)
 
 
-            print(serializer.data['recommend_list'])
-            serializer.data['recommend_list'].append(ProfilepostListSerializer.data)
+            # print(serializer.data['recommend_list'])
+            serializer.data['recommend_list'].append(PostListDetailSerializer(i).data)
             # serializer.data['recommend_list']['user_info'].append(ProfilepostListSerializer(post_user_profile).data)
 
 
