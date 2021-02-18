@@ -53,6 +53,7 @@ from profiles.models import Profile
 from profiles.serializers import ProfileSerializer
 from django.shortcuts import get_object_or_404
 
+
 sensitive_post_parameters_m = method_decorator(
     sensitive_post_parameters('password1', 'password2')
 )
@@ -191,7 +192,6 @@ class UserLoginView(GenericAPIView):
                     "token": serializer.data['key']
                 })
 
-
         if getattr(settings, 'REST_USE_JWT', False):
             from rest_framework_jwt.settings import api_settings as jwt_settings
             if jwt_settings.JWT_AUTH_COOKIE:
@@ -218,11 +218,12 @@ class UserLogoutView(LogoutView):
     headers={'Authorization': 'Token your_token'}
     """
     def post(self, request):
-        if request.META.get('HTTP_AUTHORIZATION'):
+        if request.META.get('HTTP_AUTHORIZATION'):           
             tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
             user=User.objects.get(id=tok.user_id)
-            if tok == user:
-                TokenSerializer(user.auth_token).remove()
+            request.user = user
+        Token.objects.get(user_id=request.user.pk).delete()
+        # TokenSerializer(request.user.auth_token).remove()
         return Response('로그아웃되었습니다', status=status.HTTP_204_NO_CONTENT)
 
 
@@ -378,6 +379,46 @@ def myfollow_list(request):
         return Response(serializer.data)
 
 
+@api_view(['GET', 'POST'])
+def yourfollower_list(request, want_pk):
+    if request.META.get('HTTP_AUTHORIZATION'):
+        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        my=User.objects.get(id=tok.user_id)
+        request.user = my
+    
+    if request.method == 'GET':
+        follows = UserFollowing.objects.all()
+        fos = follows.filter(following_user=want_pk)
+        for fo in fos:
+            if UserFollowing.objects.filter(following_user=fo.user, user=want_pk).exists():
+                fo.is_following = "True"
+            else:
+                fo.is_following = "False"
+            fo.save()
+        serializer = isfollowingSerializer(fos, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['GET', 'POST'])
+def yourfollow_list(request, want_pk):
+    if request.META.get('HTTP_AUTHORIZATION'):
+        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        my=User.objects.get(id=tok.user_id)
+        request.user = my
+        
+    if request.method == 'GET':
+        follows = UserFollowing.objects.all()
+        fos = follows.filter(user=want_pk)
+        for fo in fos:
+            if UserFollowing.objects.filter(user=want_pk).exists():
+                fo.is_following = "True"
+            else:
+                fo.is_following = "False"
+            fo.save()
+        serializer = isfollowingSerializer(fos, many=True)
+        return Response(serializer.data)
+
+
 @api_view(['GET','POST'])
 def toggle_following(request, want_pk):
     if request.META.get('HTTP_AUTHORIZATION'):
@@ -424,17 +465,6 @@ def toggle_following(request, want_pk):
             return Response("following ")
             
 
-@api_view(['DELETE'])
-@permission_classes([AllowAny])
-def delete(request):
-    if request.method == 'DELETE':
-        serializer = deleteSerializer(data=request.data)
-        email = request.data.get('email')
-        user = User.objects.get(email=email)
-        user.delete()
-        return Response({'email': email}, status=status.HTTP_204_NO_CONTENT)
-
-
 class UserPasswordResetView(PasswordResetView):
     template_name = 'accounts/password_reset.html' #템플릿을 변경하려면 이와같은 형식으로 입력
     success_url = reverse_lazy('password_reset_done')
@@ -467,3 +497,18 @@ class UserPasswordResetCompleteView(PasswordResetCompleteView):
         context = super().get_context_data(**kwargs)
         context['login_url'] = resolve_url(settings.LOGIN_URL)
         return context
+
+
+@api_view(['GET', 'DELETE'])
+@permission_classes([AllowAny])
+def delete(request):
+    if request.META.get('HTTP_AUTHORIZATION'):
+        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        my=User.objects.get(id=tok.user_id)
+        request.user=my
+
+    if request.method == 'DELETE':
+        info = request.user
+        info.delete()
+        return Response({'email': info.email}, status=status.HTTP_204_NO_CONTENT)
+    return Response("회원탈퇴 페이지입니다")

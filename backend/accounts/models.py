@@ -23,7 +23,6 @@ from multiselectfield import MultiSelectField
 from rest_framework.authtoken.models import Token as DefaultTokenModel
 from mysite.utils import import_callable
 
-# Create your models here.
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
@@ -136,7 +135,6 @@ class Mentioned(models.Model):
     user = models.ForeignKey(User, related_name="mention_user", on_delete=models.CASCADE)
     mentioned_user = models.ForeignKey(User, related_name="mentioned_user", on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
-    # comment = models.ManyToManyField('forums.Comment', blank=True, related_name='mentioned_comment')
     comment = models.ForeignKey('forums.Comment', blank=True, on_delete=models.CASCADE, related_name='mentioned_comment')
 
 
