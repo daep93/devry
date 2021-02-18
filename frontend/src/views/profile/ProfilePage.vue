@@ -62,7 +62,6 @@ export default {
       };
       this.postInfo = {
         qnas: data.qnas,
-        forums: data.forums,
         comments: [...data.qnas_comments, ...data.forums_comments],
         qnas_pinned: data.pinned_qnas,
         forums_pinned: data.pinned_forums,
