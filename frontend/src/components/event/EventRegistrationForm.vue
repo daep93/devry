@@ -386,6 +386,14 @@ export default {
       second_file: '',
     }
   },
+  watch: {
+    file() {
+      this.thumnail = URL.createObjectURL(this.file);
+    },
+    second_file() {
+      this.profile_img = URL.createObjectURL(this.second_file);
+    }
+  },
   methods: {
     addOneTag(tagItem) {
       this.ref_tags.push(tagItem);
