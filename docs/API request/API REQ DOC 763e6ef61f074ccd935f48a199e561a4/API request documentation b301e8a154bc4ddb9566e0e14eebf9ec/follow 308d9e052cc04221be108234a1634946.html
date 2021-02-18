@@ -1,0 +1,711 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>follow</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="308d9e05-2cc0-4221-be10-8234a1634946" class="page sans"><header><h1 class="page-title">follow</h1><table class="properties"><tbody><tr class="property-row property-row-person"><th><span class="icon property-icon"><svg viewBox="0 0 14 14" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.4);flex-shrink:0;-webkit-backface-visibility:hidden" class="typesPerson"><path d="M9.625,10.8465 C8.91187,10.2891 8.12088,9.926 7,9.26013 L7,8.71938 C7.21175,8.47612 7.392,8.176 7.53813,7.83213 C7.94587,7.7315 8.3125,7.33425 8.3125,7 C8.3125,6.51788 8.1095,6.32713 7.8715,6.17137 C7.8715,6.15562 7.875,6.14162 7.875,6.125 C7.875,5.41362 7.4375,3.5 5.25,3.5 C3.0625,3.5 2.625,5.4145 2.625,6.125 C2.625,6.14162 2.6285,6.15562 2.6285,6.17137 C2.3905,6.32713 2.1875,6.51788 2.1875,7 C2.1875,7.33425 2.55413,7.7315 2.96187,7.833 C3.108,8.176 3.28825,8.47612 3.5,8.71938 L3.5,9.26013 C2.37912,9.92513 1.58812,10.2882 0.875,10.8465 C0.041125,11.4984 0,12.4688 0,14 L10.5,14 C10.5,12.4688 10.4589,11.4984 9.625,10.8465 Z M13.125,7.3465 C12.4119,6.78912 11.6209,6.426 10.5,5.76013 L10.5,5.21938 C10.7118,4.97613 10.892,4.676 11.0381,4.33213 C11.4459,4.2315 11.8125,3.83425 11.8125,3.5 C11.8125,3.01787 11.6095,2.82713 11.3715,2.67138 C11.3715,2.65562 11.375,2.64162 11.375,2.625 C11.375,1.91363 10.9375,0 8.75,0 C6.5625,0 6.125,1.9145 6.125,2.625 C6.125,2.64162 6.1285,2.65562 6.1285,2.67138 C6.11188,2.68275 6.09787,2.69588 6.08125,2.70725 C7.83212,3.066 8.59688,4.54825 8.72813,5.74787 C8.97575,6.00863 9.1875,6.39625 9.1875,7 C9.1875,7.60288 8.771,8.20312 8.18388,8.51462 C8.127,8.624 8.06662,8.729 8.00275,8.82962 C8.155,8.91537 8.30025,8.99675 8.44025,9.07463 C9.08075,9.4325 9.63375,9.74137 10.164,10.1561 C10.3022,10.2638 10.4204,10.3801 10.5289,10.4991 L14,10.4991 C14,8.96875 13.9589,7.99837 13.125,7.3465 Z"></path></svg></span>배정</th><td></td></tr><tr class="property-row property-row-select"><th><span class="icon property-icon"><svg viewBox="0 0 14 14" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.4);flex-shrink:0;-webkit-backface-visibility:hidden" class="typesSelect"><path d="M7,13 C10.31348,13 13,10.31371 13,7 C13,3.68629 10.31348,1 7,1 C3.68652,1 1,3.68629 1,7 C1,10.31371 3.68652,13 7,13 Z M3.75098,5.32278 C3.64893,5.19142 3.74268,5 3.90869,5 L10.09131,5 C10.25732,5 10.35107,5.19142 10.24902,5.32278 L7.15771,9.29703 C7.07764,9.39998 6.92236,9.39998 6.84229,9.29703 L3.75098,5.32278 Z"></path></svg></span>상태</th><td><span class="selected-value select-value-color-pink">수정 요구</span></td></tr></tbody></table></header><div class="page-body"><p id="8e24931e-b375-4f11-84c2-25796d059a8b" class=""><strong>용어 설명</strong></p><ul id="f16e0930-fc5c-4872-a4cd-05cb03fda1ee" class="bulleted-list"><li>토큰 유저: 헤더에 토큰을 넣어서 api 요청을 하는 유저</li></ul><ul id="94ebf2f0-9fb7-45bd-a621-09ffe9360db9" class="bulleted-list"><li>프로필 유저: 토큰 유저가 현재 보고 있는 프로필의 유저</li></ul><ul id="ec13fd27-e379-4ce4-b78c-05521e972d25" class="bulleted-list"><li>팔로워 (follower) : 프로필 유저를 팔로잉을 하는 사람</li></ul><ul id="355718e7-4d49-440b-8160-328ce8026ab8" class="bulleted-list"><li>팔로이 (followee): 프로필 유저가 팔로잉 하는 사람</li></ul><p id="6562b3c1-ba91-4945-8ec8-801b3acc8846" class=""><strong>상황 설명</strong></p><p id="70621d07-804a-4539-9f70-5fc432c440aa" class="">토큰 유저가 프로필 유저의 프로필을 보고 팔로워 수 또는 팔로이 수를 누를 경우 구체적인 팔로워/팔로이 목록이 보이는 모달을 띄우낟.</p><h3 id="07b09d4d-543b-4ff5-a21d-c3f7da9f9907" class=""><mark class="highlight-red_background"><strong>팔로워 목록 불러오기</strong></mark></h3><ul id="f383c0b7-2914-4476-9a99-ef01c6c388e0" class="bulleted-list"><li>url mapping:  (&#x27;follow/followers&#x27;)</li></ul><ul id="f4eb6815-1f64-4680-bbbe-4f8480e3b690" class="bulleted-list"><li>method: get</li></ul><ul id="7c54e9f0-f676-46ab-9e10-8410238dc957" class="bulleted-list"><li>헤더에 사용자 인증 토큰 첨부 여부 : O (로그인 하지 않은 경우 토큰에는 빈 값이 들어간다)</li></ul><ul id="dfc27904-badf-4111-93aa-eafcda701187" class="bulleted-list"><li>설명 :  프로필 유저의 팔로워 목록 정보를 요청. 토큰을 통해 is_following 값이 결정된다. </li></ul><ul id="faa221aa-58e9-40df-a207-54afde8f6e98" class="bulleted-list"><li>전송할 data : <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css')</style><pre id="ceb39953-0e9c-42af-a495-dd042059c123" class="code"><code><span class="token comment">// form</span>
+<span class="token punctuation">{</span>
+	user_id<span class="token punctuation">,</span> <span class="token comment">// 프로필 유저의 아이디</span>
+<span class="token punctuation">}</span></code></pre><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css')</style><pre id="4ab57fb0-a570-4a39-91b9-31def25a0275" class="code"><code><span class="token comment">// example</span>
+<span class="token punctuation">{</span>
+	user_id<span class="token operator">:</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token comment">// 프로필 유저의 아이디</span>
+<span class="token punctuation">}</span></code></pre></li></ul><ul id="b4856e6f-e720-43cd-8867-df62ee19bcd4" class="bulleted-list"><li>기대하는 response data :<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css')</style><pre id="07d04130-4ae4-4995-9d47-e490f5da90f5" class="code"><code><span class="token comment">// form</span>
+<span class="token punctuation">{</span>
+    follower_list<span class="token operator">:</span>
+    <span class="token punctuation">[</span>  <span class="token comment">// 팔로워들의 정보 list</span>
+       <span class="token punctuation">{</span>
+           user_id<span class="token punctuation">,</span>              <span class="token comment">// 해당 팔로워를 구분해 줄 id</span>
+					 username<span class="token punctuation">,</span>        <span class="token comment">// 해당 팔로워의 닉네임</span>
+           profile_img<span class="token punctuation">,</span>     <span class="token comment">// 해당 팔로워의 프로필 이미지</span>
+           follower_num<span class="token punctuation">,</span>    <span class="token comment">// 해당 팔로워가 가진 팔로워 수</span>
+           post_num<span class="token punctuation">,</span>        <span class="token comment">// 해당  팔로워가 작성한 글의 갯수</span>
+           is_following<span class="token punctuation">,</span>    <span class="token comment">// 토큰 유저가 해당 팔로워를 팔로잉하고 있는지 여부 </span>
+       <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">]</span>
+<span class="token punctuation">}</span></code></pre><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css')</style><pre id="2d579fbd-e20d-4017-a14a-51f04d49a42b" class="code"><code><span class="token comment">// example</span>
+<span class="token punctuation">{</span>
+		follower_list<span class="token operator">:</span> <span class="token punctuation">[</span>
+	        <span class="token punctuation">{</span>
+	          user_id<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+	          username<span class="token operator">:</span> <span class="token string">'유저'</span><span class="token punctuation">,</span>
+	          profile_img<span class="token operator">:</span> <span class="token string">'https://cdn.quasar.dev/img/avatar.png'</span><span class="token punctuation">,</span>
+	          follower_num<span class="token operator">:</span> <span class="token number">50</span><span class="token punctuation">,</span>
+	          post_num<span class="token operator">:</span> <span class="token number">10</span><span class="token punctuation">,</span>
+	          is_following<span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+	        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+					<span class="token punctuation">{</span>
+	          user_id<span class="token operator">:</span> <span class="token number">2</span><span class="token punctuation">,</span>
+	          username<span class="token operator">:</span> <span class="token string">'유저2'</span><span class="token punctuation">,</span>
+	          profile_img<span class="token operator">:</span> <span class="token string">'https://cdn.quasar.dev/img/boy-avatar.png'</span><span class="token punctuation">,</span>
+	          follower_num<span class="token operator">:</span> <span class="token number">22</span><span class="token punctuation">,</span>
+	          post_num<span class="token operator">:</span> <span class="token number">6</span><span class="token punctuation">,</span>
+	          is_following<span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+	        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+					<span class="token comment">// 이와 같이 유저 숫자 만큼 리스트 안에 담아서 보내주시면 됩니다.</span>
+		<span class="token punctuation">]</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</code></pre></li></ul><p id="51c8a781-c948-4138-a717-8e3a905e99c7" class="">
+</p><h3 id="195d968b-1bcb-4d22-82ae-c42c69e1520b" class=""><mark class="highlight-red_background"><strong>팔로이 목록 불러오기</strong></mark></h3><ul id="a31d96b8-4403-45e9-aaf9-67ae2398e220" class="bulleted-list"><li>url mapping:  (&#x27;follow/followees)</li></ul><ul id="da71a5d3-e8a2-4acf-8517-100a81282cdd" class="bulleted-list"><li>method: get</li></ul><ul id="ababb03f-e690-4221-a8d2-a45573f0e859" class="bulleted-list"><li>헤더에 사용자 인증 토큰 첨부 여부 : O (로그인 하지 않은 경우 토큰에는 빈 값이 들어간다)</li></ul><ul id="b9f5c5ce-27f7-445a-bdd0-76f5d80dbf32" class="bulleted-list"><li>설명 : user_id의 팔로워 목록 정보를 요청. 토큰을 통해 is_following 값이 결정된다. </li></ul><ul id="9a100afd-6da1-4168-831e-1b91008f683c" class="bulleted-list"><li>전송할 data:<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css')</style><pre id="8bd1647b-6f2d-48f6-b359-c70bd1616087" class="code"><code><span class="token comment">// form</span>
+<span class="token punctuation">{</span>
+	user_id<span class="token punctuation">,</span> <span class="token comment">// 프로필 유저의 아이디</span>
+<span class="token punctuation">}</span></code></pre><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css')</style><pre id="d4ec3331-100d-40b5-92f4-19bd53b16e40" class="code"><code><span class="token comment">// example</span>
+<span class="token punctuation">{</span>
+	user_id<span class="token operator">:</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token comment">// 프로필 유저의 아이디</span>
+<span class="token punctuation">}</span></code></pre></li></ul><ul id="236ee4e3-67ba-47e5-a1fd-e23af2e01b1f" class="bulleted-list"><li>기대하는 response data :<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css')</style><pre id="5b578404-461a-4cbb-a68f-73eff45d53f6" class="code"><code><span class="token comment">// form</span>
+<span class="token punctuation">{</span>
+    followee_list<span class="token operator">:</span> 
+    <span class="token punctuation">[</span>  <span class="token comment">// 팔로워들의 정보 list</span>
+       <span class="token punctuation">{</span>
+            user_id<span class="token punctuation">,</span>              <span class="token comment">// 팔로이들을 구분해 줄 id</span>
+            username<span class="token punctuation">,</span>        <span class="token comment">// 해당 팔로이의 닉네임</span>
+						profile_img<span class="token punctuation">,</span>     <span class="token comment">// 해당 팔로이의 프로필 이미지</span>
+            follower_num<span class="token punctuation">,</span>    <span class="token comment">// 해당 팔로이가 가진 팔로워 수</span>
+            post_num<span class="token punctuation">,</span>        <span class="token comment">// 해당 팔로이가 작성한 글의 갯수</span>
+					  is_following<span class="token punctuation">,</span>    <span class="token comment">// 토큰 유저가 해당 팔로이를 팔로잉하고 있는지 여부 </span>
+       <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">]</span>
+<span class="token punctuation">}</span></code></pre><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css')</style><pre id="558fee83-89f4-4586-bb01-4bb366bfbddd" class="code"><code><span class="token comment">// example</span>
+<span class="token punctuation">{</span>
+	followee_list<span class="token operator">:</span> <span class="token punctuation">[</span>
+	        <span class="token punctuation">{</span>
+	          id<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+	          username<span class="token operator">:</span> <span class="token string">'유저'</span><span class="token punctuation">,</span>
+	          profile_img<span class="token operator">:</span> <span class="token string">'img/boy-avatar.png'</span><span class="token punctuation">,</span>
+	          follower_num<span class="token operator">:</span> <span class="token number">50</span><span class="token punctuation">,</span>
+	          post_num<span class="token operator">:</span> <span class="token number">10</span><span class="token punctuation">,</span>
+	        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+	        <span class="token punctuation">{</span>
+	          id<span class="token operator">:</span> <span class="token number">2</span><span class="token punctuation">,</span>
+	          username<span class="token operator">:</span> <span class="token string">'유저2'</span><span class="token punctuation">,</span>
+	          profile_img<span class="token operator">:</span> <span class="token string">'img/avatar.png'</span><span class="token punctuation">,</span>
+	          follower_num<span class="token operator">:</span> <span class="token number">22</span><span class="token punctuation">,</span>
+	          post_num<span class="token operator">:</span> <span class="token number">6</span><span class="token punctuation">,</span>
+	        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+					<span class="token comment">// 이와 같이 유저 숫자 만큼 리스트 안에 담아서 보내주시면 됩니다.</span>
+		<span class="token punctuation">]</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span></code></pre></li></ul><p id="ae923829-e846-4c54-8948-de0c3499f7f1" class="">
+</p><h3 id="f8478aee-64e7-4104-8784-0466ffe0f32c" class=""><mark class="highlight-red_background"><strong>팔로잉</strong></mark></h3><ul id="ee90ae91-fc34-4834-ada9-83008785d266" class="bulleted-list"><li>url mapping:  (&#x27;/follow/:user_id&#x27;)</li></ul><ul id="148ad460-09d2-444f-8569-67a571972738" class="bulleted-list"><li>method: put</li></ul><ul id="07cac63c-694b-48e3-b55d-e5441e72c373" class="bulleted-list"><li>헤더에 사용자 인증 토큰 첨부 여부 : O </li></ul><ul id="25b4ba92-b87c-43f8-bb53-7020b67c0e47" class="bulleted-list"><li>설명: 토큰 유저가 user_id에 해당하는 사용자를 팔로우할 수 있도록 요청</li></ul><ul id="cf78085b-0960-479f-a66a-13ff789e8df6" class="bulleted-list"><li>전송할 data : 없음</li></ul><ul id="62dbb75e-3a02-42d7-a98a-0d94789ec8eb" class="bulleted-list"><li>기대하는 response data : 없음</li></ul><p id="e9760938-4bcf-4733-8982-0877ff2a087e" class="">
+</p><h3 id="7767d008-3b6d-47be-a0f6-d04bd5478731" class=""><mark class="highlight-red_background">언팔로잉</mark></h3><ul id="6d94bc8e-0fc9-4679-a722-f9907ba1e708" class="bulleted-list"><li>url mapping:  (&#x27;/follow/:user_id&#x27;)</li></ul><ul id="aef9ca98-7dcf-4d57-8ecd-7defccccaecc" class="bulleted-list"><li>method: delete</li></ul><ul id="00b99caf-a919-49e5-a28f-846cd4515026" class="bulleted-list"><li>헤더에 사용자 인증 토큰 첨부 여부 : O </li></ul><ul id="b53b7784-0deb-498a-b5e0-23558e0d818d" class="bulleted-list"><li>설명: 토큰 유저가 user_id에 해당하는 사용자를 언팔로우할 수 있도록 요청</li></ul><ul id="16b70d50-220d-4442-85b8-db1a6f2377dd" class="bulleted-list"><li>전송할 data : 없음</li></ul><ul id="9cd20fd6-787d-4642-9f33-516f18338960" class="bulleted-list"><li>기대하는 response data : 없음
+</li></ul><p id="da185470-3bce-41e2-9c42-4c8a0e88423d" class="">
+</p></div></article></body></html>
