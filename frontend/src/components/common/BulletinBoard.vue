@@ -101,7 +101,9 @@ export default {
   computed: {
     // watch로 감시하기 위해서 store의 데이터를 selectedTags에 담음.
     selectedTags() {
-      return this.$store.getters.getSelectedTags;
+      return this.$store.getters.getSelectedTags.length
+        ? this.$store.getters.getSelectedTags
+        : this.$store.state.all_tag_list;
     },
   },
   methods: {

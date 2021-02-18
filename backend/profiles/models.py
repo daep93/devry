@@ -111,6 +111,7 @@ class Profile(models.Model):
     projects = models.TextField()
     thumbnail = models.OneToOneField(ForumImagePost, on_delete=models.CASCADE, blank=True, null=True, related_name='forum_image')
     is_following = models.BooleanField(default=False)
+    post_num = models.PositiveIntegerField(default=0)
     joined = models.DateTimeField(blank=True, null=True)
     tags = models.TextField(blank=True)
 

@@ -7,6 +7,8 @@ import os
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 
+
+
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -14,11 +16,11 @@ from rest_framework.response import Response
 from .serializers import PostListSerializer, ProfilepostSerializer, PostListforamtSerializer, PostSerializer,CommentSerializer, likeSerializer, bookmarkSerializer, like_commentSerializer, \
     UserinfoSerializer,ProfileListSerializer ,PostdetailSerializer,CommentlistSerializer,CommentdetailSerializer, PostDetailCommentSerializer, DetailCommentSerializer, pinnedSerializer,  \
         ProfilepostSerializer, ForumPostSerializer, pinnedDetailSerializer, PostMentionedCommentSerializer, DetailCommentMentionedSerializer, MentionedCommentSerializer, MentionedUserInfoSerializer, \
-            ImagePostSerializer, AuthenticatedFeedSerializer, PostdetailSerializer, ProfilepostListSerializer
+            ImagePostSerializer, AuthenticatedFeedSerializer, PostdetailSerializer, ProfilepostListSerializer, ForumpinnedSerializer, UnauthorizedFeedSerializer, PostListDetailSerializer
 from .models import Post, Comment
 from rest_framework import viewsets
 from profiles.models import Profile
-from profiles.serializers import ProfileSerializer
+from profiles.serializers import ProfileSerializer, ProfilePostNumberSerializer
 from accounts.models import User, Mentioned
 from accounts.serializers import UserSerializer
 from qnas.models import Qna
@@ -41,10 +43,63 @@ class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
 
 
+
+
 @api_view(['GET'])
 def post_list(request):
     """
     Post 글 목록 보기
+    피드를 통해 사용자가 팔로잉하고 있는 사용자의 일주일 이내 정보를 제공합니다.
+
+    ---
+    """
+    if request.META.get('HTTP_AUTHORIZATION'):       
+        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user=User.objects.get(id=tok.user_id)
+        # request.user = user
+    if request.method == 'GET':
+        print(request.user)
+        posts = Post.objects.all().order_by('-written_time')   # 최신 순으로 정렬
+        following_users = []
+
+        # 사용자의 유저 정보에 팔로잉이 있는 경우 = API로 확인이 가능한 경우
+    if request.user != 'AnonymousUser':
+        if len(UserSerializer(request.user).data['following']):
+            for i in UserSerializer(request.user).data['following']:
+                if i['following_user'] not in following_users:
+                    following_users.append(i['following_user'])
+
+# 팔로우한 유저이면서 7일 이내의 게시글만 불러오기
+    real_posts = Post.objects.filter(user__in=following_users, written_time__gte=datetime.now()-timedelta(days=7))  
+    serializer = AuthenticatedFeedSerializer()
+
+    print(real_posts)
+    for i in range(len(real_posts)):
+        post_user = User.objects.get(id=PostSerializer(real_posts[i]).data['user'])
+        post_user_profile = Profile.objects.get(username=post_user)
+
+        serializer.data['feed_list'].append(PostListSerializer(real_posts[i]).data)
+        serializer.data['feed_list'][i]['user_info'].append(ProfilepostListSerializer(post_user_profile).data)
+
+
+#         # 토큰을 이용한 사용자 획인 코드
+#         # post number in user_id -> It will be "True"       
+
+        real_posts[i].like_num = real_posts[i].like_users.count() 
+        if real_posts[i].like_users.filter(id=request.user.pk).exists():
+            real_posts[i].liked = "True"      
+        else:
+            real_posts[i].liked = "False"
+        real_posts[i].save()  
+                
+    return Response(serializer.data)
+
+
+
+@api_view(['GET'])
+def post_list_new(request):
+    """
+    Post 글 목록 보기(최신순)
 
     ---
     """
@@ -55,45 +110,119 @@ def post_list(request):
     if request.method == 'GET':
         print(request.user)
         posts = Post.objects.all().order_by('-written_time')   # 최신 순으로 정렬
-        following_users = []
-        # 사용자의 유저 정보에 팔로잉이 있는 경우 = API로 확인이 가능한 경우
-        if request.user != 'AnonymousUser':
-            if len(UserSerializer(request.user).data['following']):
-                for i in UserSerializer(request.user).data['following']:
-                    if i['following_user'] not in following_users:
-                        following_users.append(i['following_user'])
+        serializer = AuthenticatedFeedSerializer()
 
-                real_posts = Post.objects.filter(user__in=following_users, written_time__gte=datetime.now()-timedelta(days=7))  # 팔로우한 유저이면서 7일 이내의 게시글만 불러오기
-                posts_for_unauthorized_user = Post.objects.filter(written_time__gte=datetime.now()-timedelta(days=7)).order_by('-like_num')
-                serializer = AuthenticatedFeedSerializer(real_posts, many=True)
-                for i in range(len(real_posts)):
-                    post_user = User.objects.get(id=PostSerializer(posts[i]).data['user'])
-                    post_user_profile = Profile.objects.get(username=post_user)
-                    serializer.data[i]['feed_list'].append(PostListSerializer(posts[i]).data)
-                    serializer.data[i]['feed_list'][0]['user_info'].append(ProfilepostListSerializer(post_user_profile).data)
-                    serializer.data[i]['recommend_list'].append(PostListforamtSerializer(posts_for_unauthorized_user[i]).data)
-                    # serializer.data[i]['recommend_list'][0]['user'] = (PostListforamtSerializer(posts_for_unauthorized_user[i]).data['profile_img'])
-                # 토큰을 이용한 사용자 획인 코드
-                # post number in user_id -> It will be "True"       
 
-                    real_posts[i].like_num = real_posts[i].like_users.count() 
-                    if real_posts[i].like_users.filter(id=request.user.pk).exists():
-                        real_posts[i].liked = "True"      
-                    else:
-                        real_posts[i].liked = "False"
-                    real_posts[i].save()  
-                
-            # 확인된 api 요청 사용자이지만 팔로잉 정보가 없을 때-> 1주일 이내의 글을 좋아요 많은 순서대로 정렬
-            else:
-                posts_for_unauthorized_user = Post.objects.filter(written_time__gte=datetime.now()-timedelta(days=7)).order_by('-like_num')
-                serializer = AuthenticatedFeedSerializer(posts_for_unauthorized_user, many=True)
+        post_user = User.objects.get(username=request.user)
+        post_user_profile = Profile.objects.get(username=post_user)
+        
 
-                for i in range(len(posts_for_unauthorized_user)):
-                    serializer.data[i]['recommend_list'].append(PostListforamtSerializer(posts_for_unauthorized_user[i]).data)
+    for i in range(len(posts)):
+        post_user = User.objects.get(id=PostSerializer(posts[i]).data['user'])
+        post_user_profile = Profile.objects.get(username=post_user)
+
+        serializer.data['feed_list'].append(PostListDetailSerializer(posts[i]).data)
+        serializer.data['feed_list'][i]['user_info'].append(ProfilepostListSerializer(post_user_profile).data)
+
+
+        posts[i].like_num = posts[i].like_users.count() 
+        if posts[i].like_users.filter(id=request.user.pk).exists():
+            posts[i].liked = "True"      
+        else:
+            posts[i].liked = "False"
+        posts[i].save()  
+
+    return Response(serializer.data)
 
 
 
-        return Response(serializer.data) 
+@api_view(['GET'])
+def post_list_like(request):
+    """
+    Post 글 목록 보기(좋아요 많은 순)
+
+    ---
+    """
+    if request.META.get('HTTP_AUTHORIZATION'):       
+        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user=User.objects.get(id=tok.user_id)
+        request.user = user
+    if request.method == 'GET':
+        print(request.user)
+        posts = Post.objects.all().order_by('-like_num')   # 좋아요 많은 순으로 정렬
+        serializer = AuthenticatedFeedSerializer()
+
+
+        post_user = User.objects.get(username=request.user)
+        post_user_profile = Profile.objects.get(username=post_user)
+        
+
+    for i in range(len(posts)):
+        post_user = User.objects.get(id=PostSerializer(posts[i]).data['user'])
+        post_user_profile = Profile.objects.get(username=post_user)
+
+        serializer.data['feed_list'].append(PostListDetailSerializer(posts[i]).data)
+        serializer.data['feed_list'][i]['user_info'].append(ProfilepostListSerializer(post_user_profile).data)
+
+
+        posts[i].like_num = posts[i].like_users.count() 
+        if posts[i].like_users.filter(id=request.user.pk).exists():
+            posts[i].liked = "True"      
+        else:
+            posts[i].liked = "False"
+        posts[i].save()  
+
+    return Response(serializer.data)
+
+    
+@api_view(['GET'])
+def post_list_recommend(request):
+    """
+    Post 글 목록 보기
+    (API 요청으로 사용자를 한정할 수 없는 경우(토큰이 없는 경우),
+    가입은 되어있지만 아무도 팔로우하지 않아 피드 기능을 이용할 수 없는 경우)
+
+    ---
+    """
+
+    if request.META.get('HTTP_AUTHORIZATION'):       
+        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user=User.objects.get(id=tok.user_id)
+        request.user = user
+    if request.method == 'GET':
+        print(request.user)
+        serializer = UnauthorizedFeedSerializer()
+
+#   # 확인된 api 요청 사용자이지만 팔로잉 정보가 없을 때-> 1주일 이내의 글을 좋아요 많은 순서대로 정렬
+    # posts = Post.objects.all().order_by('-like_num') 
+        posts_for_unauthorized_user = Post.objects.filter(written_time__gte=datetime.now()-timedelta(days=7)).order_by('-like_num')
+        post_user = User.objects.get(username=request.user)
+        post_user_profile = Profile.objects.get(username=post_user)
+        
+        print(posts_for_unauthorized_user)
+
+        # post_user = User.objects.get(id=PostSerializer(posts_for_unauthorized_user).data)
+        # post_user_profile = Profile.objects.get(username=post_user)
+        for i in posts_for_unauthorized_user:
+            # print(i)
+            # print(ProfilepostListSerializer(i).data)
+
+
+            # print(serializer.data['recommend_list'])
+            serializer.data['recommend_list'].append(PostListDetailSerializer(i).data)
+            # serializer.data['recommend_list']['user_info'].append(ProfilepostListSerializer(post_user_profile).data)
+
+
+
+        # posts_for_unauthorized_user[i].like_num = posts_for_unauthorized_user[i].like_users.count() 
+        # if posts_for_unauthorized_user[i].like_users.filter(id=request.user.pk).exists():
+        #     posts_for_unauthorized_user[i].liked = "True"      
+        # else:
+        #     posts_for_unauthorized_user[i].liked = "False"
+        # posts_for_unauthorized_user[i].save()  
+
+    return Response(serializer.data)
+
 
 
 @api_view(['GET', 'POST'])
@@ -117,7 +246,22 @@ def post_list_create(request):
                 post.liked = "False"
             post.save()
             # post number in user_id -> It will be "True"
-        serializer = PostListSerializer(posts, many=True)
+        serializer = PostListDetailSerializer(posts, many=True)
+
+        for post in posts:
+            post_user = PostListforamtSerializer(post).data['user']
+            print(post_user)
+            post_username = User.objects.get(username=post_user['username'])
+            post_profile = Profile.objects.get(username=post_username)
+            post_profile_img = ProfileSerializer(post_profile).data['profile_img']
+
+            # print(serializer.data)
+
+            # serializer.data[0]['user_info'].append({
+            #     # 'user': post_user,
+            #     'username': post_username,
+            #     'profile_img': post_profile_img
+            # })
 
         return Response(serializer.data) 
     else:
@@ -170,45 +314,47 @@ def post_detail_update_delete(request, post_pk):
        
     if request.method == 'GET':
         serializer = PostdetailSerializer(post)
+
         comment_for_post = Comment.objects.filter(post=PostSerializer(post).data['id'])
         post.comment_num = len(comment_for_post)
         post.save()
         
+        user_following_list = []
+        for i in UserSerializer(request.user).data['following']:
+            user_following_list.append(i['following_user'])
 
+        post_writer = User.objects.get(id=post_pk)
+        if post_writer != request.user:
+            profile = Profile.objects.get(user=post_pk)
+            if post_pk in user_following_list:
+                profile.is_following = True
+                profile.save()
 
         post_user = PostSerializer(post).data['user']
         post_username = User.objects.get(id=post_user)
         post_user_profile = Profile.objects.get(username=post_username)
 
         serializer.data['writer_info'].append(ProfilepostSerializer(post_user_profile).data)
-        
-        # if request.user != post_username:
-        #     following_user_id = UserSerializer(request.user).data['id']
-        #     print(UserSerializer(post_username).data)
-        #     print(following_user_id)
-        #     print(type(following_user_id))
-        #     print(UserSerializer(post_username).data['followers'])
-        #     for people in UserSerializer(post_username).data['followers']:
-        #         if following_user_id == people['user']:
-        #             following_user_profile = Profile.objects.get(id=following_user_id)
-        #             print(ProfileSerializer(following_user_profile).data)
+    
 
-                    # profile.is_following = True
-                    # profile.save()
-
-        user_pinned_posts = []
+        user_pinned_qnas = []
         forum_for_pinned = Post.objects.all()
         for single_pinned_post in forum_for_pinned:
-            if post_user in pinnedSerializer(single_pinned_post).data['pinned_users']:
-                user_pinned_posts.append(pinnedDetailSerializer(single_pinned_post).data)
+            if post_user in ForumpinnedSerializer(single_pinned_post).data['pinned_users']:
+                user_pinned_qnas.append(pinnedDetailSerializer(single_pinned_post).data)
         
+        user_pinned_forums = []
         qna_for_pinned = Qna.objects.all()
         for single_pinned_post in qna_for_pinned:
             if post_user in QnapinnedSerializer(single_pinned_post).data['pinned_users']:
-                user_pinned_posts.append(QnaDetailPinnedSerializer(single_pinned_post).data)
+                user_pinned_forums.append(QnaDetailPinnedSerializer(single_pinned_post).data)
 
-        for user_pinned_post in range(len(user_pinned_posts)):
-            serializer.data['writer_info'][0]['pinned_posts'].append(user_pinned_posts[user_pinned_post])
+
+        for user_pinned_qna in range(len(user_pinned_qnas)):
+            serializer.data['writer_info'][0]['pinned_qnas'].append(user_pinned_qnas[user_pinned_qna])
+
+        for user_pinned_forum in range(len(user_pinned_forums)):
+            serializer.data['writer_info'][0]['pinned_forums'].append(user_pinned_forums[user_pinned_forum])
 
         serializer.data['forum_post'].append(ForumPostSerializer(post).data)
    
@@ -225,11 +371,14 @@ def post_detail_update_delete(request, post_pk):
                 serializer.data['comments'][single_comment]['username'] = str(comment_username)
                 serializer.data['comments'][single_comment]['profile_img'] = comment_user_img
 
-            mentioned_comments = Mentioned.objects.filter(comment=serializer.data['comments'])
-
-            for single_mention in range(len(mentioned_comments)):
-                mentioned_user = Profile.objects.get(user=MentionedCommentSerializer(mentioned_comments[single_mention]).data['mentioned_user'])
-                serializer.data['comments'][0]['mentioned'].append(MentionedUserInfoSerializer(mentioned_user).data)
+            # 멘션
+            comments_in_post = Comment.objects.filter(post=post_pk)
+            print(comments_in_post)
+            for comment_in_post in comments_in_post:
+                mentioned_comments = Mentioned.objects.filter(comment=CommentSerializer(comment_in_post).data['id'])
+                for single_mention in range(len(mentioned_comments)):
+                    mentioned_user = Profile.objects.get(user=MentionedCommentSerializer(mentioned_comments[single_mention]).data['mentioned_user'])
+                    serializer.data['comments'][0]['mentioned'].append(MentionedUserInfoSerializer(mentioned_user).data)
 
         return Response(serializer.data)
 

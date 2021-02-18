@@ -66,6 +66,7 @@
               "
               @click="goToProfile"
               class="cursor-pointer"
+              style="height:40px;"
             />
           </q-avatar>
         </div>
@@ -93,7 +94,7 @@ export default {
   },
   data() {
     return {
-      img_url: `${process.env.VUE_APP_SERVER_API_URL}${this.entity.profile.profile_img}`,
+      img_url: `${this.entity.profile.profile_img}`,
     };
   },
   methods: {

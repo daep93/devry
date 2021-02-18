@@ -8,7 +8,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from accounts.serializers import UserSerializer, UserProfileUpdateSerializer, TokenSerializer, UserJoinedSerializer, UserFollowerNumberSerializer
+from accounts.serializers import UserSerializer, UserProfileUpdateSerializer, TokenSerializer, UserJoinedSerializer, UserFollowerNumberSerializer, UserinfoSerializer
 from accounts.models import User
 from .serializers import ProfileSerializer, ProfileListSerializer, ProfileLinkSerializer, ProfileProjectSerializer, ProfileUpdateSerializer, ProfileShowSerializer
 from .models import Profile
@@ -145,12 +145,37 @@ def profile_show(request, profile_pk):
             if tags_list[single_tag] > 0:
                 real_tags[single_tag] = tags_list[single_tag]
 
+        # 팔로잉
+
+        profile_user = User.objects.get(username=ProfileSerializer(profile).data['username'])
+        profile_user_id = (ProfileSerializer(profile).data['user'])
+        request_user_id = UserinfoSerializer(request.user).data['id']
+
+        # print(profile_user)
+        # print(request_user_id)
+        # print(request.user_id)
+        if request.user != 'AnonymousUser' and request.user != profile_user:
+            # if 
+            for single_user in UserSerializer(profile_user).data['followers']:
+                if request_user_id == single_user['user']:
+                    profile.is_following = True
+                else:
+                    profile.is_following = False
+
+
+
+        # # user가 쓴 글들의 수
+        user_posts = Post.objects.filter(user=ProfileSerializer(profile).data['user'])
+        user_qnas = Qna.objects.filter(user=ProfileSerializer(profile).data['user'])
+        profile.post_num = (len(user_posts) + len(user_qnas))
+        print(profile.post_num)
 
         # User정보 안에 저장된 follow 내역들을 profile에 저장하는 과정
         profile.follower_num = profile_user.follower_num
         profile.followee_num = profile_user.followee_num
         profile.save()
 
+        
         # 사용자가 작성한 qna, ans, pinned한 글들만 filter해줌
         qnas = Qna.objects.filter(user=ProfileSerializer(profile).data['user'])
         forums = Post.objects.filter(user=ProfileSerializer(profile).data['user'])
