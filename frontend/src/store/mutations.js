@@ -5,10 +5,10 @@ export default {
   offAccountModal(state) {
     state.accountModal = false;
   },
-  onFollowModal(state, tab, id) {
-    state.follow.id = id;
+  onFollowModal(state, info) {
+    state.follow.id = info[1];
     state.follow.modal = true;
-    state.follow.tab = tab;
+    state.follow.tab = info[0];
   },
   offFollowModal(state) {
     state.follow.modal = false;

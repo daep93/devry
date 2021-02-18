@@ -58,10 +58,12 @@
 import { getOtherFolloweeList, followOtherUser } from '@/api/follow';
 
 export default {
+  props: {
+    userId: String,
+  },
   data() {
     return {
       followeeData: [],
-      userId: this.$store.state.follow.id,
     };
   },
   methods: {
@@ -84,9 +86,8 @@ export default {
     async getFollowee() {
       try {
         this.$q.loading.show();
-        // const want_pk =
-        // const { data } = await getOtherFolloweeList(want_pk);
-        // this.followeeData = data;
+        const { data } = await getOtherFolloweeList(this.userId);
+        this.followeeData = data;
       } catch (error) {
         console.log(error);
       } finally {

@@ -106,10 +106,10 @@ export default {
     linkRedirect(url) {
       window.open(url);
     },
-    onFollow(tab, id) {
+    onFollow(tab) {
       // console.log(tab, id);
       // this.$store.state.follow.id = this.info.userId;
-      this.$store.commit('onFollowModal', tab, id);
+      this.$store.commit('onFollowModal', [tab, this.$route.params.id]);
     },
   },
 };

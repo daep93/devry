@@ -50,9 +50,12 @@
 </template>
 
 <script>
-import { getFollowerList, followOtherUser } from '@/api/follow';
+import { getOtherFollowerList, followOtherUser } from '@/api/follow';
 
 export default {
+  props: {
+    userId: String,
+  },
   data() {
     return {
       followerData: [],
@@ -78,7 +81,7 @@ export default {
     async getFollower() {
       try {
         this.$q.loading.show();
-        const { data } = await getFollowerList();
+        const { data } = await getOtherFollowerList(this.userId);
         this.followerData = data;
       } catch (error) {
         console.log(error);
