@@ -11,9 +11,19 @@ function getMainEventList() {
   return board.get(`event/main`);
 }
 
-// forum list 불러오기
-function getForumFeedList() {
-  return board.get(`forum/`);
+// forum board - 최신순 리스트 불러오기
+function loadForumNew() {
+  return board.get(`fourmno`);
+}
+// forum board - 피드 리스트 불러오기
+function loadForumFeed() {
+  return board.get(`forum`);
 }
 
-export { getQnaList, getForumFeedList, getEventList, getMainEventList };
+export {
+  getQnaList,
+  getEventList,
+  getMainEventList,
+  loadForumNew,
+  loadForumFeed,
+};

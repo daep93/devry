@@ -8,14 +8,14 @@
     >
       <div class="row col-12 justify-end">
         <!-- <span> -->
-        <span v-if="info.user.id == $store.state.id">
+        <span v-if="info.user == $store.state.id">
           <q-btn flat round dense icon="more_vert" class="q-mt-md">
             <q-menu>
               <q-list style="min-width: 100px">
                 <q-item clickable v-close-popup>
                   <q-item-section>수정하기</q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup>
+                <q-item clickable v-close-popup @click="deleteForum">
                   <q-item-section>삭제하기</q-item-section>
                 </q-item>
                 <q-separator />
@@ -61,20 +61,30 @@
 
 <script>
 import { colorSoloMapper } from '@/utils/tagColorMapper';
+import { deleteForumItem } from '@/api/forum';
 
 export default {
   props: {
     info: Object,
   },
   data() {
-    return {
-      title: this.info.title,
-      tags: ['Javascript', 'Vue.js'],
-    };
+    return {};
   },
   methods: {
     tagColor(tag, alpha) {
       return colorSoloMapper(tag, alpha);
+    },
+    async deleteForum() {
+      try {
+        const post_id = this.info.post_id;
+        this.$q.loading.show();
+        await deleteForumItem(post_id);
+        this.$router.push({ path: '/forum' });
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.$q.loading.hide();
+      }
     },
   },
 };

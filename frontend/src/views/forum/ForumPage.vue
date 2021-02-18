@@ -67,7 +67,7 @@ export default {
         this.$store.commit('onAccountModal');
       }
     },
-    // 게시판의 정보를 서버로부터 받아옴
+    // 게시판의 '최신순' 정보를 서버로부터 받아옴
     async loadBoard() {
       try {
         this.$q.loading.show();
@@ -75,7 +75,6 @@ export default {
         // this.origin_board = data;
         this.board = data;
         this.loaded = true;
-        // this.board = testCase;
       } catch (error) {
         console.log(error);
       } finally {
