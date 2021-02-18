@@ -11,8 +11,8 @@
         class="text-center"
         style="width:330px;height:50px;border-radius:5px;font-size:16pt"
         type="submit"
-        @click="offModal"
-        >돌아가기</q-btn
+        @click="moveToLogin"
+        >로그인 하기</q-btn
       >
     </div>
   </div>
@@ -21,8 +21,8 @@
 <script>
 export default {
   methods: {
-    offModal() {
-      this.$store.commit('offAccountModal');
+    moveToLogin() {
+      this.$store.commit('setAccountModalType', 'login');
     },
   },
 };

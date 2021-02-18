@@ -33,8 +33,9 @@
             :name="index"
             :key="post.id"
             style="border-radius: 10px;"
+            class="row items-center"
           >
-            <post-card :detail="info.pinned[0]"></post-card>
+            <qna-post-card :detail="post"></qna-post-card>
           </q-carousel-slide>
         </q-carousel>
       </q-card-section>
@@ -72,11 +73,11 @@
       <q-card-section
         style="width:100%;border: 2px solid #2F95B4; border-raidus:5px; "
       >
-        <post-card
+        <qna-post-card
           v-for="post in info.posts"
           :detail="post"
           :key="post.id"
-        ></post-card>
+        ></qna-post-card>
       </q-card-section>
     </q-card>
     <q-card v-if="post == 'comments'">
@@ -94,13 +95,13 @@
 </template>
 
 <script>
-import PostCard from '@/components/common/PostCard';
+import QnaPostCard from '@/components/qna/QnaPostCard';
 import CommentCard from '@/components/common/CommentCard';
 export default {
   props: {
     info: Object,
   },
-  components: { PostCard, CommentCard },
+  components: { QnaPostCard, CommentCard },
   data() {
     return {
       autoplay: true,

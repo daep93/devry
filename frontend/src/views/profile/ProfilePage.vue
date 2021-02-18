@@ -55,7 +55,7 @@ export default {
         projects: data.project,
         postNum: data.posts.length,
         commentNum: data.comments.length,
-        myTags: data.tags,
+        myTags: data.my_tags,
       };
       this.postInfo = {
         posts: data.posts,

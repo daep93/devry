@@ -338,7 +338,7 @@ export default {
       // }
       // frm.append('my_tags', this.profile_info.my_tags);
       try {
-        if (!this.file) {
+        if (this.file) {
           const frm = new FormData();
           frm.append('image', this.file);
           const { data } = await saveQnaImage(frm);
@@ -359,29 +359,17 @@ export default {
           sns_name3: 'Linkedin',
           sns_url3: this.linkedin,
           tech_stack: this.profile_info.tech_stack,
-          project_name1: this.profile_info.profile[0]
-            ? this.profile_info.profile[0].project_name
-            : '',
-          project_url1: this.profile_info.profile[0]
-            ? this.profile_info.profile[0].project_url
-            : '',
-          project_name2: this.profile_info.profile[1]
-            ? this.profile_info.profile[1].project_name
-            : '',
-          project_url2: this.profile_info.profile[1]
-            ? this.profile_info.profile[1].project_url
-            : '',
-          project_name3: this.profile_info.profile[2]
-            ? this.profile_info.profile[2].project_name
-            : '',
-          project_url3: this.profile_info.profile[2]
-            ? this.profile_info.profile[2].project_url
-            : '',
+          project_name1: this.profile_info.project[0].project_name,
+          project_url1: this.profile_info.project[0].project_url,
+          project_name2: this.profile_info.project[1].project_name,
+          project_url2: this.profile_info.project[1].project_url,
+          project_name3: this.profile_info.project[2].project_name,
+          project_url3: this.profile_info.project[2].project_url,
           my_tags: this.profile_info.my_tags,
         });
         deleteCookie('login_nickname');
         saveUserNicknameToCookie(this.profile_info.username);
-        this.$router.go(-1);
+        // this.$router.go(-1);
       } catch (error) {
         console.log(error);
       } finally {

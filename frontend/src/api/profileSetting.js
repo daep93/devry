@@ -4,11 +4,7 @@ function loadProfile(profileId) {
   return profileSetting.get(`/${profileId}/`);
 }
 function updateProfile(profileId, profileData) {
-  return profileSetting.put(`/${profileId}/`, profileData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
+  return profileSetting.put(`/${profileId}/`, profileData);
 }
 function deleteProfile() {
   return profileSetting.delete('/');

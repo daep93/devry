@@ -238,7 +238,7 @@ export default {
   // },
   created() {
     this.tagNames = Object.keys(this.info.tags);
-    this.tagColors = colorListMapper(this.tagNames, 0.5);
+    this.tagColors = colorListMapper(this.info.myTags, 0.5);
     this.tagBoldColors = colorListMapper(this.tagNames, 1);
     this.tagLength = this.tagNames.length;
     this.tagCounts = Object.values(this.info.tags);

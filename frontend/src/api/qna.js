@@ -120,6 +120,9 @@ function toggleQnaBookmark(qna_pk) {
 function getQnaBookmarkStatus(qna_pk) {
   return instance.get(`qna_bookmark/${qna_pk}/`);
 }
+function togglePinned(qna_pk) {
+  return setInterceptors(instance).post(`qna_pinned/${qna_pk}/`);
+}
 
 export {
   registerSmallComment,
@@ -146,4 +149,5 @@ export {
   checkQnaSmallFollowing,
   toggleQnaBookmark,
   getQnaBookmarkStatus,
+  togglePinned,
 };
