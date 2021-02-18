@@ -14,7 +14,6 @@
             class="cursor-pointer glossy font-weight-bold"
             size="12px"
           >
-            <ion-icon name="document-text-outline"></ion-icon>
             <q-icon
               :name="$i.ionDocumentTextOutline"
               class="q-mr-sm"

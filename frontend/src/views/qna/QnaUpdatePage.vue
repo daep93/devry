@@ -1,5 +1,5 @@
 <template>
-  <post-edit-form :category="qna">
+  <post-edit-form category="qna">
     <template slot="buttons" slot-scope="scopeProps">
       <q-btn
         outline

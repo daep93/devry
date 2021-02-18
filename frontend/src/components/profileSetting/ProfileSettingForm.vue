@@ -8,7 +8,11 @@
         <div class="row col-6">
           <!-- 프로필 이미지 -->
           <q-img
-            :src="img ? img : require('@/assets/basic_image.png')"
+            :src="
+              info.profile_img
+                ? info.profile_img
+                : require('@/assets/basic_image.png')
+            "
             spinner-color="white"
             style="height: 140px; max-width: 150px; position: relative; border: 1px solid #cccccc "
             class="rounded-borders q-mb-lg"
@@ -251,12 +255,11 @@ export default {
     return {
       email: '',
       profile_info: this.info,
-      img: `${process.env.VUE_APP_SERVER_API_URL}${this.info.profile_img}`,
       chageImg: false,
-      github: '',
+      github: this.info.link[0].sns_url,
       // gitlab: '',
-      facebook: '',
-      linkedin: '',
+      facebook: this.info.link[1].sns_url,
+      linkedin: this.info.link[2].sns_url,
       file: '',
     };
   },
@@ -294,7 +297,7 @@ export default {
       });
     },
     removeOneProject(project, index) {
-      this.profile_info.projects.splice(index, 1);
+      this.profile_info.project.splice(index, 1);
     },
     addOneTag(tagItem) {
       this.profile_info.my_tags.push(tagItem);
@@ -304,39 +307,6 @@ export default {
     },
     // 새로운 데이터 보내기
     async submitForm() {
-      // const frm = new FormData();
-      // frm.append('username', this.profile_info.username);
-      // frm.append(
-      //   'profile_img',
-      //   this.$refs.imageInput.files[0] ? this.$refs.imageInput.files[0] : null,
-      // );
-      // frm.append('region', this.profile_info.region);
-      // frm.append('group', this.profile_info.group);
-      // frm.append('bio', this.profile_info.bio);
-      // frm.append('links', [
-      //   { sns_name: 'github', sns_url: this.github },
-      //   { sns_name: 'facebook', sns_url: this.facebook },
-      //   { sns_name: 'linkedin', sns_url: this.linkedin },
-      // ]);
-      // frm.append('sns_name1', 'github');
-      // frm.append('sns_url1', this.github);
-      // frm.append('sns_name2', 'github');
-      // frm.append('sns_url2', this.facebook);
-      // frm.append('sns_name3', 'github');
-      // frm.append('sns_url3', this.linkedin);
-      // frm.append('tech_stack', this.profile_info.tech_stack);
-      // frm.append('project', this.profile_info.project);
-      // for (const index in this.profile_info.project) {
-      //   frm.append(
-      //     `project_name${index + 1}`,
-      //     this.profile_info.profile[index].project_name,
-      //   );
-      //   frm.append(
-      //     `project_url${index + 1}`,
-      //     this.profile_info.profile[index].project_url,
-      //   );
-      // }
-      // frm.append('my_tags', this.profile_info.my_tags);
       try {
         if (this.file) {
           const frm = new FormData();
@@ -359,16 +329,35 @@ export default {
           sns_name3: 'Linkedin',
           sns_url3: this.linkedin,
           tech_stack: this.profile_info.tech_stack,
-          project_name1: this.profile_info.project[0].project_name,
-          project_url1: this.profile_info.project[0].project_url,
-          project_name2: this.profile_info.project[1].project_name,
-          project_url2: this.profile_info.project[1].project_url,
-          project_name3: this.profile_info.project[2].project_name,
-          project_url3: this.profile_info.project[2].project_url,
+          project_name1:
+            this.profile_info.project.length > 0
+              ? this.profile_info.project[0].project_name
+              : '',
+          project_url1:
+            this.profile_info.project.length > 0
+              ? this.profile_info.project[0].project_url
+              : '',
+          project_name2:
+            this.profile_info.project.length > 1
+              ? this.profile_info.project[1].project_name
+              : '',
+          project_url2:
+            this.profile_info.project.length > 1
+              ? this.profile_info.project[1].project_url
+              : '',
+          project_name3:
+            this.profile_info.project.length > 2
+              ? this.profile_info.project[2].project_name
+              : '',
+          project_url3:
+            this.profile_info.project.length > 2
+              ? this.profile_info.project[2].project_url
+              : '',
           my_tags: this.profile_info.my_tags,
         });
         deleteCookie('login_nickname');
         saveUserNicknameToCookie(this.profile_info.username);
+        this.$store.commit('setUsername', this.profile_info.username);
         // this.$router.go(-1);
       } catch (error) {
         console.log(error);

@@ -67,18 +67,19 @@
                   <q-item
                     clickable
                     v-ripple
-                    style="background-color:#F0ECEC; border-radius:6px; "
-                    class="q-mb-sm q-pl-lg"
+                    style="background-color:#F0ECEC; border-radius:6px; height:20px"
+                    class="q-mb-sm full-width"
                     v-for="project in info.projects"
                     :key="project.project_name"
                   >
                     <q-item-section>
                       <div
                         style="color: #08458C"
-                        class="text-center"
-                        @click="window.open(info.project.project_url)"
+                        class="text-center  q-py-none"
                       >
-                        {{ info.project.project_name }}
+                        <a :href="project.project_url" target="_blank">
+                          {{ project.project_name }}
+                        </a>
                       </div>
                     </q-item-section>
                   </q-item>
@@ -250,4 +251,17 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+a:link {
+  color: #08458c;
+  text-decoration: none;
+}
+a:visited {
+  color: #08458c;
+  text-decoration: none;
+}
+a:hover {
+  color: #08458c;
+  text-decoration: none;
+}
+</style>

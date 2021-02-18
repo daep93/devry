@@ -120,7 +120,7 @@ export default {
         this.$q.loading.hide();
         alert('로그인 성공');
         this.offModal();
-        location.reload();
+        // location.reload();
       } catch (error) {
         console.log(error);
         this.$q.loading.hide();

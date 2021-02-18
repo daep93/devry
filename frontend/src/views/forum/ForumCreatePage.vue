@@ -1,5 +1,5 @@
 <template>
-  <post-edit-form :file="file" :category="forum">
+  <post-edit-form :file="file" category="forum">
     <template slot="thumbnail">
       <q-file
         v-model="file"
