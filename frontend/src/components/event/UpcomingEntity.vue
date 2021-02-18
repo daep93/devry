@@ -77,7 +77,8 @@ export default {
   },
   data() {
     return {
-      profile_img: `${process.env.VUE_APP_SERVER_API_URL}${this.entity.profile_img}`,
+      // profile_img: `${process.env.VUE_APP_SERVER_API_URL}${this.entity.profile_img}`,
+      profile_img: this.entity.profile_img
     };
   },
   methods: {
