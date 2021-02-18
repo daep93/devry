@@ -81,8 +81,6 @@ export default {
         );
       } else if (newValue === 'like') {
         this.board.sort((item1, item2) => item2.like_num - item1.like_num);
-      } else if (newValue === 'feed') {
-        //
       }
     },
     selectedTags(newValue) {
