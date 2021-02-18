@@ -4,7 +4,8 @@
       <div class="row col-2 q-mt-lg">
         <div class="row col-9"></div>
         <div class="row col-3">
-          <forum-detail-status :info="status"></forum-detail-status>
+          <!-- <forum-detail-status></forum-detail-status> -->
+          <!-- <forum-detail-status :info="status"></forum-detail-status> -->
         </div>
       </div>
       <div class="row col-10 q-mt-lg">
@@ -51,23 +52,23 @@ export default {
   computed: {
     status() {
       return {
-        like_num: this.contents.like_num,
-        liked: this.contents.liked,
-        bookmarked: this.contents.bookmarked,
-        bookmark_num: this.contents.bookmark_num,
-        viewed_num: this.contents.viewed_num,
-        post_id: this.contents.id,
-        comment_count: this.contents.comment_count,
+        like_num: this.contents.forum_post[0].like_num,
+        liked: this.contents.forum_post[0].liked,
+        bookmarked: this.contents.forum_post[0].bookmarked,
+        bookmark_num: this.contents.forum_post[0].bookmark_num,
+        viewed_num: this.contents.forum_post[0].viewed_num,
+        post_id: this.contents.forum_post[0].id,
+        comment_count: this.contents.forum_post[0].comment_num,
       };
     },
     forumBody() {
       return {
-        title: this.contents.title,
-        ref_tags: this.contents.ref_tags,
-        content: this.contents.content,
-        written_time: this.contents.written_time,
-        post_id: this.contents.id,
-        user: this.contents.user,
+        title: this.contents.forum_post[0].title,
+        ref_tags: this.contents.forum_post[0].ref_tags,
+        content: this.contents.forum_post[0].content,
+        written_time: this.contents.forum_post[0].written_time,
+        post_id: this.contents.forum_post[0].id,
+        user: this.contents.writer_info[0].user,
       };
     },
     comments() {
@@ -75,7 +76,7 @@ export default {
     },
     createComments() {
       return {
-        post_id: this.contents.id,
+        post_id: this.contents.forum_post[0].id,
       };
     },
     shortProfile() {
@@ -90,7 +91,6 @@ export default {
     try {
       const { data } = await loadForumItem(index);
       this.contents = data;
-      console.log(this.contents);
     } catch (error) {
       console.log(error);
     }

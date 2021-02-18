@@ -47,7 +47,8 @@
 // import ForumBoard from '@/components/forum/ForumBoard';
 import BulletinBoard from '@/components/common/BulletinBoard';
 import ForumEntity from '@/components/forum/ForumEntity';
-import { getForumList } from '@/api/board';
+import { loadForumNew } from '@/api/board';
+// import { loadForumNew, loadForumLike, loadForumFeed, loadForumRecommend } from '@/api/board';
 
 export default {
   components: {
@@ -68,15 +69,13 @@ export default {
         this.$store.commit('onAccountModal');
       }
     },
-    // 게시판의 정보를 서버로부터 받아옴
+    // 게시판의 '최신순' 정보를 서버로부터 받아옴
     async loadBoard() {
       try {
         this.$q.loading.show();
-        const { data } = await getForumList();
-        // this.origin_board = data;
+        const { data } = await loadForumNew();
         this.board = data;
         this.loaded = true;
-        // this.board = testCase;
       } catch (error) {
         console.log(error);
       } finally {

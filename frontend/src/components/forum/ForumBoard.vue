@@ -40,7 +40,7 @@
 <script>
 import ForumEntity from '@/components/forum/ForumEntity.vue';
 // import { getQnaList } from '@/api/board';
-import { testCase } from '@/dummy/Forum';
+
 export default {
   props: {
     current: Number,
