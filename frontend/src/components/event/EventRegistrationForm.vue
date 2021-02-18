@@ -38,20 +38,6 @@
                 <q-icon name="attachment" class="text-white" />
               </template>
             </q-file>
-            <!-- <input
-              ref="thumnailInput"
-              type="file"
-              hidden
-              @change="onChangeThumnails"
-            />
-            <q-btn
-              @click="onClickThumnailUpload"
-              color="primary"
-              label="이미지 등록"
-              class="float-right"
-              style="width: 150px; height: 40px; border-radius:5px; position:absolute; bottom:0px;"
-            >
-            </q-btn> -->
           </div>
         </div>
         <!-- 이벤트 상태 및 카테고리 -->
@@ -289,19 +275,6 @@
                 <q-icon name="attachment" class="text-white" />
               </template>
             </q-file>
-            <!-- <input
-              ref="profileInput"
-              type="file"
-              hidden
-              @change="onChangeProfiles"
-            />
-            <q-btn
-              @click="onClickProfileUpload"
-              color="primary"
-              label="프로필 등록"
-              style="width: 150px; height: 40px; border-radius:5px; position:absolute; bottom:0px;"
-            >
-            </q-btn> -->
           </div>
         </div>
         <!-- 호스트 이름 -->
@@ -339,11 +312,6 @@
       </div> 
     </div> 
     <!-- 이벤트 관련 태그 -->
-    <!-- <event-tag
-      @addTagItem="addOneTag"
-      @removeTagItem="removeOneTag"
-      :propsTagData="ref_tags"
-    ></event-tag>   -->
     <event-registration-tag
       @addTagItem="addOneTag"
       @removeTagItem="removeOneTag"
@@ -382,14 +350,12 @@
 </template>
 
 <script>
-// import EventTag from '@/components/event/EventTag';
 import EventRegistrationTag from '@/components/event/EventRegistrationTag';
 import { loadEventItem, createEventItem, updateEventItem, deleteEventItem } from '@/api/eventRegistration';
 import { saveQnaImage } from '@/api/qna';
 
 export default {
   components: {
-    // EventTag,
     EventRegistrationTag
   },
   data() {
@@ -421,24 +387,6 @@ export default {
     }
   },
   methods: {
-    // onClickThumnailUpload() {
-    //   this.$refs.thumnailInput.click();
-    // },
-    // onChangeThumnails(e) {
-    //   const file = e.target.files[0];
-    //   console.log(file);
-    //   this.thumnail = URL.createObjectURL(file)
-    //   this.thumnail = file
-    //   console.log(this.thumnail)
-    // },
-    // onClickProfileUpload() {
-    //   this.$refs.profileInput.click();
-    // },
-    // onChangeProfiles(e) {
-    //   const file = e.target.files[0];
-    //   console.log(file);
-    //   this.profile_img = URL.createObjectURL(file);
-    // },
     addOneTag(tagItem) {
       this.ref_tags.push(tagItem);
     },
@@ -454,6 +402,7 @@ export default {
           frm.append('image', this.file);
           const { data } = await saveQnaImage(frm);
           this.thumnail = data.image;
+          console.log(this.thumnail)
         }
         // 호스트 프로필 서버에 저장하기
         if (this.second_file) {
@@ -461,6 +410,7 @@ export default {
           frm.append('image', this.second_file);
           const { data } = await saveQnaImage(frm);
           this.profile_img = data.image;
+          console.log(this.profile_img)
         }
         // 이벤트 새로 생성하기
         console.log('글 생성하기로 들어왔나?')

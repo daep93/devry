@@ -17,7 +17,7 @@
         :name="index"
         v-for="(event, index) in this.main_events"
         :key="event.eventId"
-        style="background-color: pink; border-radius: 10px;"
+        style="background-color: black; border-radius: 10px;"
         class="overflow-hidden"
       >
         <main-entity :entity="event"></main-entity>

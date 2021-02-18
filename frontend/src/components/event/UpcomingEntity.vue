@@ -110,19 +110,9 @@ export default {
       }
     },
   },
-  watch: {
-    entity() {
-      console.log('변화가 있나?')
-    }
-  }
-  // watch: {
-  //   entity() {
-  //     this.entity.bookmarked = !this.entity.bookmarked;
-  //     if (this.entity.bookmarked) {
-  //       this.entity.bookmark_num = this.entity.bookmark_num + 1;
-  //     } else {
-  //       this.entity.bookmark_num = this.entity.bookmark_num - 1;
-  //     }
+  // computed: {
+  //   bookmark_data() {
+  //     console.log('변화가 있나?')
   //   }
   // }
 };

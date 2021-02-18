@@ -1,6 +1,6 @@
 <template>
-  <div class="q-pa-lg q-mt-sm row justify-center">
-    <div class="q-pa-sm" style="width: 60vw; ">
+  <div class="q-pt-lg row justify-center">
+    <div class="col-8 q-pl-lg">
       <!-- 타이틀 -->
       <div class="row q-mb-sm q-mb-lg col-12 text-h5 text-weight-bold">
         <div class="row col-9">Event 게시판</div>

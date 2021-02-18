@@ -34,9 +34,9 @@
               :key="event.eventId"
               class="col-4 q-pa-xs"
             >
-              <recommend-entity 
+              <upcoming-entity 
                 :entity="event"
-              ></recommend-entity>
+              ></upcoming-entity>
             </div>
           </q-tabs>
         </q-intersection>
@@ -47,12 +47,12 @@
 
 <script>
 // import { testCase } from '@/dummy/Events.js';
-import RecommendEntity from '@/components/event/RecommendEntity.vue';
+import UpcomingEntity from '@/components/event/UpcomingEntity.vue';
 import { getEventList } from '@/api/board';
 
 export default {
   components: {
-    RecommendEntity,
+    UpcomingEntity,
   },
   data() {
     return {
