@@ -4,10 +4,21 @@
       <div class="row col-2"></div>
       <div class="row col-8 q-pr-xl">
         <div class="text-h6 text-weight-bold q-mb-md">댓글 작성하기</div>
-        <markdown-editor
+
+        <q-input
+          bordered
+          flat
+          v-model="newComment"
+          autogrow
+          placeholder="댓글을 입력해주세요"
+          class="full-width"
+          @input="getContents"
+        />
+
+        <!-- <markdown-editor
           @input="getContents"
           :height="'400px'"
-        ></markdown-editor>
+        ></markdown-editor> -->
       </div>
       <div class="row col-2"></div>
 
