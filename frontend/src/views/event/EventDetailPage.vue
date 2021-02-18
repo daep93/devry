@@ -7,7 +7,7 @@
         <q-img
           :src="
             thumnail
-              ? `https://devry.kr${this.thumnail}`
+              ? this.thumnail
               : require('@/assets/basic_image.png')
           "
           spinner-color="white"
@@ -140,7 +140,7 @@
             <img
               :src="
                 profile_img
-                  ? `https://devry.kr${this.profile_img}`
+                  ? this.profile_img
                   : require('@/assets/basic_image.png')
               "
               class="col-6 rounded-borders"
