@@ -42,7 +42,7 @@ export default {
         region: data.region,
         group: data.group,
         email: data.email,
-        links: data.links,
+        links: data.link,
         joined: data.joined,
         followerNum: data.follower_num,
         followeeNum: data.followee_num,
@@ -51,16 +51,21 @@ export default {
       };
       this.sideInfo = {
         tags: data.tags,
-        skills: data.tech_stack,
+        skills:
+          typeof data.tech_stack == 'string'
+            ? [data.tech_stack]
+            : data.tech_stack,
         projects: data.project,
-        postNum: data.posts.length,
-        commentNum: data.comments.length,
-        myTags: data.tags,
+        postNum: data.qnas.length + data.forums.length,
+        commentNum: data.qnas_comments.length + data.forums_comments.length,
+        myTags: typeof data.my_tags == 'string' ? [data.my_tags] : data.my_tags,
       };
       this.postInfo = {
-        posts: data.posts,
-        comments: data.comments,
-        pinned: data.pinned_posts,
+        qnas: data.qnas,
+        forums: data.forums,
+        comments: [...data.qnas_comments, ...data.forums_comments],
+        qnas_pinned: data.pinned_qnas,
+        forums_pinned: data.pinned_forums,
       };
       this.loaded = true;
     } catch (error) {

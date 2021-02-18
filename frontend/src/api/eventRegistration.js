@@ -15,6 +15,15 @@ function updateEventItem(postId, postData) {
   return instance.put(`event/${postId}/`, postData);
 }
 
+
+// function createEventItem(postData) {
+//   return instance.post('event/', postData, {
+//     headers: {
+//       'Content-Type': 'multipart/form-data',
+//     },
+//   });
+// }
+
 // function updateEventItem(postId, postData) {
 //   return instance.put(`event/${postId}/`, postData, {
 //     headers: {

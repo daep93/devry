@@ -44,7 +44,8 @@ type = (
     ('Workshop', 'Workshop'),
     ('Hackathon', 'Hackathon'),
     ('competition', 'competition'),
-    ('Meeting','Meeting'),
+    ('Meeting', 'Meeting'),
+    ('Recruting', 'Recruting'),
 )
 
 ch = (
@@ -55,7 +56,7 @@ ch = (
 
 class Event(models.Model):
     state= MultiSelectField(max_length=20, choices=ch)
-    thumnail = models.ImageField(upload_to="%Y/%m/%d", default="")
+    thumnail = models.URLField(default="", max_length=100, blank=True, null=False)
     title = models.CharField(max_length=70)
     category = MultiSelectField(choices=type)
     place = models.CharField(max_length=70, default="")
@@ -67,7 +68,7 @@ class Event(models.Model):
     schedule = models.TextField(default="")
     king= models.BooleanField(default="False")
     host_name=models.CharField(max_length=70)
-    profile_img=models.ImageField(upload_to="%Y/%m/%d", default="")
+    profile_img=models.URLField(default="", max_length=100, blank=True, null=False)
     register_url=models.URLField(default="")
 
     ref_tags = MultiSelectField(choices=tech)

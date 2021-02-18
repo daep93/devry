@@ -89,16 +89,11 @@ function deleteRecomment(anssmall_pk) {
 
 // QnA 이미지 임시저장 하기
 function saveQnaImage(postData) {
-  return instance.post('qna_image/', postData, {
+  return instance.post('qnatest/image/', postData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
   });
-}
-
-// QnA 이미지 임시저장한 내용 불러오기
-function loadQnaImage() {
-  return instance.get('qna/');
 }
 
 // QnA 글 작성자 팔로잉 여부 및 팔로잉하기
@@ -114,6 +109,19 @@ function checkQnaSmallFollowStatus(ans_pk) {
 // QnA 큰 댓글 작성자 팔로잉하기
 function checkQnaSmallFollowing(ans_pk) {
   return instance.post(`ans/following/${ans_pk}`);
+}
+
+// QnA 게시물 북마크하기
+function toggleQnaBookmark(qna_pk) {
+  return instance.post(`qna_bookmark/${qna_pk}/`);
+}
+
+// QnA 게시물 북마크 상태 가져오기
+function getQnaBookmarkStatus(qna_pk) {
+  return instance.get(`qna_bookmark/${qna_pk}/`);
+}
+function togglePinned(qna_pk) {
+  return setInterceptors(instance).post(`qna_pinned/${qna_pk}/`);
 }
 
 export {
@@ -136,8 +144,10 @@ export {
   updateRecomment,
   deleteRecomment,
   saveQnaImage,
-  loadQnaImage,
   checkQnaFollowing,
   checkQnaSmallFollowStatus,
   checkQnaSmallFollowing,
+  toggleQnaBookmark,
+  getQnaBookmarkStatus,
+  togglePinned,
 };

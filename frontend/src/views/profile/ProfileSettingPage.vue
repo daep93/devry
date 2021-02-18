@@ -14,7 +14,7 @@
 
       <!-- 입력 폼 -->
       <profile-setting-form
-        v-if="profile_info.username"
+        v-if="loaded"
         :info="profile_info"
       ></profile-setting-form>
     </div>
@@ -40,6 +40,7 @@ export default {
         tech_stack: [],
         username: '',
       },
+      loaded: false,
     };
   },
   async created() {
@@ -51,13 +52,31 @@ export default {
       this.profile_info.bio = data.bio;
       this.profile_info.email = data.email;
       this.profile_info.group = data.group;
-      this.profile_info.link = data.link;
-      this.profile_info.my_tags = data.my_tags;
+      this.profile_info.link = data.link.length
+        ? data.link
+        : [
+            { sns_name: '', sns_url: '' },
+            { sns_name: '', sns_url: '' },
+            { sns_name: '', sns_url: '' },
+          ];
+      this.profile_info.my_tags =
+        typeof data.my_tags == 'string' ? [data.my_tags] : data.my_tags;
       this.profile_info.profile_img = data.profile_img;
       this.profile_info.project = data.project;
+      // this.profile_info.project = data.project.length
+      //   ? data.project
+      //   : [
+      //       { project_name: '', project_url: '' },
+      //       { project_name: '', project_url: '' },
+      //       { project_name: '', project_url: '' },
+      //     ];
       this.profile_info.region = data.region;
-      this.profile_info.tech_stack = data.tech_stack;
+      this.profile_info.tech_stack =
+        typeof data.tech_stack == 'string'
+          ? [data.tech_stack]
+          : data.tech_stack;
       this.profile_info.username = username;
+      this.loaded = true;
     } catch (error) {
       console.log(error);
     } finally {

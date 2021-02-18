@@ -24,15 +24,22 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from .models import User, UserManager, TokenModel, UserFollowing
 from mysite.utils import import_callable
+import os
+# import sys
+# sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'profiles'))
+# from profiles.models import Profile
+# from profiles.models import Profile
 
 User = get_user_model()
 
+
 class UserSerializer(serializers.ModelSerializer):
+
     following = serializers.SerializerMethodField(read_only=True)
     followers = serializers.SerializerMethodField(read_only=True)
-
     follower_num = serializers.IntegerField(read_only=True)
     followee_num = serializers.IntegerField(read_only=True)
+
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'password', 'following', 'followers', 'follower_num', 'followee_num', 'date_joined')
@@ -49,6 +56,7 @@ class UserEmailSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'email',)
+
 
 class UserProfileUpdateSerializer(serializers.ModelSerializer):
 
@@ -77,6 +85,28 @@ class UserFollowingNumberSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'followee_num',)
 
+
+class UserinfoSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'follower_num', 'followee_num')
+
+
+class isfollowingSerializer(serializers.ModelSerializer):
+    
+    user = UserinfoSerializer(
+        read_only=True,
+    )
+
+    following_user = UserinfoSerializer(
+        read_only=True,
+    )
+
+    class Meta:
+        model = UserFollowing
+        fields = ('id', 'user', 'following_user', 'is_following')
+        
 
 class UserRegistrationSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=30)
@@ -116,9 +146,6 @@ class UserRegistrationSerializer(serializers.Serializer):
         adapter.save_user(request, user, self)
         self.custom_signup(request, user)
         setup_user_email(request, user, [])
-
-        
-
         return user
 
 
@@ -128,25 +155,22 @@ class UserLoginSerializer(serializers.Serializer):
 
     def authenticate(self, **kwargs):
         return authenticate(self.context['request'], **kwargs)
-
         return user
 
     def _validate_username(self, username, password):
+       
         user = None
-
         if username and password:
             user = self.authenticate(username=username, password=password)
         else:
             msg = _('Must include "username" and "password".')
             raise exceptions.ValidationError(msg)
-
         return user
 
     def validate(self, attrs):
         username = attrs.get('username')
         # email = attrs.get('email')
         password = attrs.get('password')
-
         user = None
 
         if 'allauth' in settings.INSTALLED_APPS:
@@ -203,9 +227,8 @@ class UserFollowingSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-
-
 class UserFollowersSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = UserFollowing
         fields = ("id", "user", "created")
@@ -265,6 +288,7 @@ class InfoSerializer(serializers.Serializer):
             'username': user.username,
         }
 
+
 class ProfileEmailSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -272,9 +296,7 @@ class ProfileEmailSerializer(serializers.ModelSerializer):
         fields = ('email')
 
 
-
-
 class deleteSerializer(serializers.ModelSerializer):
-    email = serializers.CharField(max_length=80)
+
     class Meta:
        model = User

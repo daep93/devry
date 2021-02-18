@@ -5,7 +5,11 @@
         <div class="col-3 row justify-center">
           <div class="col-9">
             <q-img
-              :src="info.profileImg ? img : require('@/assets/basic_image.png')"
+              :src="
+                info.profileImg
+                  ? info.profileImg
+                  : require('@/assets/basic_image.png')
+              "
               alt="change-password"
               class="profile-picture "
               style="width:150px;height:150px"
@@ -53,12 +57,7 @@
             <q-icon
               v-for="link in info.links"
               :key="link.sns_name"
-              :name="
-                $i[
-                  `ionLogo${link.sns_name.charAt(0).toUpperCase() +
-                    link.sns_name.slice(1)}`
-                ]
-              "
+              :name="$i[`ionLogo${link.sns_name}`]"
               size="sm"
               color="grey-8"
               class="q-mr-xs cursor-pointer"
@@ -108,11 +107,6 @@ export default {
     onFollow(tab) {
       this.$store.commit('onFollowModal', tab);
     },
-  },
-  data() {
-    return {
-      img: `${process.env.VUE_APP_SERVER_API_URL}${this.info.profileImg}`,
-    };
   },
 };
 </script>

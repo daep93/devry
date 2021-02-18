@@ -1,15 +1,33 @@
 from rest_framework import serializers, fields
 from .models import Post, Comment, tech
-from profiles.models import Profile
-from profiles.serializers import ProfileSerializer, ProfileListSerializer
-from accounts.models import User
+from profiles.models import Profile, ForumImagePost
+from profiles.serializers import ProfileSerializer, ProfileListSerializer, ProfilePinnedQnaSerializer, ProfileImageSerializer, ProfilePinnedForumSerializer
+from accounts.models import User, Mentioned
+
+
+# class ImgPost(object):
+#     def __init__(self, files, thumbnail):
+#         self.files = files 
+#         self.thumbnail = thumbnail 
+
+
+# class ImagePostSerializer(serializers.Serializer):
+#     files = serializers.FileField()
+#     thumbnail = serializers.ImageField()
+class ImagePostSerializer(serializers.ModelSerializer):
+    thumbnail = serializers.ImageField(use_url=True, allow_empty_file = True)
+    
+    class Meta:
+        model = ForumImagePost
+        fields = ('thumbnail',)
+
 
 
 class UserinfoSerializer(serializers.ModelSerializer):
-
+    profile_img = ProfileImageSerializer(read_only=True)
     class Meta:
         model = User
-        fields = ( 'id', 'username')
+        fields = ( 'id', 'username', 'profile_img')
 
 
 class ProfilepostListSerializer(serializers.ModelSerializer):
@@ -19,11 +37,28 @@ class ProfilepostListSerializer(serializers.ModelSerializer):
         fields = ('user', 'username', 'profile_img', )
 
 
-class ProfilepostSerializer(serializers.ModelSerializer):
+class ProfileImagePostListSerializer(serializers.ModelSerializer):
       
     class Meta:
         model = Profile
-        fields = ('user', 'username', 'profile_img', 'follower_num', 'bio')
+        fields = ('id', )
+
+
+class PostnumberSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Post
+        fields = ('post_num',)
+
+
+
+class ProfilepostSerializer(serializers.ModelSerializer):
+    pinned_qnas = ProfilePinnedQnaSerializer(many=True, read_only=True)
+    pinned_forums = ProfilePinnedForumSerializer(many=True, read_only=True)
+    thumbnail = ImagePostSerializer(many=True, read_only=True)
+    class Meta:
+        model = Profile
+        fields = ('user', 'username', 'profile_img', 'post_num', 'follower_num', 'bio', 'thumbnail', 'is_following', 'pinned_qnas', 'pinned_forums', )
 # 부족한 필드 추가해야함
 
 
@@ -51,10 +86,6 @@ class PostListforamtSerializer(serializers.ModelSerializer):
     user = UserinfoSerializer(
         read_only=True,
     )
-
-    profile = ProfilepostListSerializer(
-        read_only=True,
-    )
     
     comment_count = serializers.IntegerField(
         source='comment_set.count',
@@ -63,13 +94,14 @@ class PostListforamtSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ('id', 'title','user', 'written_time', 'ref_tags', 'like_num', 'comment_count', 'viewed_num', 'liked', 'profile')
+        fields = ('id', 'title', 'written_time', 'ref_tags', 'liked', 'comment_count', 'like_num', 'viewed_num',  'user')
 
 
 class PostListSerializer(serializers.ModelSerializer):
     
-    profile = ProfilepostListSerializer(
+    user_info = ProfilepostListSerializer(
         read_only=True,
+        many=True
     )
     
     comment_count = serializers.IntegerField(
@@ -79,7 +111,38 @@ class PostListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ('id', 'title', 'written_time', 'ref_tags', 'like_num', 'comment_count', 'viewed_num', 'liked', 'profile')
+        fields = ('id', 'title', 'written_time', 'ref_tags', 'liked', 'comment_count', 'viewed_num', 'like_num', 'user_info',)
+
+
+class PostListDetailSerializer(serializers.ModelSerializer):
+    thumbnail = serializers.ImageField(use_url=True)
+
+    user_info = ProfilepostListSerializer(
+        many=True
+    )
+
+    comment_count = serializers.IntegerField(
+        source='comment_set.count',
+        read_only=True,
+    )
+    class Meta:
+        model = Post
+        fields = ('id', 'title', 'written_time', 'ref_tags', 'liked', 'bookmarked', 'comment_count', 'thumbnail', 'viewed_num', 'like_num', 'bookmark_num', 'user_info')
+
+
+
+class AuthenticatedFeedSerializer(serializers.ModelSerializer):
+    # feed_list = PostListSerializer(read_only=True, many=True)
+    class Meta:
+        model = Post
+        fields = ('feed_list', )
+
+
+class UnauthorizedFeedSerializer(serializers.ModelSerializer):
+    # recommend_list = PostListforamtSerializer()
+    class Meta:
+        model = Post
+        fields = ('recommend_list',)
 
 
 class CommentdetailSerializer(serializers.ModelSerializer):
@@ -112,7 +175,50 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ('id',  'comment_content', 'like_comment_num', 'user', 'post', 'written_time', 'liked_comment', 'profile')
+        fields = ('user', 'id',  'comment_content', 'like_comment_num', 'post', 'written_time', 'liked_comment', 'profile')
+
+
+class PostMentionedCommentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Comment
+        fields = ('mentioned',)
+
+
+class MentionedCommentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Mentioned
+        fields = '__all__'
+
+
+class DetailCommentMentionedSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'mentioned', 'mentioned_comment')
+
+
+class DetailCommentSerializer(serializers.ModelSerializer):
+    mentioned = PostMentionedCommentSerializer(many=True, read_only=True)
+    class Meta:
+        model = Comment
+        fields = ('user', 'id', 'username', 'profile_img', 'written_time', 'comment_content', 'like_comment_num', 'mentioned')
+
+
+class MentionedUserInfoSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Profile
+        fields = ('user','username')
+
+
+class PostDetailCommentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Post
+        fields = ('comments',)
+
 
 class PostSerializer(serializers.ModelSerializer):
 
@@ -130,8 +236,16 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ('id','user', 'title','content','ref_tags', 'bookmark_num', 'bookmarked', 'like_num', 'liked',
+        fields = ('id','user', 'title','content','ref_tags', 'bookmark_num', 'bookmarked', 'like_num', 'liked', 'thumbnail',
         'viewed_num', 'comment_num', 'written_time','comment_set', )
+
+
+class ForumPostSerializer(serializers.ModelSerializer):
+    ref_tags= fields.MultipleChoiceField(choices=tech)
+
+    class Meta:
+        model = Post
+        fields = ('id', 'title', 'content', 'ref_tags', 'bookmark_num', 'bookmarked', 'like_num', 'liked', 'comment_num', 'viewed_num', 'written_time')
 
 class PostdetailSerializer(serializers.ModelSerializer):
 
@@ -141,17 +255,18 @@ class PostdetailSerializer(serializers.ModelSerializer):
     #     read_only=True,
     # )
 
-    writer_info = ProfilepostSerializer(
-        read_only=True,
-    )
+    writer_info = ProfilepostSerializer(many=True,read_only=True)
 
-    # forum_post = PostSerializer(many=True, read_only=True)
+    forum_post = ForumPostSerializer(many=True, read_only=True)
+
+    comments = PostDetailCommentSerializer(many=True, read_only=True)
+    # comments = PostDetailCommentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Post
-        # fields = ('id', 'writer_info', 'forum_post')
-        fields = ('id','writer_info', 'title','written_time', 'ref_tags', 'like_num',
-        'viewed_num', 'bookmark_num','content', 'comment_set', 'liked', 'bookmarked','user' )
+        fields = ('writer_info', 'forum_post', 'comments')
+        # fields = ('id','writer_info', 'title','written_time', 'ref_tags', 'like_num',
+        # 'viewed_num', 'bookmark_num','content', 'comment_set', 'liked', 'bookmarked','user' )
 
 
 
@@ -160,7 +275,7 @@ class likeSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Post
-        fields = ('id', "liked")
+        fields = ('id', "liked",  "like_num", "like_users")
 
 
 class like_commentSerializer(serializers.ModelSerializer):
@@ -174,4 +289,25 @@ class bookmarkSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Post
-        fields = ('id', "bookmarked")
+        fields = ('id', "bookmarked",  "bookmark_num", "bookmark_users")
+
+
+class pinnedSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Post
+        fields = ('id', 'pinned', 'pinned_num', 'pinned_users')
+
+
+class pinnedDetailSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Post
+        fields = ('id', 'title',)
+
+
+class ForumpinnedSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Post
+        fields = ('id', 'pinned', 'pinned_users', 'pinned_num')

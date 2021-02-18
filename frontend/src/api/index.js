@@ -13,8 +13,6 @@ function createInstanceWithAuth(url) {
 }
 const instance = createInstance();
 const instanceAuth = setInterceptors(instance);
-const follower = createInstanceWithAuth('follower/');
-const followee = createInstanceWithAuth('followee/');
 const profileSetting = createInstanceWithAuth('profiles/setting/');
 const board = createInstanceWithAuth('board/');
-export { instance, follower, followee, profileSetting, board, instanceAuth };
+export { instance, profileSetting, board, instanceAuth };

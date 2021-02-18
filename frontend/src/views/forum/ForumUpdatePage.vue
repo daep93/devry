@@ -1,5 +1,5 @@
 <template>
-  <post-edit-form>
+  <post-edit-form category="forum">
     <template slot="buttons" slot-scope="scopeProps">
       <q-btn
         outline

@@ -12,7 +12,7 @@ from rest_framework.views import APIView
 from .serializers import QnaListSerializer, QnasmalllistSerializer, AnssmalllistSerializer, ProfileqnaSerializer, \
     QnaListforamtSerializer, QnaSerializer, AnsSerializer, likeSerializer, bookmarkSerializer, solveSerializer, \
     like_ansSerializer, UserinfoSerializer, ProfileListSerializer, ProfileSerializer, QnasmallSerializer, \
-    AnssmallSerializer, QnadetailSerializer, AnslistSerializer, AnsdetailSerializer,AnslistformatSerializer, pinnedSerializer, \
+    AnssmallSerializer, QnadetailSerializer, AnslistSerializer, AnsdetailSerializer,AnslistformatSerializer, QnapinnedSerializer, \
     QnaImageSerializer, AnsImageSerializer, ImagePostSerializer, isfollowingSerializer,isfollowingansSerializer
 
 from accounts.serializers import UserFollowingSerializer
@@ -364,12 +364,13 @@ def like(request, qna_pk):
     # user authentication process
     qna = get_object_or_404(Qna, pk=qna_pk)
     if request.method == 'GET':
+        serializer = likeSerializer(qna)
         if qna.like_users.filter(pk=request.user.pk).exists():
             qna.liked="True"
-            serializer = likeSerializer(qna)
+            qna.save()
         else:
             qna.liked="False"
-            serializer = likeSerializer(qna)
+            qna.save()
         return Response(serializer.data)
 
     # user가 qna을 좋아요 누른 전체유저에 존재하는지.
@@ -377,10 +378,14 @@ def like(request, qna_pk):
         if qna.like_users.filter(pk=request.user.pk).exists():
             # like canceled
             qna.like_users.remove(request.user)
+            qna.like_num -= 1
+            qna.save()
             return Response("like canceled")
         else:
             # like 
             qna.like_users.add(request.user)
+            qna.like_num += 1
+            qna.save()
             return Response("like !!!!!!")
 
 
@@ -396,12 +401,13 @@ def pinned(request, qna_pk):
     # user authentication process
     qna = get_object_or_404(Qna, pk=qna_pk)
     if request.method == 'GET':
+        serializer = QnapinnedSerializer(qna)
         if qna.pinned_users.filter(pk=request.user.pk).exists():
             qna.pinned="True"
-            serializer = pinnedSerializer(qna)
+            qna.save()
         else:
             qna.pinned="False"
-            serializer = pinnedSerializer(qna)
+            qna.save()
         return Response(serializer.data)
 
     # user가 qna을 pinned한 전체유저에 존재하는지.
@@ -409,10 +415,14 @@ def pinned(request, qna_pk):
         if qna.pinned_users.filter(pk=request.user.pk).exists():
             # pinned canceled
             qna.pinned_users.remove(request.user)
+            qna.pinned_num -= 1
+            qna.save()
             return Response("pinned canceled")
         else:
             # pinned 
             qna.pinned_users.add(request.user)
+            qna.pinned_num += 1
+            qna.save()
             return Response("pinned !!!!!!")
 
 
@@ -430,12 +440,13 @@ def like_ans(request, ans_pk):
     # user authentication process
     ans = get_object_or_404(Ans, pk=ans_pk)
     if request.method == 'GET':
+        serializer = like_ansSerializer(ans)
         if ans.like_ans_users.filter(pk=request.user.pk).exists():
             ans.liked_ans="True"
-            serializer = like_ansSerializer(ans)
+            ans.save()
         else:
             ans.liked_ans="False"
-            serializer = like_ansSerializer(ans)
+            ans.save()
         return Response(serializer.data)
 
     # user가 ans 좋아요 누른 전체유저에 존재하는지.
@@ -443,10 +454,14 @@ def like_ans(request, ans_pk):
         if ans.like_ans_users.filter(pk=request.user.pk).exists():
             # like canceled
             ans.like_ans_users.remove(request.user)
+            ans.like_ans_num -= 1
+            ans.save()
             return Response("ans_like canceled")
         else:
             # like 
             ans.like_ans_users.add(request.user)
+            ans.like_ans_num += 1
+            ans.save()
             return Response("ans_like !!!!!!")
 
 
@@ -463,12 +478,13 @@ def bookmark(request, qna_pk):
         request.user=user
     qna = get_object_or_404(Qna, pk=qna_pk)
     if request.method == 'GET':
+        serializer = bookmarkSerializer(qna)
         if qna.bookmark_users.filter(pk=request.user.pk).exists():
             qna.bookmarked="True"
-            serializer = bookmarkSerializer(qna)
+            qna.save()
         else:
             qna.bookmarked="False"
-            serializer = bookmarkSerializer(qna)
+            qna.save()
         return Response(serializer.data)
 
     # user가 qna을 북마크 누른 전체유저에 존재하는지.
@@ -476,10 +492,14 @@ def bookmark(request, qna_pk):
         if qna.bookmark_users.filter(pk=request.user.pk).exists():
             # bookmark cancled
             qna.bookmark_users.remove(request.user)
+            qna.bookmark_num -= 1
+            qna.save()
             return Response("bookmark cancled")
         else:
             # bookmark
             qna.bookmark_users.add(request.user)
+            qna.bookmark_num += 1
+            qna.save()
             return Response("bookmark")
 
 
@@ -496,13 +516,13 @@ def solve(request, ans_pk):
         request.user=user
  
     ans = get_object_or_404(Ans, pk=ans_pk)
-    qna = get_object_or_404(Qna, pk=ans.qna_id)
+    qna = get_object_or_404(Qna, pk=ans.id)
     if request.method == 'GET':
         serializer = solveSerializer(ans)
         return Response(serializer.data)
     if request.method == 'POST':
         ans = get_object_or_404(Ans, pk=ans_pk)
-        qna = get_object_or_404(Qna, pk=ans.qna_id)   
+        qna = get_object_or_404(Qna, pk=ans.id)   
         if ans.assisted == 1:
             ans.assisted = "False"
             qna.solved = "False"
@@ -549,7 +569,7 @@ def qna_list_small_q(request, qna_pk):
         request.user=user
     if request.method == 'GET':
         anss = Qnasmall.objects.all()
-        an=anss.filter(qna_id=qna_pk)
+        an=anss.filter(qna=qna_pk)
         serializer = QnasmalllistSerializer(an, many=True)
         return Response(serializer.data)
 

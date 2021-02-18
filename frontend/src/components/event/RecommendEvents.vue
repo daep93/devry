@@ -1,7 +1,9 @@
 <template>
   <div class="row q-mb-xl">
     <!-- 소제목 타이틀 -->
-    <div class="row col-12 text-h6 text-weight-bold ">Events for You</div>
+    <div class="row col-12 text-h6 text-weight-bold ">
+      당신을 위한 추천 이벤트
+    </div>
 
     <div class=" row q-mb-sm justify-end col-12">
       <!-- 태그 필터링 -->
@@ -17,7 +19,15 @@
       <q-select
         outlined
         v-model="category"
-        :options="['ALL', 'Conference', 'Workshop', 'Hackathon', 'Competition', 'Meeting']"
+        :options="[
+          'ALL',
+          'Conference',
+          'Workshop',
+          'Hackathon',
+          'Competition',
+          'Meeting',
+          'Recruting',
+        ]"
         style="width:140px;"
       />
     </div>
@@ -34,9 +44,7 @@
               :key="event.eventId"
               class="col-4 q-pa-xs"
             >
-              <recommend-entity 
-                :entity="event"
-              ></recommend-entity>
+              <upcoming-entity :entity="event"></upcoming-entity>
             </div>
           </q-tabs>
         </q-intersection>
@@ -46,13 +54,12 @@
 </template>
 
 <script>
-// import { testCase } from '@/dummy/Events.js';
-import RecommendEntity from '@/components/event/RecommendEntity.vue';
+import UpcomingEntity from '@/components/event/UpcomingEntity.vue';
 import { getEventList } from '@/api/board';
 
 export default {
   components: {
-    RecommendEntity,
+    UpcomingEntity,
   },
   data() {
     return {
@@ -93,16 +100,18 @@ export default {
           return false;
         });
       } catch (error) {
-      console.log(error);
-      // alert('에러가 발생했습니다.)
+        console.log(error);
+        // alert('에러가 발생했습니다.)
       } finally {
         this.$q.loading.hide();
       }
-    }
+    },
   },
   computed: {
     selectedTags() {
-      return this.$store.getters.getSelectedTags;
+      return this.$store.getters.getSelectedTags.length
+        ? this.$store.getters.getSelectedTags
+        : this.$store.state.all_tag_list;
     },
     categorySortedList() {
       return this.recommend_events.filter(article => {

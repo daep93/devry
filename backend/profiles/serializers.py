@@ -1,5 +1,5 @@
 from rest_framework import serializers, fields
-from .models import Profile, Link, Projects
+from .models import Profile
 from .models import tech, user_tag
 from accounts.models import User
 from django.shortcuts import get_object_or_404
@@ -20,11 +20,13 @@ class ProfileProjectSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ('project_name1', 'project_url1', 'project_name2', 'project_url2', 'project_name3', 'project_url3')
 
+
 class ProfileTagSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
         fields = ('tags',)
+
 
 class ProfileMyTagSerializer(serializers.ModelSerializer):
 
@@ -32,25 +34,67 @@ class ProfileMyTagSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ('my_tags',)
 
-class ProfilePostsSerializer(serializers.ModelSerializer):
+
+class ProfileMyTechSerialier(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ('posts',)
+        fields = ('tech_stack',)
 
-class ProfilePinnedPostsSerializer(serializers.ModelSerializer):
 
-    class Meta:
-        model = Profile
-        fields = ('pinned_posts', )
-
-class ProfileCommentsSerializer(serializers.ModelSerializer):
+class ProfileQnaPostsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ('comments', )
+        fields = ('qnas',)
+
+class ProfileForumPostsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Profile
+        fields = ('forums',)
 
 
+class ProfilePostNumberSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Profile
+        fields = ('post_num', )
+
+
+class ProfilePinnedQnaSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Profile
+        fields = ('pinned_qnas', )
+
+
+class ProfilePinnedForumSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Profile
+        fields = ('pinned_forums', )
+
+
+class ProfileImageSerializer(serializers.ModelSerializer):
+    profile_img = serializers.ImageField()
+    class Meta:
+        model = Profile
+        fields = ('profile_img',)
+
+
+class ProfileQnaCommentsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Profile
+        fields = ('qnas_comments', )
+
+
+class ProfileForumCommentsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Profile
+        fields = ('forums_comments', )
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -67,50 +111,50 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ('user', 'email', 'username', 'joined', 'follower_num', 'followee_num', 'profile_img', 'region', 'group', 'bio', 'links', 'sns_name1', 'sns_name2', 'sns_name3', 'sns_url1', 'sns_url2', 'sns_url3',
-        'tech_stack', 'projects', 'project_name1', 'project_name2', 'project_name3', 'project_url1', 'project_url2', 'project_url3', 'my_tags', 'pinned_posts', 'posts', 'comments',  )
+        'tech_stack', 'projects', 'project_name1', 'project_name2', 'project_name3', 'project_url1', 'project_url2', 'project_url3', 'my_tags', 'pinned_qnas', 'qnas',  )
 
 
 
 class ProfileShowSerializer(serializers.ModelSerializer):
-    tech_stack = fields.MultipleChoiceField(choices=tech)
+    # my_tags = ProfileMyTagSerializer(many=True, read_only=True)
+    # tech_stack = ProfileMyTechSerialier(many=True, read_only=True)
 
     link = ProfileLinkSerializer(many=True, read_only=True)
     project = ProfileProjectSerializer(many=True, read_only=True)
     follower_num = serializers.IntegerField(read_only=True)
     followee_num = serializers.IntegerField(read_only=True)
 
-    # my_tags = ProfileMyTagSerializer(read_only=True)
     tags = ProfileTagSerializer(read_only=True)
-    posts = ProfilePostsSerializer(many=True, read_only=True)
-    pinned_posts = ProfilePinnedPostsSerializer(many=True, read_only=True)
-    comments = ProfileCommentsSerializer(many=True, read_only=True)
+    qnas = ProfileQnaPostsSerializer(many=True, read_only=True)
+    forums = ProfileForumPostsSerializer(many=True, read_only=True)
+    
+    pinned_qnas = ProfilePinnedQnaSerializer(many=True, read_only=True)
+    pinned_forums = ProfilePinnedQnaSerializer(many=True, read_only=True)
+    qnas_comments = ProfileQnaCommentsSerializer(many=True, read_only=True)
+    forums_comments = ProfileForumCommentsSerializer(many=True, read_only=True)
     class Meta:
         model = Profile
-        fields = ('user', 'email', 'username', 'joined', 'follower_num', 'followee_num', 'profile_img', 'region', 'group', 'bio', 'link', 
-        'tech_stack', 'my_tags', 'project', 'tags', 'pinned_posts', 'posts', 'comments',  )
+        fields = ('user', 'email', 'username', 'joined', 'follower_num', 'followee_num', 'profile_img', 'region', 'group', 'bio', 'link', 'is_following',
+        'tech_stack', 'my_tags', 'project', 'tags', 'pinned_qnas', 'pinned_forums', 'qnas',  'forums','qnas_comments', 'forums_comments')
 
 
-class ProfileListSerializer(serializers.ModelSerializer):
-    tech_stack = fields.MultipleChoiceField(choices=tech)
-    my_tags = fields.MultipleChoiceField(choices=user_tag)      
-
+class ProfileListSerializer(serializers.ModelSerializer):    
+    # my_tags = ProfileMyTagSerializer(many=True, read_only=True)
+    # tech_stack = ProfileMyTechSerialier(many=True, read_only=True)
+    profile_img = serializers.URLField(read_only=True)
     link = ProfileLinkSerializer(many=True, read_only=True)
-
     project = ProfileProjectSerializer(many=True, read_only=True)
-
 
     class Meta:
         model = Profile
         fields = ('email', 'profile_img', 'region', 'group', 'bio', 'link', 'tech_stack', 'project', 'my_tags', )
-        read_only_fields = ('profile_img', 'link', 'project')
+        read_only_fields = ('profile_img', 'link', 'project', 'tech_stack')
  
-
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
     tech_stack = fields.MultipleChoiceField(choices=tech)
-    my_tags = fields.MultipleChoiceField(choices=user_tag)
-
-    # links = ProfileLinkSerializer(many=True, read_only=True)
+    my_tags = fields.MultipleChoiceField(choices=user_tag)   
+    profile_img = serializers.URLField(read_only=True)
     links = fields.ListField()
     projects = fields.ListField()
     class Meta:
@@ -159,8 +203,3 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-class ProfileImageSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Profile
-        fields = ('user', 'profile_img')

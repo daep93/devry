@@ -1,5 +1,4 @@
 <template>
-  <!-- 채택 댓글 프로필 -->
   <div>
     <div class="row cal-3 q-pt-lg q-ml-sm">
       <div v-if="info.assisted == true">
@@ -13,10 +12,16 @@
             <div class="row col-12">
               <div class="row col-2">
                 <span style="cursor:pointer;" class="q-mt-xs">
-                  <q-avatar
-                    style="width: 35px; height: 35px;"
-                    @click="goToProfile"
-                    ><img :src="profile_img" />
+                  <q-avatar style="border: 1px solid #ECEFF1" size="2.8em">
+                    <q-img
+                      :src="
+                        info.profile.profile_img
+                          ? img_url
+                          : require('@/assets/basic_image.png')
+                      "
+                      @click="goToProfile"
+                      class="cursor-pointer"
+                    />
                   </q-avatar>
                 </span>
               </div>
@@ -82,10 +87,9 @@ export default {
   },
   data() {
     return {
-      title: 'Add a YouTube stats widget to your iPhone with JavaScript',
-      profile_img: 'https://cdn.quasar.dev/img/avatar.png',
       is_following: Boolean,
       follower_num: this.info.user.follower_num,
+      img_url: `${process.env.VUE_APP_SERVER_API_URL}${this.info.profile.profile_img}`,
     };
   },
   watch: {

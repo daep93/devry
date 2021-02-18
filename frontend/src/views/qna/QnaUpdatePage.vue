@@ -1,19 +1,20 @@
 <template>
-  <post-edit-form>
+  <post-edit-form category="qna">
     <template slot="buttons" slot-scope="scopeProps">
       <q-btn
         outline
-        color="blue-12"
+        color="red-12"
         class="text-weight-bold q-px-xl q-py-sm q-mr-md"
-        label="임시저장"
+        label="삭제하기"
         size="md"
+        @click="scopeProps.deleteQna"
       />
       <q-btn
         color="blue-12"
         class="text-weight-bold q-px-xl q-py-sm"
         label="작성하기"
         size="md"
-        @click="scopeProps.createQna"
+        @click="scopeProps.updateQna"
       />
     </template>
   </post-edit-form>
@@ -21,15 +22,23 @@
 
 <script>
 import PostEditForm from '@/components/common/PostEditForm';
+
 export default {
   components: {
     PostEditForm,
   },
-  methods: {},
-  created() {
+  async created() {
     this.$store.commit('offLeft');
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+ul {
+  list-style-type: none;
+  padding-left: 0px;
+}
+.preview-shadow {
+  box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
+}
+</style>

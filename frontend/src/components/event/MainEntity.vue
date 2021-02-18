@@ -1,17 +1,15 @@
 <template>
-  <div class="row justify-center overflow-hidden" @click="goToDetail">
+  <div class="row justify-center overflow-hidden">
     <img
-      src="@/assets/tensorFlow.jpg"
-      alt="tensorflow"
+      :src="
+        entity.thumnail 
+          ? img_url 
+          : require('@/assets/basic_image.png')
+      "
       style="height:240px; width:100%;"
-      
+      class="cursor-pointer"
+      @click="goToDetail"
     />
-    <!-- {{ entity.thumnail }} -->
-    <!-- {{ this.address }}
-    <img
-      src="address"
-      style="height:240px; width:100%;"
-    /> -->
   </div>
 </template>
 
@@ -23,7 +21,7 @@ export default {
   data() {
     return {
       num: '',
-      address: `https://devry.kr${this.entity.thumnail}`
+      img_url: this.entity.thumnail
     }
   },
   methods: {

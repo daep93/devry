@@ -33,8 +33,9 @@
             :name="index"
             :key="post.id"
             style="border-radius: 10px;"
+            class="row items-center"
           >
-            <post-card :detail="info.pinned[0]"></post-card>
+            <qna-post-card :detail="post"></qna-post-card>
           </q-carousel-slide>
         </q-carousel>
       </q-card-section>
@@ -51,12 +52,13 @@
       </div>
       <div>
         <q-tabs v-model="post" style="color:#259EC5">
-          <q-tab name="posts" label="posts" class="qtab" />
-          <q-tab name="comments" label="comments" />
+          <q-tab name="qna" label="QnA" class="qtab" />
+          <q-tab name="forum" label="포럼" class="qtab" />
+          <q-tab name="comments" label="댓글" />
         </q-tabs>
       </div>
     </div>
-    <q-card v-if="post == 'posts'">
+    <q-card v-if="post == 'forum'">
       <q-card-section
         style="width:100%;border: 2px solid #2F95B4; border-raidus:5px; "
       >
@@ -65,6 +67,17 @@
           :detail="post"
           :key="post.id"
         ></post-card>
+      </q-card-section>
+    </q-card>
+    <q-card v-if="post == 'qna'">
+      <q-card-section
+        style="width:100%;border: 2px solid #2F95B4; border-raidus:5px; "
+      >
+        <qna-post-card
+          v-for="post in info.posts"
+          :detail="post"
+          :key="post.id"
+        ></qna-post-card>
       </q-card-section>
     </q-card>
     <q-card v-if="post == 'comments'">
@@ -82,18 +95,18 @@
 </template>
 
 <script>
-import PostCard from '@/components/common/PostCard';
+import QnaPostCard from '@/components/qna/QnaPostCard';
 import CommentCard from '@/components/common/CommentCard';
 export default {
   props: {
     info: Object,
   },
-  components: { PostCard, CommentCard },
+  components: { QnaPostCard, CommentCard },
   data() {
     return {
       autoplay: true,
       slide: 1,
-      post: 'posts',
+      post: 'qna',
     };
   },
 };

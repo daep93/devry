@@ -19,7 +19,7 @@
     </div>
 
     <!-- SNS 로그인 -->
-    <div class="row justify-around q-mt-md" style=" width:400px;">
+    <!-- <div class="row justify-around q-mt-md" style=" width:400px;">
       <q-btn size="16px" round color="grey-2">
         <q-icon name="img:google.svg"></q-icon>
       </q-btn>
@@ -32,7 +32,7 @@
       <q-btn size="16px" round color="yellow">
         <q-icon name="img:kakao.svg" size="45px"></q-icon>
       </q-btn>
-    </div>
+    </div> -->
   </div>
 </template>
 

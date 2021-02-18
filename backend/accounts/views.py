@@ -43,21 +43,27 @@ from django.views.decorators.http import require_POST
 # from .models import User, TokenModel
 from .models import User, TokenModel, UserFollowing
 # from .serializers import  UserRegistrationSerializer, UserSerializer, InfoSerializer, deleteSerializer, UserLoginSerializer
-from .serializers import  UserRegistrationSerializer, UserSerializer, InfoSerializer, deleteSerializer, UserLoginSerializer, UserFollowersSerializer, UserFollowingSerializer, TokenSerializer, UserFollowerNumberSerializer, UserFollowingNumberSerializer, UserFollowSerializer
+from .serializers import UserRegistrationSerializer, UserSerializer, InfoSerializer, isfollowingSerializer, \
+        deleteSerializer, UserLoginSerializer, UserFollowersSerializer, UserFollowingSerializer, TokenSerializer, \
+        UserFollowerNumberSerializer, UserFollowingNumberSerializer, UserFollowSerializer
 from .app_settings import RegisterSerializer, register_permission_classes
 from mysite.app_settings import TokenSerializer, LoginSerializer, UserDetailsSerializer, JWTSerializer, create_token
 from mysite.utils import jwt_encode
 from profiles.models import Profile
 from profiles.serializers import ProfileSerializer
+from django.shortcuts import get_object_or_404
+
 
 sensitive_post_parameters_m = method_decorator(
     sensitive_post_parameters('password1', 'password2')
 )
+
 sensitive_post_parameters_n = method_decorator(
     sensitive_post_parameters(
         'password', 'old_password', 'new_password1', 'new_password2'
     )
 )
+
 
 class UserSignupView(CreateAPIView):
     """
@@ -108,13 +114,14 @@ class UserSignupView(CreateAPIView):
                         allauth_settings.EMAIL_VERIFICATION,
                         None)
         return user
-
+        
 
 class UserLoginView(GenericAPIView):
     """
     이메일과 비밀번호를 통해 토큰을 발급받을 수 있습니다.
+    
+    ---
     """
-
     permission_classes = (AllowAny,)
     serializer_class = UserLoginSerializer
     token_model = TokenModel
@@ -133,9 +140,9 @@ class UserLoginView(GenericAPIView):
             response_serializer = TokenSerializer
         return response_serializer
 
+
     def login(self):
         self.user = self.serializer.validated_data['user']
-
         if getattr(settings, 'REST_USE_JWT', False):
             self.token = jwt_encode(self.user)
         else:
@@ -146,7 +153,6 @@ class UserLoginView(GenericAPIView):
 
     def get_response(self):
         serializer_class = self.get_response_serializer()
-
         if getattr(settings, 'REST_USE_JWT', False):
             data = {
                 'user': self.user,
@@ -157,12 +163,10 @@ class UserLoginView(GenericAPIView):
         else:
             serializer = serializer_class(instance=self.token,
                                           context={'request': self.request})
-
         token = Token.objects.all()
         user_token = Token.objects.get(user_id = self.user.id)
-
         response = Response(serializer.data, status=status.HTTP_200_OK)
-
+        print(token)
         response = Response({
                 "user": {
                     "id": self.user.id,
@@ -171,22 +175,22 @@ class UserLoginView(GenericAPIView):
                 "token": serializer.data['key']
             })
 
-
         # 사용자의 프로필이 존재하는 경우 로그인시 프로필의 tag 정보를 추가하는 과정
         profiles = Profile.objects.all()
         if profiles.filter(user_id=self.user.id).exists():
             profile = Profile.objects.get(username=self.user.username)
             if ProfileSerializer(profile).data['my_tags']:
                 user_tag = ProfileSerializer(profile).data['my_tags']
+                user_profile_img = ProfileSerializer(profile).data['profile_img']
                 response = Response({
                     "user": {
                         "id": self.user.id,
                         "username": self.user.username,
-                        "my_tags": user_tag
+                        "my_tags": user_tag,
+                        "profile_img": user_profile_img
                     },
                     "token": serializer.data['key']
                 })
-
 
         if getattr(settings, 'REST_USE_JWT', False):
             from rest_framework_jwt.settings import api_settings as jwt_settings
@@ -207,17 +211,19 @@ class UserLoginView(GenericAPIView):
         self.login()
         return self.get_response()
 
+
 class UserLogoutView(LogoutView):
     """
     headers에 유저의 토큰을 입력합니다. 
     headers={'Authorization': 'Token your_token'}
     """
     def post(self, request):
-        if request.META.get('HTTP_AUTHORIZATION'):
+        if request.META.get('HTTP_AUTHORIZATION'):           
             tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
             user=User.objects.get(id=tok.user_id)
-            if tok == user:
-                TokenSerializer(user.auth_token).remove()
+            request.user = user
+        Token.objects.get(user_id=request.user.pk).delete()
+        # TokenSerializer(request.user.auth_token).remove()
         return Response('로그아웃되었습니다', status=status.HTTP_204_NO_CONTENT)
 
 
@@ -254,6 +260,7 @@ class UserFollowingViewSet(viewsets.ModelViewSet):
     serializer_class = UserFollowingSerializer
     # permission_classes = (IsAuthenticatedOrReadOnly,)
 
+
 @api_view(['GET', 'POST'])
 def following(request):
     '''
@@ -269,11 +276,6 @@ def following(request):
         follows = UserFollowing.objects.all()
         serializer = UserFollowingSerializer(follows, many=True)
 
-        fo_user = User.objects.get(pk=1)
-        print(UserSerializer(fo_user).data)
-
-
-
         return Response(serializer.data)
 
     if request.method == 'POST':
@@ -282,39 +284,184 @@ def following(request):
         following_people = User.objects.get(pk=request.data['following_user'])
 
         if serializer.is_valid(raise_exception=True):
-            print(serializer.validated_data)
             serializer.save()
-
         followee_people.follower_num += 1
         following_people.followee_num += 1
         followee_people.save()
         following_people.save()
-        
         return Response(serializer.data)
-
-
 
 
 @api_view(['GET', 'POST'])
 def follow_list(request):
     if request.method == 'GET':
         follows = UserFollowing.objects.all()
-
         serializer = UserFollowingSerializer(follows, many=True)
-
         return Response(serializer.data)
 
 
-@api_view(['DELETE'])
-@permission_classes([AllowAny])
-def delete(request):
-    if request.method == 'DELETE':
-        serializer = deleteSerializer(data=request.data)
-        email = request.data.get('email')
-        user = User.objects.get(email=email)
-        user.delete()
-        return Response({'email': email}, status=status.HTTP_204_NO_CONTENT)
+@api_view(['GET', 'POST'])
+def following_list(request):
+    if request.method == 'GET':
+        pass
+    else:
+        serializer = UserFollowingSerializer(data=request.data)
+        followee_people = User.objects.get(pk=request.data['user'])
+        following_people = User.objects.get(pk=request.data['following_user'])
 
+        if serializer.is_valid(raise_exception=True):
+            print(serializer.validated_data)
+            serializer.save()
+        followee_people.follower_num += 1
+        following_people.followee_num += 1
+        followee_people.save()
+        following_people.save()  
+        return Response(serializer.data)
+
+
+@api_view(['GET', 'POST'])
+def followee_list(request):
+    if request.method == 'GET':
+        pass
+    else:
+        serializer = UserFollowingSerializer(data=request.data)
+        followee_people = User.objects.get(pk=request.data['user'])
+        following_people = User.objects.get(pk=request.data['following_user'])
+        if serializer.is_valid(raise_exception=True):
+            print(serializer.validated_data)
+            serializer.save()
+        followee_people.follower_num += 1
+        following_people.followee_num += 1
+        followee_people.save()
+        following_people.save()
+        return Response(serializer.data)
+
+
+@api_view(['GET', 'POST'])
+def myfollower_list(request):
+    if request.META.get('HTTP_AUTHORIZATION'):
+        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        my=User.objects.get(id=tok.user_id)
+        request.user = my
+    
+    if request.method == 'GET':
+        follows = UserFollowing.objects.all()
+        fos = follows.filter(following_user=request.user.pk)
+        for fo in fos:
+            if UserFollowing.objects.filter(following_user=fo.user, user=request.user.pk).exists():
+                fo.is_following = "True"
+            else:
+                fo.is_following = "False"
+            fo.save()
+        serializer = isfollowingSerializer(fos, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['GET', 'POST'])
+def myfollow_list(request):
+    if request.META.get('HTTP_AUTHORIZATION'):
+        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        my=User.objects.get(id=tok.user_id)
+        request.user = my
+        
+    if request.method == 'GET':
+        follows = UserFollowing.objects.all()
+        fos = follows.filter(user=request.user.pk)
+        for fo in fos:
+            if UserFollowing.objects.filter(user=request.user.pk).exists():
+                fo.is_following = "True"
+            else:
+                fo.is_following = "False"
+            fo.save()
+        serializer = isfollowingSerializer(fos, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['GET', 'POST'])
+def yourfollower_list(request, want_pk):
+    if request.META.get('HTTP_AUTHORIZATION'):
+        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        my=User.objects.get(id=tok.user_id)
+        request.user = my
+    
+    if request.method == 'GET':
+        follows = UserFollowing.objects.all()
+        fos = follows.filter(following_user=want_pk)
+        for fo in fos:
+            if UserFollowing.objects.filter(following_user=fo.user, user=want_pk).exists():
+                fo.is_following = "True"
+            else:
+                fo.is_following = "False"
+            fo.save()
+        serializer = isfollowingSerializer(fos, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['GET', 'POST'])
+def yourfollow_list(request, want_pk):
+    if request.META.get('HTTP_AUTHORIZATION'):
+        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        my=User.objects.get(id=tok.user_id)
+        request.user = my
+        
+    if request.method == 'GET':
+        follows = UserFollowing.objects.all()
+        fos = follows.filter(user=want_pk)
+        for fo in fos:
+            if UserFollowing.objects.filter(user=want_pk).exists():
+                fo.is_following = "True"
+            else:
+                fo.is_following = "False"
+            fo.save()
+        serializer = isfollowingSerializer(fos, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['GET','POST'])
+def toggle_following(request, want_pk):
+    if request.META.get('HTTP_AUTHORIZATION'):
+        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        my=User.objects.get(id=tok.user_id)
+        request.user=my
+    # user authentication process
+    
+    if request.method == 'GET':
+        if UserFollowing.objects.filter(following_user=want_pk, user=request.user.pk).exists():
+            fo = UserFollowing.objects.get(following_user=want_pk, user=request.user.pk)
+            fo.is_following="True"
+            serializer = isfollowingSerializer(fo)
+            return Response(serializer.data)
+        else:
+            return Response("false")
+        
+    if request.method == 'POST':
+        if UserFollowing.objects.filter(following_user= want_pk, user=request.user.pk).exists():
+            # following canceled
+            followee_people = User.objects.get(pk=request.user.pk)
+            following_people = User.objects.get(pk=want_pk)
+            followee_people.followee_num -= 1
+            following_people.follower_num -= 1
+            followee_people.save()
+            following_people.save()
+            UserFollowing.objects.get(following_user= want_pk, user_id=request.user.pk).delete()     
+            return Response("following canceled")
+        else:
+            # following 
+            serializer = UserFollowingSerializer(data=request.data)
+            followee_people = User.objects.get(pk=request.user.pk)
+            following_people = User.objects.get(pk=want_pk)
+            user =request.user.pk
+            following_user = want_pk
+            a={"user":user,"following_user":following_user}
+            serializer = UserFollowingSerializer(data=a)  
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()     
+            followee_people.followee_num += 1
+            following_people.follower_num += 1
+            followee_people.save()
+            following_people.save()
+            return Response("following ")
+            
 
 class UserPasswordResetView(PasswordResetView):
     template_name = 'accounts/password_reset.html' #템플릿을 변경하려면 이와같은 형식으로 입력
@@ -327,9 +474,9 @@ class UserPasswordResetView(PasswordResetView):
         else:
             return render(self.request, 'accounts/password_reset_done_fail.html')
             
+
 class UserPasswordResetDoneView(PasswordResetDoneView):
     template_name = 'accounts/password_reset_done.html' #템플릿을 변경하려면 이와같은 형식으로 입력
-
 
 
 class UserPasswordResetConfirmView(PasswordResetConfirmView):
@@ -340,6 +487,7 @@ class UserPasswordResetConfirmView(PasswordResetConfirmView):
     def form_valid(self, form):
         return super().form_valid(form)
 
+
 class UserPasswordResetCompleteView(PasswordResetCompleteView):
     template_name = 'accounts/password_reset_complete.html'
 
@@ -347,3 +495,18 @@ class UserPasswordResetCompleteView(PasswordResetCompleteView):
         context = super().get_context_data(**kwargs)
         context['login_url'] = resolve_url(settings.LOGIN_URL)
         return context
+
+
+@api_view(['GET', 'DELETE'])
+@permission_classes([AllowAny])
+def delete(request):
+    if request.META.get('HTTP_AUTHORIZATION'):
+        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        my=User.objects.get(id=tok.user_id)
+        request.user=my
+
+    if request.method == 'DELETE':
+        info = request.user
+        info.delete()
+        return Response({'email': info.email}, status=status.HTTP_204_NO_CONTENT)
+    return Response("회원탈퇴 페이지입니다")

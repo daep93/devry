@@ -1,14 +1,20 @@
 <template>
   <q-card class="col-7">
     <div class="row full-width">
-      <div class="row col-6 items-center">
-        <q-card-section>
+      <div class="row col-6  ">
+        <q-card-section class="row justify-center full-width">
+          <div class=" text-bold q-mb-md text-center full-width">
+            태그로 보는 포스팅 횟수
+          </div>
           <pie-chart
-            v-if="loaded"
+            v-if="loaded && tagCounts.length"
             :data="chartData"
             :options="chartOptions"
             style="width:25vw"
           ></pie-chart>
+          <span v-else class="text-grey-5 full-width text-center">
+            없음
+          </span>
         </q-card-section>
       </div>
       <div class="row col-6 items-start">
@@ -18,7 +24,7 @@
               <div class="text-bold q-mb-md  text-center">
                 My Tags
               </div>
-              <div class="row q-mb-xl ">
+              <div class="row q-mb-xl items-center justify-center">
                 <span
                   v-for="(tag, index) in info.myTags"
                   :key="tag"
@@ -27,6 +33,9 @@
                   style="font-size:10pt; border-radius:5pt;"
                   >#{{ tag }}</span
                 >
+                <span v-if="info.myTags.length == 0" class="text-grey-5">
+                  없음
+                </span>
               </div>
             </q-card-section>
           </div>
@@ -35,7 +44,7 @@
               <div class=" text-bold q-mb-md text-center">
                 My Skills/languages
               </div>
-              <div class="row">
+              <div class="row items-center justify-center">
                 <span
                   v-for="skill in info.skills"
                   :key="skill"
@@ -43,6 +52,9 @@
                   style="background-color: #F0ECEC; font-size:10pt; border-radius:5pt "
                   >{{ skill }}</span
                 >
+                <span v-if="info.skills.length == 0" class="text-grey-5">
+                  없음
+                </span>
               </div>
             </q-card-section>
           </div>
@@ -53,26 +65,33 @@
               <div class="text-bold text-center q-mb-md">
                 My Projects
               </div>
-              <div class="row full-width">
-                <q-list separator class="full-width">
+              <div class="row full-width ">
+                <q-list
+                  separator
+                  class="full-width items-center justify-center row"
+                >
                   <q-item
                     clickable
                     v-ripple
-                    style="background-color:#F0ECEC; border-radius:6px; "
-                    class="q-mb-sm q-pl-lg"
+                    style="background-color:#F0ECEC; border-radius:6px; height:20px"
+                    class="q-mb-sm full-width"
                     v-for="project in info.projects"
                     :key="project.project_name"
                   >
                     <q-item-section>
                       <div
                         style="color: #08458C"
-                        class="text-center"
-                        @click="window.open(info.project.project_url)"
+                        class="text-center  q-py-none"
                       >
-                        {{ info.project.project_name }}
+                        <a :href="project.project_url" target="_blank">
+                          {{ project.project_name }}
+                        </a>
                       </div>
                     </q-item-section>
                   </q-item>
+                  <span v-if="info.projects.length == 0" class="text-grey-5">
+                    없음
+                  </span>
                 </q-list>
               </div>
             </q-card-section>
@@ -178,14 +197,6 @@ export default {
             fontSize: 14,
           },
         },
-        title: {
-          text: '태그로 보는 포스팅 횟수',
-          fontSize: 15,
-          fontFamily: "'roboto'",
-          fontColor: '#000000',
-          display: true,
-          padding: 10,
-        },
         animation: {
           animateScale: true,
         },
@@ -226,7 +237,7 @@ export default {
   // },
   created() {
     this.tagNames = Object.keys(this.info.tags);
-    this.tagColors = colorListMapper(this.tagNames, 0.5);
+    this.tagColors = colorListMapper(this.info.myTags, 0.5);
     this.tagBoldColors = colorListMapper(this.tagNames, 1);
     this.tagLength = this.tagNames.length;
     this.tagCounts = Object.values(this.info.tags);
@@ -238,4 +249,17 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+a:link {
+  color: #08458c;
+  text-decoration: none;
+}
+a:visited {
+  color: #08458c;
+  text-decoration: none;
+}
+a:hover {
+  color: #08458c;
+  text-decoration: none;
+}
+</style>

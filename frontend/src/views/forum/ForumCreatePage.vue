@@ -1,5 +1,19 @@
 <template>
-  <post-edit-form>
+  <post-edit-form :file="file" category="forum">
+    <template slot="thumbnail">
+      <q-file
+        v-model="file"
+        label="썸네일 등록"
+        standout="bg-indigo-3 text-white "
+        color="primary"
+        style="max-width:300px"
+        class="q-mt-none q-mx-none q-mb-lg"
+      >
+        <template v-slot:prepend>
+          <q-icon name="attach_file" />
+        </template>
+      </q-file>
+    </template>
     <template slot="buttons" slot-scope="scopeProps">
       <q-btn
         outline
@@ -25,7 +39,11 @@ export default {
   components: {
     PostEditForm,
   },
-  methods: {},
+  data() {
+    return {
+      file: '',
+    };
+  },
   created() {
     this.$store.commit('offLeft');
   },

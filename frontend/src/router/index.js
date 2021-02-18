@@ -15,6 +15,11 @@ const routes = [
     // component: () => import('@/views/MainPage.vue'),
   },
   {
+    path: '/bookmark',
+    name: 'Bookmark',
+    component: () => import('@/views/bookmark/BookmarkPage.vue'),
+  },
+  {
     path: '/profile/:id',
     name: 'Profile',
     component: () => import('@/views/profile/ProfilePage.vue'),
@@ -26,15 +31,11 @@ const routes = [
     beforeEnter: (to, from, next) => {
       if (!store.getters.isLogined) {
         alert('로그인이 필요합니다');
+        next('/main');
         return;
       }
       next();
     },
-  },
-  {
-    path: '/twit',
-    name: 'Twit',
-    component: () => import('@/views/TwitPage.vue'),
   },
   {
     path: '/qna',
@@ -49,10 +50,11 @@ const routes = [
   {
     path: '/qna/create',
     name: 'QnACreate',
-    component: () => import('@/views/common/PostCreatePage.vue'),
+    component: () => import('@/views/qna/QnaCreatePage.vue'),
     beforeEnter: (to, from, next) => {
       if (!store.getters.isLogined) {
         alert('로그인이 필요합니다');
+        next('/main');
         return;
       }
       next();
@@ -61,10 +63,11 @@ const routes = [
   {
     path: '/qna/:id',
     name: 'QnAUpdate',
-    component: () => import('@/views/common/PostUpdatePage.vue'),
+    component: () => import('@/views/qna/QnaUpdatePage.vue'),
     beforeEnter: (to, from, next) => {
       if (!store.getters.isLogined) {
         alert('로그인이 필요합니다');
+        next('/main');
         return;
       }
       next();
@@ -77,6 +80,7 @@ const routes = [
     beforeEnter: (to, from, next) => {
       if (!store.getters.isLogined) {
         alert('로그인이 필요합니다');
+        next('/main');
         return;
       }
       next();
@@ -89,6 +93,7 @@ const routes = [
     beforeEnter: (to, from, next) => {
       if (!store.getters.isLogined) {
         alert('로그인이 필요합니다');
+        next('/main');
         return;
       }
       next();
@@ -100,7 +105,6 @@ const routes = [
     component: () => import('@/views/forum/ForumPage.vue'),
   },
   {
-    // 추후 id값으로 수정 필요
     path: '/forum-detail/:id',
     name: 'ForumDetail',
     component: () => import('@/views/forum/ForumDetailPage.vue'),
@@ -111,7 +115,6 @@ const routes = [
     component: () => import('@/views/event/EventPage.vue'),
   },
   {
-    // path: '/event/:id',
     path: '/event-detail/:id',
     name: 'EventDetail',
     component: () => import('@/views/event/EventDetailPage.vue'),
@@ -141,11 +144,6 @@ const routes = [
       }
       next();
     },
-  },
-  {
-    path: '/jobs',
-    name: 'Jobs',
-    component: () => import('@/views/JobsPage.vue'),
   },
   {
     path: '*',

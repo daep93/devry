@@ -19,12 +19,6 @@
       align="left"
     >
       <q-route-tab
-        name="twit"
-        :icon="$i.ionHappyOutline"
-        label="자유 게시판"
-        to="/twit"
-      />
-      <q-route-tab
         name="qna"
         :icon="$i.ionSearchOutline"
         label="QnA"
@@ -37,12 +31,6 @@
         to="/forum"
       />
       <q-route-tab name="event" icon="event" label="이벤트" to="/event" />
-      <q-route-tab
-        name="jobs"
-        :icon="$i.ionLaptopOutline"
-        label="구인구직"
-        to="/jobs"
-      />
     </q-tabs>
     <div v-if="$store.getters.isLogined">
       <div class="row my-tags q-pt-lg">

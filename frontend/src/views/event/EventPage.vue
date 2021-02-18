@@ -1,11 +1,10 @@
 <template>
-  <div class="q-pa-lg q-mt-sm row justify-center">
-    <div class="q-pa-sm" style="width: 60vw; ">
+  <div class="q-pt-lg row justify-center">
+    <div class="col-8 q-pl-lg">
       <!-- 타이틀 -->
-      <!-- <div style="margin-bottom: 20px;">
-        <span class="text-h4 text-weight-bolder">Events </span>
-        <p class="text-subtitle2" style="margin-top: 10px;">이벤트 정보를 확인할 수 있는 페이지입니다 :)</p>
-      </div> -->
+      <div class="row q-mb-sm q-mb-lg col-12 text-h5 text-weight-bold">
+        <div class="row col-9">Event 게시판</div>
+      </div>
       <main-event></main-event>
       <recommend-events></recommend-events>
       <upcoming-events class="q-mb-lg"></upcoming-events>
@@ -40,7 +39,7 @@ export default {
   methods: {
     goToEventRegister() {
       this.$router.push({ path: '/event-registration' });
-    }
+    },
   },
   created() {
     // 왼쪽 사이드 바 열림

@@ -54,7 +54,7 @@ class ProfileqnaSerializer(serializers.ModelSerializer):
       
     class Meta:
         model = Profile
-        fields = ('user', 'username', 'profile_img', 'bio', 'pinned_posts')
+        fields = ('user', 'username', 'profile_img', 'bio', 'pinned_qnas')
 
 
 class QnasmallSerializer(serializers.ModelSerializer):
@@ -279,7 +279,7 @@ class likeSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Qna
-        fields = ('id', "liked")
+        fields = ('id', "liked", "like_num", "like_users")
 
 
 class like_ansSerializer(serializers.ModelSerializer):
@@ -293,20 +293,33 @@ class bookmarkSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Qna
-        fields = ('id', "bookmarked")
+        fields = ('id', "bookmarked", "bookmark_num", "bookmark_users")
 
-class pinnedSerializer(serializers.ModelSerializer):
+class QnapinnedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Qna
-        fields = ('id', 'pinned',)
+        fields = ('id', 'pinned', 'pinned_users', 'pinned_num')
 
+
+class QnaDetailPinnedSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Qna
+        fields = ('id', 'title',)
 
 class solveSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Ans
         fields = ('id', "assisted")
+
+
+class QnanumberSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Qna
+        fields = ("post_num")
 
 
 class isfollowingSerializer(serializers.ModelSerializer):

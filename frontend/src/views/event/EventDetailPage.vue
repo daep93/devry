@@ -5,7 +5,11 @@
       <div class="row full-width q-pb-sm justify-center q-px-sm">
         <!-- 이벤트 썸네일 이미지 -->
         <q-img
-          :src="thumnail"
+          :src="
+            thumnail
+              ? this.thumnail
+              : require('@/assets/basic_image.png')
+          "
           spinner-color="white"
           class="rounded-borders col-6"
         >
@@ -53,7 +57,7 @@
 
           <div class="row q-mb-sm full-width items-center">
             <div class="text-h6 text-weight-bold q-mr-md">주최</div>
-            <idv>{{ host_name }}</idv>
+            <div>{{ host_name }}</div>
           </div>
           <div class="row q-mb-sm full-width items-center">
             <div class="text-h6 text-weight-bold q-mr-md">비용</div>
@@ -134,7 +138,11 @@
           </div>
           <div class="row full-width">
             <img
-              :src="profile_img"
+              :src="
+                profile_img
+                  ? this.profile_img
+                  : require('@/assets/basic_image.png')
+              "
               class="col-6 rounded-borders"
               style="width: 70px; height: 50px;"
             />
@@ -198,8 +206,7 @@ export default {
     updateEvent() {
       const post_id = this.$route.params.id;
       // 이벤트 등록 수정하기 페이지로 이동
-      this.$router.push({ path: `/event-update/${post_id}` });
-      // this.$router.push({ path: '/event-registration/:id' });
+      this.$router.push({ path: `/event-update/${post_id}`});
     },
     // 북마크 토글하기
     async checkbookmarked() {

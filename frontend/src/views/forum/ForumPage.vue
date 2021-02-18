@@ -1,14 +1,30 @@
 <template>
   <div class="row justify-center q-pt-lg ">
     <div class="row col-8 justify-center q-pl-lg">
-      <div class="row q-mb-sm q-mb-lg col-12 text-h5 text-weight-bold">
-        <div class="row col-9">Forum 게시판</div>
-        <div class="col-3 row justify-end">
-          <q-btn color="blue-7" @click="goToDetail">글쓰기</q-btn>
+      <div class="row q-mb-lg col-12 justify-between">
+        <div class="row col-10">
+          <div class="row col-3">
+            <span class="text-h5  text-weight-bold">Forum 게시판</span>
+          </div>
         </div>
+        <span class="q-ml-lg">
+          <q-btn
+            color="blue-7"
+            @click="goToDetail"
+            class="cursor-pointer glossy font-weight-bold"
+            size="12px"
+          >
+            <q-icon
+              :name="$i.ionDocumentTextOutline"
+              class="q-mr-sm"
+              size="xs"
+            ></q-icon>
+            글쓰기
+          </q-btn>
+        </span>
       </div>
       <!-- <forum-board></forum-board> -->
-      <bulletin-board :origin_board="board">
+      <bulletin-board :origin_board="board" v-if="loaded">
         <template slot="tab">
           <q-tab name="feed" label="피드" />
           <q-tab name="time" label="최신글" />
@@ -31,18 +47,18 @@
 // import ForumBoard from '@/components/forum/ForumBoard';
 import BulletinBoard from '@/components/common/BulletinBoard';
 import ForumEntity from '@/components/forum/ForumEntity';
-import { getForumList } from '@/api/board';
-// import { testCase } from '@/dummy/Forum';
+import { loadForumNew } from '@/api/board';
+// import { loadForumNew, loadForumLike, loadForumFeed, loadForumRecommend } from '@/api/board';
 
 export default {
   components: {
-    // ForumBoard,
     BulletinBoard,
     ForumEntity,
   },
   data() {
     return {
       board: [],
+      loaded: false,
     };
   },
   methods: {
@@ -53,14 +69,13 @@ export default {
         this.$store.commit('onAccountModal');
       }
     },
-    // 게시판의 정보를 서버로부터 받아옴
+    // 게시판의 '최신순' 정보를 서버로부터 받아옴
     async loadBoard() {
       try {
         this.$q.loading.show();
-        const { data } = await getForumList();
-        // this.origin_board = data;
+        const { data } = await loadForumNew();
         this.board = data;
-        // this.board = testCase;
+        this.loaded = true;
       } catch (error) {
         console.log(error);
       } finally {
