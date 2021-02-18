@@ -20,7 +20,8 @@
                   }}</b>
                 </span>
                 <span
-                  >글 ?? · 팔로워 {{ data.following_user.follower_num }}</span
+                  >팔로잉 {{ data.following_user.followee_num }} · 팔로워
+                  {{ data.following_user.follower_num }}</span
                 >
               </q-item-section>
             </q-item>
@@ -67,7 +68,8 @@ export default {
   },
   methods: {
     goToProfile(index) {
-      this.$router.push(`/profile/${this.followerData[index].user.id}`);
+      console.log('click!');
+      this.$router.push(`/profile/${this.followerData[index].id}`);
       location.reload();
     },
     async toggleFollow(index) {

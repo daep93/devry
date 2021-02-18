@@ -18,7 +18,7 @@
                   <b style="font-size: 15px;">{{ data.user.username }}</b>
                 </span>
                 <span
-                  >팔로잉 {{ data.user.follow_num }} · 팔로워
+                  >팔로잉 {{ data.user.followee_num }} · 팔로워
                   {{ data.user.follower_num }}</span
                 >
               </q-item-section>

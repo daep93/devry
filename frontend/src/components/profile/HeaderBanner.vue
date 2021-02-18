@@ -25,7 +25,7 @@
               >follow</q-btn
             > -->
             <template v-if="$store.state.id != info.userId">
-              <template v-if="!info.followStatus">
+              <template v-if="!is_following">
                 <q-btn
                   no-caps
                   color="primary"
@@ -101,7 +101,7 @@
             </div>
             <div>
               <span class="q-mr-md cursor-pointer" @click="onFollow('follow')"
-                >팔로워: <b>{{ info.followerNum }}</b></span
+                >팔로워: <b>{{ followerNum }}</b></span
               >
               <span class="cursor-pointer" @click="onFollow('following')"
                 >팔로우: <b>{{ info.followeeNum }}</b></span
@@ -125,7 +125,7 @@
 </template>
 
 <script>
-import { getOtherFollowerList, followOtherUser } from '@/api/follow';
+import { followOtherUser } from '@/api/follow';
 
 export default {
   props: {
@@ -134,11 +134,14 @@ export default {
   data() {
     return {
       followerData: [],
+      is_following: this.info.is_following,
+      followerNum: this.info.followerNum,
     };
   },
   watch: {
     info(newValue) {
-      this.followStatus = newValue.followStatus;
+      (this.is_following = newValue.is_following),
+        (this.followerNum = newValue.followerNum);
     },
   },
   methods: {
@@ -148,32 +151,17 @@ export default {
     onFollow(tab) {
       this.$store.commit('onFollowModal', [tab, this.$route.params.id]);
     },
-    async getFollower() {
-      try {
-        this.$q.loading.show();
-        const { data } = await getOtherFollowerList(this.info.userId);
-        this.followerData = data;
-      } catch (error) {
-        console.log(error);
-      } finally {
-        this.$q.loading.hide();
-      }
-    },
-    checkFollow() {
-      for (let data of this.followerData) {
-        if (data.user.id === this.$store.state.id) {
-          this.followStatus = true;
-        } else {
-          this.followStatus = false;
-        }
-      }
-    },
     async toggleFollow() {
       try {
         this.$q.loading.show();
         const want_pk = this.info.userId;
         await followOtherUser(want_pk);
-        this.followStatus = !this.followStatus;
+        this.is_following = !this.is_following;
+        if (this.is_following) {
+          this.followerNum = this.followerNum + 1;
+        } else {
+          this.followerNum = this.followerNum - 1;
+        }
       } catch (error) {
         console.log(error);
       } finally {

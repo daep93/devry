@@ -50,6 +50,7 @@ export default {
         followeeNum: data.followee_num,
         bio: data.bio,
         profileImg: data.profile_img,
+        is_following: data.is_following,
       };
       this.sideInfo = {
         tags: data.tags,
