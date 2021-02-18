@@ -61,6 +61,7 @@ export default {
   data() {
     return {
       tab: '',
+
       thumbStyle: {
         right: '2px',
         borderRadius: '5px',

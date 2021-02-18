@@ -1,5 +1,6 @@
 <template>
   <div>
+    {{ userId }} aaaa
     <div v-for="(data, index) in followeeData" :key="index" class="q-pa-xs">
       <div class="q-pa-md row col-align" style="height:80px;">
         <div class="col-8 row" style="height:100%">
@@ -54,12 +55,13 @@
 </template>
 
 <script>
-import { getFolloweeList, followOtherUser } from '@/api/follow';
+import { getOtherFolloweeList, followOtherUser } from '@/api/follow';
 
 export default {
   data() {
     return {
       followeeData: [],
+      userId: this.$store.state.follow.id,
     };
   },
   methods: {
@@ -82,8 +84,9 @@ export default {
     async getFollowee() {
       try {
         this.$q.loading.show();
-        const { data } = await getFolloweeList();
-        this.followeeData = data;
+        // const want_pk =
+        // const { data } = await getOtherFolloweeList(want_pk);
+        // this.followeeData = data;
       } catch (error) {
         console.log(error);
       } finally {
@@ -91,8 +94,26 @@ export default {
       }
     },
   },
+  computed: {
+    followId() {
+      return this.$store.state.follow.id;
+    },
+  },
+  watch: {
+    async followId(newValue) {
+      // this.userId = newValue.userId;
+      const { data } = await getOtherFolloweeList(newValue);
+      this.followeeData = data;
+      console.log(this.followeeData);
+    },
+  },
   async created() {
     try {
+      console.log('test');
+      // console.log(this.userId);
+      // console.log(this.$store.state.follow.tab);
+      // console.log(this.$store.state.follow.id);
+      // console.log(this.followId);
       this.getFollowee();
     } catch (error) {
       console.log(error);

@@ -38,6 +38,7 @@ export default {
       this.$q.loading.show();
       const { data } = await getProfile(id);
       this.headerInfo = {
+        userId: data.user,
         username: data.username,
         region: data.region,
         group: data.group,

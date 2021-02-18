@@ -79,7 +79,9 @@
               <span class="q-mr-md cursor-pointer" @click="onFollow('follow')"
                 >팔로워: <b>{{ info.followerNum }}</b></span
               >
-              <span class="cursor-pointer" @click="onFollow('following')"
+              <span
+                class="cursor-pointer"
+                @click="onFollow('following', info.userId)"
                 >팔로우: <b>{{ info.followeeNum }}</b></span
               >
             </div>
@@ -104,8 +106,10 @@ export default {
     linkRedirect(url) {
       window.open(url);
     },
-    onFollow(tab) {
-      this.$store.commit('onFollowModal', tab);
+    onFollow(tab, id) {
+      // console.log(tab, id);
+      // this.$store.state.follow.id = this.info.userId;
+      this.$store.commit('onFollowModal', tab, id);
     },
   },
 };

@@ -5,7 +5,8 @@ export default {
   offAccountModal(state) {
     state.accountModal = false;
   },
-  onFollowModal(state, tab) {
+  onFollowModal(state, tab, id) {
+    state.follow.id = id;
     state.follow.modal = true;
     state.follow.tab = tab;
   },
