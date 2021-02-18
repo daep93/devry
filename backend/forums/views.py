@@ -1,9 +1,11 @@
 import requests
 import json
-
+from datetime import datetime, date, timedelta
+import time
 import os
 
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -12,7 +14,7 @@ from rest_framework.response import Response
 from .serializers import PostListSerializer, ProfilepostSerializer, PostListforamtSerializer, PostSerializer,CommentSerializer, likeSerializer, bookmarkSerializer, like_commentSerializer, \
     UserinfoSerializer,ProfileListSerializer ,PostdetailSerializer,CommentlistSerializer,CommentdetailSerializer, PostDetailCommentSerializer, DetailCommentSerializer, pinnedSerializer,  \
         ProfilepostSerializer, ForumPostSerializer, pinnedDetailSerializer, PostMentionedCommentSerializer, DetailCommentMentionedSerializer, MentionedCommentSerializer, MentionedUserInfoSerializer, \
-            ImagePostSerializer, AuthenticatedFeedSerializer
+            ImagePostSerializer, AuthenticatedFeedSerializer, PostdetailSerializer, ProfilepostListSerializer
 from .models import Post, Comment
 from rest_framework import viewsets
 from profiles.models import Profile
@@ -51,21 +53,45 @@ def post_list(request):
         user=User.objects.get(id=tok.user_id)
         request.user = user
     if request.method == 'GET':
-        posts = Post.objects.all() 
-        serializer = PostListSerializer(posts, many=True)
-        # 토큰을 이용한 사용자 획인 코드
-       
-        # post number in user_id -> It will be "True"
-        # serializer = PostListforamtSerializer(posts, many=True)
-        for post in posts:
-            print(PostListSerializer(post).data)
-            post.like_num = post.like_users.count() 
-            if post.like_users.filter(id=request.user.pk).exists():
-                post.liked = "True"      
+        print(request.user)
+        posts = Post.objects.all().order_by('-written_time')   # 최신 순으로 정렬
+        following_users = []
+        # 사용자의 유저 정보에 팔로잉이 있는 경우 = API로 확인이 가능한 경우
+        if request.user != 'AnonymousUser':
+            if len(UserSerializer(request.user).data['following']):
+                for i in UserSerializer(request.user).data['following']:
+                    if i['following_user'] not in following_users:
+                        following_users.append(i['following_user'])
+
+                real_posts = Post.objects.filter(user__in=following_users, written_time__gte=datetime.now()-timedelta(days=7))  # 팔로우한 유저이면서 7일 이내의 게시글만 불러오기
+                posts_for_unauthorized_user = Post.objects.filter(written_time__gte=datetime.now()-timedelta(days=7)).order_by('-like_num')
+                serializer = AuthenticatedFeedSerializer(real_posts, many=True)
+                for i in range(len(real_posts)):
+                    post_user = User.objects.get(id=PostSerializer(posts[i]).data['user'])
+                    post_user_profile = Profile.objects.get(username=post_user)
+
+                    serializer.data[i]['feed_list'].append(PostListSerializer(posts[i]).data)
+                    serializer.data[i]['feed_list'][0]['user_info'].append(ProfilepostListSerializer(post_user_profile).data)
+                    serializer.data[i]['recommend_list'].append(PostListforamtSerializer(posts_for_unauthorized_user[i]).data)
+                # 토큰을 이용한 사용자 획인 코드
+                # post number in user_id -> It will be "True"       
+
+                    real_posts[i].like_num = real_posts[i].like_users.count() 
+                    if real_posts[i].like_users.filter(id=request.user.pk).exists():
+                        real_posts[i].liked = "True"      
+                    else:
+                        real_posts[i].liked = "False"
+                    real_posts[i].save()  
+                
+            # 확인된 api 요청 사용자이지만 팔로잉 정보가 없을 때-> 1주일 이내의 글을 좋아요 많은 순서대로 정렬
             else:
-                post.liked = "False"
-            post.save()  
-        print(serializer.data)
+                posts_for_unauthorized_user = Post.objects.filter(written_time__gte=datetime.now()-timedelta(days=7)).order_by('-like_num')
+                serializer = AuthenticatedFeedSerializer(posts_for_unauthorized_user, many=True)
+
+                for i in range(len(posts_for_unauthorized_user)):
+                    serializer.data[i]['recommend_list'].append(PostListforamtSerializer(posts_for_unauthorized_user[i]).data)
+
+
 
         return Response(serializer.data) 
 
@@ -170,42 +196,6 @@ def post_detail_update_delete(request, post_pk):
                     # profile.is_following = True
                     # profile.save()
 
-
-        # print(os.path.join('media'))
-
-        # print(os.getcwd())
-        # # # print(request.FILES)
-        # image_url = "http://127.0.0.1:8000/qnatest/image/"
-        # thumbnail = request.FILES['thumbnail']
-        # data = Image.open(thumbnail, 'r')
-        # data2 = os.path.join(os.getcwd(), str(thumbnail))
-        # print(data)
-        # print(data2)
-
-        # def file_selector(folder_path = '.'):
-        #     filenames = os.listdir(folder_path)
-        #     selected_filename = st.selectbox(request.FILES['thumbnail'], filenames)
-        #     return os.path.join(folder_path, selected_filename)
-
-        # filename = file_selector()
-        # st.write('You selected `%s`' % filename)
-
-        root_dir= os.path.dirname
-        print(root_dir)
-
-
-        # response = requests.post(image_url, files=data)
-        # if 'thumbnail' in request.FILES:
-        #     image_url = "http://127.0.0.1:8000/qnatest/image/"
-        #     file = {'thumbnail': {'data': open('Download.png', 'rb')}}
-        # # file = Image.open(os.getcwd() +'/static/ERD.jpg','r')
-        #     # file = Image
-        #     response = requests.post(image_url, files=file)
-        #     # response = requests.post(image_url)
-        #     print(response)
-        #     print(response.json())
-        #     print(response.status_code)
-
         user_pinned_posts = []
         forum_for_pinned = Post.objects.all()
         for single_pinned_post in forum_for_pinned:
@@ -221,25 +211,25 @@ def post_detail_update_delete(request, post_pk):
             serializer.data['writer_info'][0]['pinned_posts'].append(user_pinned_posts[user_pinned_post])
 
         serializer.data['forum_post'].append(ForumPostSerializer(post).data)
+   
 
+        if len(comment_for_post):
+            for single_comment in range(len(comment_for_post)):
+                comment_username = User.objects.get(id=DetailCommentSerializer(comment_for_post[single_comment]).data['user'])
 
-        
-        for single_comment in range(len(comment_for_post)):
-            comment_username = User.objects.get(id=DetailCommentSerializer(comment_for_post[single_comment]).data['user'])
+                serializer.data['comments'].append(DetailCommentSerializer(comment_for_post[single_comment]).data)
 
-            serializer.data['comments'].append(DetailCommentSerializer(comment_for_post[single_comment]).data)
+                comment_user_profile = Profile.objects.get(user=DetailCommentSerializer(comment_for_post[single_comment]).data['user'])
+                comment_user_img = ProfileSerializer(comment_user_profile).data['profile_img']
 
-            comment_user_profile = Profile.objects.get(user=DetailCommentSerializer(comment_for_post[single_comment]).data['user'])
-            comment_user_img = ProfileSerializer(comment_user_profile).data['profile_img']
+                serializer.data['comments'][single_comment]['username'] = str(comment_username)
+                serializer.data['comments'][single_comment]['profile_img'] = comment_user_img
 
-            serializer.data['comments'][single_comment]['username'] = str(comment_username)
-            serializer.data['comments'][single_comment]['profile_img'] = comment_user_img
+            mentioned_comments = Mentioned.objects.filter(comment=serializer.data['comments'])
 
-        mentioned_comments = Mentioned.objects.filter(comment= serializer.data['comments'][0]['id'])
-
-        for single_mention in range(len(mentioned_comments)):
-            mentioned_user = Profile.objects.get(user=MentionedCommentSerializer(mentioned_comments[single_mention]).data['mentioned_user'])
-            serializer.data['comments'][0]['mentioned'].append(MentionedUserInfoSerializer(mentioned_user).data)
+            for single_mention in range(len(mentioned_comments)):
+                mentioned_user = Profile.objects.get(user=MentionedCommentSerializer(mentioned_comments[single_mention]).data['mentioned_user'])
+                serializer.data['comments'][0]['mentioned'].append(MentionedUserInfoSerializer(mentioned_user).data)
 
         return Response(serializer.data)
 

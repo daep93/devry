@@ -1,3 +1,7 @@
+import json
+import requests 
+import os
+
 from django.shortcuts import get_object_or_404
 
 from rest_framework import status
@@ -17,6 +21,8 @@ from mysite.app_settings import TokenSerializer
 
 from qnas.serializers import QnaSerializer, AnsSerializer, QnapinnedSerializer
 from qnas.models import Qna, Ans
+
+from PIL import Image
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
@@ -198,8 +204,7 @@ def profile_show(request, profile_pk):
                     'project_url' : ProfileSerializer(profile).data[project_url]
                     }
                 )
-        profile.ref_tags = list(serializer.data['my_tags'])
-        profile.save()
+
         print(serializer.data)
         return Response(serializer.data)
 
@@ -278,57 +283,37 @@ def profile_setting(request, profile_pk):
                     'project_url' : ProfileSerializer(profile).data[project_url]
                     }
                 )
-        print(serializer.data)
-        # print(serializer.data['my_tags'])
-        profile.ref_tags = list(serializer.data['my_tags'])
-        profile.save()
+                
         return Response(serializer.data)
 
     if request.method == 'PUT':
         tags_for_user = ['Python3', 'Django', 'Java','Spring','HTML5','CSS3', 'JavaScript', 'TypeScript','Vue.js','React', 'Angular','Node.js', 'Swift','Ruby','Ruby on Rails', 'MySQL',
         'MariaDB','MongoDB','Docker','Kubernetes','Frontend','Backend','DevOps','Artificial Intelligence','BigData', 'Blockchain','Internet of Things', 'Augmented Reality','Virtual Reality']
 
-        serializer = ProfileUpdateSerializer(instance=profile, data=request.POST, partial=True)
+        serializer = ProfileUpdateSerializer(instance=profile, data=request.data, partial=True)
         if serializer.is_valid(raise_exception=True):
             
-            
-            # print(request.data.getlist('tech_stack'))
-            # serializer.validated_data['tech_stack'] = []
-            # for tec in request.data.getlist('tech_stack'):
-                # serializer.validated_data['tech_stack'].append(tec)
-            # serializer.validated_data['tech_stack'] = request.data.getlist('tech_stack')
-
-            # tech_list = []
-            # all_techs = request.data.getlist('tech_stack')
-
-            # for single_tech in all_techs:
-            #     tech_list.append(single_tech)
-
-            # print(tech_list)
-            # serializer.validated_data['my_tags'].append(serializer.validated_data['my_tags'])
+        
 
             # print(serializer.validated_data['my_tags'])
-            # for single_tag in serializer.validated_data['my_tags']:
-            #     print(single_tag)
+            # for single_tag in request.data['my_tags']:
             #     if single_tag not in tags_for_user:
             #         return Response(serializer.errors)
 
 
             # 이미지 받아오기
-            print(request.FILES)
-            if 'profile_img' in request.FILES:
-                serializer.validated_data['profile_img'] = request.FILES['profile_img']
-                image_field = profile.profile_img  # 이미지 주소
-                img_name = serializer.validated_data['profile_img']
-            # image_update = request.FILES.get('profile_img', None)
+            # serializer.validated_data['profile_img'] = ''
+            print(request.data)
+            print(serializer.validated_data)
+            # serializer.validated_data['profile_img'] = request.data['profile_img']
 
-            # serializer.validated_data['tech_stack'] = ''
-            # print(serializer.validated_data['tech_stack'])
-            # serializer.validated_data['tech_stack'] = (request.data['tech_stack'])
-            serializer.validated_data['tech_stack'] = list(request.data['tech_stack'])
-            
-            serializer.validated_data['my_tags'] = list()
-            serializer.validated_data['my_tags'] = (request.data['my_tags'])
+
+            # serializer.validated_data['bio'] = request.data['bio']
+            # serializer.validated_data['region'] = request.data['region']
+            # serializer.validated_data['group'] = request.data['group']
+            # serializer.validated_data['tech_stack'] = request.data['tech_stack']
+            # serializer.validated_data['my_tags'] = request.data['my_tags']
+
 
             serializer.validated_data['links'] = []
             serializer.validated_data['projects'] = []
