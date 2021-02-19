@@ -29,6 +29,7 @@ export default {
       sideInfo: {},
       postInfo: {},
       loaded: false,
+      followerData: [],
     };
   },
   computed: {},
@@ -38,6 +39,7 @@ export default {
       this.$q.loading.show();
       const { data } = await getProfile(id);
       this.headerInfo = {
+        userId: data.user,
         username: data.username,
         region: data.region,
         group: data.group,
@@ -48,6 +50,7 @@ export default {
         followeeNum: data.followee_num,
         bio: data.bio,
         profileImg: data.profile_img,
+        is_following: data.is_following,
       };
       this.sideInfo = {
         tags: data.tags,

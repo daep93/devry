@@ -77,7 +77,7 @@ export default {
           // 넘길 데이터
           user: this.$store.state.id,
           comment_content: this.content,
-          post: this.info,
+          post: this.info.post_id,
         });
         location.reload();
       } catch (error) {

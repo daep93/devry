@@ -1,7 +1,7 @@
 <template>
   <div class="q-pl-md row col-12">
     <div class="row col-12">
-      <q-card flat bordered style="width: 50px; height: 65px;">
+      <q-card flat bordered style="width: 45px; height: 65px;">
         <div style="margin:0 auto; text-align:center" class="q-pt-sm">
           <template v-if="liked_comment">
             <q-icon

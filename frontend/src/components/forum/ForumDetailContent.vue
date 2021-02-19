@@ -7,8 +7,8 @@
       style="min-height: 300px;"
     >
       <div class="row col-12 justify-end">
-        <!-- <span> -->
-        <span v-if="info.user == $store.state.id">
+        <span>
+          <!-- <span v-if="info.user == $store.state.id"> -->
           <q-btn flat round dense icon="more_vert" class="q-mt-md">
             <q-menu>
               <q-list style="min-width: 100px">
@@ -23,7 +23,7 @@
             </q-menu>
           </q-btn>
         </span>
-        <span v-else class="q-mt-xl"></span>
+        <!-- <span v-else class="q-mt-xl"></span> -->
       </div>
       <q-card-section class="row col-12 q-py-none">
         <div class="row col-12 text-weight-bold q-mb-md text-h4">
@@ -76,7 +76,7 @@ export default {
     },
     async deleteForum() {
       try {
-        const post_id = this.info.post_id;
+        const post_id = this.info.id;
         this.$q.loading.show();
         await deleteForumItem(post_id);
         this.$router.push({ path: '/forum' });
