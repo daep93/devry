@@ -78,13 +78,12 @@ class ProfilePostSerializer(serializers.ModelSerializer):
         model = Post
         fields = ('id', 'title', 'username', 'written_time', 'thumbnail', 'like_num', 'comment_count', 'ref_tags',)
 
-
 class PostListforamtSerializer(serializers.ModelSerializer):
     
     user = UserinfoSerializer(
         read_only=True,
     )
-    
+
     comment_count = serializers.IntegerField(
         source='comment_set.count',
         read_only=True,
@@ -96,7 +95,7 @@ class PostListforamtSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ('id', 'title', 'written_time', 'ref_tags', 'liked', 'comment_count', 'like_num', 'viewed_num', 'user', 'profile' )
+        fields = ('id', 'title','thumbnail','written_time','ref_tags', 'liked', 'comment_count', 'like_num', 'viewed_num', 'user', 'profile' )
 
 
 class PostListSerializer(serializers.ModelSerializer):
@@ -105,7 +104,7 @@ class PostListSerializer(serializers.ModelSerializer):
         read_only=True,
         many=True
     )
-    
+
     comment_count = serializers.IntegerField(
         source='comment_set.count',
         read_only=True,
@@ -113,9 +112,9 @@ class PostListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ('id', 'title', 'written_time', 'ref_tags', 'liked', 'comment_count', 'viewed_num', 'like_num', 'user_info','profile')
+        fields = ('id', 'title','thumbnail','written_time', 'ref_tags', 'liked', 'comment_count', 'viewed_num', 'like_num', 'user_info','profile')
 
-
+        
 class PostListDetailSerializer(serializers.ModelSerializer):
     thumbnail = serializers.ImageField(use_url=True)
 
@@ -254,13 +253,15 @@ class PostSerializer(serializers.ModelSerializer):
 class ForumPostSerializer(serializers.ModelSerializer):
     ref_tags= fields.MultipleChoiceField(choices=tech)
 
+
     profile = ProfileListSerializer(
-        read_only=True
+    read_only=True
     )
 
     class Meta:
         model = Post
-        fields = ('id', 'title', 'content', 'ref_tags', 'bookmark_num', 'bookmarked', 'like_num', 'liked', 'comment_num', 'viewed_num', 'written_time', 'profile')
+        fields = ('id', 'title', 'content', 'thumbnail', 'ref_tags', 'bookmark_num', 'bookmarked', 'like_num', 'liked', 'comment_num', 'viewed_num', 'written_time', 'profile')
+
 
 class PostdetailSerializer(serializers.ModelSerializer):
 

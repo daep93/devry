@@ -337,16 +337,17 @@ def post_detail_update_delete(request, post_pk):
         for i in UserSerializer(request.user).data['following']:
             user_following_list.append(i['following_user'])
 
-        post_writer = User.objects.get(id=post_pk)
-        if post_writer != request.user:
-            profile = Profile.objects.get(user=post_pk)
-            if post_pk in user_following_list:
-                profile.is_following = True
-                profile.save()
 
         post_user = PostSerializer(post).data['user']
         post_username = User.objects.get(id=post_user)
         post_user_profile = Profile.objects.get(username=post_username)
+
+
+        if post_username != request.user:
+            profile = Profile.objects.get(user=post_pk)
+            if post_pk in user_following_list:
+                profile.is_following = True
+                profile.save()
 
         serializer.data['writer_info'].append(ProfilepostSerializer(post_user_profile).data)
     
