@@ -18,7 +18,7 @@
           <q-btn flat round dense icon="more_vert" class="q-mt-md">
             <q-menu>
               <q-list style="min-width: 100px">
-                <q-item clickable v-close-popup>
+                <q-item clickable v-close-popup @click="updateForum">
                   <q-item-section>수정하기</q-item-section>
                 </q-item>
                 <q-item clickable v-close-popup @click="deleteForum">
@@ -79,6 +79,9 @@ export default {
     },
     liquidResolve(tag) {
       return liquidResolver(tag);
+    },
+    updateForum() {
+      this.$router.push(`/forum/${this.info.id}`);
     },
     async deleteForum() {
       try {

@@ -37,7 +37,6 @@
 </template>
 
 <script>
-import ForumShortProfile from '@/components/forum/ForumShortProfile';
 import ForumComment from '@/components/forum/ForumComment';
 import ForumDetailStatus from '@/components/forum/ForumDetailStatus';
 import ForumDetailContent from '@/components/forum/ForumDetailContent';
@@ -46,7 +45,6 @@ import { loadForumItem } from '@/api/forum';
 
 export default {
   components: {
-    ForumShortProfile,
     ForumComment,
     ForumDetailStatus,
     ForumDetailContent,
