@@ -50,14 +50,8 @@ export default {
     return {
       sort: this.sorting,
       search: '',
-      union_board: this.feed_board
-        ? [...this.feed_board, ...this.origin_board]
-        : this.origin_board,
-      board: this.origin_board,
+      board: this.feed_board,
     };
-  },
-  created() {
-    if (this.sorting == 'feed') this.board = this.union_board;
   },
   watch: {
     origin_board(newValue) {
@@ -89,7 +83,7 @@ export default {
       } else if (newValue === 'like') {
         this.board.sort((item1, item2) => item2.like_num - item1.like_num);
       } else if (newValue === 'feed') {
-        this.board = this.union_board;
+        this.board = this.feed_board;
       } else if (newValue === 'latest') {
         this.board = this.origin_board;
       }
@@ -104,7 +98,6 @@ export default {
           return false;
         })
         .reverse();
-      this.prep_board = this.board;
     },
   },
   computed: {

@@ -4,7 +4,7 @@
     <q-img
       :src="
         entity.thumbnail
-          ? thumbnail_url
+          ? entity.thumbnail
           : require('@/assets/basic_thumbnail.png')
       "
       style="height: 50%; max-height:250px"
