@@ -26,7 +26,7 @@
         <q-btn color="black" :icon="$i.ionNotificationsOutline" round flat>
         </q-btn> -->
         <!-- 로그인 하기 이전 보여지는 버튼 구현 -->
-        <q-btn color="primary" round flat v-if="!$store.getters.isLogined">
+        <q-btn color="grey" round flat v-if="!$store.getters.isLogined">
           <q-avatar :icon="$i.ionPersonCircleOutline"></q-avatar>
           <q-menu>
             <q-item @click="loginModal" clickable>
@@ -49,9 +49,7 @@
         </q-btn>
         <!-- 로그인 이후 보여지는 버튼 구현 -->
         <q-btn color="primary" round flat v-if="$store.getters.isLogined">
-          <q-avatar style="border: 1px solid #ECEFF1">
-            <q-img :src="require('@/assets/basic_image.png')" />
-          </q-avatar>
+          <q-avatar :icon="$i.ionPersonCircleOutline"></q-avatar>
           <q-menu style="width:30%">
             <q-item @click="moveToProfilePage" clickable>
               <q-item-section avatar>
