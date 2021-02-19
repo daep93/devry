@@ -51,7 +51,7 @@ export default {
     'Java',
     'JavaScript',
     'MariaDB',
-    'MySql',
+    'MySQL',
     'Node.js',
     'Python3',
     'React',
