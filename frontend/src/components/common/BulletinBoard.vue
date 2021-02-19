@@ -50,11 +50,14 @@ export default {
     return {
       sort: this.sorting,
       search: '',
-      board: this.origin_board,
       union_board: this.feed_board
         ? [...this.feed_board, ...this.origin_board]
         : this.origin_board,
+      board: this.origin_board,
     };
+  },
+  created() {
+    if (this.sorting == 'feed') this.board = this.union_board;
   },
   watch: {
     origin_board(newValue) {

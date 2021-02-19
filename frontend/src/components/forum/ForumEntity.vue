@@ -7,7 +7,7 @@
           ? thumbnail_url
           : require('@/assets/basic_thumbnail.png')
       "
-      style="height: 50%;"
+      style="height: 50%; max-height:250px"
       class="cursor-pointer"
       @click="goToDetail"
     />
