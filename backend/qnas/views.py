@@ -198,9 +198,6 @@ def qna_detail_update_delete(request, qna_pk):
     qna.viewed_num = qna.viewed_num + 1 # viewed_num++
     qna.save()
 
-    # url = urlparse('http://localhost:8080/#/qna-detail/'+str(qna_pk))
-    # print(url)
-
     # like_check
     anss = Ans.objects.all()
     for ans in anss:

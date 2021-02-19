@@ -70,7 +70,6 @@ class Event(models.Model):
     host_name=models.CharField(max_length=70)
     profile_img=models.URLField(default="", max_length=100, blank=True, null=False)
     register_url=models.URLField(default="")
-
     ref_tags = MultiSelectField(choices=tech)
     bookmark_num = models.PositiveIntegerField(default=0)
     bookmark_users = models.ManyToManyField(settings.AUTH_USER_MODEL,related_name='bookmark_evnets')
