@@ -2,7 +2,7 @@
   <div class="row full-width">
     <q-img
       class="full-width row items-center"
-      position="0 -250px"
+      position="0 -130px"
       style="height:200px; "
       :src="info.thumbnail"
     />
