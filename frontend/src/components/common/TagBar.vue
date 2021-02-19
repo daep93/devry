@@ -168,8 +168,11 @@ export default {
     },
   },
   created() {
-    for (const tag of this.$store.getters.getMyTags) {
-      this.tags[tag] = true;
+    if (this.$store.getters.getMyTags.length > 0) {
+      for (const tag in this.tags) this.tags[tag] = false;
+      for (const tag of this.$store.getters.getMyTags) {
+        this.tags[tag] = true;
+      }
     }
   },
 };
