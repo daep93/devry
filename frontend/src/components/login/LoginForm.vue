@@ -39,7 +39,7 @@
           :clear-icon="$i.ionCloseOutline"
           stack-label
           bottom-slots
-          placeholder="5~12자 영문 대 소문자, 숫자를 사용하세요"
+          placeholder="6~12자 영문 대 소문자, 숫자를 사용하세요"
           type="password"
           label="password"
           :dense="dense"
@@ -56,7 +56,7 @@
             <br />
           </template>
           <template v-slot:error>
-            <div class="text-red-8" v-if="password.length < 5">
+            <div class="text-red-8" v-if="password.length < 6">
               6자 이상의 비밀번호를 입력해주세요
             </div>
             <div class="text-red-8" v-else-if="password.length > 12">
