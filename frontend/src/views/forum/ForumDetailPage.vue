@@ -13,9 +13,9 @@
             <forum-detail-content :info="forumBody"></forum-detail-content>
           </div>
         </div>
-        <div class="col-3 q-pl-sm q-pr-xl">
+        <!-- <div class="col-3 q-pl-sm q-pr-xl">
           <forum-short-profile :info="shortProfile"></forum-short-profile>
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="row col-12">

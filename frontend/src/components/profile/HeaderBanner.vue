@@ -19,11 +19,6 @@
         <div class="col-9 q-pr-xl">
           <div class="row q-mb-sm justify-between">
             <span class="text-h5  text-indigo-14"> @{{ info.username }}</span>
-            <!-- <q-btn
-              style="background-color:#1595DC;"
-              class="text-white text-bold"
-              >follow</q-btn
-            > -->
             <template v-if="$store.state.id != info.userId">
               <template v-if="!is_following">
                 <q-btn
@@ -111,7 +106,7 @@
         </div>
       </div>
       <div class="row q-px-xl q-my-md full-width">
-        <div class="full-width">
+        <div class="full-width" v-if="info.bio">
           <q-icon
             :name="$i.ionChatboxEllipsesOutline"
             style="color:#727272"
