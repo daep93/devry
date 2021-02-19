@@ -42,6 +42,7 @@
                         ? img_url
                         : require('@/assets/basic_image.png')
                     "
+                    style="height:40px"
                     @click="goToProfile"
                     class="cursor-pointer"
                   />
