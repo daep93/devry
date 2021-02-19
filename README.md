@@ -185,9 +185,9 @@ DEVRY는 **개발자 특화 커뮤니티** 서비스와 **포트폴리오** 서�
 - 작성자의 프로필 및 대표 글을 미리보기 형태로 제공, 관심 있을 경우 바로 팔로우 할 수 있도록 함
 - 블로그에서 작성하는 것과 같이 편집 기능 제공
 
-![forum](img/README/sub2/1. forum.JPG)
-
-![forum_detail](img/README/sub2/2. forum detail.JPG)
+![forum](img/README/sub3/포럼게시판.PNG)
+---
+![forum_detail](img/README/sub3/포럼게시물.PNG)
 
 </br>
 
@@ -200,7 +200,9 @@ DEVRY는 **개발자 특화 커뮤니티** 서비스와 **포트폴리오** 서�
 - 답변 완료, 답변 대기 상태를 색깔로 구분 가능
 - 질문자와 채택된 답변자의 프로필 및 대표 글을 미리보기 형태로 제공
 
-![qna](img/README/sub2/3. qna.JPG)
+![qna](img/README/sub3/qna게시판.PNG)
+---
+![qna](img/README/sub3/qna게시물.PNG)
 
 </br>
 
@@ -212,9 +214,11 @@ DEVRY는 **개발자 특화 커뮤니티** 서비스와 **포트폴리오** 서�
 - 태그 필터링 기능을 통해 원하는 기술 스택의 이벤트만 선택해서 확인 가능
   - 왼쪽 카테고리 구역의 My tags에서 내가 팔로우하는 태그 고정, 페이지 이동 시 자동 필터링
 
-![event](img/README/sub2/4. event.JPG)
+![event](img/README/sub3/이벤트게시판.PNG)
+---
+![event](img/README/sub3/이벤트게시물.PNG)
 
-![event_detail](img/README/sub2/5. event detail.JPG)
+
 </br>
 
 ### 2. 포트폴리오 기능
@@ -233,13 +237,13 @@ DEVRY는 **개발자 특화 커뮤니티** 서비스와 **포트폴리오** 서�
 
 자신의 개발 이력 및 커뮤니티 활동 내역 요약을 통해, 마치 작은 블로그를 제공하는 것처럼 또 하나의 포트폴리오를 제공
 
-![profile](img/README/sub2/7. profile.JPG)
+![profile](img/README/sub3/프로필1.PNG)
+---
+![profile](img/README/sub3/프로필2.PNG)
+---
 
-![profile1](img/README/sub2/8. profile 2.JPG)
+---
 
-![profile2](img/README/sub2/9. profile 3.JPG)
-
-![profile3](img/README/sub2/10. profile 4.JPG)
 
 
 
@@ -251,11 +255,9 @@ DEVRY는 **개발자 특화 커뮤니티** 서비스와 **포트폴리오** 서�
 
 - 개발자에게 특화된 이력 입력폼 제공
 
-![setting1](img/README/sub2/11. profile-setting.JPG)
-
-![setting2](img/README/sub2/12. profile-setting 2.JPG)
-
-![setting3](img/README/sub2/13. profile-setting 3.JPG)
+![profile](img/README/sub3/프로필설정1.PNG)
+---
+![profile](img/README/sub3/프로필설정2.PNG)
 
 </br>
 
@@ -265,9 +267,10 @@ DEVRY는 **개발자 특화 커뮤니티** 서비스와 **포트폴리오** 서�
 
 - 해당 화면에서 바로 팔로우 및 팔로우 취소 가능
 
-![modal1](img/README/sub2/14. follow.JPG)
+![modal1](img/README/sub3/팔로우1.PNG)
+---
+![modal1](img/README/sub3/팔로우2.PNG)
 
-![modal2](img/README/sub2/15. follower.JPG)
 
 </br>
 
@@ -288,8 +291,9 @@ DEVRY는 **개발자 특화 커뮤니티** 서비스와 **포트폴리오** 서�
 
 
 ![liquid](img/README/Liquid 태그 가이드.PNG)
-
+---
 ![liquid1](img/README/Liquid_1.PNG)
+---
 ![liquid2](img/README/Liquid_2.PNG)
 
 
