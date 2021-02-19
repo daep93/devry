@@ -3,7 +3,7 @@
     <q-img
       class="full-width row items-center"
       position="0 -130px"
-      style="height:200px; "
+      style="height:200px; border:1px solid #cccccc; border-bottom:none "
       :src="info.thumbnail"
     />
     <q-card
