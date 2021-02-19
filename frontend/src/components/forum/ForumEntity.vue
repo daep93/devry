@@ -67,10 +67,15 @@
         <div class="col-4 row items-end justify-end items-md-baseline">
           <div class="icon-position q-mb-xs row items-center">
             <div class="q-mr-xs">
-              <q-icon
+              <!-- <q-icon
                 :name="$i.ionHeartOutline"
                 style="color:#727272"
                 size="22px"
+              ></q-icon> -->
+              <q-icon
+                :name="entity.liked ? $i.ionHeart : $i.ionHeartOutline"
+                size="sm"
+                :color="entity.liked ? 'red-8' : 'grey-6'"
               ></q-icon>
             </div>
             <div class="q-mr-md" style=" font-size: 13pt;">
