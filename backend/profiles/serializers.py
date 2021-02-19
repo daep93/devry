@@ -105,8 +105,6 @@ class ProfileSerializer(serializers.ModelSerializer):
     projects = ProfileProjectSerializer(many=True, read_only=True)
     username = serializers.CharField(read_only=True)
     email = serializers.EmailField(read_only=True)
-    # follower_num = serializers.IntegerField(read_only=True)
-    # followee_num = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Profile
@@ -116,9 +114,6 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class ProfileShowSerializer(serializers.ModelSerializer):
-    # my_tags = ProfileMyTagSerializer(many=True, read_only=True)
-    # tech_stack = ProfileMyTechSerialier(many=True, read_only=True)
-
     link = ProfileLinkSerializer(many=True, read_only=True)
     project = ProfileProjectSerializer(many=True, read_only=True)
     follower_num = serializers.IntegerField(read_only=True)
@@ -139,8 +134,6 @@ class ProfileShowSerializer(serializers.ModelSerializer):
 
 
 class ProfileListSerializer(serializers.ModelSerializer):    
-    # my_tags = ProfileMyTagSerializer(many=True, read_only=True)
-    # tech_stack = ProfileMyTechSerialier(many=True, read_only=True)
     profile_img = serializers.URLField(read_only=True)
     link = ProfileLinkSerializer(many=True, read_only=True)
     project = ProfileProjectSerializer(many=True, read_only=True)

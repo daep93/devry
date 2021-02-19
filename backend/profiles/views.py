@@ -160,9 +160,6 @@ def profile_show(request, profile_pk):
         profile_user_id = (ProfileSerializer(profile).data['user'])
         request_user_id = UserinfoSerializer(request.user).data['id']
 
-        # print(profile_user)
-        # print(request_user_id)
-        # print(request.user_id)
         if request.user != 'AnonymousUser' and request.user != profile_user:
             # if 
             for single_user in UserSerializer(profile_user).data['followers']:
@@ -177,7 +174,6 @@ def profile_show(request, profile_pk):
         user_posts = Post.objects.filter(user=ProfileSerializer(profile).data['user'])
         user_qnas = Qna.objects.filter(user=ProfileSerializer(profile).data['user'])
         profile.post_num = (len(user_posts) + len(user_qnas))
-        print(profile.post_num)
 
         # User정보 안에 저장된 follow 내역들을 profile에 저장하는 과정
         profile.follower_num = profile_user.follower_num
@@ -215,11 +211,6 @@ def profile_show(request, profile_pk):
             serializer.data['qnas_comments'].append(AnsSerializer(qna_comment).data)
         for forum_comment in forum_comments:
             serializer.data['forums_comments'].append(CommentSerializer(forum_comment).data)
-
-            # commented_post = Qna.objects.filter(id=AnsSerializer(comment).data['qna'])
-            # print(commented_post)
-            print(serializer.data)
-            # serializer.data['title'] += 'asdasd'
             
         for pinned_qna in user_pinned_qnas:
             serializer.data['pinned_qnas'].append(pinned_qna)
@@ -228,8 +219,6 @@ def profile_show(request, profile_pk):
             serializer.data['pinned_forums'].append(pinned_forum)
 
         serializer.data['tags'].update(real_tags)
-        # serializer.data['title'].update()
-        # print(serializer.data['tags'])
 
         # 저장된 sns_name, sns_url, project_name, project_url들을 각각 link와 project에 추가해 보여주는 과정
         for number in range(1, 4):
@@ -267,8 +256,6 @@ def profile_setting(request, profile_pk):
     사용자로부터 넘어오는 토큰 값(request.META['HTTP_AUTHORIZATION'])이 서버에 저장된 사용자의 토큰과 일치하면
     프로필 정보를 보여주거나, 수정할 수 있습니다.
     '''
-
-    # if request.META['HTTP_AUTHORIZATION'] == TokenSerializer(user.auth_token).data['key']:
 
     profile = get_object_or_404(Profile, pk=profile_pk)
     new_profile = Profile.objects.filter(pk=profile_pk).first()
@@ -343,18 +330,6 @@ def profile_setting(request, profile_pk):
         serializer = ProfileUpdateSerializer(instance=profile, data=request.data, partial=True)
         if serializer.is_valid(raise_exception=True):
             
-        
-
-            # print(serializer.validated_data['my_tags'])
-            # for single_tag in request.data['my_tags']:
-            #     if single_tag not in tags_for_user:
-            #         return Response(serializer.errors)
-
-
-            # 이미지 받아오기
-            # serializer.validated_data['profile_img'] = ''
-            # print(request.data)
-            # print(serializer.validated_data)
             serializer.validated_data['profile_img'] = request.data['profile_img']
 
 

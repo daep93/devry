@@ -5,23 +5,21 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django.utils.translation import ugettext_lazy as _
-
 from django.dispatch import receiver
 from django.urls import reverse
 from django.template.loader import render_to_string
 from django_rest_passwordreset.signals import reset_password_token_created
 from django.core.mail import EmailMultiAlternatives
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill
 
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-
 from multiselectfield import MultiSelectField
+from mysite.utils import import_callable
 
 from rest_framework.authtoken.models import Token as DefaultTokenModel
-from mysite.utils import import_callable
 
 
 class UserManager(BaseUserManager):
@@ -127,8 +125,6 @@ class UserFollowing(models.Model):
             models.UniqueConstraint(fields=['user','following_user'],  name="unique_followers")
         ]
         
-    # def __str__(self):
-    #     return f"user_id = {self.user_id} follows user_id = {self.following_user_id}"
 
 class Mentioned(models.Model):
 

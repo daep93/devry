@@ -125,11 +125,8 @@ def post_list_new(request):
         print(request.user)
         posts = Post.objects.all().order_by('-written_time')   # 최신 순으로 정렬
         serializer = AuthenticatedFeedSerializer()
-
-
         post_user = User.objects.get(username=request.user)
         post_user_profile = Profile.objects.get(username=post_user)
-        
 
     for i in range(len(posts)):
         post_user = User.objects.get(id=PostSerializer(posts[i]).data['user'])
@@ -208,32 +205,15 @@ def post_list_recommend(request):
         serializer = UnauthorizedFeedSerializer()
 
 #   # 확인된 api 요청 사용자이지만 팔로잉 정보가 없을 때-> 1주일 이내의 글을 좋아요 많은 순서대로 정렬
-    # posts = Post.objects.all().order_by('-like_num') 
         posts_for_unauthorized_user = Post.objects.filter(written_time__gte=datetime.now()-timedelta(days=7)).order_by('-like_num')
         post_user = User.objects.get(username=request.user)
         post_user_profile = Profile.objects.get(username=post_user)
         
         print(posts_for_unauthorized_user)
 
-        # post_user = User.objects.get(id=PostSerializer(posts_for_unauthorized_user).data)
-        # post_user_profile = Profile.objects.get(username=post_user)
         for i in posts_for_unauthorized_user:
-            # print(i)
-            # print(ProfilepostListSerializer(i).data)
-
-
-            # print(serializer.data['recommend_list'])
             serializer.data['recommend_list'].append(PostListDetailSerializer(i).data)
-            # serializer.data['recommend_list']['user_info'].append(ProfilepostListSerializer(post_user_profile).data)
 
-
-
-        # posts_for_unauthorized_user[i].like_num = posts_for_unauthorized_user[i].like_users.count() 
-        # if posts_for_unauthorized_user[i].like_users.filter(id=request.user.pk).exists():
-        #     posts_for_unauthorized_user[i].liked = "True"      
-        # else:
-        #     posts_for_unauthorized_user[i].liked = "False"
-        # posts_for_unauthorized_user[i].save()  
 
     return Response(serializer.data)
 
@@ -268,14 +248,6 @@ def post_list_create(request):
             post_username = User.objects.get(username=post_user['username'])
             post_profile = Profile.objects.get(username=post_username)
             post_profile_img = ProfileSerializer(post_profile).data['profile_img']
-
-            # print(serializer.data)
-
-            # serializer.data[0]['user_info'].append({
-            #     # 'user': post_user,
-            #     'username': post_username,
-            #     'profile_img': post_profile_img
-            # })
 
         return Response(serializer.data) 
     else:

@@ -5,17 +5,8 @@ from profiles.serializers import ProfileSerializer, ProfileListSerializer, Profi
 from accounts.models import User, Mentioned
 
 
-# class ImgPost(object):
-#     def __init__(self, files, thumbnail):
-#         self.files = files 
-#         self.thumbnail = thumbnail 
-
-
-# class ImagePostSerializer(serializers.Serializer):
-#     files = serializers.FileField()
-#     thumbnail = serializers.ImageField()
 class ImagePostSerializer(serializers.ModelSerializer):
-    thumbnail = serializers.ImageField(use_url=True, allow_empty_file = True)
+    thumbnail = serializers.ImageField(use_url=True, allow_empty_file=True)
     
     class Meta:
         model = ForumImagePost
@@ -57,7 +48,6 @@ class ProfilepostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ('user', 'username', 'profile_img', 'post_num', 'follower_num', 'bio', 'thumbnail', 'is_following', 'pinned_qnas', 'pinned_forums', )
-# 부족한 필드 추가해야함
 
 
 class WriterInfoSerializer(serializers.ModelSerializer):
@@ -137,14 +127,12 @@ class PostListDetailSerializer(serializers.ModelSerializer):
 
 
 class AuthenticatedFeedSerializer(serializers.ModelSerializer):
-    # feed_list = PostListSerializer(read_only=True, many=True)
     class Meta:
         model = Post
         fields = ('feed_list', )
 
 
 class UnauthorizedFeedSerializer(serializers.ModelSerializer):
-    # recommend_list = PostListforamtSerializer()
     class Meta:
         model = Post
         fields = ('recommend_list',)
@@ -265,24 +253,15 @@ class ForumPostSerializer(serializers.ModelSerializer):
 
 class PostdetailSerializer(serializers.ModelSerializer):
 
-    # ref_tags= fields.MultipleChoiceField(choices=tech)
-    
-    # user = UserinfoSerializer(
-    #     read_only=True,
-    # )
-
     writer_info = ProfilepostSerializer(many=True,read_only=True)
 
     forum_post = ForumPostSerializer(many=True, read_only=True)
 
     comments = PostDetailCommentSerializer(many=True, read_only=True)
-    # comments = PostDetailCommentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Post
         fields = ('writer_info', 'forum_post', 'comments')
-        # fields = ('id','writer_info', 'title','written_time', 'ref_tags', 'like_num',
-        # 'viewed_num', 'bookmark_num','content', 'comment_set', 'liked', 'bookmarked','user' )
 
 
 

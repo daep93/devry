@@ -30,7 +30,7 @@ from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, 
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail.message import EmailMessage
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render                                                            
+from django.shortcuts import render, get_object_or_404                                                           
 from django.template import RequestContext
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
@@ -40,9 +40,7 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.decorators.http import require_POST
 
-# from .models import User, TokenModel
 from .models import User, TokenModel, UserFollowing
-# from .serializers import  UserRegistrationSerializer, UserSerializer, InfoSerializer, deleteSerializer, UserLoginSerializer
 from .serializers import UserRegistrationSerializer, UserSerializer, InfoSerializer, isfollowingSerializer, \
         deleteSerializer, UserLoginSerializer, UserFollowersSerializer, UserFollowingSerializer, TokenSerializer, \
         UserFollowerNumberSerializer, UserFollowingNumberSerializer, UserFollowSerializer
@@ -51,12 +49,12 @@ from mysite.app_settings import TokenSerializer, LoginSerializer, UserDetailsSer
 from mysite.utils import jwt_encode
 from profiles.models import Profile
 from profiles.serializers import ProfileSerializer
-from django.shortcuts import get_object_or_404
 
 
 sensitive_post_parameters_m = method_decorator(
     sensitive_post_parameters('password1', 'password2')
 )
+
 
 sensitive_post_parameters_n = method_decorator(
     sensitive_post_parameters(
