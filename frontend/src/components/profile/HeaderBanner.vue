@@ -164,14 +164,6 @@ export default {
       }
     },
   },
-  async created() {
-    try {
-      this.getFollower();
-      this.checkFollow();
-    } catch (error) {
-      console.log(error);
-    }
-  },
 };
 </script>
 

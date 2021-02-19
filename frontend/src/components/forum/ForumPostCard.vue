@@ -2,8 +2,11 @@
   <div class="row q-mb-sm post-card-frame">
     <div class="col-2" style="">
       <q-img
-        src="https://source.unsplash.com/random"
-        alt="change-password"
+        :src="
+          detail.thumbnail
+            ? detail.thumbnail
+            : require('@/assets/basic_image.png')
+        "
         class="post-thumbnail"
       ></q-img>
     </div>
@@ -32,7 +35,7 @@
               size="22px"
               class="q-mr-sm"
             ></q-icon>
-            <span>{{ detail.comment_num }}</span>
+            <span>{{ detail.comment_set.length }}</span>
           </div>
           <div></div>
         </div>
@@ -45,7 +48,7 @@
       </div>
       <div class="row justify-end items-end col-12">
         <span
-          v-for="tag in detail.tags"
+          v-for="tag in detail.ref_tags"
           class="q-mr-sm q-mb-sm q-px-xs tag-color"
           :style="{ 'background-color': tagColor(tag) }"
           :key="tag"
@@ -64,7 +67,7 @@ export default {
   },
   methods: {
     tagColor(tag) {
-      return colorSoloMapper(tag, 0.2);
+      return colorSoloMapper(tag, 0.5);
     },
   },
 };
@@ -74,7 +77,7 @@ export default {
 .post-card-frame {
   width: 100%;
   border: 1px solid #c1b9b9;
-  border-radius: 8px;
+  border-radius: 5px;
 }
 .post-thumbnail {
   height: 150px;
@@ -82,6 +85,6 @@ export default {
 }
 .tag-color {
   font-size: 10pt;
-  border-radius: 5pt;
+  border-radius: 3pt;
 }
 </style>

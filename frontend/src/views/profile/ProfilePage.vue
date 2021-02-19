@@ -68,6 +68,7 @@ export default {
         comments: [...data.qnas_comments, ...data.forums_comments],
         qnas_pinned: data.pinned_qnas,
         forums_pinned: data.pinned_forums,
+        forums: data.forums,
       };
       this.loaded = true;
     } catch (error) {

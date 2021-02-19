@@ -27,6 +27,7 @@
           @mouseenter="autoplay = false"
           @mouseleave="autoplay = true"
           height="170px"
+          v-if="info.qnas_pinned.length"
         >
           <q-carousel-slide
             v-for="(post, index) in info.qnas_pinned"
@@ -38,6 +39,7 @@
             <qna-post-card :detail="post"></qna-post-card>
           </q-carousel-slide>
         </q-carousel>
+        <div v-else class="full-width text-center text-grey-6">없음</div>
       </q-card-section>
     </q-card>
     <div class="row justify-between q-mb-sm">
@@ -53,6 +55,7 @@
       <div>
         <q-tabs v-model="post" style="color:#259EC5">
           <q-tab name="qna" label="질문" />
+          <q-tab name="forum" label="포럼" />
           <q-tab name="comments" label="댓글" />
         </q-tabs>
       </div>
@@ -66,6 +69,17 @@
           :detail="qna"
           :key="qna.id"
         ></qna-post-card>
+      </q-card-section>
+    </q-card>
+    <q-card v-if="post == 'forum'">
+      <q-card-section
+        style="width:100%;border: 2px solid #2F95B4; border-raidus:5px; "
+      >
+        <forum-post-card
+          v-for="forum in info.forums"
+          :detail="forum"
+          :key="forum.id"
+        ></forum-post-card>
       </q-card-section>
     </q-card>
     <q-card v-if="post == 'comments'">
@@ -84,12 +98,13 @@
 
 <script>
 import QnaPostCard from '@/components/qna/QnaPostCard';
+import ForumPostCard from '@/components/forum/ForumPostCard';
 import CommentCard from '@/components/common/CommentCard';
 export default {
   props: {
     info: Object,
   },
-  components: { QnaPostCard, CommentCard },
+  components: { QnaPostCard, CommentCard, ForumPostCard },
   data() {
     return {
       autoplay: true,
