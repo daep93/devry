@@ -32,50 +32,65 @@ export default {
       followerData: [],
     };
   },
-  computed: {},
-  async created() {
-    const id = this.$route.params.id;
-    try {
-      this.$q.loading.show();
-      const { data } = await getProfile(id);
-      this.headerInfo = {
-        userId: data.user,
-        username: data.username,
-        region: data.region,
-        group: data.group,
-        email: data.email,
-        links: data.link,
-        joined: data.joined,
-        followerNum: data.follower_num,
-        followeeNum: data.followee_num,
-        bio: data.bio,
-        profileImg: data.profile_img,
-        is_following: data.is_following,
-      };
-      this.sideInfo = {
-        tags: data.tags,
-        skills:
-          typeof data.tech_stack == 'string'
-            ? [data.tech_stack]
-            : data.tech_stack,
-        projects: data.project,
-        postNum: data.qnas.length + data.forums.length,
-        commentNum: data.qnas_comments.length + data.forums_comments.length,
-        myTags: typeof data.my_tags == 'string' ? [data.my_tags] : data.my_tags,
-      };
-      this.postInfo = {
-        qnas: data.qnas,
-        comments: [...data.qnas_comments, ...data.forums_comments],
-        qnas_pinned: data.pinned_qnas,
-        forums_pinned: data.pinned_forums,
-        forums: data.forums,
-      };
-      this.loaded = true;
-    } catch (error) {
-      console.log(error);
-    } finally {
-      this.$q.loading.hide();
-    }
+  computed: {
+    paramsId() {
+      return this.$route.params.id;
+    },
+  },
+  watch: {
+    paramsId(newValue) {
+      this.loaded = false;
+      this.loadData(newValue);
+    },
+  },
+  methods: {
+    async loadData(id) {
+      try {
+        this.$q.loading.show();
+        const { data } = await getProfile(id);
+        this.headerInfo = {
+          userId: data.user,
+          username: data.username,
+          region: data.region,
+          group: data.group,
+          email: data.email,
+          links: data.link,
+          joined: data.joined,
+          followerNum: data.follower_num,
+          followeeNum: data.followee_num,
+          bio: data.bio,
+          profileImg: data.profile_img,
+          is_following: data.is_following,
+        };
+        this.sideInfo = {
+          tags: data.tags,
+          skills:
+            typeof data.tech_stack == 'string'
+              ? [data.tech_stack]
+              : data.tech_stack,
+          projects: data.project,
+          postNum: data.qnas.length + data.forums.length,
+          commentNum: data.qnas_comments.length + data.forums_comments.length,
+          myTags:
+            typeof data.my_tags == 'string' ? [data.my_tags] : data.my_tags,
+        };
+        this.postInfo = {
+          qnas: data.qnas,
+          comments: [...data.qnas_comments, ...data.forums_comments],
+          qnas_pinned: data.pinned_qnas,
+          forums_pinned: data.pinned_forums,
+          forums: data.forums,
+        };
+        this.loaded = true;
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.$q.loading.hide();
+      }
+    },
+  },
+  created() {
+    this.loadData(this.paramsId);
   },
   components: {
     HeaderBanner,

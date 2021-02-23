@@ -7,11 +7,18 @@
         style="color:#3B77AF"
         class="row justify-start"
       >
-        <q-tab name="feed" label="피드" />
+        <q-tab name="feed" label="피드" v-if="$store.getters.isLogined" />
+        <q-tab name="recomm" label="추천" v-else />
         <q-tab name="time" label="최신글" />
       </q-tabs>
       <div class="row justify-end q-gutter-lg">
-        <q-input v-model="search" type="search" class="q-mb-sm" outlined>
+        <q-input
+          v-model="search"
+          type="search"
+          class="q-mb-sm"
+          outlined
+          @keypress.enter="seachPost"
+        >
           <template v-slot:append>
             <q-icon :name="$i.ionSearchOutline" />
           </template>
@@ -25,13 +32,22 @@
         >
       </div>
     </div>
-    <div class="row q-mt-md col-12">
+    <div class="row q-mt-md col-12" v-if="cur_board.length">
       <div
         class="row col-4 q-pa-sm"
-        v-for="forum in board"
+        v-for="forum in cur_board"
         :key="forum.forumId"
       >
         <forum-entity :entity="forum"></forum-entity>
+      </div>
+    </div>
+    <div
+      class="row q-mt-md col-12  justify-center items-center"
+      style="height:300px"
+      v-else
+    >
+      <div class="text-grey-7">
+        아직 데이터가 없습니다. 다른 사용자들을 팔로우 해서 소식을 받아보세요.
       </div>
     </div>
   </div>
@@ -39,8 +55,7 @@
 
 <script>
 import ForumEntity from '@/components/forum/ForumEntity.vue';
-// import { getQnaList } from '@/api/board';
-
+import { loadForumTime, loadForumFeed } from '@/api/board';
 export default {
   props: {
     current: Number,
@@ -50,83 +65,95 @@ export default {
   },
   data() {
     return {
-      sort: 'time',
+      sort: this.$store.getters.isLogined ? 'feed' : 'recomm',
       search: '',
-      board: [],
-      origin_board: [],
+      time_board: [],
+      feed_board: [],
+      recomm_board: [],
+      cur_board: [],
     };
   },
   async created() {
-    // myTags로부터 selectedTags를 받아옴
-    this.$store.commit('initSelectedTags');
     // QnA 게시판의 정보를 서버로부터 받아옴
     this.loadBoard();
   },
-  watch: {
-    sort(newValue) {
-      // sort를 감시해서 바뀌면 새로운 게시판의 정보를 서버로부터 받아옴
-      // this.loadBoard();
-      if (newValue === 'time') {
-        this.board.sort((item1, item2) => {
-          return (
-            this.$moment(item2.written_time) - this.$moment(item1.written_time)
-          );
-        });
-      } else if (newValue === 'comment') {
-        this.board.sort(
-          (item1, item2) => item2.comment_num - item1.comment_num,
-        );
-      } else {
-        this.board.sort((item1, item2) => item2.like_num - item1.like_num);
-      }
-    },
-    selectedTags(newValue) {
-      // store의 selectedTags가 바뀌면 새로운 게시판의 정보를 서버로부터 받아옴
-      // this.loadBoard();
-      this.board = this.origin_board.filter(post => {
+  methods: {
+    tagFilter(board) {
+      // 게시물 목록으로부터 selectedTags에 매칭된 게시물만 가져온다.
+      return board.filter(post => {
         for (const tag of post.ref_tags) {
-          if (newValue.indexOf(tag) >= 0) return true;
+          if (this.selectedTags.indexOf(tag) >= 0) return true;
         }
         return false;
       });
     },
-  },
-  methods: {
-    // 게시판의 정보를 서버로부터 받아옴
     async loadBoard() {
+      // 포럼 게시판 목록 정보를 불러온다.
       try {
         this.$q.loading.show();
-        // const { data } = await getQnaList({
-        //   tags_filter: this.selectedTags,
-        //   tab: this.sort,
-        // });
-        // const { data } = await getQnaList();
-        // this.origin_board = data;
-        this.origin_board = testCase;
-        this.board = this.origin_board.filter(post => {
-          for (const tag of post.ref_tags) {
-            if (this.selectedTags.indexOf(tag) >= 0) {
-              return true;
-            }
-          }
-          return false;
-        });
-        this.board.sort((item1, item2) => {
-          return (
-            this.$moment(item2.written_time) - this.$moment(item1.written_time)
+        // 로그인에 상관없이 최신순으로 포럼 목록을 받아온다.
+        let { data } = await loadForumTime();
+        this.time_board = data;
+
+        if (this.$store.getters.isLogined) {
+          // 로그인이 되어 있으면 Feed를 가져온다.
+          let { data } = await loadForumFeed();
+          this.feed_board = data;
+          this.cur_board = this.tagFilter(data);
+        } else {
+          // 로그인이 되어 있지 않으면 추천순서대로 정렬된 포럼 목록을 가져온다.
+          this.recomm_board = [...this.time_board].sort(
+            (item1, item2) => item2.like_num - item1.like_num,
           );
-        });
+          this.cur_board = this.tagFilter(this.recomm_board);
+        }
+        this.loaded = true;
       } catch (error) {
         console.log(error);
       } finally {
         this.$q.loading.hide();
       }
     },
+
+    seachPost() {
+      // 검색창에 키워드를 적으면 title 또는 username에 일부 일치하는 게시물들을 필터링한다.
+      const searchReg = new RegExp(this.search, 'i');
+      this.board = this.origin_board.filter(item => {
+        if (searchReg.test(item.title)) return true;
+        if (searchReg.test(item.user.username)) return true;
+        return false;
+      });
+    },
   },
+  watch: {
+    sort(newValue) {
+      // sort를 감시해서 바뀌면 현재 게시판을 탭에 맞게 바꿈
+      if (newValue === 'time') {
+        this.cur_board = this.time_board;
+      } else if (newValue === 'feed') {
+        this.cur_board = this.feed_board;
+      } else {
+        this.cur_board = this.recomm_board;
+      }
+
+      // 태그 필터링
+      this.cur_board = this.tagFilter(this.cur_board);
+    },
+    selectedTags() {
+      // store의 selectedTags가 바뀌면 게시판 목록을 필터링함.
+      this.cur_board = this.tagFilter(this.origin_board);
+    },
+  },
+
   computed: {
     // watch로 감시하기 위해서 store의 데이터를 selectedTags에 담음.
     selectedTags() {
       return this.$store.getters.getSelectedTags;
+    },
+    origin_board() {
+      if (this.sort === 'time') return this.time_board;
+      else if (this.sort === 'feed') return this.feed_board;
+      else return this.recomm_board;
     },
   },
 };

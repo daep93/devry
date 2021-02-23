@@ -2,7 +2,10 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import store from '@/store/index';
 Vue.use(VueRouter);
-
+const loginModalOn = () => {
+  store.commit('setAccountModalType', 'login');
+  store.commit('onAccountModal');
+};
 const routes = [
   {
     path: '/',
@@ -30,8 +33,7 @@ const routes = [
     component: () => import('@/views/profile/ProfileSettingPage.vue'),
     beforeEnter: (to, from, next) => {
       if (!store.getters.isLogined) {
-        alert('로그인이 필요합니다');
-        next('/main');
+        loginModalOn();
         return;
       }
       next();
@@ -53,8 +55,7 @@ const routes = [
     component: () => import('@/views/qna/QnaCreatePage.vue'),
     beforeEnter: (to, from, next) => {
       if (!store.getters.isLogined) {
-        alert('로그인이 필요합니다');
-        next('/main');
+        loginModalOn();
         return;
       }
       next();
@@ -66,8 +67,7 @@ const routes = [
     component: () => import('@/views/qna/QnaUpdatePage.vue'),
     beforeEnter: (to, from, next) => {
       if (!store.getters.isLogined) {
-        alert('로그인이 필요합니다');
-        next('/main');
+        loginModalOn();
         return;
       }
       next();
@@ -79,8 +79,7 @@ const routes = [
     component: () => import('@/views/forum/ForumCreatePage.vue'),
     beforeEnter: (to, from, next) => {
       if (!store.getters.isLogined) {
-        alert('로그인이 필요합니다');
-        next('/main');
+        loginModalOn();
         return;
       }
       next();
@@ -92,8 +91,7 @@ const routes = [
     component: () => import('@/views/forum/ForumUpdatePage.vue'),
     beforeEnter: (to, from, next) => {
       if (!store.getters.isLogined) {
-        alert('로그인이 필요합니다');
-        next('/main');
+        loginModalOn();
         return;
       }
       next();

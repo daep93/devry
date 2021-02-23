@@ -118,7 +118,6 @@ export default {
           password: this.password,
         });
         this.$q.loading.hide();
-        alert('로그인 성공');
         this.offModal();
         location.reload();
       } catch (error) {
