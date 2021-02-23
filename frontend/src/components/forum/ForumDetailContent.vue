@@ -1,11 +1,13 @@
 <template>
   <div class="row full-width">
-    <q-img
-      class="full-width row items-center"
-      position="0 -130px"
-      style="height:200px; border:1px solid #cccccc; border-bottom:none "
-      :src="info.thumbnail"
-    />
+    <template v-if="info.thumbnail">
+      <q-img
+        class="full-width row items-center"
+        position="0 -130px"
+        style="height:200px; border:1px solid #cccccc; border-bottom:none "
+        :src="info.thumbnail"
+      />
+    </template>
     <q-card
       flat
       bordered
