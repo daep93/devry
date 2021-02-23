@@ -2,11 +2,7 @@
   <q-card class="row full-width" style="height:300px">
     <!-- 썸네일 -->
     <q-img
-      :src="
-        entity.thumbnail
-          ? entity.thumbnail
-          : require('@/assets/basic_thumbnail.png')
-      "
+      :src="entity.thumbnail ? entity.thumbnail : require('@/assets/DEVRY.jpg')"
       style="height: 50%;"
       class="cursor-pointer"
       @click="goToDetail"
@@ -25,9 +21,10 @@
         :key="index"
         :style="{ 'background-color': tagColor(tag, 0.3) }"
         style="font-size:0.8em; border-radius:3pt; height:20px"
-        class="q-px-xs q-mr-xs"
-        ># {{ tag.charAt(0).toUpperCase() + tag.slice(1) }}</span
+        class="q-px-xs q-mr-xs row items-center"
       >
+        <div># {{ tag.charAt(0).toUpperCase() + tag.slice(1) }}</div>
+      </span>
     </div>
     <div class="row full-width  q-px-md q-py-sm ">
       <div class="row col-12">
