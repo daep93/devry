@@ -1,5 +1,5 @@
 <template>
-  <div class="col">
+  <div class="col-1 q-pl-lg">
       <!-- <q-card flat bordered style="width: 45px; height: 65px;"> -->
       <q-card class="q-ml-lg" flat style="width: 45px; height: 65px;">
         <div style="margin:0 auto; text-align:center">

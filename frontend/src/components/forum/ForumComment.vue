@@ -29,10 +29,6 @@
                       data.written_time | moment('YYYY/MM/DD HH:mm')
                     }}</div>
                   </div>
-                  <!-- <div class="row col-12 q-mt-md q-ml-sm">
-                    {{ data.comment_content }}
-                  </div> -->
-                  <!-- </q-card> -->
                 </div>
                 <forum-comment-status :info="data"></forum-comment-status>
               </div>
@@ -127,7 +123,7 @@ import {
   deleteForumComment,
 } from '@/api/forum';
 import { liquidResolver } from '@/utils/liquidTag';
-import MarkdownEditor from '@/components/common/MarkdownEditor';
+// import MarkdownEditor from '@/components/common/MarkdownEditor';
 
 export default {
   props: {
@@ -135,7 +131,7 @@ export default {
   },
   components: {
     ForumCommentStatus,
-    MarkdownEditor,
+    // MarkdownEditor,
   },
   data() {
     const res = [];
