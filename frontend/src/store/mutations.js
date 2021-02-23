@@ -49,7 +49,10 @@ export default {
     state.tagFilter = !state.tagFilter;
   },
   initSelectedTags(state) {
-    state.selectedTags = state.myTags;
+    let myTags = state.myTags;
+    // 만약 myTags가 설정되어 있지 않다면 전체 태그 목록을 가져온다.
+    if (state.myTags.length === 0) myTags = state.all_tag_list;
+    state.selectedTags = myTags;
   },
   setSelectedTags(state, tags) {
     state.selectedTags = tags;

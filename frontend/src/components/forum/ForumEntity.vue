@@ -1,5 +1,5 @@
 <template>
-  <q-card class="row full-width" style="min-height:300px">
+  <q-card class="row full-width" style="height:300px">
     <!-- 썸네일 -->
     <q-img
       :src="
@@ -7,7 +7,7 @@
           ? entity.thumbnail
           : require('@/assets/basic_thumbnail.png')
       "
-      style="height: 50%; max-height:250px"
+      style="height: 50%;"
       class="cursor-pointer"
       @click="goToDetail"
     />
@@ -32,7 +32,7 @@
     <div class="row full-width  q-px-md q-py-sm ">
       <div class="row col-12">
         <div class="row col-8 items-center q-gutter-sm">
-          <div class="row col-12">
+          <div class="row col-12 items-center">
             <div class="row col-2">
               <span class="q-mt-xs">
                 <q-avatar style="border: 1px solid #ECEFF1" size="2.8em">
@@ -42,7 +42,7 @@
                         ? entity.profile.profile_img
                         : require('@/assets/basic_image.png')
                     "
-                    style="height:40px"
+                    style="height:1em"
                     @click="goToProfile"
                     class="cursor-pointer"
                   />
@@ -50,9 +50,9 @@
               </span>
             </div>
             <div class="row col-10">
-              <div class="q-pl-lg">
+              <div class="q-pl-md">
                 <span
-                  style="font-size: 14px; color: #464646"
+                  style="font-size: 0.9em; color: #464646"
                   @click="goToProfile"
                   class="cursor-pointer"
                   ><b>{{ entity.user.username }}</b></span
@@ -74,21 +74,21 @@
               ></q-icon> -->
               <q-icon
                 :name="entity.liked ? $i.ionHeart : $i.ionHeartOutline"
-                size="sm"
+                size="1.5em"
                 :color="entity.liked ? 'red-8' : 'grey-6'"
               ></q-icon>
             </div>
-            <div class="q-mr-md" style=" font-size: 13pt;">
+            <div class="q-mr-md" style=" font-size: 1.2em;">
               {{ entity.like_num }}
             </div>
             <div class="q-mr-sm">
               <q-icon
                 :name="$i.ionChatboxEllipsesOutline"
                 style="color:#727272"
-                size="22px"
+                size="1.5em"
               ></q-icon>
             </div>
-            <span style="font-size: 13pt;">{{ entity.comment_count }}</span>
+            <span style="font-size: 1.2em;">{{ entity.comment_count }}</span>
           </div>
         </div>
       </div>

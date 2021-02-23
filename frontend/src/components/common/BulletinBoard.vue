@@ -50,7 +50,9 @@ export default {
     return {
       sort: this.sorting,
       search: '',
-      board: this.feed_board,
+      board: this.$store.getters.isLogined
+        ? this.feed_board
+        : this.origin_board,
     };
   },
   watch: {
@@ -86,6 +88,10 @@ export default {
         this.board = this.feed_board;
       } else if (newValue === 'latest') {
         this.board = this.origin_board;
+      } else if (newValue == 'recomm') {
+        this.origin_board.sort((item1, item2) => {
+          return item1.like_num - item2.like_num;
+        });
       }
     },
     selectedTags(newValue) {
@@ -105,9 +111,7 @@ export default {
   computed: {
     // watch로 감시하기 위해서 store의 데이터를 selectedTags에 담음.
     selectedTags() {
-      return this.$store.getters.getSelectedTags.length
-        ? this.$store.getters.getSelectedTags
-        : this.$store.state.all_tag_list;
+      return this.$store.getters.getSelectedTags;
     },
   },
   methods: {
