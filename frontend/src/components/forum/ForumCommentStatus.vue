@@ -1,9 +1,9 @@
 <template>
-  <div class="q-pl-md col">
+  <div class="col">
       <!-- <q-card flat bordered style="width: 45px; height: 65px;"> -->
-      <q-card class="q-ml-lg justify-end" flat style="width: 45px; height: 65px;">
+      <q-card class="q-ml-lg" flat style="width: 45px; height: 65px;">
         <div style="margin:0 auto; text-align:center">
-          <template v-if="liked_comment">
+          <template v-if="info.liked_comment">
             <q-icon
               :name="$i.ionHeart"
               color="red"
@@ -21,7 +21,7 @@
               @click="checkLiked"
             ></q-icon>
           </template>
-          <span class="q-ml-sm q-mt-md">{{ like_comment_num }}</span>
+          <span class="q-ml-sm q-mt-md">{{ info.like_comment_num }}</span>
           <br />
           <br />
         </div>
@@ -38,7 +38,6 @@ export default {
   data() {
     return {
       liked_comment: this.info.liked_comment,
-      // liked_comment: false,
       like_comment_num: this.info.like_comment_num,
     };
   },
@@ -54,14 +53,15 @@ export default {
         alert('로그인을 해주세요');
         return;
       }
+      const commentId = this.info.id;
+      console.log(this.info.liked_comment)
       try {
-        const commentId = this.info.id;
         await toggleForumCommentLike(commentId);
-        this.liked_comment = !this.liked_comment;
-        if (this.liked_comment) {
-          this.like_comment_num = this.like_comment_num + 1;
+        this.info.liked_comment = !this.info.liked_comment;
+        if (this.info.liked_comment) {
+          this.info.like_comment_num = this.info.like_comment_num + 1;
         } else {
-          this.like_comment_num = this.like_comment_num - 1;
+          this.info.like_comment_num = this.info.like_comment_num - 1;
         }
       } catch (error) {
         console.log(error);
