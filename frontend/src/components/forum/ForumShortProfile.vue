@@ -32,7 +32,7 @@
               >
                 <b>{{ info.username }}</b>
                 <div class="text-caption">
-                  글 {{ info.post_num }} · 팔로워 {{ follower_num }}
+                  글 {{ info.post_num }} · 팔로워 {{ followerNum }}
                 </div>
               </div>
             </div>
@@ -48,7 +48,7 @@
         class="row col-12 justify-center"
         v-if="info.user != $store.state.id"
       >
-        <template v-if="is_following == false">
+        <template v-if="followingStatus == false">
           <q-btn
             no-caps
             color="primary"
@@ -109,20 +109,20 @@ import { followOtherUser } from '@/api/follow';
 export default {
   props: {
     info: Object,
+    followingStatus: Boolean,
+    followerNum: Number,
   },
   data() {
     return {
       img_url: `${this.info.profile_img}`,
-      is_following: this.info.is_following,
-      follower_num: this.info.follower_num,
+      follower_num: this.followerNum,
     };
   },
-  watch: {
-    info(newValue) {
-      (this.is_following = newValue.is_following),
-        (this.follower_num = newValue.follower_num);
-    },
-  },
+  // watch: {
+  //   info(newValue) {
+  //     this.follower_num = newValue.follower_num;
+  //   },
+  // },
   methods: {
     async toggleFollow() {
       if (!this.$store.getters.isLogined) alert('로그인이 필요합니다!');
@@ -131,11 +131,11 @@ export default {
           this.$q.loading.show();
           const want_pk = this.info.user;
           await followOtherUser(want_pk);
-          this.is_following = !this.is_following;
-          if (this.is_following) {
-            this.follower_num = this.follower_num + 1;
+          this.followingStatus = !this.followingStatus;
+          if (this.followingStatus) {
+            this.followerNum = this.followerNum + 1;
           } else {
-            this.follower_num = this.follower_num - 1;
+            this.followerNum = this.followerNum - 1;
           }
         } catch (error) {
           console.log(error);
@@ -149,11 +149,6 @@ export default {
     },
     goToDetail() {
       this.$router.push({ name: 'ForumDetail' });
-    },
-  },
-  computed: {
-    profile() {
-      return this.info.profile;
     },
   },
 };

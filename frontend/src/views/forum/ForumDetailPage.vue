@@ -20,7 +20,11 @@
           </div>
         </div>
         <div class="col-3 q-pl-sm q-pr-xl">
-          <forum-short-profile :info="shortProfile"></forum-short-profile>
+          <forum-short-profile
+            :info="shortProfile"
+            :followingStatus="followingStatus"
+            :followerNum="followerNum"
+          ></forum-short-profile>
         </div>
       </div>
     </div>
@@ -59,6 +63,7 @@ export default {
       forumBody: '',
       comments: '',
       shortProfile: '',
+      followingStatus: '',
       loaded: false,
     };
   },
@@ -70,6 +75,8 @@ export default {
       this.status = this.contents;
       this.forumBody = this.contents;
       this.shortProfile = this.contents.profile;
+      this.followerNum = this.contents.user.follower_num;
+      this.followingStatus = this.contents.is_following;
       this.comments = this.contents.comment_set;
       this.loaded = true;
     } catch (error) {
