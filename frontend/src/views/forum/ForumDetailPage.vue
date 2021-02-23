@@ -19,9 +19,9 @@
             ></forum-detail-content>
           </div>
         </div>
-        <!-- <div class="col-3 q-pl-sm q-pr-xl">
+        <div class="col-3 q-pl-sm q-pr-xl">
           <forum-short-profile :info="shortProfile"></forum-short-profile>
-        </div> -->
+        </div>
       </div>
     </div>
     <div class="row col-12">
@@ -41,6 +41,7 @@ import ForumComment from '@/components/forum/ForumComment';
 import ForumDetailStatus from '@/components/forum/ForumDetailStatus';
 import ForumDetailContent from '@/components/forum/ForumDetailContent';
 import ForumCommentCreate from '@/components/forum/ForumCommentCreate';
+import ForumShortProfile from '@/components/forum/ForumShortProfile';
 import { loadForumItem } from '@/api/forum';
 
 export default {
@@ -49,6 +50,7 @@ export default {
     ForumDetailStatus,
     ForumDetailContent,
     ForumCommentCreate,
+    ForumShortProfile,
   },
   data() {
     return {
@@ -65,10 +67,10 @@ export default {
     try {
       const { data } = await loadForumItem(index);
       this.contents = data;
-      this.status = this.contents.forum_post[0];
-      this.forumBody = this.contents.forum_post[0];
-      this.shortProfile = this.contents.writer_info[0];
-      this.comments = this.contents.comments;
+      this.status = this.contents;
+      this.forumBody = this.contents;
+      this.shortProfile = this.contents.profile;
+      this.comments = this.contents.comment_set;
       this.loaded = true;
     } catch (error) {
       console.log(error);
