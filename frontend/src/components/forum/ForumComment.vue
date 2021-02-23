@@ -118,9 +118,11 @@
 <script>
 import ForumCommentStatus from '@/components/forum/ForumCommentStatus';
 import {
-  loadForumItem,
+  // loadForumItem,
+  // getForumComment,
   updateForumComment,
   deleteForumComment,
+  getForumComment,
 } from '@/api/forum';
 import { liquidResolver } from '@/utils/liquidTag';
 // import MarkdownEditor from '@/components/common/MarkdownEditor';
@@ -193,8 +195,10 @@ export default {
   async created() {
     const index = this.$route.params.id;
     try {
-      const { data } = await loadForumItem(index);
+      // const { data } = await loadForumItem(index);
+      const { data } = await getForumComment(index);
       this.contents = data;
+      console.log(this.contents)
       this.author = data.user.id;
     } catch (error) {
       console.log(error);

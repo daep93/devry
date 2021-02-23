@@ -3,7 +3,7 @@
       <!-- <q-card flat bordered style="width: 45px; height: 65px;"> -->
       <q-card class="q-ml-lg" flat style="width: 45px; height: 65px;">
         <div style="margin:0 auto; text-align:center">
-          <template v-if="info.liked_comment">
+          <template v-if="liked_comment">
             <q-icon
               :name="$i.ionHeart"
               color="red"
@@ -21,7 +21,7 @@
               @click="checkLiked"
             ></q-icon>
           </template>
-          <span class="q-ml-sm q-mt-md">{{ info.like_comment_num }}</span>
+          <span class="q-ml-sm q-mt-md">{{ like_comment_num }}</span>
           <br />
           <br />
         </div>
@@ -41,12 +41,12 @@ export default {
       like_comment_num: this.info.like_comment_num,
     };
   },
-  // watch: {
-  //   info(newValue) {
-  //     (this.liked_comment = newValue.liked_comment),
-  //       (this.like_comment_num = newValue.like_comment_num);
-  //   },
-  // },
+  watch: {
+    info(newValue) {
+      (this.liked_comment = newValue.liked_comment),
+        (this.like_comment_num = newValue.like_comment_num);
+    },
+  },
   methods: {
     async checkLiked() {
       if (!this.$store.getters.isLogined) {
@@ -54,14 +54,14 @@ export default {
         return;
       }
       const commentId = this.info.id;
-      console.log(this.info.liked_comment)
+      console.log(this.liked_comment)
       try {
         await toggleForumCommentLike(commentId);
-        this.info.liked_comment = !this.info.liked_comment;
-        if (this.info.liked_comment) {
-          this.info.like_comment_num = this.info.like_comment_num + 1;
+        this.liked_comment = !this.liked_comment;
+        if (this.liked_comment) {
+          this.like_comment_num = this.like_comment_num + 1;
         } else {
-          this.info.like_comment_num = this.info.like_comment_num - 1;
+          this.like_comment_num = this.like_comment_num - 1;
         }
       } catch (error) {
         console.log(error);
