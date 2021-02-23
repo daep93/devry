@@ -86,7 +86,12 @@ def profile_show(request, profile_pk):
     GET Method를 통해 사용자의 상세 프로필을 조회합니다. 
     '''
     profile = get_object_or_404(Profile, pk=profile_pk) 
-    
+
+    if request.META.get('HTTP_AUTHORIZATION'):           
+        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user=User.objects.get(id=tok.user_id)
+        request.user = user
+
     real_tags = {}
     tags_list = {
         'Python3': 0,
@@ -160,7 +165,7 @@ def profile_show(request, profile_pk):
         profile_user_id = (ProfileSerializer(profile).data['user'])
         request_user_id = UserinfoSerializer(request.user).data['id']
 
-        if request.user != 'AnonymousUser' and request.user != profile_user:
+        if request.user != profile_user:
             # if 
             for single_user in UserSerializer(profile_user).data['followers']:
                 if request_user_id == single_user['user']:
@@ -244,7 +249,7 @@ def profile_show(request, profile_pk):
                     }
                 )
 
-        print(serializer.data)
+        # print(serializer.data)
         return Response(serializer.data)
 
  
