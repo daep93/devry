@@ -13,9 +13,6 @@ urlpatterns = [
     path('board/forum/', views.post_list),
     path('board/forumno/', views.post_list_no),
 
-    path('board/forum/new', views.post_list_new),
-    path('board/forum/like', views.post_list_like),
-    path('board/forum/recommend', views.post_list_recommend),
     path('forum/', views.post_list_create),
     path('forum/<int:post_pk>/', views.post_detail_update_delete),
     path('forum_like/<int:post_pk>/', views.like),
@@ -24,9 +21,10 @@ urlpatterns = [
     path('forum/mybookmark/', views.forum_mybookmark),
     path('forum/myforum/', views.forum_mypost),
     path('forum/mycomment/', views.forum_mycomment),
+    path('forum/following/<int:post_pk>', views.is_following),
+    path('comment/following/<int:comment_pk>', views.is_following_comment),
 
     path('comment/', views.comment_list),
     path('comment/<int:comment_pk>/', views.comment_detail_update_delete),
     path('comment_like/<int:comment_pk>/', views.like_comment),
-    path('comment/<int:comment_pk>/mentioned/', views.comment_mentioned),
 ]

@@ -1,5 +1,5 @@
 from django.db import models
-from accounts.models import User, Mentioned
+from accounts.models import User
 from profiles.models import Profile
 from django.conf import settings
 from multiselectfield import MultiSelectField
@@ -106,7 +106,6 @@ class Post(models.Model):
         return self.title
 
 
-
 class Comment(models.Model):
     comment_content = models.TextField()
     assisted = models.BooleanField(default="False")
@@ -116,11 +115,8 @@ class Comment(models.Model):
     written_time = models.DateTimeField(auto_now_add=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, blank=True, null=True, related_name='comments_profile')
-    profile_img = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    username = models.TextField()
     user_info = models.ForeignKey(Profile, on_delete=models.CASCADE, blank=True, null=True, related_name='comments_userinfo')
-    mentioned = models.ManyToManyField(Mentioned, blank=True, related_name='comment_mention')
 
     def __str__(self):
         return self.comment_content
