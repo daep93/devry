@@ -7,16 +7,13 @@
         <div class="row col-2">
           <!-- 댓글 좋아요 수, 댓글 수, 북마크 수 -->
           <div class="row col-9"></div>
-          <div class="row col-3 q-mt-lg">
-            <forum-comment-status :info="data"></forum-comment-status>
-          </div>
         </div>
         <div class="row col-10">
           <div class="row col-9">
             <q-card flat bordered class="my-card q-pa-lg q-mt-lg row col-12">
-              <div class="row col-11 q-mt-sm">
-                <div class="row col-12">
-                  <div class="col-1">
+              <div class="row col q-mt-sm">
+                <div class="row col-11 q-mb-md">
+                  <div class="q-pr-sm q-pt-xs">
                     <span class="cursor-pointer q-ml-sm">
                       <q-avatar size="lg"
                         ><img src="https://cdn.quasar.dev/img/avatar.png" />
@@ -24,21 +21,24 @@
                     </span>
                   </div>
                   <!-- <q-card flat bordered class="my-card col-11 q-pa-lg"> -->
-                  <span class="text-body1 text-weight-bold">{{
-                    data.username
-                  }}</span>
-                  <span class="q-ml-sm text-caption" style="color: gray">{{
-                    data.written_time | moment('YYYY/MM/DD HH:mm')
-                  }}</span>
+                  <div>
+                    <div class="text-body1 text-weight-bold">{{
+                      data.user.username
+                    }}</div>
+                    <div class="text-caption" style="color: gray">{{
+                      data.written_time | moment('YYYY/MM/DD HH:mm')
+                    }}</div>
+                  </div>
                   <!-- <div class="row col-12 q-mt-md q-ml-sm">
                     {{ data.comment_content }}
                   </div> -->
                   <!-- </q-card> -->
                 </div>
+                <forum-comment-status :info="data"></forum-comment-status>
               </div>
 
-              <div class="row col-1 justify-end">
-                <div v-if="data.user == $store.state.id">
+              <div class="row col-1 justify-end q-pt-xs">
+                <div v-if="data.user.id == $store.state.id">
                   <div>
                     <q-btn flat round dense icon="more_vert">
                       <q-menu>
@@ -64,7 +64,25 @@
                 </div>
               </div>
 
-              <div class="row col-12 justify-center">
+              <div class=" q-py-xs row col-12" v-if="modes[index] == 'editable'">
+                <q-input
+                  clearable
+                  type="textarea"
+                  v-model="data.comment_content"
+                  class="full-width q-pa-none "
+                  color="blue-10"
+                  dense
+                  autogrow
+                  borderless
+                  @keypress.enter="
+                    updateComment(index)
+                  "
+                />
+              </div>
+              <pre class="q-py-xs row col-12 q-my-none q-ml-sm" v-else>{{
+                data.comment_content
+              }}</pre>
+              <!-- <div class="row col-12 justify-center">
                 <markdown-editor
                   v-if="modes[index] == 'editable'"
                   height="500px"
@@ -92,7 +110,7 @@
                 <q-card-section class="row col-12">
                   <q-markdown :src="info.comment_content"> </q-markdown>
                 </q-card-section>
-              </div>
+              </div> -->
             </q-card>
           </div>
         </div>
@@ -150,10 +168,12 @@ export default {
         this.modes[index] = 'preview';
         this.modes = [...this.modes];
         this.$q.loading.show();
+        console.log(this.info[index])
+        console.log(this.contents)
         await updateForumComment(comment_pk, {
           comment_content: this.info[index].comment_content,
-          post: postId,
-          user: this.author,
+          post: this.contents.id,
+          user: this.contents.user.id,
         });
       } catch (error) {
         console.log(error);

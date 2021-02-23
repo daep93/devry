@@ -1,8 +1,8 @@
 <template>
-  <div class="q-pl-md row col-12">
-    <div class="row col-12">
-      <q-card flat bordered style="width: 45px; height: 65px;">
-        <div style="margin:0 auto; text-align:center" class="q-pt-sm">
+  <div class="q-pl-md col">
+      <!-- <q-card flat bordered style="width: 45px; height: 65px;"> -->
+      <q-card class="q-ml-lg justify-end" flat style="width: 45px; height: 65px;">
+        <div style="margin:0 auto; text-align:center">
           <template v-if="liked_comment">
             <q-icon
               :name="$i.ionHeart"
@@ -21,14 +21,11 @@
               @click="checkLiked"
             ></q-icon>
           </template>
-
-          <br />
-          <span>{{ like_comment_num }}</span>
+          <span class="q-ml-sm q-mt-md">{{ like_comment_num }}</span>
           <br />
           <br />
         </div>
       </q-card>
-    </div>
   </div>
 </template>
 
@@ -41,15 +38,16 @@ export default {
   data() {
     return {
       liked_comment: this.info.liked_comment,
+      // liked_comment: false,
       like_comment_num: this.info.like_comment_num,
     };
   },
-  watch: {
-    info(newValue) {
-      (this.liked_comment = newValue.liked_comment),
-        (this.like_comment_num = newValue.like_comment_num);
-    },
-  },
+  // watch: {
+  //   info(newValue) {
+  //     (this.liked_comment = newValue.liked_comment),
+  //       (this.like_comment_num = newValue.like_comment_num);
+  //   },
+  // },
   methods: {
     async checkLiked() {
       if (!this.$store.getters.isLogined) {
