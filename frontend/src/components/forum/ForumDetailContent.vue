@@ -8,13 +8,6 @@
         :src="info.thumbnail"
       />
     </template>
-    <template v-else>
-      <q-img
-        class="full-width row items-center"
-        style="height:200px; border:1px solid #cccccc; border-bottom:none "
-        :src="require('@/assets/DEVRY.jpg')"
-      />
-    </template>
     <q-card
       flat
       bordered
