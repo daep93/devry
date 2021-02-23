@@ -165,13 +165,16 @@ def profile_show(request, profile_pk):
         profile_user_id = (ProfileSerializer(profile).data['user'])
         request_user_id = UserinfoSerializer(request.user).data['id']
 
+        print( UserSerializer(profile_user).data)
         if request.user != profile_user:
-            # if 
-            for single_user in UserSerializer(profile_user).data['followers']:
-                if request_user_id == single_user['user']:
-                    profile.is_following = True
-                else:
-                    profile.is_following = False
+            if UserSerializer(profile_user).data['followers'] == []:
+                profile.is_following = False
+            else:
+                for single_user in UserSerializer(profile_user).data['followers']:
+                    if request_user_id == single_user['user']:
+                        profile.is_following = True
+                    else:
+                        profile.is_following = False
 
 
 
@@ -249,7 +252,7 @@ def profile_show(request, profile_pk):
                     }
                 )
 
-        # print(serializer.data)
+        print(serializer.data)
         return Response(serializer.data)
 
  
