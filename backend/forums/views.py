@@ -9,10 +9,10 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import ImagePostSerializer, bookmarkSerializer, pinnedSerializer,  pinnedDetailSerializer, ForumpinnedSerializer,\
-ProfilepostListSerializer, ProfilepostSerializer, PostListforamtSerializer, PostListSerializer, \
-CommentdetailSerializer, CommentlistSerializer, CommentSerializer, DetailCommentSerializer, PostSerializer, \
-ForumPostSerializer, PostdetailSerializer, likeSerializer, like_commentSerializer, isfollowingcommentSerializer, \
-isfollowingSerializer
+    ProfilepostListSerializer, ProfilepostSerializer, PostListforamtSerializer, PostListSerializer, \
+    CommentdetailSerializer, CommentlistSerializer, CommentSerializer, DetailCommentSerializer, PostSerializer, \
+    ForumPostSerializer, PostdetailSerializer, likeSerializer, like_commentSerializer, isfollowingcommentSerializer, \
+    isfollowingSerializer
 
 from accounts.serializers import UserFollowingSerializer
 from .models import Post, Comment
@@ -50,8 +50,8 @@ def post_list(request):
     """
 
     if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        user=User.objects.get(id=tok.user_id)
+        tok = Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user = User.objects.get(id=tok.user_id)
         request.user = user
     if request.method == 'GET':
         print(request.user)
@@ -63,15 +63,16 @@ def post_list(request):
                 for i in UserSerializer(request.user).data['following']:
                     if i['following_user'] not in following_users:
                         following_users.append(i['following_user'])
-        real_posts = Post.objects.filter(user__in=following_users, written_time__gte=datetime.now()-timedelta(days=7))  # 팔로우한 유저이면서 7일 이내의 게시글만 불러오기
+        real_posts = Post.objects.filter(user__in=following_users, written_time__gte=datetime.now(
+        )-timedelta(days=7))  # 팔로우한 유저이면서 7일 이내의 게시글만 불러오기
         for post in real_posts:
-            post.like_num =post.like_users.count() 
+            post.like_num = post.like_users.count()
             if post.like_users.filter(id=request.user.pk).exists():
-                post.liked = "True"      
+                post.liked = "True"
             else:
                 post.liked = "False"
-            post.save()  
-        serializer =PostListforamtSerializer(real_posts, many=True)        
+            post.save()
+        serializer = PostListforamtSerializer(real_posts, many=True)
         return Response(serializer.data)
 
 
@@ -84,24 +85,24 @@ def post_list_no(request):
     """
     if request.method == 'GET':
         # 토큰을 이용한 사용자 획인 코드
-        if request.META.get('HTTP_AUTHORIZATION'):           
-            tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-            user=User.objects.get(id=tok.user_id)
+        if request.META.get('HTTP_AUTHORIZATION'):
+            tok = Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+            user = User.objects.get(id=tok.user_id)
             request.user = user
-       
-        posts = Post.objects.all().order_by('-written_time') 
+
+        posts = Post.objects.all().order_by('-written_time')
         for post in posts:
-            post.like_num = post.like_users.count() 
+            post.like_num = post.like_users.count()
             if post.like_users.filter(id=request.user.pk).exists():
-                post.liked = "True"      
+                post.liked = "True"
             else:
                 post.liked = "False"
-            post.ref_tags=list(post.ref_tags)
+            post.ref_tags = list(post.ref_tags)
             post.save()
-             
+
         # post number in user_id -> It will be "True"
         serializer = PostListforamtSerializer(posts, many=True)
-        return Response(serializer.data) 
+        return Response(serializer.data)
 
 
 @api_view(['GET', 'POST'])
@@ -112,32 +113,32 @@ def post_list_create(request):
     ---
     """
     if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        user=User.objects.get(id=tok.user_id)
-        request.user=user
+        tok = Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user = User.objects.get(id=tok.user_id)
+        request.user = user
     if request.method == 'GET':
         posts = Post.objects.all()
         for post in posts:
-            post.like_num = post.like_users.count() 
+            post.like_num = post.like_users.count()
             if post.like_users.filter(id=request.user.pk).exists():
-                post.liked = "True"      
+                post.liked = "True"
             else:
                 post.liked = "False"
             post.save()
             # post number in user_id -> It will be "True"
         serializer = PostListforamtSerializer(posts, many=True)
         return Response(serializer.data)
-        
+
     else:
         profiles = Profile.objects.all()
         if profiles.filter(user_id=request.user.id).exists():
-            pro=profiles.get(user_id=request.user.id)
+            pro = profiles.get(user_id=request.user.id)
             request.data['profile'] = pro.id
         serializer = PostSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save()     
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        
+
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def post_detail_update_delete(request, post_pk):
@@ -147,34 +148,39 @@ def post_detail_update_delete(request, post_pk):
     ---
     """
     if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        user=User.objects.get(id=tok.user_id)
-        request.user=user
+        tok = Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user = User.objects.get(id=tok.user_id)
+        request.user = user
     post = get_object_or_404(Post, pk=post_pk)
     post.like_num = post.like_users.count()  # like_num check
     post.bookmark_num = post.bookmark_users.count()  # bookmark_num check
-    post.viewed_num = post.viewed_num + 1 # viewed_num++
+    post.viewed_num = post.viewed_num + 1  # viewed_num++
     post.save()
     # like_check
     comments = Comment.objects.all()
     for comment in comments:
         comment.like_comment_num = comment.like_comment_users.count()
         if comment.like_comment_users.filter(id=request.user.pk).exists():
-            comment.liked_comment = "True"      
+            comment.liked_comment = "True"
         else:
             comment.liked_comment = "False"
         comment.save()
 
     if post.like_users.filter(pk=request.user.pk).exists():
-        post.liked="True"
+        post.liked = "True"
     else:
-        post.liked="False"
+        post.liked = "False"
     # bookmark_check
     if post.bookmark_users.filter(pk=request.user.pk).exists():
-        post.bookmarked="True"
+        post.bookmarked = "True"
     else:
         post.bookmarked = "False"
-         
+
+    if UserFollowing.objects.filter(following_user=post.user, user=request.user.pk).exists():
+        post.is_following = "True"
+    else:
+        post.is_following = "False"
+
     if request.method == 'GET':
         serializer = PostdetailSerializer(post)
         return Response(serializer.data)
@@ -186,15 +192,15 @@ def post_detail_update_delete(request, post_pk):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
     else:
         post.delete()
-        return Response({ 'id': post_pk }, status=status.HTTP_204_NO_CONTENT)
+        return Response({'id': post_pk}, status=status.HTTP_204_NO_CONTENT)
 
 
-@api_view(['GET','POST'])
+@api_view(['GET', 'POST'])
 def create_comment(request, post_pk):
     if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        user=User.objects.get(id=tok.user_id)
-        request.user=user
+        tok = Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user = User.objects.get(id=tok.user_id)
+        request.user = user
     post = get_object_or_404(Post, pk=post_pk)
     serializer = commentSerializer(data=request.data)
     if serializer.is_valid(raise_exception=True):
@@ -202,7 +208,7 @@ def create_comment(request, post_pk):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-@api_view(['GET','POST'])
+@api_view(['GET', 'POST'])
 def comment_list(request):
     """
     큰댓글(답변) 목록 불러오기 및 큰 댓글 작성
@@ -210,15 +216,15 @@ def comment_list(request):
     ---
     """
     if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        user=User.objects.get(id=tok.user_id)
-        request.user=user
+        tok = Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user = User.objects.get(id=tok.user_id)
+        request.user = user
     if request.method == 'GET':
         comments = Comment.objects.all()
         for comment in comments:
             comment.like_comment_num = comment.like_comment_users.count()
             if comment.like_comment_users.filter(id=request.user.pk).exists():
-                comment.liked_comment = "True"      
+                comment.liked_comment = "True"
             else:
                 comment.liked_comment = "False"
             comment.save()
@@ -228,11 +234,11 @@ def comment_list(request):
     else:
         profiles = Profile.objects.all()
         if profiles.filter(user_id=request.user.id).exists():
-            pro=profiles.get(user_id=request.user.id)
+            pro = profiles.get(user_id=request.user.id)
             request.data['profile'] = pro.id
         serializer = CommentSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save()     
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -244,14 +250,14 @@ def comment_detail_update_delete(request, comment_pk):
     ---
     """
     if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        user=User.objects.get(id=tok.user_id)
-        request.user=user
+        tok = Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user = User.objects.get(id=tok.user_id)
+        request.user = user
     comment = get_object_or_404(Comment, pk=comment_pk)
     if request.method == 'GET':
         comment.like_comment_num = comment.like_comment_users.count()
         if comment.like_comment_users.filter(id=request.user.pk).exists():
-            comment.liked_comment = "True"      
+            comment.liked_comment = "True"
         else:
             comment.liked_comment = "False"
         comment.save()
@@ -264,10 +270,10 @@ def comment_detail_update_delete(request, comment_pk):
             return Response(serializer.data)
     else:
         comment.delete()
-        return Response({ 'id': comment_pk }, status=status.HTTP_204_NO_CONTENT)
+        return Response({'id': comment_pk}, status=status.HTTP_204_NO_CONTENT)
 
 
-@api_view(['GET','POST'])
+@api_view(['GET', 'POST'])
 def like(request, post_pk):
     """
     Post 글 좋아요
@@ -275,18 +281,18 @@ def like(request, post_pk):
     ---
     """
     if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        user=User.objects.get(id=tok.user_id)
-        request.user=user
+        tok = Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user = User.objects.get(id=tok.user_id)
+        request.user = user
     # user authentication process
     post = get_object_or_404(Post, pk=post_pk)
     if request.method == 'GET':
         serializer = likeSerializer(post)
         if post.like_users.filter(pk=request.user.pk).exists():
-            post.liked="True"
+            post.liked = "True"
             post.save()
         else:
-            post.liked="False"
+            post.liked = "False"
             post.save()
         return Response(serializer.data)
 
@@ -299,14 +305,14 @@ def like(request, post_pk):
             post.save()
             return Response("like canceled")
         else:
-            # like 
+            # like
             post.like_users.add(request.user)
             post.like_num += 1
             post.save()
             return Response("like !!!!!!")
 
 
-@api_view(['GET','POST'])
+@api_view(['GET', 'POST'])
 def like_comment(request, comment_pk):
     """
     comment 댓글 좋아요
@@ -314,19 +320,19 @@ def like_comment(request, comment_pk):
     ---
     """
     if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        user=User.objects.get(id=tok.user_id)
-        request.user=user
+        tok = Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user = User.objects.get(id=tok.user_id)
+        request.user = user
     # user authentication process
     # if request.user.is_authenticated:
     comment = get_object_or_404(Comment, pk=comment_pk)
     if request.method == 'GET':
         serializer = like_commentSerializer(comment)
         if comment.like_comment_users.filter(pk=request.user.pk).exists():
-            comment.liked_comment="True"
+            comment.liked_comment = "True"
             comment.save()
         else:
-            comment.liked_comment="False"
+            comment.liked_comment = "False"
             comment.save()
         return Response(serializer.data)
 
@@ -339,14 +345,14 @@ def like_comment(request, comment_pk):
             comment.save()
             return Response("comment_like canceled")
         else:
-            # like 
+            # like
             comment.like_comment_users.add(request.user)
             comment.like_comment_num += 1
             comment.save()
             return Response("comment_like !!!!!!")
 
 
-@api_view(['GET','POST'])
+@api_view(['GET', 'POST'])
 def bookmark(request, post_pk):
     """
     post 북마크 기능
@@ -354,17 +360,17 @@ def bookmark(request, post_pk):
     ---
     """
     if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        user=User.objects.get(id=tok.user_id)
-        request.user=user
+        tok = Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user = User.objects.get(id=tok.user_id)
+        request.user = user
     post = get_object_or_404(Post, pk=post_pk)
     if request.method == 'GET':
         serializer = bookmarkSerializer(post)
         if post.bookmark_users.filter(pk=request.user.pk).exists():
-            post.bookmarked="True"
+            post.bookmarked = "True"
             post.save()
         else:
-            post.bookmarked="False"
+            post.bookmarked = "False"
             post.save()
         return Response(serializer.data)
 
@@ -383,7 +389,8 @@ def bookmark(request, post_pk):
             post.save()
             return Response("bookmark")
 
-@api_view(['GET','POST'])
+
+@api_view(['GET', 'POST'])
 def pinned(request, post_pk):
     """
     post pinned 기능
@@ -391,17 +398,17 @@ def pinned(request, post_pk):
     ---
     """
     if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        user=User.objects.get(id=tok.user_id)
-        request.user=user
+        tok = Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user = User.objects.get(id=tok.user_id)
+        request.user = user
     post = get_object_or_404(Post, pk=post_pk)
     if request.method == 'GET':
         serializer = pinnedSerializer(post)
         if post.pinned_users.filter(pk=request.user.pk).exists():
-            post.pinneded="True"
+            post.pinneded = "True"
             post.save()
         else:
-            post.pinneded="False"
+            post.pinneded = "False"
             post.save()
         return Response(serializer.data)
 
@@ -429,17 +436,17 @@ def forum_mybookmark(request):
     ---
     """
     if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        user=User.objects.get(id=tok.user_id)
+        tok = Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user = User.objects.get(id=tok.user_id)
         request.user = user
 
     if request.method == 'GET':
-        mark=[]
+        mark = []
         posts = Post.objects.all()
         for post in posts:
             if post.bookmark_users.filter(id=request.user.pk).exists():
                 mark.append(post)
-        
+
         serializer = PostListforamtSerializer(mark, many=True)
         return Response(serializer.data)
 
@@ -452,8 +459,8 @@ def forum_mypost(request):
     ---
     """
     if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        user=User.objects.get(id=tok.user_id)
+        tok = Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user = User.objects.get(id=tok.user_id)
         request.user = user
 
     if request.method == 'GET':
@@ -470,8 +477,8 @@ def forum_mycomment(request):
     ---
     """
     if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        user=User.objects.get(id=tok.user_id)
+        tok = Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user = User.objects.get(id=tok.user_id)
         request.user = user
 
     if request.method == 'GET':
@@ -480,7 +487,7 @@ def forum_mycomment(request):
         return Response(serializer.data)
 
 
-@api_view(['GET','POST'])
+@api_view(['GET', 'POST'])
 def is_following(request, post_pk):
     """
     forum 글 작성자 팔로잉 여부확인과 팔로잉 하기
@@ -488,22 +495,22 @@ def is_following(request, post_pk):
     ---
     """
     if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        user=User.objects.get(id=tok.user_id)
-        request.user=user
+        tok = Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user = User.objects.get(id=tok.user_id)
+        request.user = user
     # user authentication process
     post = get_object_or_404(Post, pk=post_pk)
     if request.method == 'GET':
-        if UserFollowing.objects.filter(following_user= post.user, user=request.user.pk).exists():
-            post.is_following="True"
+        if UserFollowing.objects.filter(following_user=post.user, user=request.user.pk).exists():
+            post.is_following = "True"
             serializer = isfollowingSerializer(post)
         else:
-            post.is_following="False"
+            post.is_following = "False"
             serializer = isfollowingSerializer(post)
         return Response(serializer.data)
-        
+
     if request.method == 'POST':
-        if UserFollowing.objects.filter(following_user= post.user, user=request.user.pk).exists():
+        if UserFollowing.objects.filter(following_user=post.user, user=request.user.pk).exists():
             # following canceled
             followee_people = User.objects.get(pk=request.user.pk)
             following_people = User.objects.get(pk=post.user_id)
@@ -511,19 +518,19 @@ def is_following(request, post_pk):
             following_people.follower_num -= 1
             followee_people.save()
             following_people.save()
-            UserFollowing.objects.filter(user_id=request.user.pk).delete()     
+            UserFollowing.objects.filter(user_id=request.user.pk).delete()
             return Response("following canceled")
         else:
-            # following 
+            # following
             serializer = UserFollowingSerializer(data=request.data)
             followee_people = User.objects.get(pk=request.user.pk)
             following_people = User.objects.get(pk=post.user_id)
-            user =request.user.pk
+            user = request.user.pk
             following_user = post.user_id
-            a={"user":user,"following_user":following_user}
-            serializer = UserFollowingSerializer(data=a)  
+            a = {"user": user, "following_user": following_user}
+            serializer = UserFollowingSerializer(data=a)
             if serializer.is_valid(raise_exception=True):
-                serializer.save()     
+                serializer.save()
             followee_people.followee_num += 1
             following_people.follower_num += 1
             followee_people.save()
@@ -531,7 +538,7 @@ def is_following(request, post_pk):
             return Response("following ")
 
 
-@api_view(['GET','POST'])
+@api_view(['GET', 'POST'])
 def is_following_comment(request, comment_pk):
     """
     Ans(큰 댓글) 작성자 팔로잉 여부확인과 팔로잉 하기
@@ -539,22 +546,22 @@ def is_following_comment(request, comment_pk):
     ---
     """
     if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        user=User.objects.get(id=tok.user_id)
-        request.user=user
+        tok = Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        user = User.objects.get(id=tok.user_id)
+        request.user = user
      # user authentication process
     comment = get_object_or_404(Comment, pk=comment_pk)
     if request.method == 'GET':
-        if UserFollowing.objects.filter(following_user= comment.user, user=request.user.pk).exists():
-            comment.is_following="True"
+        if UserFollowing.objects.filter(following_user=comment.user, user=request.user.pk).exists():
+            comment.is_following = "True"
             serializer = isfollowingcommentSerializer(comment)
         else:
-            comment.is_following="False"
+            comment.is_following = "False"
             serializer = isfollowingcommentSerializer(comment)
         return Response(serializer.data)
-        
+
     if request.method == 'POST':
-        if UserFollowing.objects.filter(following_user= comment.user, user=request.user.pk).exists():
+        if UserFollowing.objects.filter(following_user=comment.user, user=request.user.pk).exists():
             # following canceled
             followee_people = User.objects.get(pk=request.user.pk)
             following_people = User.objects.get(pk=comment.user_id)
@@ -565,17 +572,17 @@ def is_following_comment(request, comment_pk):
             UserFollowing.objects.filter(user_id=request.user.pk).delete()
             return Response("following canceled")
         else:
-            # following 
+            # following
             serializer = UserFollowingSerializer(data=request.data)
             followee_people = User.objects.get(pk=request.user.pk)
             following_people = User.objects.get(pk=comment.user_id)
-            user =request.user.pk
+            user = request.user.pk
             following_user = comment.user_id
-            a={"user":user,"following_user":following_user}
-            serializer = UserFollowingSerializer(data=a)  
+            a = {"user": user, "following_user": following_user}
+            serializer = UserFollowingSerializer(data=a)
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
-            followee_people.followee_num += 1 
+            followee_people.followee_num += 1
             following_people.follower_num += 1
             followee_people.save()
             following_people.save()

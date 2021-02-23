@@ -166,12 +166,14 @@ def profile_show(request, profile_pk):
         request_user_id = UserinfoSerializer(request.user).data['id']
 
         if request.user != profile_user:
-            # if 
-            for single_user in UserSerializer(profile_user).data['followers']:
-                if request_user_id == single_user['user']:
-                    profile.is_following = True
-                else:
-                    profile.is_following = False
+            if UserSerializer(profile_user).data['followers'] == []:
+                profile.is_following = False
+            else:
+                for single_user in UserSerializer(profile_user).data['followers']:
+                    if request_user_id == single_user['user']:
+                        profile.is_following = True
+                    else:
+                        profile.is_following = False
 
 
 
@@ -197,13 +199,23 @@ def profile_show(request, profile_pk):
         qnas_for_pinned = Qna.objects.all()
         for single_pinned_qna in qnas_for_pinned:
             if user_for_pinned in QnapinnedSerializer(single_pinned_qna).data['pinned_users']:
+                single_pinned_qna.pinned = "True"
+                single_pinned_qna.save()
                 user_pinned_qnas.append(QnaSerializer(single_pinned_qna).data)
-        
+            else:
+                single_pinned_qna.pinned = "False"
+                single_pinned_qna.save()
+
         user_pinned_forums = []
         forums_for_pinned = Post.objects.all()
         for single_pinned_forum in forums_for_pinned:
             if user_for_pinned in ForumpinnedSerializer(single_pinned_forum).data['pinned_users']:
+                single_pinned_forum.pinned = "True"
+                single_pinned_forum.save()
                 user_pinned_forums.append(PostSerializer(single_pinned_forum).data)
+            else:
+                single_pinned_forum.pinned = "False"
+                single_pinned_forum.save()
 
 
 
@@ -249,7 +261,7 @@ def profile_show(request, profile_pk):
                     }
                 )
 
-        # print(serializer.data)
+        print(serializer.data)
         return Response(serializer.data)
 
  
