@@ -20,7 +20,7 @@
                       </q-avatar>
                     </span>
                   </div>
-                  <!-- <q-card flat bordered class="my-card col-11 q-pa-lg"> -->
+                    
                   <div>
                     <div class="text-body1 text-weight-bold">{{
                       data.user.username
@@ -30,7 +30,30 @@
                     }}</div>
                   </div>
                 </div>
-                <forum-comment-status :info="data"></forum-comment-status>
+                <!-- 좋아요 로직 -->
+                <div class="q-ml-lg">
+                  <template v-if="comments[index].liked_comment">
+                    <q-icon
+                      :name="$i.ionHeart"
+                      color="red"
+                      size="17px"
+                      class="cursor-pointer"
+                      @click="checkLiked(index)"
+                    ></q-icon>
+                  </template>
+                  <template v-else>
+                    <q-icon
+                      :name="$i.ionHeartOutline"
+                      style="color:#727272"
+                      size="17px"
+                      class="cursor-pointer"
+                      @click="checkLiked(index)"
+                    ></q-icon>
+                  </template>
+                  <span class="q-ml-sm q-mt-md">{{ comments[index].like_comment_num }}</span>
+                  <br />
+                  <br />
+                </div>
               </div>
 
               <div class="row col-1 justify-end q-pt-xs">
@@ -78,35 +101,6 @@
               <pre class="q-py-xs row col-12 q-my-none q-ml-sm" v-else>{{
                 data.comment_content
               }}</pre>
-              <!-- <div class="row col-12 justify-center">
-                <markdown-editor
-                  v-if="modes[index] == 'editable'"
-                  height="500px"
-                  :fetchData="data.comment_content"
-                  @input="getContents(data, $event)"
-                  class="q-mb-md q-px-md"
-                ></markdown-editor>
-                <v-md-editor
-                  v-else
-                  :value="liquidResolve(data.comment_content)"
-                  mode="preview"
-                  class="q-mb-md"
-                >
-                </v-md-editor>
-
-                <q-btn
-                  @click="updateComment(index)"
-                  color="primary"
-                  v-if="modes[index] === 'editable'"
-                  >수정 완료</q-btn
-                >
-              </div>
-
-              <div class="q-ml-md row col-12">
-                <q-card-section class="row col-12">
-                  <q-markdown :src="info.comment_content"> </q-markdown>
-                </q-card-section>
-              </div> -->
             </q-card>
           </div>
         </div>
@@ -118,14 +112,13 @@
 <script>
 import ForumCommentStatus from '@/components/forum/ForumCommentStatus';
 import {
-  // loadForumItem,
-  // getForumComment,
+  loadForumItem,
   updateForumComment,
   deleteForumComment,
   getForumComment,
+  toggleForumCommentLike,
 } from '@/api/forum';
 import { liquidResolver } from '@/utils/liquidTag';
-// import MarkdownEditor from '@/components/common/MarkdownEditor';
 
 export default {
   props: {
@@ -133,7 +126,6 @@ export default {
   },
   components: {
     ForumCommentStatus,
-    // MarkdownEditor,
   },
   data() {
     const res = [];
@@ -143,9 +135,39 @@ export default {
       contents: '',
       content: '',
       modes: res,
+      liked_comment: '',
+      like_comment_num: '',
+      comments: '',
     };
   },
+  watch: {
+    info(newValue) {
+      (this.liked_comment = newValue.liked_comment),
+        (this.like_comment_num = newValue.like_comment_num);
+    },
+  },
   methods: {
+    // 북마크 토글하기
+    async checkLiked(index) {
+      // 로그인 확인
+      if (!this.$store.getters.isLogined) {
+        alert('로그인이 필요합니다');
+        return;
+      }
+      try {
+        await toggleForumCommentLike(this.comments[index].id);
+        // 넘겨줄 데이터
+        this.comments[index].liked_comment = !this.comments[index].liked_comment;
+        if (this.comments[index].liked_comment) {
+          this.comments[index].like_comment_num = this.comments[index].like_comment_num + 1;
+        } else {
+          this.comments[index].like_comment_num = this.comments[index].like_comment_num - 1;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
     liquidResolve(tag) {
       return liquidResolver(tag);
     },
@@ -166,8 +188,6 @@ export default {
         this.modes[index] = 'preview';
         this.modes = [...this.modes];
         this.$q.loading.show();
-        console.log(this.info[index])
-        console.log(this.contents)
         await updateForumComment(comment_pk, {
           comment_content: this.info[index].comment_content,
           post: this.contents.id,
@@ -195,10 +215,10 @@ export default {
   async created() {
     const index = this.$route.params.id;
     try {
-      // const { data } = await loadForumItem(index);
-      const { data } = await getForumComment(index);
+      const { data } = await loadForumItem(index);
+      const comment_data = await getForumComment();
+      this.comments = comment_data.data;
       this.contents = data;
-      console.log(this.contents)
       this.author = data.user.id;
     } catch (error) {
       console.log(error);

@@ -54,6 +54,7 @@ export default {
         return;
       }
       const commentId = this.info.id;
+      console.log(this.info)
       console.log(this.liked_comment)
       try {
         await toggleForumCommentLike(commentId);
