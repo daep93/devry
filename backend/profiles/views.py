@@ -261,7 +261,7 @@ def profile_show(request, profile_pk):
                     }
                 )
 
-        # print(serializer.data)
+        print(serializer.data)
         return Response(serializer.data)
 
  
