@@ -24,6 +24,9 @@ import 'codemirror/addon/scroll/simplescrollbars.css';
 import 'codemirror/lib/codemirror.css';
 // filter
 import { formatNumber } from '@/utils/filters';
+// vue-tilt
+import VueTilt from 'vue-tilt.js';
+//
 
 VMdEditor.lang.use('ko-KR', koKR);
 VMdEditor.Codemirror = Codemirror;
@@ -45,6 +48,10 @@ VMdPreview.use(githubTheme);
 Vue.use(VMdPreview);
 Vue.use(VMdEditor);
 Vue.use(VueMoment);
+
+// Vue tilt
+Vue.use(VueTilt);
+
 Vue.config.productionTip = false;
 
 Vue.filter('formatNumber', formatNumber);

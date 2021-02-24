@@ -1,5 +1,9 @@
 <template>
-  <q-card class="row full-width" style="height:300px">
+  <q-card
+    class="row full-width"
+    style="height:300px"
+    v-tilt="{ speed: 300, perspective: 800 }"
+  >
     <!-- 썸네일 -->
     <q-img
       :src="entity.thumbnail ? entity.thumbnail : require('@/assets/DEVRY.jpg')"
@@ -39,7 +43,7 @@
                         ? entity.profile.profile_img
                         : require('@/assets/basic_image.png')
                     "
-                    style="height:1em"
+                    style="height:2em"
                     @click="goToProfile"
                     class="cursor-pointer"
                   />

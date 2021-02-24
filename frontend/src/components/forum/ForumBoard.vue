@@ -41,27 +41,25 @@
         <forum-entity :entity="forum"></forum-entity>
       </div>
     </div>
-    <div
-      class="row q-mt-md col-12  justify-center items-center"
-      style="height:300px"
-      v-else
-    >
-      <div class="text-grey-7">
-        아직 데이터가 없습니다. 다른 사용자들을 팔로우 해서 소식을 받아보세요.
+    <div class="row q-mt-md col-12  justify-center items-center" v-else>
+      <div class="row justify-center ">
+        <div class="text-grey-7 q-mb-md">
+          아직 데이터가 없습니다. 다른 사용자들을 팔로우 해서 소식을 받아보세요.
+        </div>
+        <recommend-user></recommend-user>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import ForumEntity from '@/components/forum/ForumEntity.vue';
+import ForumEntity from '@/components/forum/ForumEntity';
 import { loadForumTime, loadForumFeed } from '@/api/board';
+import RecommendUser from '@/components/forum/RecommendUser';
 export default {
-  props: {
-    current: Number,
-  },
   components: {
     ForumEntity,
+    RecommendUser,
   },
   data() {
     return {
