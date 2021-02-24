@@ -48,7 +48,7 @@ from .app_settings import RegisterSerializer, register_permission_classes
 from mysite.app_settings import TokenSerializer, LoginSerializer, UserDetailsSerializer, JWTSerializer, create_token
 from mysite.utils import jwt_encode
 from profiles.models import Profile
-from profiles.serializers import ProfileSerializer
+from profiles.serializers import ProfileSerializer, ProfileShowSerializer
 
 
 sensitive_post_parameters_m = method_decorator(
@@ -287,6 +287,7 @@ def following(request):
         following_people.followee_num += 1
         followee_people.save()
         following_people.save()
+
         return Response(serializer.data)
 
 
@@ -442,6 +443,22 @@ def toggle_following(request, want_pk):
             followee_people.save()
             following_people.save()
             UserFollowing.objects.get(following_user= want_pk, user_id=request.user.pk).delete()     
+
+            followee_people_id = UserSerializer(followee_people).data['id']
+            following_people_profile = Profile.objects.get(username=following_people)
+
+            if UserSerializer(following_people).data['followers'] == []:
+                following_people_profile.is_following = False
+            else:
+                for single_user in UserSerializer(following_people).data['followers']:
+                    if followee_people_id == single_user['user']:
+                        following_people_profile.is_following = True
+                    else:
+                        following_people_profile.is_following = False
+
+            following_people_profile.follower_num = following_people.follower_num
+            following_people_profile.save()
+
             return Response("following canceled")
         else:
             # following 
@@ -458,6 +475,22 @@ def toggle_following(request, want_pk):
             following_people.follower_num += 1
             followee_people.save()
             following_people.save()
+
+            followee_people_id = UserSerializer(followee_people).data['id']
+            following_people_profile = Profile.objects.get(username=following_people)
+
+            if UserSerializer(following_people).data['followers'] == []:
+                following_people_profile.is_following = False
+            else:
+                for single_user in UserSerializer(following_people).data['followers']:
+                    if followee_people_id == single_user['user']:
+                        following_people_profile.is_following = True
+                    else:
+                        following_people_profile.is_following = False
+
+            following_people_profile.follower_num = following_people.follower_num
+            following_people_profile.save()
+
             return Response("following ")
             
 
