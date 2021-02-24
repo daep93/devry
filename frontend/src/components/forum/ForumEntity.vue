@@ -43,7 +43,7 @@
                         ? entity.profile.profile_img
                         : require('@/assets/basic_image.png')
                     "
-                    style="height:1em"
+                    style="height:2em"
                     @click="goToProfile"
                     class="cursor-pointer"
                   />
