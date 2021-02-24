@@ -25,7 +25,11 @@
             </q-item>
           </q-list>
         </div>
-        <div class="col-4 row justify-center items-center" style="height:100%">
+        <div
+          v-if="data.user.id != $store.state.id"
+          class="col-4 row justify-center items-center"
+          style="height:100%"
+        >
           <div v-if="data.is_following">
             <q-btn
               no-caps
@@ -86,6 +90,7 @@ export default {
         this.$q.loading.show();
         const { data } = await getOtherFollowerList(this.userId);
         this.followerData = data;
+        console.log(this.followerData);
       } catch (error) {
         console.log(error);
       } finally {
