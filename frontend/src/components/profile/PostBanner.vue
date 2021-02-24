@@ -1,13 +1,21 @@
 <template>
   <div class="col-7 q-my-lg ">
-    <div class="q-mb-sm row items-center">
-      <q-icon
-        :name="$i.ionAttachOutline"
-        style="color: #B54333"
-        size="md"
-        class="q-mr-xs"
-      ></q-icon>
-      <span class="text-h5 text-weight-bold">Pinned</span>
+    <div class="row justify-between q-mb-sm">
+      <div class="q-mb-sm row items-center">
+        <q-icon
+          :name="$i.ionAttachOutline"
+          style="color: #B54333"
+          size="md"
+          class="q-mr-xs"
+        ></q-icon>
+        <span class="text-h5 text-weight-bold">Pinned</span>
+      </div>
+      <div>
+        <q-tabs v-model="pinned" style="color:#259EC5">
+          <q-tab name="forum" label="포럼" />
+          <q-tab name="qna" label="질문" />
+        </q-tabs>
+      </div>
     </div>
     <q-card class="q-mb-lg">
       <q-card-section
@@ -30,13 +38,17 @@
           v-if="info.qnas_pinned.length"
         >
           <q-carousel-slide
-            v-for="(post, index) in info.qnas_pinned"
-            :name="index"
+            v-for="(post, index) in pinned_post"
+            :name="index + 1"
             :key="post.id"
             style="border-radius: 10px;"
             class="row items-center"
           >
-            <qna-post-card :detail="post"></qna-post-card>
+            <forum-post-card
+              :detail="post"
+              v-if="pinned == 'forum'"
+            ></forum-post-card>
+            <qna-post-card :detail="post" v-else></qna-post-card>
           </q-carousel-slide>
         </q-carousel>
         <div v-else class="full-width text-center text-grey-6">없음</div>
@@ -54,8 +66,8 @@
       </div>
       <div>
         <q-tabs v-model="post" style="color:#259EC5">
-          <q-tab name="qna" label="질문" />
           <q-tab name="forum" label="포럼" />
+          <q-tab name="qna" label="질문" />
           <q-tab name="comments" label="댓글" />
         </q-tabs>
       </div>
@@ -109,8 +121,16 @@ export default {
     return {
       autoplay: true,
       slide: 1,
-      post: 'qna',
+      post: 'forum',
+      pinned: 'forum',
+      pinned_post: this.info.forums_pinned,
     };
+  },
+  watch: {
+    pinned(newValue) {
+      if (newValue === 'forum') this.pinned_post = this.info.forums_pinned;
+      else this.pinned_post = this.info.qnas_pinned;
+    },
   },
 };
 </script>
