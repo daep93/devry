@@ -1,6 +1,6 @@
 <template>
   <div
-    class=" q-pa-sm row full-width q-mb-lg"
+    class=" q-pa-sm row full-width q-mb-lg "
     style="border: 2px solid #ECEFF1;border-radius: 8px; "
   >
     <div
@@ -10,7 +10,7 @@
       v-tilt="{ speed: 300, perspective: 800 }"
     >
       <q-card>
-        <div class="row full-width justify-center q-my-sm">
+        <div class="row full-width justify-center q-my-sm q-pt-sm">
           <q-avatar style="border: 1px solid #ECEFF1" size="10.0em">
             <q-img
               :src="
