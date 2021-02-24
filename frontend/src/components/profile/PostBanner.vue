@@ -34,7 +34,7 @@
           :autoplay="autoplay"
           @mouseenter="autoplay = false"
           @mouseleave="autoplay = true"
-          height="170px"
+          height="180px"
           v-if="info.qnas_pinned.length"
         >
           <q-carousel-slide
