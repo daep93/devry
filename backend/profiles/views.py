@@ -135,7 +135,7 @@ def profile_show(request, profile_pk):
 
         serializer.data['followee_num'] = (UserSerializer(profile_user).data['followee_num'])
         serializer.data['follower_num'] = ((UserSerializer(profile_user).data['follower_num']))
-
+        
 
 
         # 모든 qna에서의 글 중 사용자가 쓴 글만 불러오고, 해당 글에서 참조된 태그들을 추가하는 과정
@@ -261,7 +261,7 @@ def profile_show(request, profile_pk):
                     }
                 )
 
-        print(serializer.data)
+        # print(serializer.data)
         return Response(serializer.data)
 
  
