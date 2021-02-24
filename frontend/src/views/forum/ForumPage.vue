@@ -3,7 +3,7 @@
     <div class="row col-8 justify-center q-pt-lg q-px-md">
       <div class="row q-mb-lg col-12 justify-between">
         <div class="row col-3">
-          <span class="text-h5  text-weight-bold">Forum 게시판</span>
+          <span class="text-h5  text-weight-bold">포럼 게시판</span>
         </div>
         <span class="q-ml-lg">
           <q-btn
