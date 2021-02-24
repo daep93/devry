@@ -1,6 +1,7 @@
 <template>
   <div class="row col-12">
     <!-- 댓글 시작 -->
+    <div v-for="(data, index) in info" :key="index" class="row col-12">
       <div class="row col-12">
         <!-- <div class="row col-12" v-for="(data, index) in info" :key="index"> -->
         <div class="row col-2">
@@ -9,55 +10,54 @@
         </div>
         <div class="row col-10">
           <div class="row col-9">
-            <div class="text-h6 text-weight-bold q-mb-md">댓글 목록</div>
-            <q-card flat bordered class="my-card q-pa-lg q-mb-xl row col-12">
-              <div v-for="(data, index) in info" :key="index" class="row col-12">
-                <div class="row col q-mt-lg">
-                  <div class="row col-11 q-mb-md">
-                    <div class="q-pr-sm q-pt-xs">
-                      <span class="cursor-pointer q-ml-sm">
-                        <q-avatar size="lg"
-                          ><img src="https://cdn.quasar.dev/img/avatar.png" />
-                        </q-avatar>
-                      </span>
-                    </div>
-                      
-                    <div>
-                      <div class="text-body1 text-weight-bold">{{
-                        data.user.username
-                      }}</div>
-                      <div class="text-caption" style="color: gray">{{
-                        data.written_time | moment('YYYY/MM/DD HH:mm')
-                      }}</div>
-                    </div>
+            <q-card flat bordered class="my-card q-pa-lg q-mt-lg row col-12">
+              <div class="row col q-mt-sm">
+                <div class="row col-11 q-mb-md">
+                  <div class="q-pr-sm q-pt-xs">
+                    <span class="cursor-pointer q-ml-sm">
+                      <q-avatar size="lg"
+                        ><img src="https://cdn.quasar.dev/img/avatar.png" />
+                      </q-avatar>
+                    </span>
                   </div>
-                  <!-- 좋아요 로직 -->
-                  <div class="q-ml-lg justify-end">
-                    <template v-if="comments[index].liked_comment">
-                      <q-icon
-                        :name="$i.ionHeart"
-                        color="red"
-                        size="20px"
-                        class="cursor-pointer"
-                        @click="checkLiked(index)"
-                      ></q-icon>
-                    </template>
-                    <template v-else>
-                      <q-icon
-                        :name="$i.ionHeartOutline"
-                        style="color:#727272"
-                        size="20px"
-                        class="cursor-pointer"
-                        @click="checkLiked(index)"
-                      ></q-icon>
-                    </template>
-                    <span class="q-ml-sm q-mt-md">{{ comments[index].like_comment_num }}</span>
-                    <br />
-                    <br />
+                    
+                  <div>
+                    <div class="text-body1 text-weight-bold">{{
+                      data.user.username
+                    }}</div>
+                    <div class="text-caption" style="color: gray">{{
+                      data.written_time | moment('YYYY/MM/DD HH:mm')
+                    }}</div>
                   </div>
                 </div>
+                <!-- 좋아요 로직 -->
+                <div class="q-ml-lg">
+                  <template v-if="comments[index].liked_comment">
+                    <q-icon
+                      :name="$i.ionHeart"
+                      color="red"
+                      size="17px"
+                      class="cursor-pointer"
+                      @click="checkLiked(index)"
+                    ></q-icon>
+                  </template>
+                  <template v-else>
+                    <q-icon
+                      :name="$i.ionHeartOutline"
+                      style="color:#727272"
+                      size="17px"
+                      class="cursor-pointer"
+                      @click="checkLiked(index)"
+                    ></q-icon>
+                  </template>
+                  <span class="q-ml-sm q-mt-md">{{ comments[index].like_comment_num }}</span>
+                  <br />
+                  <br />
+                </div>
+              </div>
 
-                <div v-if="data.user.id == $store.state.id" class="row col-1 justify-end q-pt-md">
+              <div class="row col-1 justify-end q-pt-xs">
+                <div v-if="data.user.id == $store.state.id">
                   <div>
                     <q-btn flat round dense icon="more_vert">
                       <q-menu>
@@ -81,32 +81,31 @@
                     </q-btn>
                   </div>
                 </div>
-          
+              </div>
 
-                <div class="q-py-xs row col-12" v-if="modes[index] == 'editable'">
-                  <q-input
-                    clearable
-                    type="textarea"
-                    v-model="data.comment_content"
-                    class="full-width q-pa-none q-mb-lg"
-                    color="blue-10"
-                    dense
-                    autogrow
-                    borderless
-                    @keypress.enter="
-                      updateComment(index)
-                    "
-                  />
-                </div>
-                <pre class="q-py-xs row col-12 q-mb-lg q-ml-sm" v-else>{{
-                  data.comment_content
-                }}</pre>
-                <q-separator inset />
-              </div> 
+              <div class=" q-py-xs row col-12" v-if="modes[index] == 'editable'">
+                <q-input
+                  clearable
+                  type="textarea"
+                  v-model="data.comment_content"
+                  class="full-width q-pa-none "
+                  color="blue-10"
+                  dense
+                  autogrow
+                  borderless
+                  @keypress.enter="
+                    updateComment(index)
+                  "
+                />
+              </div>
+              <pre class="q-py-xs row col-12 q-my-none q-ml-sm" v-else>{{
+                data.comment_content
+              }}</pre>
             </q-card>
           </div>
         </div>
       </div>
+    </div>
   </div>
 </template>
 
@@ -155,14 +154,12 @@ export default {
         alert('로그인이 필요합니다');
         return;
       }
+      // console.log(this.contents.comment_set[index].id)
       console.log(this.contents.comment_set[index].id)
-      
-      // console.log(this.comments[index].id)
       // console.log(this.comments[this.contents[index].id].id)
       const numb = this.contents.comment_set[index].id
       try {
-        // await toggleForumCommentLike(this.comments[numb].id);
-        await toggleForumCommentLike(numb);
+        await toggleForumCommentLike(this.comments[numb].id);
         console.log('인덱스', numb)
         // 넘겨줄 데이터
         this.comments[numb].liked_comment = !this.comments[numb].liked_comment;
