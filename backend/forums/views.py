@@ -22,7 +22,7 @@ from profiles.serializers import ProfileSerializer, ProfilePostNumberSerializer
 from accounts.models import User, Mentioned, UserFollowing
 from accounts.serializers import UserSerializer
 from qnas.models import Qna
-from qnas.serializers import QnapinnedSerializer, QnaDetailPinnedSerializer
+from qnas.serializers import QnapinnedSerializer, QnaDetailPinnedSerializer, QnaSerializer
 from mysite.utils import jwt_encode
 from rest_auth.models import TokenModel
 from rest_framework.authtoken.models import Token
@@ -183,6 +183,37 @@ def post_detail_update_delete(request, post_pk):
 
     if request.method == 'GET':
         serializer = PostdetailSerializer(post)
+
+        user_for_pinned = serializer.data['profile']['user']
+        user_pinned_qnas = []
+        qnas_for_pinned = Qna.objects.all()
+        for single_pinned_qna in qnas_for_pinned:
+            if user_for_pinned in QnapinnedSerializer(single_pinned_qna).data['pinned_users']:
+                single_pinned_qna.pinned = "True"
+                single_pinned_qna.save()
+                user_pinned_qnas.append(QnaSerializer(single_pinned_qna).data)
+            else:
+                single_pinned_qna.pinned = "False"
+                single_pinned_qna.save()
+
+        user_pinned_forums = []
+        forums_for_pinned = Post.objects.all()
+        for single_pinned_forum in forums_for_pinned:
+            if user_for_pinned in ForumpinnedSerializer(single_pinned_forum).data['pinned_users']:
+                single_pinned_forum.pinned = "True"
+                single_pinned_forum.save()
+                user_pinned_forums.append(PostSerializer(single_pinned_forum).data)
+            else:
+                single_pinned_forum.pinned = "False"
+                single_pinned_forum.save()
+
+        for pinned_qna in user_pinned_qnas:
+            serializer.data['profile']['pinned_qnas'].append(pinned_qna)
+
+        for pinned_forum in user_pinned_forums:
+            serializer.data['profile']['pinned_forums'].append(pinned_forum)
+
+        print(serializer.data)
         return Response(serializer.data)
 
     elif request.method == 'PUT':
