@@ -216,12 +216,19 @@ def qna_detail_update_delete(request, qna_pk):
         qna.bookmarked="True"
     else:
         qna.bookmarked = "False"
+
+    if qna.pinned_users.filter(pk=request.user.pk).exists():
+        qna.pinned="True"
+    else:
+        qna.pinned = "False"
         
     if UserFollowing.objects.filter(following_user= qna.user, user=request.user.pk).exists():
         qna.is_following="True"
     else:
         qna.is_following = "False"
-        
+    
+    qna.save()
+
     if request.method == 'GET':
         serializer = QnadetailSerializer(qna)
         return Response(serializer.data)

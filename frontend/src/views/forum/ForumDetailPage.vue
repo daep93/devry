@@ -67,6 +67,13 @@ export default {
       loaded: false,
     };
   },
+  computed: {
+    createComments() {
+      return {
+        post_id: this.contents.id,
+      };
+    },
+  },
   async created() {
     const index = this.$route.params.id;
     try {
