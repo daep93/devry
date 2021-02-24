@@ -13,7 +13,9 @@
     <div class="col-10 q-pl-sm row content-between wrap" style="height:100%">
       <div class="row justify-between q-pt-xs q-mb-sm col-12">
         <div class="row items-baseline q-mb-sm">
-          <div class="q-mr-sm text-weight-regular">@{{ detail.username }}</div>
+          <div class="q-mr-sm text-weight-regular">
+            @{{ $store.state.nickname }}
+          </div>
           <div class="text-weight-thin" style="font-size:8pt">
             {{ detail.written_time | moment('YYYY/MM/DD') }}
           </div>
@@ -37,7 +39,15 @@
             ></q-icon>
             <span>{{ detail.comment_set.length }}</span>
           </div>
-          <div></div>
+          <div class="row items-center q-mr-md cursor-pointer">
+            <q-icon
+              :name="$i.ionAttachOutline"
+              :style="{ color: pinned ? '#B54333' : '#bbbbbb' }"
+              size="22px"
+              class="q-mr-xs"
+              @click="togglePin"
+            ></q-icon>
+          </div>
         </div>
       </div>
       <div
@@ -61,13 +71,27 @@
 
 <script>
 import { colorSoloMapper } from '@/utils/tagColorMapper';
+import { togglePinned } from '@/api/forum';
 export default {
   props: {
     detail: Object,
   },
+  data() {
+    return {
+      pinned: this.detail.pinned,
+    };
+  },
   methods: {
     tagColor(tag) {
       return colorSoloMapper(tag, 0.5);
+    },
+    async togglePin() {
+      try {
+        await togglePinned(this.detail.id);
+        this.pinned = !this.pinned;
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };
