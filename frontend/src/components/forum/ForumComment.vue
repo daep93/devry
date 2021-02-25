@@ -11,7 +11,7 @@
           <div class="row col-9">
             <div class="text-h6 text-weight-bold q-mb-md">댓글 목록({{ contents.comment_set.length }}개)</div>
             <q-card flat bordered class="my-card q-pa-lg q-mb-xl row col-12">
-              <div v-if="contents.comment_set.length === 0" class="full-width text-center">
+              <div v-if="contents.comment_set.length === 0" class="full-width text-center text-grey-7">
                 댓글이 없습니다.
               </div>
               <div v-for="(data, index) in info" :key="index" class="row col-12">
