@@ -7,7 +7,6 @@
         <q-input
           outlined
           flat
-          v-model="newComment"
           type="textarea"
           placeholder="댓글을 입력해주세요"
           class="full-width"
