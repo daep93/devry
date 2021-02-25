@@ -110,6 +110,7 @@ export default {
       img: '',
       imgUrl: 'https//',
       tags: { ...this.$store.state.tags_selected },
+      loaded: false,
     };
   },
   async created() {
@@ -134,7 +135,7 @@ export default {
         try {
           this.$q.loading.show();
           const { data } = await loadForumItem(post_id);
-          const loadedData = data.forum_post[0];
+          const loadedData = data;
           this.title = loadedData.title;
           this.content = loadedData.content;
           this.ref_tags = loadedData.ref_tags;
