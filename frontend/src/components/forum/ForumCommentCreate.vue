@@ -3,13 +3,13 @@
     <div class="row col-12 q-mt-md q-pr-md">
       <div class="row col-2"></div>
       <div class="row col-8 q-pr-xl">
-        <div class="text-h6 text-weight-bold q-mb-md">댓글 작성하기</div>
+        <div class="text-h6 text-weight-bold q-mb-sm">댓글 작성하기</div>
 
         <q-input
-          bordered
+          outlined
           flat
           v-model="newComment"
-          autogrow
+          type="textarea"
           placeholder="댓글을 입력해주세요"
           class="full-width"
           @input="getContents"
@@ -26,14 +26,14 @@
       <div class="row col-9 q-mt-sm q-pl-xl">
         <div class="row col-3"></div>
         <div class="row col-9">
-          <div class="row col-12 q-mb-xl justify-center">
+          <div class="row col-12 justify-center">
             <div>
               <q-btn
                 no-caps
                 color="primary"
                 label="댓글 작성하기"
                 style="width: 200px"
-                class="q-mb-xl q-mt-lg"
+                class="q-mb-md q-mt-lg"
                 @click="createComment"
               />
             </div>
