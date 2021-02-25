@@ -146,7 +146,7 @@ class DetailCommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ('user', 'id', 'written_time', 'comment_content',
+        fields = ('user', 'id', 'written_time', 'comment_content', 'liked_comment',
                   'like_comment_num', 'profile')
 
 

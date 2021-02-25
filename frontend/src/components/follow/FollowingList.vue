@@ -27,7 +27,11 @@
             </q-item>
           </q-list>
         </div>
-        <div class="col-4 row justify-center items-center" style="height:100%">
+        <div
+          v-if="data.following_user.id != $store.state.id"
+          class="col-4 row justify-center items-center"
+          style="height:100%"
+        >
           <div v-if="data.is_following">
             <q-btn
               no-caps
@@ -68,8 +72,9 @@ export default {
   },
   methods: {
     goToProfile(index) {
-      console.log('click!');
-      this.$router.push(`/profile/${this.followerData[index].id}`);
+      this.$router.push(
+        `/profile/${this.followeeData[index].following_user.id}`,
+      );
       location.reload();
     },
     async toggleFollow(index) {
@@ -88,6 +93,7 @@ export default {
       try {
         this.$q.loading.show();
         const { data } = await getOtherFolloweeList(this.userId);
+        console.log(data);
         this.followeeData = data;
       } catch (error) {
         console.log(error);
@@ -103,7 +109,6 @@ export default {
   },
   watch: {
     async followId(newValue) {
-      // this.userId = newValue.userId;
       const { data } = await getOtherFolloweeList(newValue);
       this.followeeData = data;
       console.log(this.followeeData);

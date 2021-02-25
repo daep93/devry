@@ -98,7 +98,7 @@
                 >팔로워: <b>{{ followerNum }}</b></span
               >
               <span class="cursor-pointer" @click="onFollow('following')"
-                >팔로우: <b>{{ info.followeeNum }}</b></span
+                >팔로잉: <b>{{ info.followeeNum }}</b></span
               >
             </div>
           </div>
