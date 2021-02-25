@@ -10,7 +10,7 @@
       </div>
     </div>
     <div
-      class="row text-bold q-mb-sm full-width"
+      class="row text-bold q-mb-sm full-width cursor-pointer"
       style="font-size:14pt;"
       @click="$router.push(`/${detail.type}-detail/${detail.post_id}`)"
     >
