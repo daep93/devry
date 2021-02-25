@@ -75,8 +75,22 @@ export default {
             typeof data.my_tags == 'string' ? [data.my_tags] : data.my_tags,
         };
         this.postInfo = {
+          username: data.username,
           qnas: data.qnas,
-          comments: [...data.qnas_comments, ...data.forums_comments],
+          comments: [
+            ...data.qnas_comments.map(comment => {
+              comment['type'] = 'qna';
+              return comment;
+            }),
+            ...data.forums_comments.map(comment => {
+              comment['type'] = 'forum';
+              return comment;
+            }),
+          ].sort((c1, c2) => {
+            const time1 = new Date(c1.written_time);
+            const time2 = new Date(c2.written_time);
+            return time2 - time1;
+          }),
           qnas_pinned: data.pinned_qnas,
           forums_pinned: data.pinned_forums,
           forums: data.forums,

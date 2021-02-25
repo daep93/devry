@@ -38,6 +38,14 @@
           v-if="info.qnas_pinned.length"
         >
           <q-carousel-slide
+            :name="1"
+            style="border-radius: 10px;"
+            class="row items-center justify-center"
+            v-if="!pinned_post.length"
+          >
+            <div class="text-grey-6">고정된 게시물이 없습니다.</div>
+          </q-carousel-slide>
+          <q-carousel-slide
             v-for="(post, index) in pinned_post"
             :name="index + 1"
             :key="post.id"
@@ -46,9 +54,14 @@
           >
             <forum-post-card
               :detail="post"
+              :username="info.username"
               v-if="pinned == 'forum'"
             ></forum-post-card>
-            <qna-post-card :detail="post" v-else></qna-post-card>
+            <qna-post-card
+              :detail="post"
+              :username="info.username"
+              v-else
+            ></qna-post-card>
           </q-carousel-slide>
         </q-carousel>
         <div v-else class="full-width text-center text-grey-6">없음</div>
@@ -80,6 +93,7 @@
           v-for="qna in info.qnas"
           :detail="qna"
           :key="qna.id"
+          :username="info.username"
         ></qna-post-card>
       </q-card-section>
     </q-card>
@@ -89,6 +103,7 @@
       >
         <forum-post-card
           v-for="forum in info.forums"
+          :username="info.username"
           :detail="forum"
           :key="forum.id"
         ></forum-post-card>
@@ -100,6 +115,7 @@
       >
         <comment-card
           v-for="comment in info.comments"
+          :username="info.username"
           :detail="comment"
           :key="comment.id"
         ></comment-card>
