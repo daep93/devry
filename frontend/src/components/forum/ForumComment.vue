@@ -119,7 +119,6 @@ import {
   loadForumItem,
   updateForumComment,
   deleteForumComment,
-  // getForumComment,
   toggleForumCommentLike,
 } from '@/api/forum';
 import { liquidResolver } from '@/utils/liquidTag';
@@ -141,15 +140,8 @@ export default {
       modes: res,
       liked_comment: '',
       like_comment_num: '',
-      // comments: '',
     };
   },
-  // watch: {
-  //   info(newValue) {
-  //     (this.liked_comment = newValue.liked_comment),
-  //       (this.like_comment_num = newValue.like_comment_num);
-  //   },
-  // },
   methods: {
     // 북마크 토글하기
     async checkLiked(index) {
@@ -158,15 +150,8 @@ export default {
         alert('로그인이 필요합니다');
         return;
       }
-      console.log(this.contents.comment_set[index])
-      
-      // console.log(this.comments[index].id)
-      // console.log(this.comments[this.contents[index].id].id)
-      // const numb = this.contents.comment_set[index].id
       try {
-        // await toggleForumCommentLike(this.comments[numb].id);
         await toggleForumCommentLike(this.contents.comment_set[index].id);
-        // console.log('인덱스', numb)
         // 넘겨줄 데이터
         this.contents.comment_set[index].liked_comment = !this.contents.comment_set[index].liked_comment;
         if (this.contents.comment_set[index].liked_comment) {
@@ -227,11 +212,7 @@ export default {
     const index = this.$route.params.id;
     try {
       const { data } = await loadForumItem(index);
-      // const comment_data = await getForumComment();
-      // this.comments = comment_data.data;
-      // console.log(this.comments)
       this.contents = data;
-      console.log(this.contents)
       this.author = data.user.id;
     } catch (error) {
       console.log(error);
