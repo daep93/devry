@@ -26,7 +26,6 @@
                 <q-btn
                   no-caps
                   color="primary"
-                  id="follow-btn"
                   label="Follow"
                   @click="toggleFollow"
                   style="width: 100px"
