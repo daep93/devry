@@ -127,10 +127,10 @@ class CommentlistSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-
+    title = serializers.CharField(read_only=True)
     class Meta:
         model = Comment
-        fields = ('user', 'id', 'comment_content', 'like_comment_num',
+        fields = ('user', 'id', 'comment_content', 'like_comment_num', 'title',
                   'post', 'written_time', 'liked_comment', 'profile')
 
 

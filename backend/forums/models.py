@@ -117,6 +117,7 @@ class Comment(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, blank=True, null=True, related_name='comments_profile')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     user_info = models.ForeignKey(Profile, on_delete=models.CASCADE, blank=True, null=True, related_name='comments_userinfo')
+    title = models.TextField(blank=True)
 
     def __str__(self):
         return self.comment_content

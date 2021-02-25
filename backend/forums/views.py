@@ -269,6 +269,10 @@ def comment_list(request):
             request.data['profile'] = pro.id
         serializer = CommentSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
+
+            commented_forum = Post.objects.get(id=request.data['post'])
+            
+            serializer.validated_data['title'] = commented_forum
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
