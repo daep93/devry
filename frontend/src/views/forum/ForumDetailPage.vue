@@ -24,6 +24,7 @@
             :info="shortProfile"
             :followingStatus="followingStatus"
             :followerNum="followerNum"
+            v-if="loaded"
           ></forum-short-profile>
         </div>
       </div>

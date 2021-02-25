@@ -1,7 +1,7 @@
 <template>
   <q-card class="col-7 q-mt-xl">
     <q-card-section>
-      <div class="row items-center">
+      <div class="row items-center q-mt-sm">
         <div class="col-3 row justify-center">
           <div class="col-9">
             <q-img
@@ -12,13 +12,15 @@
               "
               alt="change-password"
               class="profile-picture "
-              style="width:150px;height:150px"
+              style="width:130px;height:130px"
             ></q-img>
           </div>
         </div>
         <div class="col-9 q-pr-xl">
           <div class="row q-mb-sm justify-between">
-            <span class="text-h5  text-indigo-14"> @{{ info.username }}</span>
+            <span class="text-h5 text-indigo-14 q-mt-sm">
+              @{{ info.username }}</span
+            >
             <template v-if="$store.state.id != info.userId">
               <template v-if="!is_following">
                 <q-btn
@@ -26,8 +28,8 @@
                   color="primary"
                   label="Follow"
                   @click="toggleFollow"
-                  style="width: 200px"
-                  class="q-mb-sm row col-10"
+                  style="width: 100px"
+                  class="q-mb-sm q-mt-sm row col-10"
                 />
               </template>
               <template v-else>
@@ -37,14 +39,17 @@
                   color="primary"
                   label="Following"
                   @click="toggleFollow"
-                  style="width: 200px"
-                  class="q-mb-sm row col-10"
+                  style="width: 100px"
+                  class="q-mb-sm q-mt-sm row col-10"
                 />
               </template>
             </template>
+            <template v-else>
+              <div class="q-mb-lg q-mt-lg"></div>
+            </template>
           </div>
           <!-- 사는 곳, 소속, 이메일 정보를 받는 행 -->
-          <div class="row q-mb-md full-width">
+          <div class="row q-mb-sm full-width">
             <div class="q-mr-md row items-center">
               <q-icon
                 :name="$i.ionLocationOutline"
@@ -71,7 +76,7 @@
             </div>
           </div>
           <!-- 등록된 웹싸이트 링크에 맞춰 로고를 보여주는 행-->
-          <div class="row  q-mb-md full-width">
+          <div class="row q-mb-md full-width">
             <q-icon
               v-for="link in info.links"
               :key="link.sns_name"
@@ -104,7 +109,7 @@
           </div>
         </div>
       </div>
-      <div class="row q-px-xl q-my-md full-width">
+      <div class="row q-px-xl q-my-sm full-width">
         <div class="full-width" v-if="info.bio">
           <q-icon
             :name="$i.ionChatboxEllipsesOutline"

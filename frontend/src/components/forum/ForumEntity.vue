@@ -116,10 +116,6 @@ export default {
       return colorSoloMapper(tag, alpha);
     },
     goToDetail() {
-      if (!this.$store.getters.isLogined) {
-        alert('로그인이 필요합니다!');
-        return;
-      }
       this.$router.push(`/forum-detail/${this.entity.id}`);
     },
     goToProfile() {
