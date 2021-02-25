@@ -19,6 +19,7 @@
                   "
                   @click="goToProfile"
                   class="cursor-pointer"
+                  style="width: 40px; height: 40px;"
                 />
               </q-avatar>
             </span>
