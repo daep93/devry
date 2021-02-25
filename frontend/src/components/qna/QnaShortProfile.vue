@@ -19,14 +19,9 @@
                   "
                   @click="goToProfile"
                   class="cursor-pointer"
+                  style="width: 40px; height: 40px;"
                 />
               </q-avatar>
-              <!-- <q-avatar
-                @click="goToProfile"
-                style="width: 35px; height: 35px;"
-                class="cursor-pointer"
-                ><img :src="profile_img" />
-              </q-avatar> -->
             </span>
           </div>
           <div class="row col-10">

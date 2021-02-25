@@ -29,13 +29,13 @@
         </div>
       </div>
     </div>
-    <div class="row col-12 q-my-xl">
+    <div class="row col-12 q-my-lg">
       <forum-comment-create
         :info="createComments"
         v-if="loaded"
       ></forum-comment-create>
     </div>
-    <div class="row col-12">
+    <div class="row col-12 q-mb-xl">
       <forum-comment :info="comments" v-if="loaded"></forum-comment>
     </div>
   </div>
