@@ -79,15 +79,19 @@
         </template>
       </div>
     </q-card>
-    <q-card
-      flat
-      bordered
-      class="my-card row col-12 q-px-sm q-pt-md"
-      style="max-width: 250px; max-height: 280px;"
-      v-if="info.profile.pinned_posts"
+    <template
+      v-if="
+        info.profile.pinned_forums.length > 0 ||
+          info.profile.pinned_qnas.length > 0
+      "
     >
-      <div class="q-px-md q-pb-sm">
-        <div style="font-size: 13px;">
+      <q-card
+        flat
+        bordered
+        class="my-card row col-12 q-px-sm q-pt-md"
+        style="max-width: 250px; max-height: 280px;"
+      >
+        <div class="q-px-md q-pb-sm row col-12">
           <div class="q-my-sm">
             <span
               class="text-weight-bold cursor-pointer"
@@ -96,17 +100,25 @@
             >
             <span>님의 글 더보기</span>
           </div>
-          <template v-for="post in info.profile">
-            <q-separator :key="post.pinned_posts" />
-            <div class="q-my-sm" :key="post.pinned_posts">
-              {{ post.pinned_posts }}
+          <template v-for="(post, index) in info.profile.pinned_forums">
+            <q-separator :key="post.title" />
+            <div class="q-my-sm" :key="post.title">
+              <span class="cursor-pointer" @click="goToForum(index)">{{
+                post.title
+              }}</span>
             </div>
           </template>
-
-          <q-separator />
+          <template v-for="(qna, index) in info.profile.pinned_qnas">
+            <q-separator :key="qna.title" />
+            <div class="q-my-sm" :key="qna.title">
+              <span class="cursor-pointer" @click="goToQna(index)">{{
+                qna.title
+              }}</span>
+            </div>
+          </template>
         </div>
-      </div>
-    </q-card>
+      </q-card>
+    </template>
   </div>
 </template>
 
@@ -144,6 +156,17 @@ export default {
     },
     goToProfile() {
       this.$router.push(`/profile/${this.info.profile.user}`);
+    },
+    goToForum(index) {
+      this.$router.push(
+        `/forum-detail/${this.info.profile.pinned_forums[index].id}`,
+      );
+    },
+    goToQna(index) {
+      this.$router.push(
+        `/qna-detail/${this.info.profile.pinned_qnas[index].id}`,
+      );
+      location.reload();
     },
   },
   computed: {
