@@ -33,7 +33,7 @@
                 color="primary"
                 label="댓글 작성하기"
                 style="width: 200px"
-                class="q-mb-xl q-mt-lg"
+                class="q-mb-md q-mt-lg"
                 @click="createComment"
               />
             </div>

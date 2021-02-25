@@ -9,8 +9,11 @@
         </div>
         <div class="row col-10">
           <div class="row col-9">
-            <div class="text-h6 text-weight-bold q-mb-md">댓글 목록</div>
+            <div class="text-h6 text-weight-bold q-mb-md">댓글 목록({{ contents.comment_set.length }}개)</div>
             <q-card flat bordered class="my-card q-pa-lg q-mb-xl row col-12">
+              <div v-if="contents.comment_set.length === 0" style="margin: 0 auto;">
+                댓글이 없습니다.
+              </div>
               <div v-for="(data, index) in info" :key="index" class="row col-12">
                 <div class="row col q-mt-lg">
                   <div class="row col-11 q-mb-md">
@@ -33,7 +36,7 @@
                   </div>
                   <!-- 좋아요 로직 -->
                   <div class="q-ml-lg justify-end">
-                    <template v-if="comments[index].liked_comment">
+                    <template v-if="contents.comment_set[index].liked_comment">
                       <q-icon
                         :name="$i.ionHeart"
                         color="red"
@@ -51,13 +54,13 @@
                         @click="checkLiked(index)"
                       ></q-icon>
                     </template>
-                    <span class="q-ml-sm q-mt-md">{{ comments[index].like_comment_num }}</span>
+                    <span class="q-ml-sm q-mt-md">{{ contents.comment_set[index].like_comment_num }}</span>
                     <br />
                     <br />
                   </div>
                 </div>
 
-                <div v-if="data.user.id == $store.state.id" class="row col-1 justify-end q-pt-md">
+                <div v-if="data.user.id == $store.state.id" class="row justify-end q-pt-md">
                   <div>
                     <q-btn flat round dense icon="more_vert">
                       <q-menu>
@@ -101,7 +104,7 @@
                 <pre class="q-py-xs row col-12 q-mb-lg q-ml-sm" v-else>{{
                   data.comment_content
                 }}</pre>
-                <q-separator inset />
+                <q-separator v-if="contents.comment_set.length !== index + 1" inset />
               </div> 
             </q-card>
           </div>
@@ -116,7 +119,7 @@ import {
   loadForumItem,
   updateForumComment,
   deleteForumComment,
-  getForumComment,
+  // getForumComment,
   toggleForumCommentLike,
 } from '@/api/forum';
 import { liquidResolver } from '@/utils/liquidTag';
@@ -138,15 +141,15 @@ export default {
       modes: res,
       liked_comment: '',
       like_comment_num: '',
-      comments: '',
+      // comments: '',
     };
   },
-  watch: {
-    info(newValue) {
-      (this.liked_comment = newValue.liked_comment),
-        (this.like_comment_num = newValue.like_comment_num);
-    },
-  },
+  // watch: {
+  //   info(newValue) {
+  //     (this.liked_comment = newValue.liked_comment),
+  //       (this.like_comment_num = newValue.like_comment_num);
+  //   },
+  // },
   methods: {
     // 북마크 토글하기
     async checkLiked(index) {
@@ -155,21 +158,21 @@ export default {
         alert('로그인이 필요합니다');
         return;
       }
-      console.log(this.contents.comment_set[index].id)
+      console.log(this.contents.comment_set[index])
       
       // console.log(this.comments[index].id)
       // console.log(this.comments[this.contents[index].id].id)
-      const numb = this.contents.comment_set[index].id
+      // const numb = this.contents.comment_set[index].id
       try {
         // await toggleForumCommentLike(this.comments[numb].id);
-        await toggleForumCommentLike(numb);
-        console.log('인덱스', numb)
+        await toggleForumCommentLike(this.contents.comment_set[index].id);
+        // console.log('인덱스', numb)
         // 넘겨줄 데이터
-        this.comments[numb].liked_comment = !this.comments[numb].liked_comment;
-        if (this.comments[numb].liked_comment) {
-          this.comments[numb].like_comment_num = this.comments[numb].like_comment_num + 1;
+        this.contents.comment_set[index].liked_comment = !this.contents.comment_set[index].liked_comment;
+        if (this.contents.comment_set[index].liked_comment) {
+          this.contents.comment_set[index].like_comment_num = this.contents.comment_set[index].like_comment_num + 1;
         } else {
-          this.comments[numb].like_comment_num = this.comments[numb].like_comment_num - 1;
+          this.contents.comment_set[index].like_comment_num = this.contents.comment_set[index].like_comment_num - 1;
         }
       } catch (error) {
         console.log(error);
@@ -224,9 +227,9 @@ export default {
     const index = this.$route.params.id;
     try {
       const { data } = await loadForumItem(index);
-      const comment_data = await getForumComment();
-      this.comments = comment_data.data;
-      console.log(this.comments)
+      // const comment_data = await getForumComment();
+      // this.comments = comment_data.data;
+      // console.log(this.comments)
       this.contents = data;
       console.log(this.contents)
       this.author = data.user.id;
