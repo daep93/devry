@@ -40,7 +40,7 @@
           </div>
         </div>
       </q-card-section>
-      <div class="q-px-md q-pb-md" v-if="profile">
+      <div class="q-px-md q-pb-md" v-if="info.bio">
         <div style="font-size: 13px;">
           {{ info.bio }}
         </div>
@@ -128,11 +128,6 @@ export default {
       follower_num: this.followerNum,
     };
   },
-  // watch: {
-  //   info(newValue) {
-  //     this.follower_num = newValue.follower_num;
-  //   },
-  // },
   methods: {
     async toggleFollow() {
       if (!this.$store.getters.isLogined) alert('로그인이 필요합니다!');

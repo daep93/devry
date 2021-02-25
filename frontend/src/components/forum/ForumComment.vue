@@ -9,12 +9,12 @@
       <div class="row col-10">
         <div class="row col-9">
           <div class="text-h6 text-weight-bold q-mb-md">
-            댓글 ({{ contents.comment_set.length }}개)
+            댓글 ({{ contents.comment_count }}개)
           </div>
           <q-card flat bordered class="my-card q-px-lg q-mb-xl row col-12">
             <div
-              v-if="contents.comment_set.length === 0"
-              class="full-width text-center text-grey-7"
+              v-if="contents.comment_count === 0"
+              class="full-width text-center text-grey-7 q-py-md"
             >
               댓글이 없습니다.
             </div>
@@ -126,10 +126,7 @@
               <pre class="q-py-xs row col-12 q-mb-lg q-ml-md" v-else>{{
                 data.comment_content
               }}</pre>
-              <q-separator
-                v-if="contents.comment_set.length !== index + 1"
-                inset
-              />
+              <q-separator v-if="contents.comment_count !== index + 1" inset />
             </div>
           </q-card>
         </div>
@@ -161,6 +158,7 @@ export default {
       modes: res,
       liked_comment: '',
       like_comment_num: '',
+      length: 0,
     };
   },
   methods: {
