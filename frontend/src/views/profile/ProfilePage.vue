@@ -80,9 +80,12 @@ export default {
           comments: [
             ...data.qnas_comments.map(comment => {
               comment['type'] = 'qna';
+              comment['post_id'] = comment['qna'];
               return comment;
             }),
             ...data.forums_comments.map(comment => {
+              comment['content'] = comment['comment_content'];
+              comment['post_id'] = comment['post'];
               comment['type'] = 'forum';
               return comment;
             }),
