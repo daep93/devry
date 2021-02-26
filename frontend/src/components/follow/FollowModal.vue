@@ -83,7 +83,6 @@ export default {
   },
   watch: {
     followTab(newValue) {
-      console.log(newValue);
       this.tab = newValue;
     },
   },

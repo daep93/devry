@@ -97,7 +97,6 @@ export default {
   },
   watch: {
     propsTechStackData(newValue) {
-      console.log(newValue);
       this.techStacks = newValue;
     },
   },

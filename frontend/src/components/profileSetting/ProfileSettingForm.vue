@@ -356,7 +356,6 @@ export default {
               : '',
           my_tags: this.profile_info.my_tags,
         });
-        console.log(this.username);
         deleteCookie('login_nickname');
         saveUserNicknameToCookie(this.username);
         this.$store.commit('setUsername', this.username);

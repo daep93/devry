@@ -111,7 +111,6 @@ export default {
     async followId(newValue) {
       const { data } = await getOtherFolloweeList(newValue);
       this.followeeData = data;
-      console.log(this.followeeData);
     },
   },
   async created() {

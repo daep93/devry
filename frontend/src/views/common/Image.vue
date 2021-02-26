@@ -119,14 +119,14 @@ export default {
       ref_tags: [],
       tags: all_tags,
       img: [],
-      imgUrl: ''
+      imgUrl: '',
     };
   },
   methods: {
     createTag() {
       if (this.tagItem !== '') {
         const str =
-        this.tagItem.charAt(0).toUpperCase() + this.tagItem.slice(1);
+          this.tagItem.charAt(0).toUpperCase() + this.tagItem.slice(1);
         this.ref_tags.push(str);
         this.tagItem = '';
       }
@@ -150,10 +150,6 @@ export default {
         alert('내용은 필수 입력항목 입니다');
       }
       try {
-        console.log(this.$store.state.id);
-        console.log(this.$store.state);
-        console.log(this.img)
-
         this.$q.loading.show();
         await createQnaItem({
           // 넘길 데이터 적어주기
@@ -163,7 +159,6 @@ export default {
           // img: this.img,
           ref_tags: this.ref_tags,
         });
-        console.log('페이지 이동 전까지 성공?');
         // 이동 시킬 페이지 적어주기(QnA 게시판으로 이동)
         this.$router.push({ path: '/qna' });
       } catch (error) {
@@ -175,34 +170,27 @@ export default {
     },
     handleUploadImage(event, insertImage, files) {
       // Get the files and upload them to the file server, then insert the corresponding content into the editor
-      console.log(files);
-      // console.log(insertImage);
-      const file = event.target.files[0]
+      const file = event.target.files[0];
 
-      // 이미지 base64변환 코드 
+      // 이미지 base64변환 코드
       const reader = new FileReader();
-      reader.onload = (event) => {
-      const image = event.target.result;
-      console.log('base64 변환', image);
-      localStorage.setItem('imgUrl', image)
+      reader.onload = event => {
+        const image = event.target.result;
+        localStorage.setItem('imgUrl', image);
       };
       reader.readAsDataURL(file);
       // Here is just an example
       insertImage({
         // url: URL.createObjectURL(file),
         // 파일명 출력하기
-        url : file.name,
+        url: file.name,
         // base64 출력하기
         // url: localStorage.getItem('imgUrl'),
         desc: '글 작성 시 ' + file.name + ' 이미지가 출력됩니다.',
         // width: 'auto',
         // height: 'auto',
       });
-      console.log(file)
-      this.img.push(file)
-      // console.log(this.img)
-      console.log(this.imgurl)
-
+      this.img.push(file);
     },
   },
   computed: {

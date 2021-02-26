@@ -132,16 +132,12 @@ export default {
         // await changePwdUser({
         //   password: this.newPwd,
         // });
-        console.log(this.password);
         this.password = this.newPwd;
-        console.log(this.password);
         // alert('비밀번호 변경에 성공하였습니다!');
         this.$emit('resetPwdSuccess');
       } catch (error) {
         // alert('에러가 발생했습니다. 다시 시도해주세요!')
-        this.$emit('resetPwdFail')
-        // console.log(error);
-        // console.log(old_password)
+        this.$emit('resetPwdFail');
       } finally {
         this.$q.loading.hide();
       }

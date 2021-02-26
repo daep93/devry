@@ -1,31 +1,31 @@
 <template>
   <div class="col-1 q-pl-lg">
-      <!-- <q-card flat bordered style="width: 45px; height: 65px;"> -->
-      <q-card class="q-ml-lg" flat style="width: 45px; height: 65px;">
-        <div style="margin:0 auto; text-align:center">
-          <template v-if="liked_comment">
-            <q-icon
-              :name="$i.ionHeart"
-              color="red"
-              size="17px"
-              class="cursor-pointer"
-              @click="checkLiked"
-            ></q-icon>
-          </template>
-          <template v-else>
-            <q-icon
-              :name="$i.ionHeartOutline"
-              style="color:#727272"
-              size="17px"
-              class="cursor-pointer"
-              @click="checkLiked"
-            ></q-icon>
-          </template>
-          <span class="q-ml-sm q-mt-md">{{ like_comment_num }}</span>
-          <br />
-          <br />
-        </div>
-      </q-card>
+    <!-- <q-card flat bordered style="width: 45px; height: 65px;"> -->
+    <q-card class="q-ml-lg" flat style="width: 45px; height: 65px;">
+      <div style="margin:0 auto; text-align:center">
+        <template v-if="liked_comment">
+          <q-icon
+            :name="$i.ionHeart"
+            color="red"
+            size="17px"
+            class="cursor-pointer"
+            @click="checkLiked"
+          ></q-icon>
+        </template>
+        <template v-else>
+          <q-icon
+            :name="$i.ionHeartOutline"
+            style="color:#727272"
+            size="17px"
+            class="cursor-pointer"
+            @click="checkLiked"
+          ></q-icon>
+        </template>
+        <span class="q-ml-sm q-mt-md">{{ like_comment_num }}</span>
+        <br />
+        <br />
+      </div>
+    </q-card>
   </div>
 </template>
 
@@ -54,8 +54,6 @@ export default {
         return;
       }
       const commentId = this.info.id;
-      console.log(this.info)
-      console.log(this.liked_comment)
       try {
         await toggleForumCommentLike(commentId);
         this.liked_comment = !this.liked_comment;

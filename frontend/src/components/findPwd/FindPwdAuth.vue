@@ -95,9 +95,8 @@ export default {
         this.$emit('authPwdSuccess');
       } catch (error) {
         // alert('에러가 발생했습니다. 계정을 확인해주세요!');
-        this.$emit('authPwdFail')
+        this.$emit('authPwdFail');
         console.log(error);
-        console.log('error발생');
       } finally {
         this.$q.loading.hide();
       }

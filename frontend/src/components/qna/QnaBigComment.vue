@@ -248,16 +248,6 @@ export default {
       }
     },
   },
-  async created() {
-    const index = this.$route.params.id;
-    try {
-      const { data } = await loadQnaItem(index);
-      this.contents = data;
-      this.author = data.user.id;
-    } catch (error) {
-      console.log(error);
-    }
-  },
 };
 </script>
 
