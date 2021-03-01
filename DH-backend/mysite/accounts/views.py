@@ -1,12 +1,18 @@
 from django.shortcuts import get_object_or_404
-from .serializers import UserRegisterSerializer, UserLoginSerializer
+from .serializers import (
+    UserRegisterSerializer, 
+    UserLoginSerializer,
+    UserProfileSerializer,
+    UserProfileSettingSerializer
+)
 from django.contrib.auth import authenticate
 from rest_framework import status, generics, mixins
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
-from .models import User
+from rest_framework.authentication import TokenAuthentication
+from .models import User,Profile
 
 # Create your views here.
 
@@ -41,4 +47,28 @@ class UserLoginAPI(generics.CreateAPIView):
             context['error_message']="인증에 실패했습니다"
         return Response(context, status=status.HTTP_404_NOT_FOUND)
 
+class UserProfileAPI(generics.RetrieveAPIView):
+    serializer_class=UserProfileSerializer
+
+    def get_queryset(self):
+        return Profile.objects.all()
+    
         
+class UserProfileSettingAPI(generics.UpdateAPIView):
+    serializer_class=UserProfileSettingSerializer
+    # 토큰을 첨부함으로써 request.user를 통해서 유저 식별이 가능하다.
+    authentication_classes=[TokenAuthentication]
+    def put(self, request):
+        profile=get_object_or_404(Profile, user=request.user)
+        # print(request.data)
+        data = request.data
+        if 'tech' in request.data:
+            data = request.data.copy()
+            #TODO: vue.js를 통해서 실제로 데이터가 문자열이 아닌 배열로 들어온다면 해당 로직을 바꿔야한다.
+            # data['tech'] = '|'.join(data['tech']) 
+            data['tech'] = '|'.join(data['tech'].split(',')) 
+        serializer=UserProfileSettingSerializer(profile, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

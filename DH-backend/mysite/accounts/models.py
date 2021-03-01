@@ -1,10 +1,7 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-from django.conf import settings
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 
-from rest_framework.authtoken.models import Token
+
 # Create your models here.
 
 # 계정 생성시 반드시 아래의 클래스를 통한다.
@@ -16,8 +13,8 @@ class UserManager(BaseUserManager):
         if not username: 
             raise ValueError('반드시 사용자 이름을 포함해야합니다.')
         user = self.model(
-            email=self.normalize_email(email),
-            username=username 
+            email    = self.normalize_email(email),
+            username = username 
         )
         user.set_password(password)
         user.save(using=self._db)
@@ -26,9 +23,9 @@ class UserManager(BaseUserManager):
     # 슈퍼계정을 만들 때 적용되는 함수
     def create_superuser(self, email, username, password):
         user = self.create_user(
-            email=email,
-            password=password,
-            username=username
+            email    = email,
+            password = password,
+            username = username
         )
         user.is_admin=True
         user.is_staff=True
@@ -56,11 +53,16 @@ class User(AbstractBaseUser):
 
     def __str__(self):
         return self.email
-
+    def get_username(self):
+        return self.username
+    def get_user_id(self):  
+        return self.id
+        
     class Meta:
         verbose_name ="사용자"
         verbose_name_plural ="사용자"
 
+    # admin이 누구인지 확인하기 위해 필요한 함수
     def has_perm(self, perm, obj=None):
         return self.is_admin
     
@@ -68,8 +70,35 @@ class User(AbstractBaseUser):
         return True
     
 
-# 토큰 생성
-@receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def create_auth_token(sender, instance=None, created=False, **kwargs):
-    if created:
-        Token.objects.create(user=instance)
+
+class Profile(models.Model):
+    user         = models.ForeignKey('User', on_delete=models.CASCADE, verbose_name='사용자')
+    profile_img  = models.URLField('Profile Image', default='')
+    region       = models.CharField('Region', max_length=50, default='')
+    group        = models.CharField('Group', max_length=50, default='')
+    bio          = models.TextField('Bio', default='')
+    tech         = models.TextField('Tech Stack', default='')
+    link         = models.ForeignKey('Link', on_delete=models.CASCADE, verbose_name='링크 페이지', default='')
+    project      = models.ForeignKey('Project', on_delete=models.CASCADE, verbose_name='링크 페이지', default='')
+
+    def __str__(self):
+        return self.user
+
+class Link(models.Model):
+    user   = models.ForeignKey('User', on_delete=models.CASCADE, verbose_name='사용자', default='')
+    name1  = models.CharField('first name',default="", max_length=50)
+    name2  = models.CharField('second name',default="", max_length=50)
+    name3  = models.CharField('third name',default="", max_length=50)
+    url1   = models.URLField('first url', default='')
+    url2   = models.URLField('second url', default='')
+    url3   = models.URLField('third url', default='')
+
+class Project(models.Model):
+    user   = models.ForeignKey('User', on_delete=models.CASCADE, verbose_name='사용자', default='')
+    name1  = models.CharField('first name',default="", max_length=50)
+    name2  = models.CharField('second name',default="", max_length=50)
+    name3  = models.CharField('third name',default="", max_length=50)
+    url1   = models.URLField('first url', default='')
+    url2   = models.URLField('second url', default='')
+    url3   = models.URLField('third url', default='')
+

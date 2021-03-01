@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from .models import User, Profile
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     
@@ -32,3 +32,23 @@ class UserLoginSerializer(serializers.ModelSerializer):
         extra_kwargs ={
             'password' : {'write_only':True}
         }
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    user=serializers.SerializerMethodField()
+    # tech는 문자열로 저장될 것이기 때문에 분리를 시켜줘야한다.
+    tech=serializers.SerializerMethodField()
+    # TODO: 차후 구현할 Forum, QnA, Pinned 데이터 등을 get을 통해 노출 시켜줄 필요 있음
+    class Meta:
+        model=Profile
+        fields='__all__'
+    def get_user(self, profile):
+        user = User.objects.get(email=profile.user)
+        return {'id': user.get_user_id(), 'email':str(user), 'username': user.get_username() }
+    def get_tech(self, profile):
+        return profile.tech.split('|')
+
+class UserProfileSettingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Profile
+        # TODO: 프로젝트와 링크 연결할 것
+        fields=['region','group','bio','tech']
