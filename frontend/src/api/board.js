@@ -1,4 +1,4 @@
-import { instance } from '@/api';
+import { instance, instanceAuth } from '@/api';
 
 // QnA 게시판에 들어올 QnA 리스트 제공
 function getQnaList() {
@@ -19,7 +19,7 @@ function loadForumTime() {
 }
 // 포럼 게시판에 들어올 포럼 리스트 제공 - 피드
 function loadForumFeed() {
-  return instance.get(`board/forum/`);
+  return instanceAuth.get(`board/forum/`);
 }
 
 export {
