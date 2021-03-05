@@ -38,7 +38,7 @@ export default {
   },
   methods: {
     goToEventRegister() {
-      this.$router.push({ path: '/event-registration' });
+      this.$router.push('/event/create');
     },
   },
   created() {

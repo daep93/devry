@@ -31,10 +31,7 @@
       </div>
     </div>
     <div class="row col-12">
-      <div
-        class="row col-3 bg-light-blue-1"
-        style="position: absolute; z-index:999; border-radius: 5px;"
-      >
+      <div class="row col-3 bg-light-blue-1 auto-tag">
         <div
           v-for="tag in suggests"
           class="col-12 q-py-md q-px-md"
@@ -113,5 +110,10 @@ export default {
 ul {
   list-style-type: none;
   padding-left: 0px;
+}
+.auto-tag {
+  position: absolute;
+  z-index: 999;
+  border-radius: 5px;
 }
 </style>

@@ -322,12 +322,12 @@
       </div>
     </div>
     <!-- 이벤트 관련 태그 -->
-    <event-registration-tag
+    <event-create-tag
       @addTagItem="addOneTag"
       @removeTagItem="removeOneTag"
       :propsTagData="ref_tags"
     >
-    </event-registration-tag>
+    </event-create-tag>
     <!-- 버튼 -->
     <div class="row q-mb-md q-mt-xl float-right" style="margin-bottom: 150px;">
       <div v-if="this.$route.params.id !== undefined">
@@ -360,18 +360,18 @@
 </template>
 
 <script>
-import EventRegistrationTag from '@/components/event/EventRegistrationTag';
+import EventCreateTag from '@/components/event/EventCreateTag';
 import {
   loadEventItem,
   createEventItem,
   updateEventItem,
   deleteEventItem,
-} from '@/api/eventRegistration';
+} from '@/api/event';
 import { saveQnaImage } from '@/api/qna';
 
 export default {
   components: {
-    EventRegistrationTag,
+    EventCreateTag,
   },
   data() {
     return {
@@ -460,7 +460,7 @@ export default {
         // 이동 시킬 페이지 적어주기(이벤트 게시판)
         this.$router.push({ path: '/event' });
       } catch (error) {
-        console.log(error);
+        alert(error);
       } finally {
         this.$q.loading.hide();
       }
@@ -508,7 +508,7 @@ export default {
         // 이동 시킬 페이지 적어주기(이벤트 게시판)
         this.$router.push({ path: '/event' });
       } catch (error) {
-        console.log(error);
+        alert(error);
       } finally {
         this.$q.loading.hide();
       }
@@ -521,7 +521,7 @@ export default {
         await deleteEventItem(post_id);
         this.$router.push({ path: '/event' });
       } catch (error) {
-        console.log(error);
+        alert(error);
       } finally {
         this.$q.loading.hide();
       }
@@ -554,17 +554,8 @@ export default {
         this.register_url = data.register_url;
         this.ref_tags = data.ref_tags;
         this.king = data.king;
-        // 날짜 시간 형식 변경
-        // const sArray = this.start.split('T')
-        // const stimes = sArray[1]
-        // const stime = stimes.split('+')
-        // this.start = sArray[0] + stime[0]
-        // const eArray = this.end.split('T')
-        // const etimes = eArray[1]
-        // const etime = etimes.split('+')
-        // this.end = eArray[0] + etime[0]
       } catch (error) {
-        console.log(error);
+        alert(error);
         // alert('에러가 발생했습니다.)
       } finally {
         this.$q.loading.hide();

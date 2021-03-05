@@ -14,8 +14,7 @@
                 : require('@/assets/basic_image.png')
             "
             spinner-color="white"
-            style="height: 140px; max-width: 150px; position: relative; border: 1px solid #cccccc "
-            class="rounded-borders q-mb-lg"
+            class="rounded-borders q-mb-lg profile-image"
           />
           <div class="q-ml-sm">
             <div class="text-subtitle1">@{{ $store.state.nickname }}</div>
@@ -32,19 +31,12 @@
               @click="onClickImageUpload"
               round
               color="primary"
-              style="position: relative; left: -35px; top: 60px;"
+              class="upload-button"
             >
               <q-icon :name="$i.ionCamera"></q-icon>
             </q-btn>
-            <span
-              @click="onClickImageUpload"
-              style="position: relative; left: -30px; top: 60px;"
-            >
-              {{
-                profile_info.chageImg
-                  ? '이미지 업로드 성공'
-                  : '선택된 파일 없음'
-              }}
+            <span @click="onClickImageUpload" class="upload-button">
+              {{ profile_info.chageImg ? '이미지 업로드 성공' : '' }}
             </span>
           </div>
         </div>
@@ -221,26 +213,25 @@
       @removeTagItem="removeOneTag"
       :propsTagData="profile_info.my_tags"
     ></profile-setting-tag>
-    <!-- 버튼 -->
-    <div class="row q-mb-md q-mt-md float-right" style="margin-bottom: 150px;">
+    <!-- 저장 버튼 -->
+    <div class="row q-mb-xl q-mt-md float-right ">
       <q-btn
         color="primary"
         label="저장"
-        style="width:200px; height:50px; border-radius:5px;"
         @click="submitForm"
+        class="save-button"
       />
     </div>
   </div>
 </template>
 
 <script>
-import ProfileSettingTech from '@/components/profileSetting/ProfileSettingTech';
-import ProfileSettingProject from '@/components/profileSetting/ProfileSettingProject';
-import ProfileSettingTag from '@/components/profileSetting/ProfileSettingTag';
-import { updateProfile } from '@/api/profileSetting';
+import ProfileSettingTech from '@/components/profile/setting/ProfileSettingTech';
+import ProfileSettingProject from '@/components/profile/setting/ProfileSettingProject';
+import ProfileSettingTag from '@/components/profile/setting/ProfileSettingTag';
+import { updateProfile } from '@/api/profile';
 import { saveUserNicknameToCookie, deleteCookie } from '@/utils/cookies';
 import { saveQnaImage } from '@/api/qna';
-// import { getProfile } from '@/api/profile';
 export default {
   components: {
     ProfileSettingTech,
@@ -281,7 +272,6 @@ export default {
     onChangeImages(e) {
       this.file = e.target.files[0];
       this.profile_info.profile_img = URL.createObjectURL(this.file);
-      // const file = this.$refs.imageInput.files[0];
     },
 
     addOneSkill(techStack) {
@@ -306,7 +296,8 @@ export default {
     removeOneTag(tag, index) {
       this.profile_info.my_tags.splice(index, 1);
     },
-    // 새로운 데이터 보내기
+
+    // 프로필 재설정 요청
     async submitForm() {
       try {
         if (this.file) {
@@ -330,30 +321,12 @@ export default {
           sns_name3: 'Linkedin',
           sns_url3: this.linkedin,
           tech_stack: this.profile_info.tech_stack,
-          project_name1:
-            this.profile_info.project.length > 0
-              ? this.profile_info.project[0].project_name
-              : '',
-          project_url1:
-            this.profile_info.project.length > 0
-              ? this.profile_info.project[0].project_url
-              : '',
-          project_name2:
-            this.profile_info.project.length > 1
-              ? this.profile_info.project[1].project_name
-              : '',
-          project_url2:
-            this.profile_info.project.length > 1
-              ? this.profile_info.project[1].project_url
-              : '',
-          project_name3:
-            this.profile_info.project.length > 2
-              ? this.profile_info.project[2].project_name
-              : '',
-          project_url3:
-            this.profile_info.project.length > 2
-              ? this.profile_info.project[2].project_url
-              : '',
+          project_name1: this.profile_info.project[0].project_name,
+          project_url1: this.profile_info.project[0].project_url,
+          project_name2: this.profile_info.project[1].project_name,
+          project_url2: this.profile_info.project[1].project_url,
+          project_name3: this.profile_info.project[2].project_name,
+          project_url3: this.profile_info.project[2].project_url,
           my_tags: this.profile_info.my_tags,
         });
         deleteCookie('login_nickname');
@@ -362,7 +335,7 @@ export default {
         alert('성공적으로 프로필을 변경하였습니다!');
         // this.$router.go(-1);
       } catch (error) {
-        console.log(error);
+        alert(error);
       } finally {
         this.$q.loading.hide();
       }
@@ -371,4 +344,21 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.profile-image {
+  height: 140px;
+  max-width: 150px;
+  position: relative;
+  border: 1px solid #cccccc;
+}
+.upload-button {
+  position: relative;
+  left: -35px;
+  top: 60px;
+}
+.save-button {
+  width: 200px;
+  height: 50px;
+  border-radius: 5px;
+}
+</style>

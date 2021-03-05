@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="row q-mb-sm q-pl-sm"
-    style="width:100%; border: 1px solid #C1B9B9; border-radius: 8px"
-  >
+  <div class="row q-mb-sm q-pl-sm card-background">
     <div class="row justify-between q-pt-xs q-mb-xs">
       <div class="row items-center">
         <div class="q-mr-sm">@{{ username }},</div>
@@ -40,5 +37,10 @@ export default {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.card-background {
+  width: 100%;
+  border: 1px solid #c1b9b9;
+  border-radius: 8px;
 }
 </style>
