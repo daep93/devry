@@ -1,7 +1,7 @@
 from rest_framework import serializers, fields, renderers
 from .models import Qna, Ans, tech, Qnasmall, Anssmall, ImagePost
 from profiles.models import Profile
-from profiles.serializers import ProfileSerializer, ProfileListSerializer
+from profiles.serializers import ProfileSerializer, ProfileListSerializer, ProfilePinnedForumSerializer, ProfilePinnedQnaSerializer
 from accounts.models import User
 
 class UserinfoSerializer(serializers.ModelSerializer):
@@ -51,10 +51,12 @@ class ProfileqnaListSerializer(serializers.ModelSerializer):
 
 
 class ProfileqnaSerializer(serializers.ModelSerializer):
-      
+    pinned_qnas = ProfilePinnedQnaSerializer(many=True, read_only=True)
+    pinned_forums = ProfilePinnedForumSerializer(many=True, read_only=True)    
+    
     class Meta:
         model = Profile
-        fields = ('user', 'username', 'profile_img', 'bio', 'pinned_qnas')
+        fields = ('user', 'username', 'profile_img', 'bio', 'pinned_qnas', 'pinned_forums')
 
 
 class QnasmallSerializer(serializers.ModelSerializer):

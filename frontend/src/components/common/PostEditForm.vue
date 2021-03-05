@@ -110,6 +110,7 @@ export default {
       img: '',
       imgUrl: 'https//',
       tags: { ...this.$store.state.tags_selected },
+      loaded: false,
     };
   },
   async created() {
@@ -126,7 +127,7 @@ export default {
           this.content = data.content;
           this.ref_tags = data.ref_tags;
         } catch (error) {
-          console.log(error);
+          alert(error);
         } finally {
           this.$q.loading.hide();
         }
@@ -134,13 +135,13 @@ export default {
         try {
           this.$q.loading.show();
           const { data } = await loadForumItem(post_id);
-          const loadedData = data.forum_post[0];
+          const loadedData = data;
           this.title = loadedData.title;
           this.content = loadedData.content;
           this.ref_tags = loadedData.ref_tags;
           this.thumbnail = loadedData.thumbnail;
         } catch (error) {
-          console.log(error);
+          alert(error);
         } finally {
           this.$q.loading.hide();
         }
@@ -216,7 +217,7 @@ export default {
         // 이전 페이지로 이동
         this.$router.go(-1);
       } catch (error) {
-        console.log(error);
+        alert(error);
       } finally {
         this.$q.loading.hide();
       }
@@ -238,7 +239,7 @@ export default {
         // 이전 페이지로 이동
         this.$router.go(-1);
       } catch (error) {
-        console.log(error);
+        alert(error);
       } finally {
         this.$q.loading.hide();
       }
@@ -253,7 +254,7 @@ export default {
         // 이전 페이지로 이동
         this.$router.go(-1);
       } catch (error) {
-        console.log(error);
+        alert(error);
       } finally {
         this.$q.loading.hide();
       }
@@ -263,7 +264,6 @@ export default {
     async createForum() {
       if (this.checkForm()) return;
       try {
-        console.log(this.file);
         this.$q.loading.show();
         // 썸네일을 우선 서버에 저장한다.
         if (this.file) {
@@ -285,7 +285,7 @@ export default {
         // 이전 페이지로 이동
         this.$router.go(-1);
       } catch (error) {
-        console.log(error);
+        alert(error);
       } finally {
         this.$q.loading.hide();
       }
@@ -316,7 +316,7 @@ export default {
         // 이전 페이지로 이동
         this.$router.go(-1);
       } catch (error) {
-        console.log(error);
+        alert(error);
       } finally {
         this.$q.loading.hide();
       }
@@ -331,7 +331,7 @@ export default {
         // 이전 페이지로 이동
         this.$router.go(-1);
       } catch (error) {
-        console.log(error);
+        alert(error);
       } finally {
         this.$q.loading.hide();
       }

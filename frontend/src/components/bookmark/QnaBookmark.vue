@@ -4,12 +4,12 @@
       class="row col-12 q-mb-md text-h6 text-weight-bold"
       style="color: #545454"
     >
-      QnA bookmark
+      QnA 북마크
     </div>
     <template v-if="QnaBookmarkList.length > 0">
       <div
         v-for="(data, index) in QnaBookmarkList"
-        key="data"
+        :key="index"
         class="row col-12 q-mb-sm"
       >
         <q-card class="row full-width q-pa-md" flat bordered>
@@ -90,7 +90,7 @@ export default {
         const { data } = await getQnaBookmarkList();
         this.QnaBookmarkList = data;
       } catch (error) {
-        console.log(error);
+        alert(error);
       } finally {
         this.$q.loading.hide();
       }
@@ -102,7 +102,7 @@ export default {
         await toggleQnaBookmark(qnaId);
         this.getQnaBookmark();
       } catch (error) {
-        console.log(error);
+        alert(error);
       } finally {
         this.$q.loading.hide();
       }
@@ -112,7 +112,7 @@ export default {
     try {
       this.getQnaBookmark();
     } catch (error) {
-      console.log(error);
+      alert(error);
     }
   },
 };

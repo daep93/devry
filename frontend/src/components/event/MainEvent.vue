@@ -1,5 +1,5 @@
 <template>
-  <div style="clear: both; " class="q-mb-xl">
+  <div style="clear: both; " class="q-mb-xl ">
     <q-carousel
       animated
       v-model="slide"
@@ -39,7 +39,7 @@ export default {
       autoplay: true,
       slide: 1,
       main_events: [],
-      num : 1
+      num: 1,
     };
   },
   async created() {
@@ -50,12 +50,12 @@ export default {
       this.main_events = data;
       return data;
     } catch (error) {
-      console.log(error);
+      alert(error);
       // alert('에러가 발생했습니다.)
     } finally {
       this.$q.loading.hide();
     }
-  }
+  },
 };
 </script>
 

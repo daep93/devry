@@ -30,7 +30,7 @@
                   style="max-width: 450px;"
                 >
                   <q-tab name="follow" label="팔로워" />
-                  <q-tab name="following" label="팔로우" />
+                  <q-tab name="following" label="팔로잉" />
                 </q-tabs>
 
                 <q-separator style="width: 75%;" />
@@ -83,7 +83,6 @@ export default {
   },
   watch: {
     followTab(newValue) {
-      console.log(newValue);
       this.tab = newValue;
     },
   },

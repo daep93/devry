@@ -45,7 +45,6 @@ export default {
   },
   methods: {
     async checkLiked() {
-      // console.log(this.info);
       if (!this.$store.getters.isLogined) {
         alert('로그인을 해주세요');
         return;
@@ -53,7 +52,6 @@ export default {
       try {
         const commentId = this.info.id;
         await toggleQnaCommentLike(commentId);
-        console.log(commentId);
         this.info.liked_ans = !this.info.liked_ans;
         if (this.info.liked_ans) {
           this.info.like_ans_num = this.info.like_ans_num + 1;
@@ -61,7 +59,7 @@ export default {
           this.info.like_ans_num = this.info.like_ans_num - 1;
         }
       } catch (error) {
-        console.log(error);
+        alert(error);
       }
     },
   },

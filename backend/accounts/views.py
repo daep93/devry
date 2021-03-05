@@ -30,7 +30,7 @@ from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, 
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail.message import EmailMessage
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404                                                           
+from django.shortcuts import render, get_object_or_404
 from django.template import RequestContext
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
@@ -42,13 +42,13 @@ from django.views.decorators.http import require_POST
 
 from .models import User, TokenModel, UserFollowing
 from .serializers import UserRegistrationSerializer, UserSerializer, InfoSerializer, isfollowingSerializer, \
-        deleteSerializer, UserLoginSerializer, UserFollowersSerializer, UserFollowingSerializer, TokenSerializer, \
-        UserFollowerNumberSerializer, UserFollowingNumberSerializer, UserFollowSerializer
+    deleteSerializer, UserLoginSerializer, UserFollowersSerializer, UserFollowingSerializer, TokenSerializer, \
+    UserFollowerNumberSerializer, UserFollowingNumberSerializer, UserFollowSerializer
 from .app_settings import RegisterSerializer, register_permission_classes
 from mysite.app_settings import TokenSerializer, LoginSerializer, UserDetailsSerializer, JWTSerializer, create_token
 from mysite.utils import jwt_encode
 from profiles.models import Profile
-from profiles.serializers import ProfileSerializer
+from profiles.serializers import ProfileSerializer, ProfileShowSerializer
 
 
 sensitive_post_parameters_m = method_decorator(
@@ -112,12 +112,12 @@ class UserSignupView(CreateAPIView):
                         allauth_settings.EMAIL_VERIFICATION,
                         None)
         return user
-        
+
 
 class UserLoginView(GenericAPIView):
     """
     이메일과 비밀번호를 통해 토큰을 발급받을 수 있습니다.
-    
+
     ---
     """
     permission_classes = (AllowAny,)
@@ -137,7 +137,6 @@ class UserLoginView(GenericAPIView):
         else:
             response_serializer = TokenSerializer
         return response_serializer
-
 
     def login(self):
         self.user = self.serializer.validated_data['user']
@@ -162,16 +161,16 @@ class UserLoginView(GenericAPIView):
             serializer = serializer_class(instance=self.token,
                                           context={'request': self.request})
         token = Token.objects.all()
-        user_token = Token.objects.get(user_id = self.user.id)
+        user_token = Token.objects.get(user_id=self.user.id)
         response = Response(serializer.data, status=status.HTTP_200_OK)
         print(token)
         response = Response({
-                "user": {
-                    "id": self.user.id,
-                    "username": self.user.username,
-                },
-                "token": serializer.data['key']
-            })
+            "user": {
+                "id": self.user.id,
+                "username": self.user.username,
+            },
+            "token": serializer.data['key']
+        })
 
         # 사용자의 프로필이 존재하는 경우 로그인시 프로필의 tag 정보를 추가하는 과정
         profiles = Profile.objects.all()
@@ -179,7 +178,8 @@ class UserLoginView(GenericAPIView):
             profile = Profile.objects.get(username=self.user.username)
             if ProfileSerializer(profile).data['my_tags']:
                 user_tag = ProfileSerializer(profile).data['my_tags']
-                user_profile_img = ProfileSerializer(profile).data['profile_img']
+                user_profile_img = ProfileSerializer(
+                    profile).data['profile_img']
                 response = Response({
                     "user": {
                         "id": self.user.id,
@@ -194,7 +194,8 @@ class UserLoginView(GenericAPIView):
             from rest_framework_jwt.settings import api_settings as jwt_settings
             if jwt_settings.JWT_AUTH_COOKIE:
                 from datetime import datetime
-                expiration = (datetime.utcnow() + jwt_settings.JWT_EXPIRATION_DELTA)
+                expiration = (datetime.utcnow() +
+                              jwt_settings.JWT_EXPIRATION_DELTA)
                 response.set_cookie(jwt_settings.JWT_AUTH_COOKIE,
                                     self.token,
                                     expires=expiration,
@@ -215,10 +216,11 @@ class UserLogoutView(LogoutView):
     headers에 유저의 토큰을 입력합니다. 
     headers={'Authorization': 'Token your_token'}
     """
+
     def post(self, request):
-        if request.META.get('HTTP_AUTHORIZATION'):           
-            tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-            user=User.objects.get(id=tok.user_id)
+        if request.META.get('HTTP_AUTHORIZATION'):
+            tok = Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+            user = User.objects.get(id=tok.user_id)
             request.user = user
         Token.objects.get(user_id=request.user.pk).delete()
         # TokenSerializer(request.user.auth_token).remove()
@@ -233,6 +235,7 @@ class UserInfoView(APIView):
         "email": "email"
     }
     """
+
     def post(self, request, *args, **kwargs):
         if request.method == 'POST':
             serializer = InfoSerializer(data=request.data)
@@ -246,12 +249,12 @@ class UserInfoView(APIView):
         response = {
             'user': {
                 'username': serializer.data['username'],
-                'email': serializer.data['email'],   
-                
+                'email': serializer.data['email'],
+
             },
         }
         return Response(response, status=status.HTTP_200_OK)
-        
+
 
 class UserFollowingViewSet(viewsets.ModelViewSet):
     queryset = UserFollowing.objects.all()
@@ -273,7 +276,6 @@ def following(request):
     if request.method == 'GET':
         follows = UserFollowing.objects.all()
         serializer = UserFollowingSerializer(follows, many=True)
-
         return Response(serializer.data)
 
     if request.method == 'POST':
@@ -287,6 +289,7 @@ def following(request):
         following_people.followee_num += 1
         followee_people.save()
         following_people.save()
+
         return Response(serializer.data)
 
 
@@ -313,7 +316,7 @@ def following_list(request):
         followee_people.follower_num += 1
         following_people.followee_num += 1
         followee_people.save()
-        following_people.save()  
+        following_people.save()
         return Response(serializer.data)
 
 
@@ -338,10 +341,10 @@ def followee_list(request):
 @api_view(['GET', 'POST'])
 def myfollower_list(request):
     if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        my=User.objects.get(id=tok.user_id)
+        tok = Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        my = User.objects.get(id=tok.user_id)
         request.user = my
-    
+
     if request.method == 'GET':
         follows = UserFollowing.objects.all()
         fos = follows.filter(following_user=request.user.pk)
@@ -358,10 +361,10 @@ def myfollower_list(request):
 @api_view(['GET', 'POST'])
 def myfollow_list(request):
     if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        my=User.objects.get(id=tok.user_id)
+        tok = Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        my = User.objects.get(id=tok.user_id)
         request.user = my
-        
+
     if request.method == 'GET':
         follows = UserFollowing.objects.all()
         fos = follows.filter(user=request.user.pk)
@@ -378,15 +381,16 @@ def myfollow_list(request):
 @api_view(['GET', 'POST'])
 def yourfollower_list(request, want_pk):
     if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        my=User.objects.get(id=tok.user_id)
+        tok = Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        my = User.objects.get(id=tok.user_id)
         request.user = my
-    
+
     if request.method == 'GET':
         follows = UserFollowing.objects.all()
         fos = follows.filter(following_user=want_pk)
         for fo in fos:
-            if UserFollowing.objects.filter(following_user=fo.user, user=want_pk).exists():
+            target = fo.user
+            if UserFollowing.objects.filter(user=request.user.pk, following_user=target).exists():
                 fo.is_following = "True"
             else:
                 fo.is_following = "False"
@@ -398,15 +402,16 @@ def yourfollower_list(request, want_pk):
 @api_view(['GET', 'POST'])
 def yourfollow_list(request, want_pk):
     if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        my=User.objects.get(id=tok.user_id)
+        tok = Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        my = User.objects.get(id=tok.user_id)
         request.user = my
-        
+
     if request.method == 'GET':
         follows = UserFollowing.objects.all()
         fos = follows.filter(user=want_pk)
         for fo in fos:
-            if UserFollowing.objects.filter(user=want_pk).exists():
+            target = fo.following_user
+            if UserFollowing.objects.filter(user=request.user.pk, following_user=target).exists():
                 fo.is_following = "True"
             else:
                 fo.is_following = "False"
@@ -415,25 +420,26 @@ def yourfollow_list(request, want_pk):
         return Response(serializer.data)
 
 
-@api_view(['GET','POST'])
+@api_view(['GET', 'POST'])
 def toggle_following(request, want_pk):
     if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        my=User.objects.get(id=tok.user_id)
-        request.user=my
+        tok = Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        my = User.objects.get(id=tok.user_id)
+        request.user = my
     # user authentication process
-    
+
     if request.method == 'GET':
         if UserFollowing.objects.filter(following_user=want_pk, user=request.user.pk).exists():
-            fo = UserFollowing.objects.get(following_user=want_pk, user=request.user.pk)
-            fo.is_following="True"
+            fo = UserFollowing.objects.get(
+                following_user=want_pk, user=request.user.pk)
+            fo.is_following = "True"
             serializer = isfollowingSerializer(fo)
             return Response(serializer.data)
         else:
             return Response("false")
-        
+
     if request.method == 'POST':
-        if UserFollowing.objects.filter(following_user= want_pk, user=request.user.pk).exists():
+        if UserFollowing.objects.filter(following_user=want_pk, user=request.user.pk).exists():
             # following canceled
             followee_people = User.objects.get(pk=request.user.pk)
             following_people = User.objects.get(pk=want_pk)
@@ -441,45 +447,80 @@ def toggle_following(request, want_pk):
             following_people.follower_num -= 1
             followee_people.save()
             following_people.save()
-            UserFollowing.objects.get(following_user= want_pk, user_id=request.user.pk).delete()     
+            UserFollowing.objects.get(
+                following_user=want_pk, user_id=request.user.pk).delete()
+
+            followee_people_id = UserSerializer(followee_people).data['id']
+            following_people_profile = Profile.objects.get(
+                username=following_people)
+
+            if UserSerializer(following_people).data['followers'] == []:
+                following_people_profile.is_following = False
+            else:
+                for single_user in UserSerializer(following_people).data['followers']:
+                    if followee_people_id == single_user['user']:
+                        following_people_profile.is_following = True
+                    else:
+                        following_people_profile.is_following = False
+
+            following_people_profile.follower_num = following_people.follower_num
+            following_people_profile.save()
+
             return Response("following canceled")
         else:
-            # following 
+            # following
             serializer = UserFollowingSerializer(data=request.data)
             followee_people = User.objects.get(pk=request.user.pk)
             following_people = User.objects.get(pk=want_pk)
-            user =request.user.pk
+            user = request.user.pk
             following_user = want_pk
-            a={"user":user,"following_user":following_user}
-            serializer = UserFollowingSerializer(data=a)  
+            a = {"user": user, "following_user": following_user}
+            serializer = UserFollowingSerializer(data=a)
             if serializer.is_valid(raise_exception=True):
-                serializer.save()     
+                serializer.save()
             followee_people.followee_num += 1
             following_people.follower_num += 1
             followee_people.save()
             following_people.save()
+
+            followee_people_id = UserSerializer(followee_people).data['id']
+            following_people_profile = Profile.objects.get(
+                username=following_people)
+
+            if UserSerializer(following_people).data['followers'] == []:
+                following_people_profile.is_following = False
+            else:
+                for single_user in UserSerializer(following_people).data['followers']:
+                    if followee_people_id == single_user['user']:
+                        following_people_profile.is_following = True
+                    else:
+                        following_people_profile.is_following = False
+
+            following_people_profile.follower_num = following_people.follower_num
+            following_people_profile.save()
+
             return Response("following ")
-            
+
 
 class UserPasswordResetView(PasswordResetView):
-    template_name = 'accounts/password_reset.html' #템플릿을 변경하려면 이와같은 형식으로 입력
+    template_name = 'accounts/password_reset.html'  # 템플릿을 변경하려면 이와같은 형식으로 입력
     success_url = reverse_lazy('password_reset_done')
     form_class = PasswordResetForm
-    
+
     def form_valid(self, form):
         if User.objects.filter(email=self.request.POST.get("email")).exists():
             return super().form_valid(form)
         else:
             return render(self.request, 'accounts/password_reset_done_fail.html')
-            
+
 
 class UserPasswordResetDoneView(PasswordResetDoneView):
-    template_name = 'accounts/password_reset_done.html' #템플릿을 변경하려면 이와같은 형식으로 입력
+    template_name = 'accounts/password_reset_done.html'  # 템플릿을 변경하려면 이와같은 형식으로 입력
 
 
 class UserPasswordResetConfirmView(PasswordResetConfirmView):
     form_class = SetPasswordForm
-    success_url=reverse_lazy('password_reset_complete')
+    success_url = reverse_lazy('password_reset_complete')
     template_name = 'accounts/password_reset_confirm.html'
 
     def form_valid(self, form):
@@ -499,9 +540,9 @@ class UserPasswordResetCompleteView(PasswordResetCompleteView):
 @permission_classes([AllowAny])
 def delete(request):
     if request.META.get('HTTP_AUTHORIZATION'):
-        tok=Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
-        my=User.objects.get(id=tok.user_id)
-        request.user=my
+        tok = Token.objects.get(pk=request.META['HTTP_AUTHORIZATION'])
+        my = User.objects.get(id=tok.user_id)
+        request.user = my
 
     if request.method == 'DELETE':
         info = request.user

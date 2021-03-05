@@ -137,10 +137,13 @@ class ProfileListSerializer(serializers.ModelSerializer):
     profile_img = serializers.URLField(read_only=True)
     link = ProfileLinkSerializer(many=True, read_only=True)
     project = ProfileProjectSerializer(many=True, read_only=True)
+    user_id = serializers.IntegerField(read_only=True)
+    profile_id = serializers.IntegerField(read_only=True)
+    username = serializers.CharField(read_only=True)
 
     class Meta:
         model = Profile
-        fields = ('email', 'profile_img', 'region', 'group', 'bio', 'link', 'tech_stack', 'project', 'my_tags', )
+        fields = ('email', 'profile_img', 'region', 'group', 'bio', 'link', 'tech_stack', 'project', 'my_tags', 'user_id', 'profile_id', 'username')
         read_only_fields = ('profile_img', 'link', 'project', 'tech_stack')
  
 

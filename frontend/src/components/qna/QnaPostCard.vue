@@ -3,21 +3,31 @@
     <div class="full-width q-pl-sm row content-between wrap">
       <div class="row justify-between q-pt-xs q-mb-sm col-12">
         <div class="row items-baseline q-mb-sm">
-          <div class="q-mr-sm text-weight-regular">
-            @{{ $store.state.nickname }}
-          </div>
+          <div class="q-mr-sm text-weight-regular">@{{ username }}</div>
           <div class="text-weight-thin" style="font-size:8pt">
             {{ detail.written_time | moment('YYYY/MM/DD') }}
           </div>
         </div>
         <div class="row">
           <div class="row items-center q-mr-sm">
-            <q-icon
-              :name="$i.ionHeart"
-              color="red"
-              size="22px"
-              class="q-mr-sm"
-            ></q-icon>
+            <template v-if="detail.liked">
+              <q-icon
+                :name="$i.ionHeart"
+                color="red"
+                size="20px"
+                class="cursor-pointer"
+                @click="checkLiked(index)"
+              ></q-icon>
+            </template>
+            <template v-else>
+              <q-icon
+                :name="$i.ionHeartOutline"
+                style="color:#727272"
+                size="20px"
+                class="cursor-pointer"
+                @click="checkLiked(index)"
+              ></q-icon>
+            </template>
             <span>{{ detail.like_num }}</span>
           </div>
           <div class="row items-center q-mr-md">
@@ -42,8 +52,9 @@
         </div>
       </div>
       <div
-        class="row text-bold col-12 q-px-md q-mb-xs"
+        class="row text-bold col-12 q-px-md q-mb-xs cursor-pointer"
         style="font-size:14pt; height:80px"
+        @click="$router.push(`/qna-detail/${detail.id}`)"
       >
         {{ detail.title }}
       </div>
@@ -65,6 +76,7 @@ import { colorSoloMapper } from '@/utils/tagColorMapper';
 import { togglePinned } from '@/api/qna';
 export default {
   props: {
+    username: String,
     detail: Object,
   },
   data() {
@@ -81,7 +93,7 @@ export default {
         await togglePinned(this.detail.id);
         this.pinned = !this.pinned;
       } catch (error) {
-        console.log(error);
+        alert(error);
       }
     },
   },

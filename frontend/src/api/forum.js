@@ -1,18 +1,17 @@
-import { instance } from '@/api';
-import { setInterceptors } from '@/api/common/interceptors';
+import { instance, instanceAuth } from '@/api';
 
 // forum 글 등록하기
 function createForumItem(postData) {
-  return setInterceptors(instance).post('forum/', postData);
+  return instanceAuth.post('forum/', postData);
 }
 
 // forum 특정 글 불러오기
-function loadForumItem(post_pk) {
-  return instance.get(`forum/${post_pk}/`);
+function loadForumItem(forum_pk) {
+  return instance.get(`forum/${forum_pk}/`);
 }
 // forum 글 수정하기
 function updateForumItem(postId, postData) {
-  return setInterceptors(instance).put(`forum/${postId}/`, postData);
+  return instanceAuth.put(`forum/${postId}/`, postData);
 }
 
 // forum  글 삭제하기
@@ -21,13 +20,13 @@ function deleteForumItem(postId) {
 }
 
 // forum 글 좋아요 토글하기
-function toggleForumLike(post_pk) {
-  return instance.post(`forum_like/${post_pk}/`);
+function toggleForumLike(forum_pk) {
+  return instance.post(`forum_like/${forum_pk}/`);
 }
 
-// forum 글 pinned 하기
-function pinnedForum(post_pk) {
-  return instance.post(`forum_pinned/${post_pk}/`);
+// forum 글 Pinned 토글하기
+function togglePinned(forum_pk) {
+  return instanceAuth.post(`forum_pinned/${forum_pk}/`);
 }
 
 // forum 댓글 목록 불러오기
@@ -66,8 +65,8 @@ function toggleForumCommentLike(comment_pk) {
 }
 
 // forum 게시물 북마크하기
-function toggleforumBookmark(post_pk) {
-  return instance.post(`forum_bookmark/${post_pk}/`);
+function toggleforumBookmark(forum_pk) {
+  return instance.post(`forum_bookmark/${forum_pk}/`);
 }
 
 export {
@@ -84,5 +83,5 @@ export {
   postForumMentioned,
   toggleForumCommentLike,
   toggleforumBookmark,
-  pinnedForum,
+  togglePinned,
 };

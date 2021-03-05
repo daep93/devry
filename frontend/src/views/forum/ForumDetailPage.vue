@@ -19,19 +19,24 @@
             ></forum-detail-content>
           </div>
         </div>
-        <!-- <div class="col-3 q-pl-sm q-pr-xl">
-          <forum-short-profile :info="shortProfile"></forum-short-profile>
-        </div> -->
+        <div class="col-3 q-pl-sm q-pr-xl">
+          <forum-short-profile
+            :info="shortProfile"
+            :followingStatus="followingStatus"
+            :followerNum="followerNum"
+            v-if="loaded"
+          ></forum-short-profile>
+        </div>
       </div>
     </div>
-    <div class="row col-12">
-      <forum-comment :info="comments" v-if="loaded"></forum-comment>
-    </div>
-    <div class="row col-12 q-my-xl">
+    <div class="row col-12 q-my-lg">
       <forum-comment-create
         :info="createComments"
         v-if="loaded"
       ></forum-comment-create>
+    </div>
+    <div class="row col-12 q-mb-xl">
+      <forum-comment :info="comments" v-if="loaded"></forum-comment>
     </div>
   </div>
 </template>
@@ -41,6 +46,7 @@ import ForumComment from '@/components/forum/ForumComment';
 import ForumDetailStatus from '@/components/forum/ForumDetailStatus';
 import ForumDetailContent from '@/components/forum/ForumDetailContent';
 import ForumCommentCreate from '@/components/forum/ForumCommentCreate';
+import ForumShortProfile from '@/components/forum/ForumShortProfile';
 import { loadForumItem } from '@/api/forum';
 
 export default {
@@ -49,6 +55,7 @@ export default {
     ForumDetailStatus,
     ForumDetailContent,
     ForumCommentCreate,
+    ForumShortProfile,
   },
   data() {
     return {
@@ -57,21 +64,31 @@ export default {
       forumBody: '',
       comments: '',
       shortProfile: '',
+      followingStatus: '',
       loaded: false,
     };
+  },
+  computed: {
+    createComments() {
+      return {
+        post_id: this.contents.id,
+      };
+    },
   },
   async created() {
     const index = this.$route.params.id;
     try {
       const { data } = await loadForumItem(index);
       this.contents = data;
-      this.status = this.contents.forum_post[0];
-      this.forumBody = this.contents.forum_post[0];
-      this.shortProfile = this.contents.writer_info[0];
-      this.comments = this.contents.comments;
+      this.status = this.contents;
+      this.forumBody = this.contents;
+      this.shortProfile = this.contents.profile;
+      this.followerNum = this.contents.user.follower_num;
+      this.followingStatus = this.contents.is_following;
+      this.comments = this.contents.comment_set;
       this.loaded = true;
     } catch (error) {
-      console.log(error);
+      alert(error);
     }
     this.$store.commit('offLeft');
   },

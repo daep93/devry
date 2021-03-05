@@ -19,6 +19,7 @@
                   "
                   @click="goToProfile"
                   class="cursor-pointer"
+                  style="width: 40px; height: 40px;"
                 />
               </q-avatar>
             </span>
@@ -32,14 +33,14 @@
               >
                 <b>{{ info.username }}</b>
                 <div class="text-caption">
-                  글 {{ info.post_num }} · 팔로워 {{ follower_num }}
+                  글 {{ info.post_num }} · 팔로워 {{ followerNum }}
                 </div>
               </div>
             </div>
           </div>
         </div>
       </q-card-section>
-      <div class="q-px-md q-pb-md" v-if="profile">
+      <div class="q-px-md q-pb-md" v-if="info.bio">
         <div style="font-size: 13px;">
           {{ info.bio }}
         </div>
@@ -48,7 +49,7 @@
         class="row col-12 justify-center"
         v-if="info.user != $store.state.id"
       >
-        <template v-if="is_following == false">
+        <template v-if="followingStatus == false">
           <q-btn
             no-caps
             color="primary"
@@ -72,15 +73,16 @@
         </template>
       </div>
     </q-card>
-    <q-card
-      flat
-      bordered
-      class="my-card row col-12 q-px-sm q-pt-md"
-      style="max-width: 250px; max-height: 280px;"
-      v-if="profile"
+    <template
+      v-if="info.pinned_forums.length > 0 || info.pinned_qnas.length > 0"
     >
-      <div class="q-px-md q-pb-sm">
-        <div style="font-size: 13px;">
+      <q-card
+        flat
+        bordered
+        class="my-card row col-12 q-px-sm q-pt-md"
+        style="max-width: 250px; max-height: 280px;"
+      >
+        <div class="q-px-md q-pb-sm row col-12">
           <div class="q-my-sm">
             <span
               class="text-weight-bold cursor-pointer"
@@ -89,39 +91,41 @@
             >
             <span>님의 글 더보기</span>
           </div>
-          <template v-for="post in profile.pinned">
+          <template v-for="(post, index) in info.pinned_forums">
             <q-separator :key="post.title" />
             <div class="q-my-sm" :key="post.title">
-              {{ post.title }}
+              <span class="cursor-pointer" @click="goToForum(index)">{{
+                post.title
+              }}</span>
             </div>
           </template>
-
-          <q-separator />
+          <template v-for="(qna, index) in info.pinned_qnas">
+            <q-separator :key="qna.title" />
+            <div class="q-my-sm" :key="qna.title">
+              <span class="cursor-pointer" @click="goToQna(index)">{{
+                qna.title
+              }}</span>
+            </div>
+          </template>
         </div>
-      </div>
-    </q-card>
+      </q-card>
+    </template>
   </div>
 </template>
 
 <script>
 import { followOtherUser } from '@/api/follow';
-//
 export default {
   props: {
     info: Object,
+    followingStatus: Boolean,
+    followerNum: Number,
   },
   data() {
     return {
       img_url: `${this.info.profile_img}`,
-      is_following: this.info.is_following,
-      follower_num: this.info.follower_num,
+      follower_num: this.followerNum,
     };
-  },
-  watch: {
-    info(newValue) {
-      (this.is_following = newValue.is_following),
-        (this.follower_num = newValue.follower_num);
-    },
   },
   methods: {
     async toggleFollow() {
@@ -131,14 +135,14 @@ export default {
           this.$q.loading.show();
           const want_pk = this.info.user;
           await followOtherUser(want_pk);
-          this.is_following = !this.is_following;
-          if (this.is_following) {
-            this.follower_num = this.follower_num + 1;
+          this.followingStatus = !this.followingStatus;
+          if (this.followingStatus) {
+            this.followerNum = this.followerNum + 1;
           } else {
-            this.follower_num = this.follower_num - 1;
+            this.followerNum = this.followerNum - 1;
           }
         } catch (error) {
-          console.log(error);
+          alert(error);
         } finally {
           this.$q.loading.hide();
         }
@@ -147,13 +151,12 @@ export default {
     goToProfile() {
       this.$router.push(`/profile/${this.info.user}`);
     },
-    goToDetail() {
-      this.$router.push({ name: 'ForumDetail' });
+    goToForum(index) {
+      this.$router.push(`/forum-detail/${this.info.pinned_forums[index].id}`);
+      location.reload();
     },
-  },
-  computed: {
-    profile() {
-      return this.info.profile;
+    goToQna(index) {
+      this.$router.push(`/qna-detail/${this.info.pinned_qnas[index].id}`);
     },
   },
 };

@@ -21,6 +21,7 @@
                       "
                       @click="goToProfile"
                       class="cursor-pointer"
+                      style="width: 40px; height: 40px;"
                     />
                   </q-avatar>
                 </span>
@@ -117,7 +118,7 @@ export default {
           this.follower_num = this.follower_num - 1;
         }
       } catch (error) {
-        console.log(error);
+        alert(error);
       }
     },
   },
@@ -127,7 +128,7 @@ export default {
       const { data } = await checkQnaSmallFollowStatus(ansId);
       this.is_following = data.is_following;
     } catch (error) {
-      console.log(error);
+      alert(error);
     }
     this.$store.commit('offLeft');
   },

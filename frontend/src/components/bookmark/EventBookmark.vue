@@ -4,12 +4,12 @@
       class="row col-12 q-mb-md text-h6 text-weight-bold"
       style="color: #545454"
     >
-      Event bookmark
+      이벤트 북마크
     </div>
     <template v-if="EventBookmarkList.length > 0">
       <div
         v-for="(data, index) in EventBookmarkList"
-        key="data"
+        :key="index"
         class="row col-12 q-mb-sm"
       >
         <q-card class="row full-width q-pa-md" flat bordered>
@@ -90,7 +90,7 @@ export default {
         const { data } = await getEventBookmarkList();
         this.EventBookmarkList = data;
       } catch (error) {
-        console.log(error);
+        alert(error);
       } finally {
         this.$q.loading.hide();
       }
@@ -102,7 +102,7 @@ export default {
         await toggleEventBookmark(eventId);
         this.getEventBookmark();
       } catch (error) {
-        console.log(error);
+        alert(error);
       } finally {
         this.$q.loading.hide();
       }
@@ -112,7 +112,7 @@ export default {
     try {
       this.getEventBookmark();
     } catch (error) {
-      console.log(error);
+      alert(error);
     }
   },
 };

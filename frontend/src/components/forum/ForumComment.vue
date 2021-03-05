@@ -1,100 +1,134 @@
 <template>
   <div class="row col-12">
     <!-- 댓글 시작 -->
-    <div v-for="(data, index) in info" :key="index" class="row col-12">
-      <div class="row col-12">
-        <!-- <div class="row col-12" v-for="(data, index) in info" :key="index"> -->
-        <div class="row col-2">
-          <!-- 댓글 좋아요 수, 댓글 수, 북마크 수 -->
-          <div class="row col-9"></div>
-          <div class="row col-3 q-mt-lg">
-            <forum-comment-status :info="data"></forum-comment-status>
+    <div class="row col-12">
+      <div class="row col-2">
+        <!-- 댓글 좋아요 수, 댓글 수, 북마크 수 -->
+        <div class="row col-9"></div>
+      </div>
+      <div class="row col-10">
+        <div class="row col-9">
+          <div class="text-h6 text-weight-bold q-mb-md">
+            댓글 ({{ contents.comment_count }}개)
           </div>
-        </div>
-        <div class="row col-10">
-          <div class="row col-9">
-            <q-card flat bordered class="my-card q-pa-lg q-mt-lg row col-12">
-              <div class="row col-11 q-mt-sm">
-                <div class="row col-12">
-                  <div class="col-1">
-                    <span class="cursor-pointer q-ml-sm">
-                      <q-avatar size="lg"
-                        ><img src="https://cdn.quasar.dev/img/avatar.png" />
+          <q-card flat bordered class="my-card q-px-lg q-mb-xl row col-12">
+            <div
+              v-if="contents.comment_count === 0"
+              class="full-width text-center text-grey-7 q-py-md"
+            >
+              댓글이 없습니다.
+            </div>
+            <div v-for="(data, index) in info" :key="index" class="row col-12">
+              <div class="row col q-mt-lg">
+                <div class="row col-11">
+                  <div class="q-pr-sm q-pt-xs">
+                    <span class="cursor-pointer q-ml-md">
+                      <q-avatar
+                        style="border: 1px solid #ECEFF1"
+                        size="2.8em"
+                        @load="getProfilePic(index)"
+                      >
+                        <q-img
+                          :src="
+                            data.profile.profile_img
+                              ? info[index].profile.profile_img
+                              : require('@/assets/basic_image.png')
+                          "
+                          class="cursor-pointer"
+                          style="width: 40px; height: 40px;"
+                        />
                       </q-avatar>
                     </span>
                   </div>
-                  <!-- <q-card flat bordered class="my-card col-11 q-pa-lg"> -->
-                  <span class="text-body1 text-weight-bold">{{
-                    data.username
-                  }}</span>
-                  <span class="q-ml-sm text-caption" style="color: gray">{{
-                    data.written_time | moment('YYYY/MM/DD HH:mm')
-                  }}</span>
-                  <!-- <div class="row col-12 q-mt-md q-ml-sm">
-                    {{ data.comment_content }}
-                  </div> -->
-                  <!-- </q-card> -->
-                </div>
-              </div>
 
-              <div class="row col-1 justify-end">
-                <div v-if="data.user == $store.state.id">
-                  <div>
-                    <q-btn flat round dense icon="more_vert">
-                      <q-menu>
-                        <q-list style="min-width: 100px">
-                          <q-item
-                            clickable
-                            v-close-popup
-                            @click="editerOpen(index)"
-                          >
-                            <q-item-section>수정하기</q-item-section>
-                          </q-item>
-                          <q-item
-                            clickable
-                            v-close-popup
-                            @click="deleteComment(index)"
-                          >
-                            <q-item-section>삭제하기</q-item-section>
-                          </q-item>
-                        </q-list>
-                      </q-menu>
-                    </q-btn>
+                  <div class="q-ml-sm">
+                    <div class="text-body1 text-weight-bold">
+                      <span
+                        @click="goToProfile(index)"
+                        class="cursor-pointer"
+                        >{{ data.user.username }}</span
+                      >
+                    </div>
+                    <div class="text-caption" style="color: gray">
+                      {{ data.written_time | moment('YYYY/MM/DD HH:mm') }}
+                    </div>
                   </div>
                 </div>
+                <!-- 좋아요 로직 -->
+                <div class="q-ml-lg justify-end">
+                  <template v-if="contents.comment_set[index].liked_comment">
+                    <q-icon
+                      :name="$i.ionHeart"
+                      color="red"
+                      size="20px"
+                      class="cursor-pointer"
+                      @click="checkLiked(index)"
+                    ></q-icon>
+                  </template>
+                  <template v-else>
+                    <q-icon
+                      :name="$i.ionHeartOutline"
+                      style="color:#727272"
+                      size="20px"
+                      class="cursor-pointer"
+                      @click="checkLiked(index)"
+                    ></q-icon>
+                  </template>
+                  <span class="q-ml-sm q-mt-md">{{
+                    contents.comment_set[index].like_comment_num
+                  }}</span>
+                  <br />
+                  <br />
+                </div>
               </div>
 
-              <div class="row col-12 justify-center">
-                <markdown-editor
-                  v-if="modes[index] == 'editable'"
-                  height="500px"
-                  :fetchData="data.comment_content"
-                  @input="getContents(data, $event)"
-                  class="q-mb-md q-px-md"
-                ></markdown-editor>
-                <v-md-editor
-                  v-else
-                  :value="liquidResolve(data.comment_content)"
-                  mode="preview"
-                  class="q-mb-md"
-                >
-                </v-md-editor>
-
-                <q-btn
-                  @click="updateComment(index)"
-                  color="primary"
-                  v-if="modes[index] === 'editable'"
-                  >수정 완료</q-btn
-                >
+              <div
+                v-if="data.user.id == $store.state.id"
+                class="row justify-end q-mt-md"
+              >
+                <div>
+                  <q-btn flat round dense icon="more_vert">
+                    <q-menu>
+                      <q-list style="min-width: 100px">
+                        <q-item
+                          clickable
+                          v-close-popup
+                          @click="editerOpen(index)"
+                        >
+                          <q-item-section>수정하기</q-item-section>
+                        </q-item>
+                        <q-item
+                          clickable
+                          v-close-popup
+                          @click="deleteComment(index)"
+                        >
+                          <q-item-section>삭제하기</q-item-section>
+                        </q-item>
+                      </q-list>
+                    </q-menu>
+                  </q-btn>
+                </div>
               </div>
 
-              <div class="q-ml-md row col-12">
-                <q-card-section class="row col-12">
-                  <q-markdown :src="info.comment_content"> </q-markdown>
-                </q-card-section>
+              <div class="q-py-xs row col-12" v-if="modes[index] == 'editable'">
+                <q-input
+                  clearable
+                  type="textarea"
+                  v-model="data.comment_content"
+                  class="full-width q-pa-none q-mb-lg"
+                  color="blue-10"
+                  dense
+                  autogrow
+                  borderless
+                  @keypress.enter="updateComment(index)"
+                />
               </div>
-            </q-card>
-          </div>
+              <pre class="q-py-xs row col-12 q-mb-lg q-ml-md" v-else>{{
+                data.comment_content
+              }}</pre>
+              <q-separator v-if="contents.comment_count !== index + 1" inset />
+            </div>
+          </q-card>
         </div>
       </div>
     </div>
@@ -102,22 +136,17 @@
 </template>
 
 <script>
-import ForumCommentStatus from '@/components/forum/ForumCommentStatus';
 import {
   loadForumItem,
   updateForumComment,
   deleteForumComment,
+  toggleForumCommentLike,
 } from '@/api/forum';
 import { liquidResolver } from '@/utils/liquidTag';
-import MarkdownEditor from '@/components/common/MarkdownEditor';
 
 export default {
   props: {
     info: Array,
-  },
-  components: {
-    ForumCommentStatus,
-    MarkdownEditor,
   },
   data() {
     const res = [];
@@ -127,9 +156,37 @@ export default {
       contents: '',
       content: '',
       modes: res,
+      liked_comment: '',
+      like_comment_num: '',
+      length: 0,
     };
   },
   methods: {
+    goToProfile(index) {
+      this.$router.push(`/profile/${this.info[index].user.id}`);
+    },
+    async checkLiked(index) {
+      if (!this.$store.getters.isLogined) {
+        alert('로그인이 필요합니다');
+        return;
+      }
+      try {
+        await toggleForumCommentLike(this.contents.comment_set[index].id);
+        // 넘겨줄 데이터
+        this.contents.comment_set[index].liked_comment = !this.contents
+          .comment_set[index].liked_comment;
+        if (this.contents.comment_set[index].liked_comment) {
+          this.contents.comment_set[index].like_comment_num =
+            this.contents.comment_set[index].like_comment_num + 1;
+        } else {
+          this.contents.comment_set[index].like_comment_num =
+            this.contents.comment_set[index].like_comment_num - 1;
+        }
+      } catch (error) {
+        alert(error);
+      }
+    },
+
     liquidResolve(tag) {
       return liquidResolver(tag);
     },
@@ -152,11 +209,11 @@ export default {
         this.$q.loading.show();
         await updateForumComment(comment_pk, {
           comment_content: this.info[index].comment_content,
-          post: postId,
-          user: this.author,
+          post: this.contents.id,
+          user: this.contents.user.id,
         });
       } catch (error) {
-        console.log(error);
+        alert(error);
       } finally {
         this.$q.loading.hide();
       }
@@ -168,7 +225,7 @@ export default {
         await deleteForumComment(comment_pk);
         location.reload();
       } catch (error) {
-        console.log(error);
+        alert(error);
       } finally {
         this.$q.loading.hide();
       }
@@ -179,9 +236,8 @@ export default {
     try {
       const { data } = await loadForumItem(index);
       this.contents = data;
-      this.author = data.user.id;
     } catch (error) {
-      console.log(error);
+      alert(error);
     }
   },
 };
