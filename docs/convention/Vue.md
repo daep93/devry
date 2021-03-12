@@ -3,13 +3,13 @@
 ## 필수 사항
 
 0. 객체, 변수, 함수명:
-    - 두 단어 이상일 경우 camelCase를 준수
+    - 두 단어 이상일 경우 camelCase를 반드시 준수 (단, API를 통해 서버로 부터 넘겨 받은 데이터를 직접 접근할 경우, snake_case 허용)
 1. Vue 파일 이름
     - 확장자가 vue인 파일의 이름은 PaskalCase를 준수.
     - 반드시 두단어 이상을 조합할 것. 예) LoginForm, MainPage
 2. views 폴더
     - router-view를 통해 이동할 페이지 컴포넌트만 포함
-    - 목적에 따라 폴더 생성 가능. 예) views/post
+    - 목적에 따라 폴더 생성 가능. 예) views/qna
     - views 폴더 안의 vue 파일들은 이름이 반드시 Page로 끝난다. 예) NotFoundPage
 3. components 폴더
     - 페이지 컴포넌트에서 재사용할 컴포넌트들 포함
